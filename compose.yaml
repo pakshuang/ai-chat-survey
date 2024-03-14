@@ -1,0 +1,31 @@
+version: '3'
+services:
+  frontend:
+    image: frontend
+    container_name: ${FRONTEND_CONTAINER_NAME}
+    build: ./frontend
+    environment:
+      - STREAMLIT_SERVER_PORT=${FRONTEND_CONTAINER_PORT}
+    env_file:
+      - .env
+    ports:
+      - ${FRONTEND_HOST_PORT}:${FRONTEND_CONTAINER_PORT}
+    networks:
+      - app-network
+    depends_on:
+      - backend
+
+  backend:
+    image: backend
+    container_name: ${BACKEND_CONTAINER_NAME}
+    build: ./backend
+    env_file:
+      - .env
+    ports:
+      - ${BACKEND_HOST_PORT}:${BACKEND_CONTAINER_PORT}
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
