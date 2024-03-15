@@ -22,9 +22,3 @@ EXPOSE 5000
 # Define the command to run the application
 ENTRYPOINT ["python"]
 CMD ["app.py"]
-
-# Build the Docker image
-# docker build -t backend .
-
-# Run the Docker container
-# docker run -p 5000:5000 backend

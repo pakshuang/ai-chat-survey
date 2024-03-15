@@ -2,7 +2,7 @@ version: '3'
 services:
   frontend:
     image: frontend
-    container_name: ${FRONTEND_CONTAINER_NAME}
+    container_name: ${FRONTEND_HOST}
     build: ./frontend
     environment:
       - STREAMLIT_SERVER_PORT=${FRONTEND_CONTAINER_PORT}
@@ -17,7 +17,7 @@ services:
 
   backend:
     image: backend
-    container_name: ${BACKEND_CONTAINER_NAME}
+    container_name: ${BACKEND_HOST}
     build: ./backend
     env_file:
       - .env
