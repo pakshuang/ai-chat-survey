@@ -25,9 +25,3 @@ HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
 # Define the command to run the application
 ENTRYPOINT ["streamlit", "run"]
 CMD ["streamlit_app.py", "--server.address=0.0.0.0"]
-
-# Build the Docker image
-# docker build -t frontend .
-
-# Run the Docker container
-# docker run -p 8501:8501 frontend
