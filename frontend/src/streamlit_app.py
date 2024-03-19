@@ -23,11 +23,14 @@ def main():
 
     # Add a button to trigger the data retrieval from the backend
     if st.button("Get Data"):
-        data = get_data_from_backend()
-        if data is not None:
-            st.write("Data received from backend:")
-            st.write(data)
-        else:
+        try:
+            data = get_data_from_backend()
+            if data:
+                st.write("Data received from backend:")
+                st.write(data)
+            else:
+                st.write("Empty response received from backend.")
+        except:
             st.write("Failed to retrieve data from backend.")
 
 if __name__ == "__main__":
