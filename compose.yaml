@@ -2,7 +2,7 @@ version: '3'
 services:
   frontend:
     image: frontend
-    container_name: ${FRONTEND_HOST}
+    container_name: frontend
     build: ./frontend
     environment:
       - STREAMLIT_SERVER_PORT=${FRONTEND_CONTAINER_PORT}
@@ -10,22 +10,14 @@ services:
       - .env
     ports:
       - ${FRONTEND_HOST_PORT}:${FRONTEND_CONTAINER_PORT}
-    networks:
-      - app-network
     depends_on:
       - backend
 
   backend:
     image: backend
-    container_name: ${BACKEND_HOST}
+    container_name: backend
     build: ./backend
     env_file:
       - .env
     ports:
-      - ${BACKEND_HOST_PORT}:${BACKEND_CONTAINER_PORT}
-    networks:
-      - app-network
-
-networks:
-  app-network:
-    driver: bridge
+      - 127.0.0.1:${BACKEND_HOST_PORT}:${BACKEND_CONTAINER_PORT} # Only required for accessing the API directly from the host
