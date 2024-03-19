@@ -44,7 +44,7 @@ These endpoints are used to create, read, update, and delete admins, which are t
   {
     "admins": [
       {
-        "id": int,
+        "id": "integer",
         "username": "string"
       }
     ]
@@ -65,7 +65,7 @@ These endpoints are used to create, read, update, and delete admins, which are t
 
   ```json
   {
-    "id": int,
+    "id": "integer",
     "username": "string"
   }
   ```
@@ -178,13 +178,14 @@ These endpoints are used to create, read, update, and delete surveys, which are 
             "type": "string", # question, text
             "content": "string", # question
             <!-- if type == "question" -->
+            "question_id": "integer",
             "question_type": "string", # multiple_choice, short_answer, long_answer, etc.
             "options": ["string"]
           }
         ]
       }
     ],
-    "interview_context": "string" # The proprietary knowledge that the interviewer needs to have to conduct the interview
+    "chat_context": "string" # The proprietary knowledge that the chatbot needs to have to conduct the chat
   }
   ```
   
@@ -192,7 +193,7 @@ These endpoints are used to create, read, update, and delete surveys, which are 
 
   ```json
   {
-    "confirmation": "string"
+    "survey_id": "integer"
   }
   ```
 
@@ -232,7 +233,7 @@ These endpoints are used to create, read, update, and delete surveys, which are 
   ```json
   {
     "metadata": {
-      "id": "string",
+      "id": "integer",
       "name": "string",
       "description": "string",
       "created_by": "string", # user ID
@@ -247,19 +248,17 @@ These endpoints are used to create, read, update, and delete surveys, which are 
         "subtitle": "string",
         "components": [
           {
-            "type": "question",
-            "question_type": "string",
+            "type": "string", # question, text
             "content": "string", # question
+            <!-- if type == "question" -->
+            "question_id": "integer",
+            "question_type": "string", # multiple_choice, short_answer, long_answer, etc.
             "options": ["string"]
-          },
-          {
-            "type": "text",
-            "content": "string"
           }
         ]
       }
     ],
-    "interview_context": "string" # The proprietary knowledge that the interviewer needs to have to conduct the interview
+    "chat_context": "string" # The proprietary knowledge that the chatbot needs to have to conduct the chat
   }
   ```
 
@@ -292,7 +291,7 @@ These endpoints are used to create, read, update, and delete surveys, which are 
       "section object",
       "section object"
     ],
-    "interview_context": "string" # The proprietary knowledge that the interviewer needs to have to conduct the interview
+    "chat_context": "string" # The proprietary knowledge that the chatbot needs to have to conduct the chat
   }
   ```
 
@@ -328,18 +327,182 @@ These endpoints are used to create, read, update, and delete surveys, which are 
   - `404` - Not Found
   - `500` - Internal Server Error
 
-## Interviews
-
-These endpoints are used to facilitate interviews, which are the second phase of the survey process.
-
-TODO: Add interview endpoints
-
 ## Responses
 
-These endpoints are used to submit, read, update, and delete responses, which are the combined data collected from the survey and interview completed by a single respondent.
+These endpoints are used to submit, read, update, and delete responses, which are the combined data collected from the survey and chat completed by a single respondent.
 
 ### 1. Submit Response
 
-- **Endpoint:** `/response`
+- **Endpoint:** `survey/{id}/response`
 - **Method:** `POST`
 - **Description:** Submit a new response
+- **Request Body:**
+
+  ```json
+  {
+    "metadata": {
+      "survey_id": "integer", # survey ID
+    },
+    "responses": [
+      {
+        "question_id": "integer",
+        "response": "string",
+      }
+    ]
+  }
+  ```
+
+- **Response:**
+
+  ```json
+  {
+    "response_id": "integer"
+  }
+  ```
+
+- **Status Codes:**
+  - `201` - Created
+  - `400` - Bad Request
+  - `500` - Internal Server Error
+
+### 2. Get Responses
+
+- **Endpoint:** `/survey/{id}/response`
+- **Method:** `GET`
+- **Description:** Get all responses for a survey
+- **Response:**
+
+  ```json
+  {
+    "responses": [
+      {
+        "response_id": "integer",
+        "metadata": {
+          "survey_id": "integer", # survey ID
+          "response_id": "integer", # user ID
+          "submitted_at": "string", # YYYY-MM-DD HH:MM:SS
+        },
+        "responses": [
+          {
+            "question_id": "integer",
+            "response": "string",
+          }
+        ]
+      }
+    ]
+  }
+  ```
+
+- **Status Codes:**
+  - `200` - OK
+  - `500` - Internal Server Error
+
+### 3. Get Response
+
+- **Endpoint:** `/survey/{id}/response/{response_id}`
+- **Method:** `GET`
+- **Description:** Get a response by ID
+- **Response:**
+
+  ```json
+  {
+    "response_id": "integer",
+    "metadata": {
+      "survey_id": "integer", # survey ID
+      "response_id": "integer", # user ID
+      "submitted_at": "string", # YYYY-MM-DD HH:MM:SS
+    },
+    "responses": [
+      {
+        "question_id": "integer",
+        "response": "string",
+      }
+    ]
+  }
+  ```
+
+- **Status Codes:**
+  - `200` - OK
+  - `404` - Not Found
+  - `500` - Internal Server Error
+
+### 4. Update Response
+
+- **Endpoint:** `/survey/{id}/response/{response_id}`
+- **Method:** `PUT`
+- **Description:** Update a response by ID
+- **Request Body:**
+
+  ```json
+  {
+    "metadata": {
+      "survey_id": "integer", # survey ID
+      "response_id": "integer", # user ID
+    },
+    "responses": [
+      {
+        "question_id": "integer",
+        "response": "string",
+      }
+    ]
+  }
+  ```
+
+- **Response:**
+
+  ```json
+  {
+    "confirmation": "string"
+  }
+  ```
+
+- **Status Codes:**
+  - `200` - OK
+  - `400` - Bad Request
+  - `404` - Not Found
+  - `500` - Internal Server Error
+
+### 5. Delete Response
+
+- **Endpoint:** `/survey/{id}/response/{response_id}`
+- **Method:** `DELETE`
+- **Description:** Delete a response by ID
+- **Response:**
+
+  ```json
+  {
+    "confirmation": "string"
+  }
+  ```
+
+- **Status Codes:**
+  - `200` - OK
+  - `404` - Not Found
+  - `500` - Internal Server Error
+
+### 6. Chatbot
+
+- **Endpoint:** `/survey/{id}/response/{response_id}/chat`
+- **Method:** `POST`
+- **Description:** Send a message to the chatbot
+- **Request Body:**
+
+  ```json
+  {
+    "message": "string" # Can be empty since the chatbot will send the first message
+  }
+  ```
+
+- **Response:**
+
+  ```json
+  {
+    "message": "string",
+    "is_last": "boolean"
+  }
+  ```
+
+- **Status Codes:**
+  - `201` - Created
+  - `400` - Bad Request
+  - `500` - Internal Server Error
