@@ -6,8 +6,148 @@ This document describes the backend API for the project. It is intended to be re
 
 These endpoints are used to create, read, update, and delete admins, which are the users who have access to the admin dashboard.
 
+### 1. Create Admin
+
+- **Endpoint:** `/admin`
+- **Method:** `POST`
+- **Description:** Create a new admin
+- **Request Body:**
+
+  ```json
+  {
+    "username": "string",
+    "password": "string",
+  }
+  ```
+
+- **Response:**
+
+  ```json
+  {
+    "confirmation": "string"
+  }
+  ```
+
+- **Status Codes:**
+  - `201` - Created
+  - `400` - Bad Request
+  - `500` - Internal Server Error
+
+### 2. Get Admins
+
+- **Endpoint:** `/admin/`
+- **Method:** `GET`
+- **Description:** Get all admin usernames
+- **Response:**
+
+  ```json
+  {
+    "admins": [
+      {
+        "id": int,
+        "username": "string"
+      }
+    ]
+  }
+  ```
+
+- **Status Codes:**
+  - `200` - OK
+  - `500` - Internal Server Error
 
 
+### 3. Get Admin
+
+- **Endpoint:** `/admin/{id}`
+- **Method:** `GET`
+- **Description:** Get an admin by ID
+- **Response:**
+
+  ```json
+  {
+    "id": int,
+    "username": "string"
+  }
+  ```
+
+- **Status Codes:**
+  - `200` - OK
+  - `404` - Not Found
+  - `500` - Internal Server Error
+
+### 4. Update Admin
+
+- **Endpoint:** `/admin/{id}`
+- **Method:** `PUT`
+- **Description:** Update an admin by ID
+- **Request Body:**
+
+  ```json
+  {
+    "username": "string",
+    "password": "string",
+  }
+  ```
+
+- **Response:**
+
+  ```json
+  {
+    "confirmation": "string"
+  }
+  ```
+
+- **Status Codes:**
+  - `200` - OK
+  - `400` - Bad Request
+  - `404` - Not Found
+  - `500` - Internal Server Error
+
+### 5. Delete Admin
+
+- **Endpoint:** `/admin/{id}`
+- **Method:** `DELETE`
+- **Description:** Delete an admin by ID
+- **Response:**
+
+  ```json
+  {
+    "confirmation": "string"
+  }
+  ```
+
+- **Status Codes:**
+  - `200` - OK
+  - `404` - Not Found
+  - `500` - Internal Server Error
+
+### 6. Login
+
+- **Endpoint:** `/admin/login`
+- **Method:** `POST`
+- **Description:** Log in an admin
+- **Request Body:**
+
+  ```json
+  {
+    "username": "string",
+    "password": "string",
+  }
+  ```
+
+- **Response:**
+
+  ```json
+  {
+    "jwt_token": "string"
+  }
+  ```
+
+- **Status Codes:**
+  - `200` - OK
+  - `400` - Bad Request
+  - `401` - Unauthorized
+  - `500` - Internal Server Error
 
 ## Surveys
 
@@ -35,14 +175,11 @@ These endpoints are used to create, read, update, and delete surveys, which are 
         "subtitle": "string",
         "components": [
           {
-            "type": "question",
-            "question_type": "string",
-            "question": "string",
+            "type": "string", # question, text
+            "content": "string", # question
+            <!-- if type == "question" -->
+            "question_type": "string", # multiple_choice, short_answer, long_answer, etc.
             "options": ["string"]
-          },
-          {
-            "type": "text",
-            "content": "string"
           }
         ]
       }
@@ -105,9 +242,22 @@ These endpoints are used to create, read, update, and delete surveys, which are 
       "status": "string" # draft, published, archived
     },
     "sections": [
-      "section object",
-      "section object",
-      "section object"
+      {
+        "title": "string",
+        "subtitle": "string",
+        "components": [
+          {
+            "type": "question",
+            "question_type": "string",
+            "content": "string", # question
+            "options": ["string"]
+          },
+          {
+            "type": "text",
+            "content": "string"
+          }
+        ]
+      }
     ],
     "interview_context": "string" # The proprietary knowledge that the interviewer needs to have to conduct the interview
   }
