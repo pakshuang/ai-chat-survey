@@ -136,6 +136,9 @@ These endpoints are used to create, read, update, and delete surveys, which are 
 
 - **Status Codes:**
   - `200` - OK
+  - `400` - Bad Request
+  - `401` - Unauthorized
+  - `403` - Forbidden
   - `500` - Internal Server Error
 
 ### 3. Get Survey
@@ -179,6 +182,8 @@ These endpoints are used to create, read, update, and delete surveys, which are 
 
 - **Status Codes:**
   - `200` - OK
+  - `401` - Unauthorized
+  - `403` - Forbidden
   - `404` - Not Found
   - `500` - Internal Server Error
 
@@ -191,12 +196,15 @@ These endpoints are used to create, read, update, and delete surveys, which are 
 
   ```json
   {
-    "confirmation": "string"
+    "message": "string"
   }
   ```
 
 - **Status Codes:**
   - `200` - OK
+  - `400` - Bad Request
+  - `401` - Unauthorized
+  - `403` - Forbidden
   - `404` - Not Found
   - `500` - Internal Server Error
 
