@@ -8,7 +8,7 @@ Admins are the users who have access to the admin portal. There will be no endpo
 
 ### 1. Login
 
-- **Endpoint:** `/admins/login`
+- **Endpoint:** `/api/v1/admins/login`
 - **Method:** `POST`
 - **Description:** Log in an admin
 - **Request Body:**
@@ -40,7 +40,7 @@ These endpoints are used to create, read, update, and delete surveys, which are 
 
 ### 1. Create Survey
 
-- **Endpoint:** `/surveys`
+- **Endpoint:** `/api/v1/surveys`
 - **Method:** `POST`
 - **Description:** Create a new survey. An admin JWT is required.
 - **Request Body:**
@@ -90,7 +90,7 @@ These endpoints are used to create, read, update, and delete surveys, which are 
 
 ### 2. Get Surveys
 
-- **Endpoint:** `/surveys/?admin={username}?status={status}`
+- **Endpoint:** `/api/v1/surveys/?admin={username}?status={status}`
 - **Method:** `GET`
 - **Description:** Get all survey objects created by a specific admin. An admin JWT that corresponds to the specified admin's username is required. The status is optional and can be used to filter the surveys by status.
 - **Response:**
@@ -111,7 +111,7 @@ These endpoints are used to create, read, update, and delete surveys, which are 
 
 ### 3. Get Survey
 
-- **Endpoint:** `/surveys/{id}`
+- **Endpoint:** `/api/v1/surveys/{id}`
 - **Method:** `GET`
 - **Description:** Get a survey object by ID. If the survey is not published, an admin JWT that corresponds to the survey creator is required. Otherwise if the survey is password-protected, an admin JWT or a respondent JWT that has permission to access that survey is required. A published, non-password-protected survey can be accessed by anyone without a JWT.
 - **Response:**
@@ -155,7 +155,7 @@ These endpoints are used to create, read, update, and delete surveys, which are 
 
 ### 4. Delete Survey
 
-- **Endpoint:** `/surveys/{id}`
+- **Endpoint:** `/api/v1/surveys/{id}`
 - **Method:** `DELETE`
 - **Description:** Delete a survey by ID. An admin JWT that corresponds to the survey creator is required.
 - **Response:**
@@ -177,7 +177,7 @@ These endpoints are used to submit, read, update, and delete responses, which ar
 
 ### 1. Submit Response
 
-- **Endpoint:** `survey/{id}/response`
+- **Endpoint:** `/api/v1/survey/{id}/response`
 - **Method:** `POST`
 - **Description:** Submit a new response. For a password-protected survey, a respondent JWT is required. For a non-password-protected survey, no JWT is required. The survey must be published. If the submission is successful, a new respondent JWT will be returned in the response body, which can be used to access the chatbot enpoint for this specific response.
 - **Request Body:**
@@ -212,7 +212,7 @@ These endpoints are used to submit, read, update, and delete responses, which ar
 
 ### 2. Get Responses
 
-- **Endpoint:** `/surveys/{id}/response`
+- **Endpoint:** `/api/v1/surveys/{id}/response`
 - **Method:** `GET`
 - **Description:** Get all responses for a survey. An admin JWT that corresponds to the survey creator is required.
 - **Response:**
@@ -244,7 +244,7 @@ These endpoints are used to submit, read, update, and delete responses, which ar
 
 ### 3. Get Response
 
-- **Endpoint:** `/surveys/{id}/response/{response_id}`
+- **Endpoint:** `/api/v1/surveys/{id}/response/{response_id}`
 - **Method:** `GET`
 - **Description:** Get a response by ID. An admin JWT that corresponds to the survey creator is required.
 - **Response:**
@@ -273,7 +273,7 @@ These endpoints are used to submit, read, update, and delete responses, which ar
 
 ### 4. Chatbot
 
-- **Endpoint:** `/surveys/{id}/response/{response_id}/chat`
+- **Endpoint:** `/api/v1/surveys/{id}/response/{response_id}/chat`
 - **Method:** `POST`
 - **Description:** Send a message to the chatbot. A respondent JWT that corresponds to the response is required.
 - **Request Body:**
@@ -300,7 +300,7 @@ These endpoints are used to submit, read, update, and delete responses, which ar
 
 ### 5. Login
 
-- **Endpoint:** `/surveys/{id}/login`
+- **Endpoint:** `/api/v1/surveys/{id}/login`
 - **Method:** `POST`
 - **Description:** Log in to a password-protected survey. A respondent JWT will be returned in the response body, which can be used to get the specified survey and submit a response.
 - **Request Body:**
