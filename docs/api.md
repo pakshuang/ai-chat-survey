@@ -79,7 +79,7 @@ These endpoints are used to create, read, update, and delete surveys, which are 
       "description": "string",
       "created_by": "string", # admin username
       "created_at": "string", # YYYY-MM-DD HH:MM:SS
-      "status": "string" # draft, published, archived
+      "status": "string" # published, archived
       "password": "string" # Optional password to protect the survey
     },
     "sections": [
@@ -119,7 +119,7 @@ These endpoints are used to create, read, update, and delete surveys, which are 
 
 ### 2. Get Surveys
 
-- **Endpoint:** `/api/v1/surveys/?admin={username}?status={status}`
+- **Endpoint:** `/api/v1/surveys/?admin={username}&status={published|archived}`
 - **Method:** `GET`
 - **Description:** Get all survey objects created by a specific admin. An admin JWT that corresponds to the specified admin's username is required. The status is optional and can be used to filter the surveys by status.
 - **Response:**
@@ -157,8 +157,8 @@ These endpoints are used to create, read, update, and delete surveys, which are 
       "created_by": "string", # admin username
       "created_at": "string", # YYYY-MM-DD HH:MM:SS
       "updated_at": "string", # YYYY-MM-DD HH:MM:SS
-      "status": "string" # draft, published, archived
-
+      "status": "string", # published, archived
+      "is_password_protected": "boolean"
     },
     "sections": [
       {
@@ -216,7 +216,7 @@ These endpoints are used to submit, read, update, and delete responses, which ar
 
 - **Endpoint:** `/api/v1/survey/{survey_id}/response`
 - **Method:** `POST`
-- **Description:** Submit a new response. For a password-protected survey, a respondent JWT is required. For a non-password-protected survey, no JWT is required. The survey must be published. If the submission is successful, a new respondent JWT will be returned in the response body, which can be used to access the chatbot enpoint for this specific response.
+- **Description:** Submit a new response. For a password-protected survey, a respondent JWT is required. For a non-password-protected survey, no JWT is required. The survey must be published. If the submission is successful, a new respondent JWT will be returned in the response body, which can be used to access the chatbot endpoint for this specific response.
 - **Request Body:**
 
   ```json
@@ -245,6 +245,9 @@ These endpoints are used to submit, read, update, and delete responses, which ar
 - **Status Codes:**
   - `201` - Created
   - `400` - Bad Request
+  - `401` - Unauthorized
+  - `403` - Forbidden
+  - `404` - Not Found
   - `500` - Internal Server Error
 
 ### 2. Get Responses
@@ -277,6 +280,9 @@ These endpoints are used to submit, read, update, and delete responses, which ar
 
 - **Status Codes:**
   - `200` - OK
+  - `401` - Unauthorized
+  - `403` - Forbidden
+  - `404` - Not Found
   - `500` - Internal Server Error
 
 ### 3. Get Response
@@ -305,6 +311,8 @@ These endpoints are used to submit, read, update, and delete responses, which ar
 
 - **Status Codes:**
   - `200` - OK
+  - `401` - Unauthorized
+  - `403` - Forbidden
   - `404` - Not Found
   - `500` - Internal Server Error
 
@@ -317,7 +325,7 @@ These endpoints are used to submit, read, update, and delete responses, which ar
 
   ```json
   {
-    "message": "string" # Can be empty since the chatbot will send the first message
+    "content": "string" # Can be an empty string since the chatbot will send the first message
   }
   ```
 
@@ -325,7 +333,7 @@ These endpoints are used to submit, read, update, and delete responses, which ar
 
   ```json
   {
-    "message": "string",
+    "content": "string",
     "is_last": "boolean"
   }
   ```
