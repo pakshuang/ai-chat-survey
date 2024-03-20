@@ -4,9 +4,36 @@ This document describes the backend API for the project. It is intended to be re
 
 ## Admins
 
-Admins are the users who have access to the admin portal. There will be no endpoints to CRUD admins, as they will be created manually in the database. The only way to create an admin is for the engineer to manually insert a record into the database. The admin will then be able to log in and access the admin portal.
+Admins are the users who have access to the admin portal. There will be no endpoints to RUD admins, but there will be an endpoint to create an admin. The only way to create an admin is for the engineer to manually insert a record into the database. The admin will then be able to log in and access the admin portal.
 
-### 1. Login
+### 1. Create Admin
+
+- **Endpoint:** `/api/v1/admins`
+- **Method:** `POST`
+- **Description:** Create a new admin
+- **Request Body:**
+
+  ```json
+  {
+    "username": "string",
+    "password": "string",
+  }
+  ```
+
+- **Response:**
+
+  ```json
+  {
+    "message": "string"
+  }
+  ```
+
+- **Status Codes:**
+  - `201` - Created
+  - `400` - Bad Request
+  - `500` - Internal Server Error
+
+### 2. Login
 
 - **Endpoint:** `/api/v1/admins/login`
 - **Method:** `POST`
