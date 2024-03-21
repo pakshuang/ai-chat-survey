@@ -182,7 +182,7 @@ def get_response(survey_id, response_id):
     return jsonify(response), 200
 
 
-@app.route('/api/v1/surveys/<survey_id>/response/<response_id>/chat', methods=['POST'])
+@app.route('/api/v1/surveys/<survey_id>/responses/<response_id>/chat', methods=['POST'])
 def send_chat_message(survey_id, response_id):
     # TODO: Check if survey exists, return 404 if not
     # TODO: Check if response exists, return 404 if not
