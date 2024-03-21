@@ -80,20 +80,13 @@ These endpoints are used to create, read, update, and delete surveys, which are 
       "created_by": "string", # admin username
       "created_at": "string", # YYYY-MM-DD HH:MM:SS
     },
-    "sections": [
+    "title": "string",
+    "subtitle": "string",
+    "questions": [
       {
-        "title": "string",
-        "subtitle": "string",
-        "components": [
-          {
-            "type": "string", # question, text
-            "content": "string", # question
-            <!-- if type == "question" -->
-            "question_id": "integer",
-            "question_type": "string", # multiple_choice, short_answer, long_answer, etc.
-            "options": ["string"]
-          }
-        ]
+        "id": "integer",
+        "type": "string", # multiple_choice, short_answer, long_answer, etc.
+        "options": ["string"]
       }
     ],
     "chat_context": "string" # The proprietary knowledge that the chatbot needs to have to conduct the chat
@@ -153,22 +146,15 @@ These endpoints are used to create, read, update, and delete surveys, which are 
       "created_by": "string", # admin username
       "created_at": "string", # YYYY-MM-DD HH:MM:SS
     },
-    "sections": [
+    "title": "string",
+    "subtitle": "string",
+    "questions": [
       {
-        "title": "string",
-        "subtitle": "string",
-        "components": [
-          {
-            "type": "string", # question, text
-            "content": "string", # question
-            <!-- if type == "question" -->
-            "question_id": "integer",
-            "question_type": "string", # mcq, mrq, short_answer, long_answer, etc.
-            "options": ["string"] # optional
-          }
-        ]
+        "id": "integer",
+        "type": "string", # multiple_choice, short_answer, long_answer, etc.
+        "options": ["string"]
       }
-    ],
+    ]
     "chat_context": "string" # The proprietary knowledge that the chatbot needs to have to conduct the chat
   }
   ```
@@ -205,7 +191,7 @@ These endpoints are used to submit, read, update, and delete responses, which ar
 
 ### 1. Submit Response
 
-- **Endpoint:** `/api/v1/survey/{survey_id}/response`
+- **Endpoint:** `/api/v1/survey/{survey_id}/responses`
 - **Method:** `POST`
 - **Description:** Submit a new response.
 - **Request Body:**
@@ -240,7 +226,7 @@ These endpoints are used to submit, read, update, and delete responses, which ar
 
 ### 2. Get Responses
 
-- **Endpoint:** `/api/v1/surveys/{survey_id}/response`
+- **Endpoint:** `/api/v1/surveys/{survey_id}/responses`
 - **Method:** `GET`
 - **Description:** Get all responses for a survey. An admin JWT that corresponds to the survey creator is required.
 - **Response:**
@@ -248,20 +234,9 @@ These endpoints are used to submit, read, update, and delete responses, which ar
   ```json
   {
     "responses": [
-      {
-        "response_id": "integer",
-        "metadata": {
-          "survey_id": "integer",
-          "response_id": "integer",
-          "submitted_at": "string", # YYYY-MM-DD HH:MM:SS
-        },
-        "responses": [
-          {
-            "question_id": "integer",
-            "response": "string",
-          }
-        ]
-      }
+      "response object", # See /api/v1/surveys/{survey_id}/responses/{response_id} for the structure of a response object
+      "response object",
+      "response object"
     ]
   }
   ```
@@ -275,23 +250,22 @@ These endpoints are used to submit, read, update, and delete responses, which ar
 
 ### 3. Get Response
 
-- **Endpoint:** `/api/v1/surveys/{survey_id}/response/{response_id}`
+- **Endpoint:** `/api/v1/surveys/{survey_id}/responses/{response_id}`
 - **Method:** `GET`
 - **Description:** Get a response by ID. An admin JWT that corresponds to the survey creator is required.
 - **Response:**
 
   ```json
   {
-    "response_id": "integer",
     "metadata": {
       "survey_id": "integer",
       "response_id": "integer",
       "submitted_at": "string", # YYYY-MM-DD HH:MM:SS
     },
-    "responses": [
+    "answers": [
       {
         "question_id": "integer",
-        "response": "string",
+        "answer": "string",
       }
     ]
   }
@@ -306,7 +280,7 @@ These endpoints are used to submit, read, update, and delete responses, which ar
 
 ### 4. Send Chat Message
 
-- **Endpoint:** `/api/v1/surveys/{survey_id}/response/{response_id}/chat`
+- **Endpoint:** `/api/v1/surveys/{survey_id}/responses/{response_id}/chat`
 - **Method:** `POST`
 - **Description:** Send a message to the chatbot. The chatbot will respond with a message.
 - **Request Body:**
