@@ -12,9 +12,9 @@ verify_ssl = false
 flask = "*"
 openai = "*"
 transformers = "*"
-torch = {index = "pytorch",version = "==2.1.0"}
-torchvision = {index = "pytorch",version = "==0.16.0"}
-torchaudio = {index = "pytorch",version = "==2.1.0"}
+torch = {index = "pytorch",version = "==2.1.2"}
+torchvision = {index = "pytorch",version = "==0.16.2"}
+torchaudio = {index = "pytorch",version = "==2.1.2"}
 jwt = "*"
 
 [dev-packages]
