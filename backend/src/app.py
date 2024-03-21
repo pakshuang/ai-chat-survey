@@ -18,43 +18,29 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'default_key_for_develop
 def admin_token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        payload, code = authenticate_request(request)
+        token = None
 
-        if code != 200:
-            return payload, code
-        
-        # Check for the 'admin' role
-        if payload['role'] != 'admin':
-            return jsonify({'message': 'Admin access required!'}), 403
+        # Check if token is in the headers
+        if 'Authorization' in request.headers:
+            token = request.headers['Authorization'].split(" ")[1]
+
+        # If no token found, return error
+        if not token:
+            return jsonify({'message': 'Token is missing!'}), 401
+
+        try:
+            # Decode the token
+            payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+
+        except Exception as e:
+            return jsonify({'message': 'Token is invalid!'}), 401
         
         # Pass some payload information to the route function
         kwargs['jwt_sub'] = payload['sub']
-        kwargs['jwt_role'] = payload['role']
 
         return f(*args, **kwargs)
 
     return decorated
-
-
-def authenticate_request(request):
-    token = None
-
-    # Check if token is in the headers
-    if 'Authorization' in request.headers:
-        token = request.headers['Authorization'].split(" ")[1]
-
-    # If no token found, return error
-    if not token:
-        return jsonify({'message': 'Token is missing!'}), 401
-
-    try:
-        # Decode the token
-        payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
-
-    except Exception as e:
-        return jsonify({'message': 'Token is invalid!'}), 401
-
-    return payload, 200
 
 
 # Admin routes
@@ -79,6 +65,7 @@ def create_admin():
 
     return jsonify({'message': f'Admin {username} created successfully'}), 201
 
+
 @app.route('/api/v1/admins/login', methods=['POST'])
 def login_admin():
     data = request.get_json()
@@ -94,7 +81,6 @@ def login_admin():
             'exp': datetime.datetime.now(datetime.UTC) + datetime.timedelta(hours=24),
             'iat': datetime.datetime.now(datetime.UTC),
             'sub': admin.username,  # Admin's username
-            'role': 'admin'  # Admin role
         }
         token = jwt.encode(token_payload, app.config['SECRET_KEY'], algorithm='HS256') # Encoded with HMAC SHA-256 algorithm
         return jsonify({'jwt': token.decode('UTF-8')}), 200
@@ -115,7 +101,7 @@ def create_survey():
         return jsonify({'message': 'Invalid data'}), 400
     
     # TODO: Save survey to database, record the survey ID for response
-    survey_id = 1
+    survey_id = 1 # Mock
 
     return jsonify({'survey_id': survey_id}), 201
 
@@ -124,14 +110,8 @@ def create_survey():
 @admin_token_required
 def get_surveys():
     admin = request.args.get('admin')
-    if not admin:
-        return jsonify({'message': 'Missing query parameter: admin'}), 400
-    if admin != request.jwt_sub:
-        return jsonify({'message': "Accessing other admin's surveys is forbidden"}), 403
 
-    status = request.args.get('status')
-
-    # TODO: Get surveys from database, filtered by admin username and status (if provided)
+    # TODO: Get surveys from database, filtered by admin username if specified
     surveys = {"surveys": []}
 
     return jsonify(surveys), 200
@@ -140,15 +120,6 @@ def get_surveys():
 @app.route('/api/v1/surveys/<survey_id>', methods=['GET'])
 def get_survey(survey_id):
     # TODO: Get survey from database, return 404 if not found
-    survey = {"metadata": {"created_by": "username", "status": "published", "is_password_protected": True}}  #TODO: Actually get survey from database
-    if survey.metadata.is_password_protected or survey.metadata.status != 'published':
-        payload, code = authenticate_request(request)
-        if code != 200:
-            return payload, code
-        elif payload['sub'] != survey_id:
-            return jsonify({'message': 'Forbidden'}), 403
-        elif survey.metadata.status != 'published' and payload['role'] != 'admin':
-            return jsonify({'message': 'Survey is not published'}), 403
     
     survey = {}
     return jsonify(survey), 200
@@ -160,8 +131,8 @@ def delete_survey(survey_id):
     if not survey_id:
         return jsonify({'message': 'Missing survey ID'}), 400
     # TODO: Check if survey exists, return 404 if not
-    creator = "admin"  #TODO: Actually get creator from database
-    if creator != request.jwt_sub:
+    survey = {"metadata": {"created_by": "username"}} # TODO: Actually get survey from database
+    if survey.metadata.created_by != request.jwt_sub:
         return jsonify({'message': "Accessing other admin's surveys is forbidden"}), 403
     # TODO: Delete survey from database
 
@@ -175,33 +146,13 @@ def delete_survey(survey_id):
 def submit_response(survey_id):
     # TODO: Check if survey exists, return 404 if not
     # TODO: Get survey
-    # TODO: Check survey status, return 403 if not 'published'
-    
-    survey = {"metadata": {"is_password_protected": True}}  #TODO: Actually get survey from database
-    if survey.metadata.is_password_protected:
-        payload, code = authenticate_request(request)
-        if code != 200:
-            return payload, code
-        if payload['role'] != 'respondent' or payload['sub'] != survey_id:
-            return jsonify({'message': 'Forbidden'}), 403
         
     data = request.get_json()
     # TODO: Validate response object against survey object, return 400 if not valid
     # TODO: Save response to database and get the response ID
     response_id = 1 # Mock
 
-    token_payload = {
-            'exp': datetime.datetime.now(datetime.UTC) + datetime.timedelta(hours=24),
-            'iat': datetime.datetime.now(datetime.UTC),
-            'sub': response_id,  # Response ID that the respondent will be using for the chat
-            'role': 'chat_respondent' # Role changes to chat_respondent
-            }
-    token = jwt.encode(token_payload, app.config['SECRET_KEY'], algorithm='HS256') # Encoded with HMAC SHA-256 algorithm
-
-    response_body = {
-        "response_id": "string",
-        "jwt": token.decode('UTF-8')
-    }
+    response_body = {"response_id": "string"}
 
     return jsonify(response_body), 201
 
@@ -210,9 +161,9 @@ def submit_response(survey_id):
 @admin_token_required
 def get_responses(survey_id):
     # TODO: Check if survey exists, return 404 if not
-    creator = "admin"  #TODO: Actually get creator from database
-    if creator != request.jwt_sub:
-        return jsonify({'message': "Accessing other admin's survey's responses is forbidden"}), 403
+    survey = {"metadata": {"created_by": "username"}} # TODO: Actually get survey from database
+    if survey.metadata.created_by != request.jwt_sub:
+        return jsonify({'message': "Accessing other admin's surveys is forbidden"}), 403
     # TODO: Get responses from database
     responses = {"responses": []}
     return jsonify(responses), 200
@@ -222,52 +173,26 @@ def get_responses(survey_id):
 @admin_token_required
 def get_response(survey_id, response_id):
     # TODO: Check if survey exists, return 404 if not
-    creator = "admin"  #TODO: Actually get creator from database
-    if creator != request.jwt_sub:
-        return jsonify({'message': "Accessing other admin's survey's responses is forbidden"}), 403
+    survey = {"metadata": {"created_by": "username"}} # TODO: Actually get survey from database
+    if survey.metadata.created_by != request.jwt_sub:
+        return jsonify({'message': "Accessing other admin's surveys is forbidden"}), 403
     # TODO: Check if response exists, return 404 if not
     # TODO: Get response from database
     response = {}
     return jsonify(response), 200
 
 
-@app.route('/api/v1/surveys/<survey_id>/response/<response_id>/chat', methods=['POST'])
-def create_chat(survey_id, response_id):
+@app.route('/api/v1/surveys/<survey_id>/responses/<response_id>/chat', methods=['POST'])
+def send_chat_message(survey_id, response_id):
     # TODO: Check if survey exists, return 404 if not
     # TODO: Check if response exists, return 404 if not
-    # TODO: Authenticate if the sub in the JWT is the same as the response ID in the URL and the role is 'chat_respondent', return 403 if not
-    if request.jwt_sub != response_id or request.jwt_role != 'chat_respondent':
-        return jsonify({'message': "Forbidden"}), 403
     data = request.get_json()
     if not data or data['content'] is None:
         return jsonify({'message': 'Missing data'}), 400
     # TODO: Save message to database
     # TODO: Get reply from LLM
     # TODO: Save reply to database
-
-
-@app.route('/api/v1/surveys/<survey_id>/login')
-def login_survey(survey_id):
-    # TODO: Check if survey exists, return 404 if not
-    # TODO: Get survey
-    # TODO: Check survey status, return 403 if not 'published'
-
-    data = request.get_json()
-
-    if not data or not data['password']:
-        return jsonify({'message': 'Missing data'}), 400
-
-    if True: #check_password_hash(survey.metadata.password, data['password']):
-        token_payload = {
-            'exp': datetime.datetime.now(datetime.UTC) + datetime.timedelta(hours=24),
-            'iat': datetime.datetime.now(datetime.UTC),
-            'sub': survey_id,  # Survey that the respondent is logging into
-            'role': 'respondent'
-        }
-        token = jwt.encode(token_payload, app.config['SECRET_KEY'], algorithm='HS256') # Encoded with HMAC SHA-256 algorithm
-        return jsonify({'jwt': token.decode('UTF-8')}), 200
-    
-    return jsonify({'message': 'Invalid credentials'}), 401
+    return jsonify({'message': 'Message sent successfully'}), 201
 
 
 if __name__ == '__main__':

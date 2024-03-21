@@ -37,7 +37,7 @@ Admins are the users who have access to the admin portal. There will be no endpo
 
 - **Endpoint:** `/api/v1/admins/login`
 - **Method:** `POST`
-- **Description:** Log in an admin
+- **Description:** Log in an admin. A JWT is issued upon successful login.
 - **Request Body:**
 
   ```json
@@ -69,7 +69,7 @@ These endpoints are used to create, read, update, and delete surveys, which are 
 
 - **Endpoint:** `/api/v1/surveys`
 - **Method:** `POST`
-- **Description:** Create a new survey. An admin JWT is required.
+- **Description:** Create a new survey. A JWT is required.
 - **Request Body:**
 
   ```json
@@ -79,23 +79,14 @@ These endpoints are used to create, read, update, and delete surveys, which are 
       "description": "string",
       "created_by": "string", # admin username
       "created_at": "string", # YYYY-MM-DD HH:MM:SS
-      "status": "string" # published, archived
-      "password": "string" # Optional password to protect the survey
     },
-    "sections": [
+    "title": "string",
+    "subtitle": "string",
+    "questions": [
       {
-        "title": "string",
-        "subtitle": "string",
-        "components": [
-          {
-            "type": "string", # question, text
-            "content": "string", # question
-            <!-- if type == "question" -->
-            "question_id": "integer",
-            "question_type": "string", # multiple_choice, short_answer, long_answer, etc.
-            "options": ["string"]
-          }
-        ]
+        "id": "integer",
+        "type": "string", # multiple_choice, short_answer, long_answer, etc.
+        "options": ["string"]
       }
     ],
     "chat_context": "string" # The proprietary knowledge that the chatbot needs to have to conduct the chat
@@ -114,14 +105,13 @@ These endpoints are used to create, read, update, and delete surveys, which are 
   - `201` - Created
   - `400` - Bad Request
   - `401` - Unauthorized
-  - `403` - Forbidden
   - `500` - Internal Server Error
 
 ### 2. Get Surveys
 
-- **Endpoint:** `/api/v1/surveys/?admin={username}&status={published|archived}`
+- **Endpoint:** `/api/v1/surveys/?admin={username}`
 - **Method:** `GET`
-- **Description:** Get all survey objects created by a specific admin. An admin JWT that corresponds to the specified admin's username is required. The status is optional and can be used to filter the surveys by status.
+- **Description:** Get all survey objects. An optional query parameter `admin` can be used to filter surveys by the admin who created them.
 - **Response:**
 
   ```json
@@ -136,7 +126,6 @@ These endpoints are used to create, read, update, and delete surveys, which are 
 
 - **Status Codes:**
   - `200` - OK
-  - `400` - Bad Request
   - `401` - Unauthorized
   - `403` - Forbidden
   - `500` - Internal Server Error
@@ -145,7 +134,7 @@ These endpoints are used to create, read, update, and delete surveys, which are 
 
 - **Endpoint:** `/api/v1/surveys/{survey_id}`
 - **Method:** `GET`
-- **Description:** Get a survey object by ID. If the survey is not published, an admin JWT that corresponds to the survey creator is required. Otherwise if the survey is password-protected, an admin JWT or a respondent JWT that has permission to access that survey is required. A published, non-password-protected survey can be accessed by anyone without a JWT.
+- **Description:** Get a survey object by ID.
 - **Response:**
 
   ```json
@@ -156,34 +145,22 @@ These endpoints are used to create, read, update, and delete surveys, which are 
       "description": "string",
       "created_by": "string", # admin username
       "created_at": "string", # YYYY-MM-DD HH:MM:SS
-      "updated_at": "string", # YYYY-MM-DD HH:MM:SS
-      "status": "string", # published, archived
-      "is_password_protected": "boolean"
     },
-    "sections": [
+    "title": "string",
+    "subtitle": "string",
+    "questions": [
       {
-        "title": "string",
-        "subtitle": "string",
-        "components": [
-          {
-            "type": "string", # question, text
-            "content": "string", # question
-            <!-- if type == "question" -->
-            "question_id": "integer",
-            "question_type": "string", # mcq, mrq, short_answer, long_answer, etc.
-            "options": ["string"] # optional
-          }
-        ]
+        "id": "integer",
+        "type": "string", # multiple_choice, short_answer, long_answer, etc.
+        "options": ["string"]
       }
-    ],
+    ]
     "chat_context": "string" # The proprietary knowledge that the chatbot needs to have to conduct the chat
   }
   ```
 
 - **Status Codes:**
   - `200` - OK
-  - `401` - Unauthorized
-  - `403` - Forbidden
   - `404` - Not Found
   - `500` - Internal Server Error
 
@@ -214,9 +191,9 @@ These endpoints are used to submit, read, update, and delete responses, which ar
 
 ### 1. Submit Response
 
-- **Endpoint:** `/api/v1/survey/{survey_id}/response`
+- **Endpoint:** `/api/v1/survey/{survey_id}/responses`
 - **Method:** `POST`
-- **Description:** Submit a new response. For a password-protected survey, a respondent JWT is required. For a non-password-protected survey, no JWT is required. The survey must be published. If the submission is successful, a new respondent JWT will be returned in the response body, which can be used to access the chatbot endpoint for this specific response.
+- **Description:** Submit a new response.
 - **Request Body:**
 
   ```json
@@ -238,21 +215,18 @@ These endpoints are used to submit, read, update, and delete responses, which ar
   ```json
   {
     "response_id": "integer",
-    "jwt": "string"
   }
   ```
 
 - **Status Codes:**
   - `201` - Created
   - `400` - Bad Request
-  - `401` - Unauthorized
-  - `403` - Forbidden
   - `404` - Not Found
   - `500` - Internal Server Error
 
 ### 2. Get Responses
 
-- **Endpoint:** `/api/v1/surveys/{survey_id}/response`
+- **Endpoint:** `/api/v1/surveys/{survey_id}/responses`
 - **Method:** `GET`
 - **Description:** Get all responses for a survey. An admin JWT that corresponds to the survey creator is required.
 - **Response:**
@@ -260,20 +234,9 @@ These endpoints are used to submit, read, update, and delete responses, which ar
   ```json
   {
     "responses": [
-      {
-        "response_id": "integer",
-        "metadata": {
-          "survey_id": "integer",
-          "response_id": "integer",
-          "submitted_at": "string", # YYYY-MM-DD HH:MM:SS
-        },
-        "responses": [
-          {
-            "question_id": "integer",
-            "response": "string",
-          }
-        ]
-      }
+      "response object", # See /api/v1/surveys/{survey_id}/responses/{response_id} for the structure of a response object
+      "response object",
+      "response object"
     ]
   }
   ```
@@ -287,23 +250,22 @@ These endpoints are used to submit, read, update, and delete responses, which ar
 
 ### 3. Get Response
 
-- **Endpoint:** `/api/v1/surveys/{survey_id}/response/{response_id}`
+- **Endpoint:** `/api/v1/surveys/{survey_id}/responses/{response_id}`
 - **Method:** `GET`
 - **Description:** Get a response by ID. An admin JWT that corresponds to the survey creator is required.
 - **Response:**
 
   ```json
   {
-    "response_id": "integer",
     "metadata": {
       "survey_id": "integer",
       "response_id": "integer",
       "submitted_at": "string", # YYYY-MM-DD HH:MM:SS
     },
-    "responses": [
+    "answers": [
       {
         "question_id": "integer",
-        "response": "string",
+        "answer": "string",
       }
     ]
   }
@@ -316,11 +278,11 @@ These endpoints are used to submit, read, update, and delete responses, which ar
   - `404` - Not Found
   - `500` - Internal Server Error
 
-### 4. Chatbot
+### 4. Send Chat Message
 
-- **Endpoint:** `/api/v1/surveys/{survey_id}/response/{response_id}/chat`
+- **Endpoint:** `/api/v1/surveys/{survey_id}/responses/{response_id}/chat`
 - **Method:** `POST`
-- **Description:** Send a message to the chatbot. A respondent JWT that corresponds to the response is required.
+- **Description:** Send a message to the chatbot. The chatbot will respond with a message.
 - **Request Body:**
 
   ```json
@@ -334,38 +296,12 @@ These endpoints are used to submit, read, update, and delete responses, which ar
   ```json
   {
     "content": "string",
-    "is_last": "boolean"
+    "is_last": "boolean" # Whether this is the last message that the chatbot will send
   }
   ```
 
 - **Status Codes:**
   - `201` - Created
   - `400` - Bad Request
-  - `500` - Internal Server Error
-
-### 5. Login
-
-- **Endpoint:** `/api/v1/surveys/{survey_id}/login`
-- **Method:** `POST`
-- **Description:** Log in to a password-protected survey. A respondent JWT will be returned in the response body, which can be used to get the specified survey and submit a response.
-- **Request Body:**
-
-  ```json
-  {
-    "password": "string",
-  }
-  ```
-
-- **Response:**
-
-  ```json
-  {
-    "jwt": "string"
-  }
-  ```
-
-- **Status Codes:**
-  - `200` - OK
-  - `400` - Bad Request
-  - `401` - Unauthorized
+  - `404` - Not Found
   - `500` - Internal Server Error
