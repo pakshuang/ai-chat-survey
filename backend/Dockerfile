@@ -6,7 +6,7 @@ WORKDIR /src
 
 # Create the requirements file from the Pipfile.lock
 RUN pip install pipenv
-COPY Pipfile.lock .
+COPY Pipfile Pipfile.lock ./
 RUN pipenv requirements > requirements.txt
 RUN pip uninstall -y pipenv
 
