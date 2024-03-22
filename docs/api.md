@@ -201,10 +201,10 @@ These endpoints are used to submit, read, update, and delete responses, which ar
     "metadata": {
       "survey_id": "integer",
     },
-    "responses": [
+    "answers": [
       {
         "question_id": "integer",
-        "response": "string",
+        "answer": "string",
       }
     ]
   }
