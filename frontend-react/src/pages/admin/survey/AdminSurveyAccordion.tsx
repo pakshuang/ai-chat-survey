@@ -11,8 +11,23 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import AdminSurveyOptions from "./AdminSurveyOptions"
+import { UseFieldArrayRemove, useFormContext, useWatch } from "react-hook-form"
+import { needOptions, QuestionType, Survey, validate } from "./constants"
 
-function AdminSurveyAccordion() {
+function AdminSurveyAccordion({
+  index,
+  remove,
+}: {
+  index: number
+  remove: UseFieldArrayRemove
+}) {
+  const { register, control, getValues } = useFormContext<Survey>()
+
+  const type = useWatch({
+    control,
+    name: `questions.${index}.type`,
+  })
+
   return (
     <AccordionItem
       w="48rem"
@@ -37,21 +52,34 @@ function AdminSurveyAccordion() {
             w="42rem"
             onClick={(e) => e.stopPropagation()}
             onKeyUp={(e) => e.preventDefault()}
+            {...register(`questions.${index}.question`, { validate })}
           />
           <AccordionIcon />
         </Flex>
       </AccordionButton>
       <AccordionPanel p="1.5rem">
         <VStack spacing="2rem" alignItems="flex-start">
-          <Select defaultValue={"option1"}>
-            <option value="option1">Multiple Choice Question</option>
-            <option value="option2">Multiple Response Question</option>
-            <option value="option3">Short Answer</option>
+          <Select
+            defaultValue={QuestionType.MCQ}
+            {...register(`questions.${index}.type`)}
+          >
+            <option value={QuestionType.MCQ}>Multiple Choice Question</option>
+            <option value={QuestionType.MRQ}>Multiple Response Question</option>
+            <option value={QuestionType.ShortAnswer}>Short Answer</option>
           </Select>
-          <AdminSurveyOptions />
-          <Button leftIcon={<DeleteIcon />} colorScheme="red" variant="outline">
-            Delete
-          </Button>
+          {needOptions(type) && (
+            <AdminSurveyOptions index={index} control={control} />
+          )}
+          {getValues(`questions`).length > 1 && (
+            <Button
+              leftIcon={<DeleteIcon />}
+              colorScheme="red"
+              variant="outline"
+              onClick={() => remove(index)}
+            >
+              Delete
+            </Button>
+          )}
         </VStack>
       </AccordionPanel>
     </AccordionItem>
