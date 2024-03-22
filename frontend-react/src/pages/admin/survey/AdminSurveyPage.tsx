@@ -11,6 +11,7 @@ import { AddIcon, ExternalLinkIcon } from "@chakra-ui/icons"
 import { useForm, FormProvider, useFieldArray } from "react-hook-form"
 import { createNewQuestion, Survey } from "./constants"
 import AdminSurveyTitle from "./AdminSurveyTitle"
+import { useState } from "react"
 
 function AdminSurveyPage() {
   const methods = useForm<Survey>({
@@ -21,6 +22,8 @@ function AdminSurveyPage() {
     },
     mode: "onSubmit",
   })
+
+  const [openIndex, setOpenIndex] = useState([0])
 
   const {
     fields: questions,
@@ -52,11 +55,13 @@ function AdminSurveyPage() {
       <Flex minH="100vh" w="100%" bg="gray.100" minW="80rem">
         <VStack mx="auto" my="5rem" spacing="0" w="48rem">
           <AdminSurveyTitle />
-          <Accordion allowMultiple defaultIndex={[0, 1]}>
+          <Accordion allowMultiple index={openIndex}>
             {questions.map((question, index) => (
               <AdminSurveyAccordion
                 key={question.id}
                 index={index}
+                openIndex={openIndex}
+                setOpenIndex={setOpenIndex}
                 remove={remove}
               />
             ))}
@@ -67,7 +72,10 @@ function AdminSurveyPage() {
               colorScheme="green"
               h="3rem"
               w="50%"
-              onClick={() => append(createNewQuestion())}
+              onClick={() => {
+                append(createNewQuestion())
+                setOpenIndex(openIndex.concat(questions.length))
+              }}
             >
               Add Question
             </Button>

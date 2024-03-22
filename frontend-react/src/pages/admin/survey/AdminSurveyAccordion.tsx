@@ -13,12 +13,17 @@ import {
 import AdminSurveyOptions from "./AdminSurveyOptions"
 import { UseFieldArrayRemove, useFormContext, useWatch } from "react-hook-form"
 import { needOptions, QuestionType, Survey, validate } from "./constants"
+import { uniq } from "lodash"
 
 function AdminSurveyAccordion({
   index,
+  openIndex,
+  setOpenIndex,
   remove,
 }: {
   index: number
+  openIndex: number[]
+  setOpenIndex: React.Dispatch<React.SetStateAction<number[]>>
   remove: UseFieldArrayRemove
 }) {
   const { register, control, getValues } = useFormContext<Survey>()
@@ -28,6 +33,15 @@ function AdminSurveyAccordion({
     name: `questions.${index}.type`,
   })
 
+  const onClick = () => {
+    if (openIndex.includes(index)) {
+      openIndex = openIndex.filter((i) => i !== index)
+    } else {
+      openIndex.push(index)
+    }
+    setOpenIndex(uniq(openIndex))
+  }
+
   return (
     <AccordionItem
       w="48rem"
@@ -36,7 +50,12 @@ function AdminSurveyAccordion({
       borderRadius={5}
       mt="1rem"
     >
-      <AccordionButton h="5rem" borderBottom="1px" borderColor="gray.200">
+      <AccordionButton
+        h="5rem"
+        borderBottom="1px"
+        borderColor="gray.200"
+        onClick={onClick}
+      >
         <Flex
           alignItems="center"
           justifyContent="space-between"
