@@ -10,6 +10,7 @@ import {
   Button,
   VStack,
 } from "@chakra-ui/react"
+import AdminSurveyOptions from "./AdminSurveyOptions"
 
 function AdminSurveyAccordion() {
   return (
@@ -41,16 +42,13 @@ function AdminSurveyAccordion() {
         </Flex>
       </AccordionButton>
       <AccordionPanel p="1.5rem">
-        <VStack spacing="2rem">
-          <Select
-            defaultValue={"option1"}
-            justifyContent="left"
-            alignContent="start"
-          >
+        <VStack spacing="2rem" alignItems="flex-start">
+          <Select defaultValue={"option1"}>
             <option value="option1">Multiple Choice Question</option>
             <option value="option2">Multiple Response Question</option>
             <option value="option3">Short Answer</option>
           </Select>
+          <AdminSurveyOptions />
           <Button leftIcon={<DeleteIcon />} colorScheme="red" variant="outline">
             Delete
           </Button>

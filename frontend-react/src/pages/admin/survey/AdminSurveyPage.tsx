@@ -36,10 +36,15 @@ function AdminSurveyPage() {
           <AdminSurveyAccordion />
         </Accordion>
         <HStack mt="1rem" w="full">
-          <Button leftIcon={<AddIcon />} colorScheme="green">
+          <Button leftIcon={<AddIcon />} colorScheme="green" h="3rem" w="50%">
             Add Question
           </Button>
-          <Button leftIcon={<ExternalLinkIcon />} colorScheme="messenger">
+          <Button
+            leftIcon={<ExternalLinkIcon />}
+            colorScheme="messenger"
+            h="3rem"
+            w="50%"
+          >
             Create Survey
           </Button>
         </HStack>
