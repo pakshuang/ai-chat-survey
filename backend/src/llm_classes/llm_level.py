@@ -1,5 +1,6 @@
 import os
 from abc import ABC, abstractmethod
+
 from dotenv import load_dotenv
 from openai import OpenAI
 
