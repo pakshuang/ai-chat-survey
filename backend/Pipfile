@@ -8,6 +8,7 @@ flask = "*"
 openai = "*"
 jwt = "*"
 python-dotenv = "*"
+pymysql = "*"
 
 [dev-packages]
 
