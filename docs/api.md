@@ -86,6 +86,7 @@ These endpoints are used to create, read, update, and delete surveys, which are 
       {
         "id": "integer",
         "type": "string", # multiple_choice, short_answer, long_answer, etc.
+        "question": "string",
         "options": ["string"]
       }
     ],
@@ -152,9 +153,10 @@ These endpoints are used to create, read, update, and delete surveys, which are 
       {
         "id": "integer",
         "type": "string", # multiple_choice, short_answer, long_answer, etc.
+        "question": "string",
         "options": ["string"]
       }
-    ]
+    ],
     "chat_context": "string" # The proprietary knowledge that the chatbot needs to have to conduct the chat
   }
   ```
