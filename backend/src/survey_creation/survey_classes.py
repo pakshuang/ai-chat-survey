@@ -18,13 +18,13 @@ class Survey:
             self.metadata = to_json['metadata']
             self.title = to_json['title']
             self.subtitle = to_json['subtitle']
-            self.questions = format_questions(to_json['questions'])
+            self.questions = self.format_questions(to_json['questions'])
             self.survey_chat_context = to_json['survey_chat_context']
 
         except Exception as e:
             raise SurveyLoadException(e) from None
     
-    def format_questions(questions: list):
+    def format_questions(self, questions: list):
         return list(
             map(lambda question: Question(question), questions)
         )
