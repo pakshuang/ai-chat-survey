@@ -14,3 +14,6 @@ EXPOSE 3306
 
 # TODO: Set up volume mounts
 
+# Healthcheck
+HEALTHCHECK --interval=30s --timeout=30s --start-period=10s --retries=3 \
+  CMD mysqladmin ping -h localhost -u root --password=${MYSQL_ROOT_PASSWORD} || exit 1
