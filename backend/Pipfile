@@ -16,6 +16,7 @@ torch = {index = "pytorch",version = "==2.1.2"}
 torchvision = {index = "pytorch",version = "==0.16.2"}
 torchaudio = {index = "pytorch",version = "==2.1.2"}
 jwt = "*"
+python-dotenv = "*"
 
 [dev-packages]
 
