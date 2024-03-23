@@ -3,18 +3,9 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
-[[source]]
-name = "pytorch"
-url = "https://download.pytorch.org/whl/cu118"
-verify_ssl = false
-
 [packages]
 flask = "*"
 openai = "*"
-transformers = "*"
-torch = {index = "pytorch",version = "==2.1.2"}
-torchvision = {index = "pytorch",version = "==0.16.2"}
-torchaudio = {index = "pytorch",version = "==2.1.2"}
 jwt = "*"
 python-dotenv = "*"
 
