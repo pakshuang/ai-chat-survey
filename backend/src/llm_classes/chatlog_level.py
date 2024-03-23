@@ -23,9 +23,10 @@ class ChatLog:
         self.message_list = [start_dict]
         self.current_index = 1
 
-    def insert_and_update(self, message: str, index: int, is_llm: bool):
+    def insert_and_update(self, message: str, index: int, is_llm: bool) -> list:
         """
         Add a new reply to the conversation chain. If edits are made in the middle, future conversations are deleted.
+        Returns a message list.
         """
         if is_llm:
             role = "assistant"

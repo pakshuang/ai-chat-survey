@@ -45,7 +45,7 @@ survey_1 = {
             "question": "Do you have any feedback about the venue?",
         },
     ],
-    "chat_context": "Full Stack Entertainment is an events company that organises performances such as concerts.",  # The proprietary knowledge that the chatbot needs to have to conduct the chat
+    "survey_chat_context": "Full Stack Entertainment is an events company that organises performances such as concerts.",  # The proprietary knowledge that the chatbot needs to have to conduct the chat
 }
 survey_2 = {
     "metadata": {
@@ -75,7 +75,7 @@ survey_2 = {
             "question": "What can we improve?",
         },
     ],
-    "chat_context": "Full Send is a retail courier company that provides mailing services for consumers. We have branches in Bishan, Changi, and Clementi.",  # The proprietary knowledge that the chatbot needs to have to conduct the chat
+    "survey_chat_context": "Full Send is a retail courier company that provides mailing services for consumers. We have branches in Bishan, Changi, and Clementi.",  # The proprietary knowledge that the chatbot needs to have to conduct the chat
 }
 
 surveys = {"surveys": [survey_1, survey_2]}
