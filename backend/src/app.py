@@ -1,5 +1,6 @@
 import datetime
 import os
+
 from functools import wraps
 import database_operations
 import jwt
@@ -346,27 +347,5 @@ def send_chat_message(survey_id, response_id):
         201,
     )
 
-## TODO: Remove before committing
-def test_database_connection():
-    # Connect to the database
-    connection = database_operations.get_connection()
-
-    try:
-        # Execute query to fetch all records from Admins table
-        with connection.cursor() as cursor:
-            sql = "SELECT * FROM Admins"
-            cursor.execute(sql)
-            admins = cursor.fetchall()
-
-            # Print out the results
-            print("Admins:")
-            for admin in admins:
-                print(admin)
-    finally:
-        # Close the database connection
-        database_operations.close_connection()
-
-
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=BACKEND_CONTAINER_PORT)
-    test_database_connection()
