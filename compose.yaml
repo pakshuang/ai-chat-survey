@@ -1,31 +1,16 @@
 version: "3"
 services:
-  frontend:
-    image: frontend
-    container_name: frontend
-    build: ./frontend
-    environment:
-      - STREAMLIT_SERVER_PORT=${FRONTEND_CONTAINER_PORT}
+  frontend-react:
+    image: frontend-react
+    container_name: frontend-react
+    build: ./frontend-react
     env_file:
       - .env
     ports:
       - ${FRONTEND_HOST_PORT}:${FRONTEND_CONTAINER_PORT}
     depends_on:
       - backend
-
-  frontend-react:
-    image: frontend-react
-    container_name: frontend-react
-    build: ./frontend-react
-    environment:
-      - NODE_ENV=development
-    env_file:
-      - .env
-    ports:
-      - 5173:5173
-    depends_on:
-      - backend
-
+      
   backend:
     image: backend
     container_name: backend
@@ -34,3 +19,13 @@ services:
       - .env
     ports:
       - 127.0.0.1:${BACKEND_HOST_PORT}:${BACKEND_CONTAINER_PORT} # Only required for accessing the API directly from the host
+
+
+  database:
+    image: database
+    container_name: database
+    build: ./database
+    env_file:
+      - .env
+    ports:
+      - ${DATABASE_HOST_PORT}:${DATABASE_CONTAINER_PORT}
