@@ -6,6 +6,7 @@ WORKDIR /docker-entrypoint-initdb.d
 
 # Copy the init.sql file into the container
 COPY init.sql /docker-entrypoint-initdb.d/
+COPY insert_dummy_data.sql /docker-entrypoint-initdb.d/
 
 # TODO: Set up volume mounts
 
