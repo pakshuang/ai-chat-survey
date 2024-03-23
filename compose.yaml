@@ -4,8 +4,6 @@ services:
     image: frontend-react
     container_name: frontend-react
     build: ./frontend-react
-    environment:
-      - NODE_ENV=development
     env_file:
       - .env
     ports:
@@ -29,8 +27,5 @@ services:
     build: ./database
     env_file:
       - .env
-    environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
     ports:
       - ${DATABASE_HOST_PORT}:${DATABASE_CONTAINER_PORT}

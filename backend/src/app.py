@@ -113,6 +113,14 @@ def admin_token_required(f):
     return decorated
 
 
+# Health check route
+
+
+@app.route('/api/v1/health', methods=['GET'])
+def health_check():
+    return jsonify({'message': 'Server is running!'}), 200
+
+
 # Admin routes
 
 

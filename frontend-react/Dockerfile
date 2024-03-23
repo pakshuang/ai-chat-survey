@@ -20,3 +20,7 @@ EXPOSE 5173
 
 # Starting our application
 CMD ["npm","run","dev"]
+
+# Healthcheck
+HEALTHCHECK --interval=30s --timeout=30s --start-period=10s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:${FRONTEND_CONTAINER_PORT}/admin/login || exit 1
