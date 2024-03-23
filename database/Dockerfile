@@ -8,5 +8,8 @@ WORKDIR /docker-entrypoint-initdb.d
 COPY init.sql /docker-entrypoint-initdb.d/
 COPY insert_dummy_data.sql /docker-entrypoint-initdb.d/
 
+# Expose MySQL port
+EXPOSE 3306
+
 # TODO: Set up volume mounts
 
