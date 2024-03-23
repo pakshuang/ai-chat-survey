@@ -10,7 +10,7 @@ class SurveyLoadException(Exception):
 
 class Survey:
     '''
-    Define survey
+    Define survey for ORM use
     '''
     def __init__(self, json_string: str):
         try:
@@ -18,11 +18,16 @@ class Survey:
             self.metadata = to_json['metadata']
             self.title = to_json['title']
             self.subtitle = to_json['subtitle']
+            self.questions = format_questions(to_json['questions'])
+            self.survey_chat_context = to_json['survey_chat_context']
 
         except Exception as e:
             raise SurveyLoadException(e) from None
-        
-        pass
+    
+    def format_questions(questions: list):
+        return list(
+            map(lambda question: Question(question), questions)
+        )
 
 class Question:
     '''
@@ -30,5 +35,6 @@ class Question:
     I suggest each type of question aka mrq, mcq be its own subtype, and we can format them differently.
     '''
 
-    def __init__(self, json_string: str):
-        pass
+    def __init__(self, data: dict):
+        self.id = data['id']
+        self.type = data['type']
