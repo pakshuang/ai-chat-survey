@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, FormControl, FormLabel, Input, Button,Flex,IconButton} from '@chakra-ui/react';
+import { Box, FormControl, FormLabel,Flex,IconButton} from '@chakra-ui/react';
 import { StarIcon } from '@chakra-ui/icons';
 interface RatingQuestionProps {
     questionData: any; // Adjust the type according to your data structure
@@ -23,4 +23,4 @@ const RatingQuestion = ({questionData,handleQuestionResponse}:RatingQuestionProp
     </FormControl>
 }
 
-export RatingQuestion
+export default  RatingQuestion

@@ -1,7 +1,6 @@
 import { Box, Button,Flex} from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'
 import PersonalInfo from './PersonalInfo';
 
 interface Props {
@@ -14,10 +13,12 @@ function SurveyPage({survey_id}:Props) {
   const [personalInfoSubmitted,setPersonalInfoSubmitted] = useState<boolean>(false);
   const [questions, setQuestions] = useState([]);
     useEffect(()=>{
-      axios.get(`/api/v1/surveys/${survey_id}`).then((rep)=>{
-        setQuestions(
-          []
-        )
+      fetch(`/api/v1/surveys/${survey_id}`).then((rep)=>{
+        rep.json().then((data)=>{
+          setQuestions(
+            []
+          )
+        })
       }
       ).catch((error)=>{
         console.log(error)

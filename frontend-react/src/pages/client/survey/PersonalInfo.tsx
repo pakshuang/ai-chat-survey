@@ -7,8 +7,10 @@ import {
   Input,
   Button,
 } from '@chakra-ui/react';
-
-const PersonalInfo = ({setPersonalInfoSubmitted}) => {
+interface Props {
+  setPersonalInfoSubmitted: (submitted:boolean) => void; // Adjust the parameter types according to your requirements
+}
+const PersonalInfo = ({setPersonalInfoSubmitted}:Props) => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
