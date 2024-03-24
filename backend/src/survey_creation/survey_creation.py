@@ -31,7 +31,7 @@ class Survey:
     Constructs a survey. Probably client will use this when building survey.
     '''
     def __init__(
-            self, metadata: str, 
+            self, metadata: dict[str, object], 
             title: str, 
             subtitle: str, 
             questions: list[Question], 
