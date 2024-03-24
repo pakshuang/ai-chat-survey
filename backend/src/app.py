@@ -7,84 +7,89 @@ import database_operations
 import jwt
 from flask import Flask, request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask import Flask, jsonify, request
+from flask_cors import CORS
+from werkzeug.security import check_password_hash, generate_password_hash
 
 BACKEND_CONTAINER_PORT = os.getenv("BACKEND_CONTAINER_PORT", "5000")
 
 app = Flask(__name__)
+CORS(app)
 app.config["SECRET_KEY"] = os.environ.get(
     "FLASK_SECRET_KEY", "default_key_for_development"
 )
 
+
 # Mock data
 
 
-# admins = {}
-#
-# survey_1 = {
-#     "metadata": {
-#         "id": 1,
-#         "name": "name",
-#         "description": "description",
-#         "created_by": "admin",  # admin username
-#         "created_at": "2024-03-22 15:24:10",  # YYYY-MM-DD HH:MM:SS
-#     },
-#     "title": "title",
-#     "subtitle": "subtitle",
-#     "questions": [
-#         {
-#             "id": 1,
-#             "type": "multiple_choice",  # multiple_choice, short_answer, long_answer, etc.
-#             "question": "Which performance did you enjoy the most?",
-#             "options": ["Clowns", "Acrobats", "Jugglers", "Magicians", "Choon"],
-#         },
-#         {
-#             "id": 2,
-#             "type": "short_answer",
-#             "question": "What did you like about the performance?",
-#         },
-#         {
-#             "id": 3,
-#             "type": "long_answer",
-#             "question": "Do you have any feedback about the venue?",
-#         },
-#     ],
-#     "chat_context": "Full Stack Entertainment is an events company that organises performances such as concerts.",
-# }
-# survey_2 = {
-#     "metadata": {
-#         "id": 2,
-#         "name": "name",
-#         "description": "description",
-#         "created_by": "admin",  # admin username
-#         "created_at": "2024-03-22 15:25:10",  # YYYY-MM-DD HH:MM:SS
-#     },
-#     "title": "title",
-#     "subtitle": "subtitle",
-#     "questions": [
-#         {
-#             "id": 1,
-#             "type": "multiple_choice",  # multiple_choice, short_answer, long_answer, etc.
-#             "question": "Rate your experience with our service:",
-#             "options": ["1", "2", "3", "4", "5"],
-#         },
-#         {
-#             "id": 2,
-#             "type": "short_answer",
-#             "question": "Who assisted you?",
-#         },
-#         {
-#             "id": 3,
-#             "type": "long_answer",
-#             "question": "What can we improve?",
-#         },
-#     ],
-#     "chat_context": "Full Send is a retail courier company that provides mailing services for consumers. \
-#         We have branches in Bishan, Changi, and Clementi.",
-# }
-#
-# surveys = {"surveys": [survey_1, survey_2]}
-#
-# responses = {"responses": []}
+admins = {}
+
+survey_1 = {
+    "metadata": {
+        "id": 1,
+        "name": "name",
+        "description": "description",
+        "created_by": "admin",  # admin username
+        "created_at": "2024-03-22 15:24:10",  # YYYY-MM-DD HH:MM:SS
+    },
+    "title": "title",
+    "subtitle": "subtitle",
+    "questions": [
+        {
+            "id": 1,
+            "type": "multiple_choice",  # multiple_choice, short_answer, long_answer, etc.
+            "question": "Which performance did you enjoy the most?",
+            "options": ["Clowns", "Acrobats", "Jugglers", "Magicians", "Choon"],
+        },
+        {
+            "id": 2,
+            "type": "short_answer",
+            "question": "What did you like about the performance?",
+        },
+        {
+            "id": 3,
+            "type": "long_answer",
+            "question": "Do you have any feedback about the venue?",
+        },
+    ],
+    "chat_context": "Full Stack Entertainment is an events company that organises performances such as concerts.",
+}
+survey_2 = {
+    "metadata": {
+        "id": 2,
+        "name": "name",
+        "description": "description",
+        "created_by": "admin",  # admin username
+        "created_at": "2024-03-22 15:25:10",  # YYYY-MM-DD HH:MM:SS
+    },
+    "title": "title",
+    "subtitle": "subtitle",
+    "questions": [
+        {
+            "id": 1,
+            "type": "multiple_choice",  # multiple_choice, short_answer, long_answer, etc.
+            "question": "Rate your experience with our service:",
+            "options": ["1", "2", "3", "4", "5"],
+        },
+        {
+            "id": 2,
+            "type": "short_answer",
+            "question": "Who assisted you?",
+        },
+        {
+            "id": 3,
+            "type": "long_answer",
+            "question": "What can we improve?",
+        },
+    ],
+    "chat_context": "Full Send is a retail courier company that provides mailing services for consumers. \
+        We have branches in Bishan, Changi, and Clementi.",
+}
+
+surveys = {"surveys": [survey_1, survey_2]}
+
+responses = {"responses": []}
 
 
 # JWT
@@ -213,7 +218,7 @@ def login_admin():
 
 @app.route("/api/v1/surveys", methods=["POST"])
 @admin_token_required
-def create_survey():
+def create_survey(**kwargs):
     data = request.get_json()
 
     # Validation
@@ -331,7 +336,7 @@ def get_survey(survey_id):
 
 @app.route("/api/v1/surveys/<survey_id>", methods=["DELETE"])
 @admin_token_required
-def delete_survey(survey_id):
+def delete_survey(survey_id, **kwargs):
     if not survey_id:
         return jsonify({"message": "Missing survey ID"}), 400
 
@@ -371,7 +376,7 @@ def submit_response():
 
 @app.route("/api/v1/responses", methods=["GET"])
 @admin_token_required
-def get_responses():
+def get_responses(**kwargs):
     # TODO: Check if survey ID is provided, return 400 if not
     survey_id = request.args.get("survey")
     if not survey_id:
@@ -404,7 +409,7 @@ def get_responses():
 
 @app.route("/api/v1/responses/<response_id>", methods=["GET"])
 @admin_token_required
-def get_response(response_id):
+def get_response(response_id, **kwargs):
     # TODO: Check if response exists, return 404 if not
     filtered_responses = list(
         filter(
