@@ -7,30 +7,28 @@ import {
   Input,
   Button,
 } from '@chakra-ui/react';
-interface Props {
-  setPersonalInfoSubmitted: (submitted:boolean) => void; // Adjust the parameter types according to your requirements
+interface personalData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  address: string;
 }
-const PersonalInfo = ({setPersonalInfoSubmitted}:Props) => {
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    address: '',
-  });
+
+interface Props {
+  personalData: personalData;
+  setpersonalData: (data: personalData)=>void;
+  handleSubmit: (e) => void;
+
+}
+const PersonalInfo = ({personalData,setpersonalData,handleSubmit}:Props) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setpersonalData({
+      ...personalData,
       [name]: value,
     });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData);
-    setPersonalInfoSubmitted(true);
   };
 
   return (
@@ -41,7 +39,7 @@ const PersonalInfo = ({setPersonalInfoSubmitted}:Props) => {
           <Input
             type="text"
             name="firstName"
-            value={formData.firstName}
+            value={personalData.firstName}
             onChange={handleChange}
           />
         </FormControl>
@@ -50,7 +48,7 @@ const PersonalInfo = ({setPersonalInfoSubmitted}:Props) => {
           <Input
             type="text"
             name="lastName"
-            value={formData.lastName}
+            value={personalData.lastName}
             onChange={handleChange}
           />
         </FormControl>
@@ -59,7 +57,7 @@ const PersonalInfo = ({setPersonalInfoSubmitted}:Props) => {
           <Input
             type="email"
             name="email"
-            value={formData.email}
+            value={personalData.email}
             onChange={handleChange}
           />
         </FormControl>
@@ -68,7 +66,7 @@ const PersonalInfo = ({setPersonalInfoSubmitted}:Props) => {
           <Input
             type="tel"
             name="phone"
-            value={formData.phone}
+            value={personalData.phone}
             onChange={handleChange}
           />
         </FormControl>
@@ -77,13 +75,14 @@ const PersonalInfo = ({setPersonalInfoSubmitted}:Props) => {
           <Input
             type="text"
             name="address"
-            value={formData.address}
+            value={personalData.address}
             onChange={handleChange}
           />
         </FormControl>
         <Flex justifyContent='flex-end'>
         <Button
           type="submit"
+          disabled={true}
           colorScheme="blue"
           mt={5}
         >
