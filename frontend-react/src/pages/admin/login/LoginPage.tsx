@@ -12,32 +12,28 @@ import {
   Link,
   Text,
   VStack,
-} from "@chakra-ui/react";
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { useState } from "react";
-import { LoginSignupData } from "./constants";
+} from "@chakra-ui/react"
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons"
+import { useForm, SubmitHandler } from "react-hook-form"
+import { useState } from "react"
+import { LoginSignupData } from "./constants"
+import { login } from "../../hooks/useApi"
 
 // TODO: abstract out into different files to avoid repeated logic across login/signup
 
 function LoginPage() {
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false)
 
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
-  } = useForm<LoginSignupData>();
+  } = useForm<LoginSignupData>()
 
   // TODO: update with actual API call
   const onSubmit: SubmitHandler<LoginSignupData> = (values) => {
-    return new Promise<void>((resolve) => {
-      setTimeout(() => {
-        alert(JSON.stringify(values, null, 2));
-        resolve();
-      }, 3000);
-    });
-  };
+    return login(values)
+  }
 
   return (
     <Flex
@@ -85,12 +81,6 @@ function LoginPage() {
                     placeholder="Password"
                     {...register("password", {
                       required: "This field is required.",
-                      // not sure if login fields typically have these checks
-                      minLength: {
-                        value: 12,
-                        message:
-                          "Your password must be at least 12 characters.",
-                      },
                       maxLength: {
                         value: 255,
                         message:
@@ -132,7 +122,7 @@ function LoginPage() {
         </Link>
       </Text>
     </Flex>
-  );
+  )
 }
 
-export default LoginPage;
+export default LoginPage

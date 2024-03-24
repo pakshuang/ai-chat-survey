@@ -16,6 +16,16 @@ app.config["SECRET_KEY"] = os.environ.get(
 )
 
 
+@app.after_request
+def handle_options(response):
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Credentials"] = "true"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+
+    return response
+
+
 # Mock data
 
 
@@ -175,9 +185,15 @@ def login_admin():
     token = jwt.encode(
         token_payload, app.config["SECRET_KEY"], algorithm="HS256"
     )  # Encoded with HMAC SHA-256 algorithm
-    jsonify(
-        {"jwt": token, "jwt_exp": token_payload["exp"].strftime("%Y-%m-%d %H:%M:%S")}
-    ), 200
+    return (
+        jsonify(
+            {
+                "jwt": token,
+                "jwt_exp": token_payload["exp"].strftime("%Y-%m-%d %H:%M:%S"),
+            }
+        ),
+        200,
+    )
 
 
 # Survey routes
