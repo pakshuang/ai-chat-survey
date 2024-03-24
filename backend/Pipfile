@@ -9,6 +9,7 @@ openai = "*"
 python-dotenv = "*"
 pymysql = "*"
 pyjwt = "*"
+flask-cors = "*"
 
 [dev-packages]
 
