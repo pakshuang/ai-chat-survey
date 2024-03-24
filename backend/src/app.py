@@ -115,7 +115,7 @@ def admin_token_required(f):
             return jsonify({"message": "Token is invalid!"}), 401
 
         # Pass some payload information to the route function
-        kwargs["jwt_sub"] = payload["sub"]
+        # kwargs["jwt_sub"] = payload["sub"]
 
         return f(*args, **kwargs)
 
@@ -196,10 +196,17 @@ def login_admin():
                 token = jwt.encode(
                     token_payload, app.config["SECRET_KEY"], algorithm="HS256"
                 )  # Encoded with HMAC SHA-256 algorithm
+
+                # Close the connection
+                database_operations.close_connection(connection)
                 return jsonify({"jwt": token}), 200
             else:
+                # Close the connection
+                database_operations.close_connection(connection)
                 return jsonify({"message": "Invalid credentials"}), 401
         else:
+            # Close the connection
+            database_operations.close_connection(connection)
             return jsonify({"message": "Username not found"}), 400
     else:
         return jsonify({"message": "Failed to connect to the database"}), 500
@@ -213,16 +220,25 @@ def create_survey():
     data = request.get_json()
 
     # Validation
-    if not data:  # TODO: Implement survey object validation
+    if not data:
         return jsonify({"message": "Invalid data"}), 400
 
-    # TODO: Save survey to database, record the survey ID for response
-    data["metadata"]["id"] = len(surveys.surveys) + 1  # Mock
-    surveys.surveys += data
-    survey_id = len(surveys.surveys)  # Mock
+    # Connect to the database
+    connection = database_operations.connect_to_mysql()
+    if not connection:
+        return jsonify({"message": "Error connecting to database"}), 500
 
-    return jsonify({"survey_id": survey_id}), 201
+    try:
+        # Create the survey
+        survey_id = database_operations.create_survey(connection, data)
 
+        if survey_id:
+            return jsonify({"survey_id": survey_id}), 201
+        else:
+            return jsonify({"message": "Error creating survey"}), 400
+
+    finally:
+        database_operations.close_connection(connection)
 
 @app.route("/api/v1/surveys", methods=["GET"])
 def get_surveys():

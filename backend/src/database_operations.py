@@ -66,3 +66,34 @@ def fetch(connection, query, params=None):
 def close_cursor(cursor):
     if cursor:
         cursor.close()
+
+
+# Helper functions for insertion and creation
+
+# Create Survey
+def create_survey(connection, data):
+    try:
+        # Insert survey data into Surveys table
+        insert_query = """
+            INSERT INTO Surveys (name, description, title, subtitle, admin_username, created_at, chat_context)
+            VALUES (%s, %s, %s, %s, %s, NOW(), %s)
+        """
+        survey_data = (
+            data['name'],
+            data['description'],
+            data['title'],
+            data['subtitle'],
+            data['admin_username'],
+            data['chat_context']
+        )
+        execute(connection, insert_query, survey_data)
+
+        # Get the ID of the inserted survey
+        select_query = "SELECT LAST_INSERT_ID() AS survey_id"
+        survey_id = fetch(connection, select_query)[0]['survey_id']
+
+        return survey_id
+    except Exception as e:
+        print(f"Error creating survey: {e}")
+        return None
+
