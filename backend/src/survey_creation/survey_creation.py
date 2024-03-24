@@ -43,13 +43,13 @@ class Question:
         if not self.is_complete():
             raise Exception("Rese not complete!")
         else:
-            {
-        "question_id": self.id,
-        "type": self.type, 
-        "question": self.question,
-        "options": self.options,
-        "answer": self.answer,
-        }
+            return {
+            "question_id": self.id,
+            "type": self.type, 
+            "question": self.question,
+            "options": self.options,
+            "answer": self.answer,
+            }
         
 class Survey:
     '''
