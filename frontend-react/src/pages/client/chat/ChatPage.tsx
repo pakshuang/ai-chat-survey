@@ -1,50 +1,33 @@
-import React, { useState } from 'react';
-import { Box, Input, Button } from '@chakra-ui/react';
-import ChatBubble from './ChatBubble';
+import { useState } from "react";
+import { Flex } from "@chakra-ui/react";
 
-interface Message {
-  text: string;
-  sender: 'user' | 'bot';
+import ChatWindow from "./ChatWindow";
+import ChatInput from "./ChatInput";
+
+interface Messages {
+  sender: "user" | "bot";
+  message: string;
 }
 
-const ChatPage: React.FC = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [inputText, setInputText] = useState<string>('');
+function ChatPage() {
+  const [messages, setMessages] = useState<Messages[]>([
+    { sender: "user", message: "Hello" },
+    { sender: "bot", message: "Hello, how are you?" },
+  ]);
 
-  const handleSendMessage = () => {
-    if (inputText.trim() !== '') {
-      setMessages([...messages, { text: inputText, sender: 'user' }]);
-      setInputText('');
-    }
-  };
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      handleSendMessage();
-    }
-  };
+  function sendMessage(message: string) {
+    setMessages(
+      messages.concat(
+        { sender: "user", message: message },
+        { sender: "bot", message: "Hi, I'm a bot" }
+      )
+    );
+  }
   return (
-    <Box display="flex" flexDirection="column" height="100vh">
-      <Box flex="1" overflowY="auto" p="4">
-        {messages.map((message, index) => (
-          <ChatBubble key={index} text={message.text} sender={message.sender} />
-        ))}
-      </Box>
-        <Box display="flex" alignItems="center" backgroundColor="#f0f0f0" borderRadius="md" p="6">
-          <Input
-            backgroundColor='white'
-            flex="1"
-            type="text"
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            placeholder="Type a message..."
-            onKeyDown={handleKeyDown} 
-          />
-          <Button ml="2" colorScheme="blue" onClick={handleSendMessage}>
-            Send
-          </Button>
-        </Box>
-    </Box>
+    <Flex flexDirection="column" bg="gray.100" h="100vh" p="1">
+      <ChatWindow messages={messages} />
+      <ChatInput sendMessage={sendMessage} />
+    </Flex>
   );
-};
-
+}
 export default ChatPage;

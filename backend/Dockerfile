@@ -15,7 +15,7 @@ RUN pipenv install --deploy
 COPY /src /src
 
 # Expose the port on which the application will run
-EXPOSE 5000
+EXPOSE ${BACKEND_CONTAINER_PORT}
 
 # Define the command to run the application
 ENTRYPOINT ["pipenv", "run", "python"]
