@@ -349,7 +349,6 @@ def send_chat_message(response_id):
     )
     if not filtered_responses:
         return jsonify({"message": "Response not found"}), 404
-    response = filtered_responses[0]
 
     data = request.get_json()
     if not data or data["content"] is None:
