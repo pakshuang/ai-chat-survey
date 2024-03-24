@@ -99,6 +99,19 @@ def construct_chatlog(survey_initial_responses: str) -> ChatLog:
         }
     return ChatLog([start_dict])
 
+def format_responses_for_gpt(response: dict[str, object]) -> str:
+        '''
+        Converts a response dictionary object into a string of questions and answers.
+        '''
+        answers = response["answers"]
+        formatted = list(
+            map(
+                lambda ans: f"{ans["question_id"]}. {ans["question"]}\n{ans["answer"]}", answers
+            )
+
+        )
+        return "\n".join(formatted)   
+
 
 if __name__ == "__main__":
 ############### TEST HERE ######################

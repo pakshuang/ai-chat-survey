@@ -1,7 +1,7 @@
 import datetime
 import os
 from functools import wraps
-from llm_classes import GPT, ChatLog, construct_chatlog
+from llm_classes import GPT, ChatLog, construct_chatlog, format_responses_for_gpt
 import re
 from survey_creation import *
 import jwt
@@ -342,15 +342,6 @@ def get_response(response_id):
 
     return jsonify(response), 200
 
-def format_responses_for_gpt(response: dict[str, object]) -> str:
-        answers = response["answers"]
-        formatted = list(
-            map(
-                lambda ans: f"{ans["question_id"]}. {ans["question"]}\n{ans["answer"]}", answers
-            )
-
-        )
-        return "\n".join(formatted)    
 
 @app.route("/api/v1/responses/<response_id>/chat", methods=["POST"])
 def send_chat_message(response_id):
@@ -388,7 +379,9 @@ def send_chat_message(response_id):
     output = llm.run(pipe.message_list)
     message_list = pipe.insert_and_update(output, pipe.current_index, is_llm=True)
     
-    ### SAVE message_list INTO DB
+    f''' SAVE message_list INTO DB'''
+
+
     assert message_list[-1]["role"] == "assistant"
     content = message_list[-1]["content"]
 
@@ -402,7 +395,6 @@ def send_chat_message(response_id):
         "content": content, "is_last": is_last
     }), 201
     
-
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=BACKEND_CONTAINER_PORT)
