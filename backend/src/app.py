@@ -102,7 +102,7 @@ def admin_token_required(f):
             # Decode the token
             payload = jwt.decode(token, app.config["SECRET_KEY"], algorithms=["HS256"])
 
-        except Exception as e:
+        except:
             return jsonify({"message": "Token is invalid!"}), 401
 
         # Pass some payload information to the route function
@@ -308,15 +308,15 @@ def get_responses():
 @admin_token_required
 def get_response(response_id):
     # TODO: Check if response exists, return 404 if not
-    responses = list(
+    filtered_responses = list(
         filter(
             lambda response: response["metadata"]["response_id"] == int(response_id),
             responses["responses"],
         )
     )
-    if not responses:
+    if not filtered_responses:
         return jsonify({"message": "Response not found"}), 404
-    response = responses[0]
+    response = filtered_responses[0]
 
     # TODO: Check if corresponding survey exists, return 404 if not
     filtered_surveys = list(
@@ -340,14 +340,15 @@ def get_response(response_id):
 @app.route("/api/v1/responses/<response_id>/chat", methods=["POST"])
 def send_chat_message(response_id):
     # TODO: Check if response exists, return 404 if not
-    responses = list(
+    filtered_responses = list(
         filter(
             lambda response: response["metadata"]["response_id"] == int(response_id),
             responses["responses"],
         )
     )
-    if not responses:
+    if not filtered_responses:
         return jsonify({"message": "Response not found"}), 404
+    response = filtered_responses[0]
 
     data = request.get_json()
     if not data or data["content"] is None:
