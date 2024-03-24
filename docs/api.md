@@ -51,7 +51,8 @@ Admins are the users who have access to the admin portal. There will be no endpo
 
   ```json
   {
-    "jwt": "string"
+    "jwt": "string",
+    "jwt_exp": "string" # YYYY-MM-DD HH:MM:SS
   }
   ```
 
