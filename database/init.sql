@@ -40,7 +40,8 @@ CREATE TABLE IF NOT EXISTS Survey_Responses (
     survey_id INT,
     response TEXT,
     submitted_at TIMESTAMP,
-    FOREIGN KEY (survey_id) REFERENCES Surveys(survey_id)
+    FOREIGN KEY (survey_id) REFERENCES Surveys(survey_id),
+    FOREIGN KEY (question_id) REFERENCES Questions(question_id)
 );
 
 -- Create the ChatLog table

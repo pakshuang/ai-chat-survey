@@ -169,22 +169,31 @@ def login_admin():
     if not data or not data["username"] or not data["password"]:
         return jsonify({"message": "Missing data"}), 400
 
-    # TODO: Actually get admin from database where username=data['username']
-    if data["username"] not in admins or not check_password_hash(
-        admins[data["username"]], data["password"]
-    ):
-        return jsonify({"message": "Invalid credentials"}), 401
-
-    token_payload = {
-        "exp": datetime.datetime.now(datetime.UTC) + datetime.timedelta(hours=24),
-        "iat": datetime.datetime.now(datetime.UTC),
-        "sub": data["username"],  # Admin's username
-    }
-    token = jwt.encode(
-        token_payload, app.config["SECRET_KEY"], algorithm="HS256"
-    )  # Encoded with HMAC SHA-256 algorithm
-    return jsonify({"jwt": token.decode("UTF-8")}), 200
-
+    # Retrieve hashed password from database
+    # Connect to database
+    connection = database_operations.connect_to_mysql()
+    if connection:
+        # Retrieve admin_usernames
+        query = "SELECT password FROM Admins WHERE admin_username = %s"
+        result = database_operations.fetch(connection, query, (data["username"],))
+        if result:
+            hashed_password = result[0]["password"]
+            # Check if the provided password matches the hashed password
+            if check_password_hash(hashed_password, data["password"]):
+                # Generate the jwt_token
+                token_payload = {
+                    "exp": datetime.datetime.now(datetime.UTC) + datetime.timedelta(hours=24),
+                    "iat": datetime.datetime.now(datetime.UTC),
+                    "sub": data["username"],  # Admin's username
+                }
+                token = jwt.encode(
+                    token_payload, app.config["SECRET_KEY"], algorithm="HS256"
+                )  # Encoded with HMAC SHA-256 algorithm
+                return jsonify({"jwt": token.decode("UTF-8")}), 200
+            else:
+                return jsonify({"message": "Invalid credentials"}), 401
+        else:
+            return jsonify({"message": "Failed to connect to the database"}), 500
 
 # Survey routes
 
