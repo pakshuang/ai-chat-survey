@@ -34,15 +34,15 @@ class GPT(LLM):
         )
         return output.choices[0].message.content
 
-class ChatLog:
-    
+class ChatLog: 
     '''
     A simple wrapper around a list of messages that supports the deletion of future messages.
     '''
 
     SYSPROMPT = """You are an assistant who is trying to gather user responses for a product.
         You have collected some survey responses, and you would like to probe further about what the user thinks about the product.
-        The user responses are provided below. Given these responses, pretend you are an interview and please generate one and only one question for the user.
+        The user responses are provided below. Given these responses, pretend you are an interview and please generate a question for the user.
+        After the user replies, decide if you wish to probe further, ask other questions regarding the user's survey responses, or thank the user and end the conversation when you have learnt enough.
         {survey_initial_responses}"""
 
     def __init__(self, survey_initial_responses: str, start_items=1):
@@ -72,13 +72,29 @@ class ChatLog:
         return self.message_list
 
 
-################ TEST HERE ######################
-# string = """
-# 1. What do you like about colgate toothpaste?
-# Tastes okay, makes teeth feel good
-# 2. Would you recommend it to a friend?
-# No
-# """
-# llm = GPT()
-# pipe = ChatLog(string)
-# print(llm.run(pipe.message_list))
+############### TEST HERE ######################
+string = """
+1. What do you like about colgate toothpaste?
+Tastes okay, makes teeth feel good
+2. Would you recommend it to a friend?
+No
+3. What do you think about colgate toothbrushes?
+Useful, durable, does not break.
+4. Would you recommend it to a friend?
+Yes
+5. Do you have any friends or family working at Colgate?
+No.
+6. What do you think about the taste of colgate toothpaste?
+It is very bitter and disgusting.
+7. How often do you consumer sweet drinks?
+Every day.
+"""
+llm = GPT()
+pipe = ChatLog(string)
+
+for i in range(10):
+    output = (llm.run(pipe.message_list))
+    print(output)
+    pipe.insert_and_update(output, pipe.current_index, True) 
+    pipe.insert_and_update(input(), pipe.current_index, False)
+   
