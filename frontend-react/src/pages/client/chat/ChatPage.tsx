@@ -29,5 +29,5 @@ function ChatPage() {
       <ChatInput sendMessage={sendMessage} />
     </Flex>
   );
-
+}
 export default ChatPage;
