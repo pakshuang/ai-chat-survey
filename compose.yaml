@@ -1,3 +1,4 @@
+---
 version: "3"
 services:
   frontend-react:
@@ -18,7 +19,7 @@ services:
     env_file:
       - .env
     ports:
-      - ${BACKEND_HOST_PORT}:${BACKEND_CONTAINER_PORT} # Only required for accessing the API directly from the host
+      - ${BACKEND_HOST_PORT}:${BACKEND_CONTAINER_PORT}
 
 
   database:
