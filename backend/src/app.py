@@ -137,7 +137,7 @@ def create_admin():
     if username in admins:  # TODO: Check if admin already exists
         return jsonify({"message": "Admin already exists"}), 400
 
-    hashed_password = generate_password_hash(data["password"], method="bcrypt")
+    hashed_password = generate_password_hash(data["password"])
 
     # TODO: Save admin to database
     admins[username] = hashed_password
@@ -167,7 +167,7 @@ def login_admin():
     token = jwt.encode(
         token_payload, app.config["SECRET_KEY"], algorithm="HS256"
     )  # Encoded with HMAC SHA-256 algorithm
-    return jsonify({"jwt": token.decode("UTF-8")}), 200
+    return jsonify({"jwt": token}), 200
 
 
 # Survey routes
@@ -191,32 +191,34 @@ def create_survey():
 
 
 @app.route("/api/v1/surveys", methods=["GET"])
-@admin_token_required
 def get_surveys():
     username = request.args.get("admin")
 
     # TODO: Get surveys from database, filtered by admin username if specified
     if username:
-        surveys = {
+        filtered_surveys = {
             "surveys": [
                 survey
-                for survey in surveys.surveys
-                if survey.metadata.created_by == username
+                for survey in surveys["surveys"]
+                if survey["metadata"]["created_by"] == username
             ]
         }  # Mock
 
-    return jsonify(surveys), 200
+    return jsonify(filtered_surveys), 200
 
 
 @app.route("/api/v1/surveys/<survey_id>", methods=["GET"])
 def get_survey(survey_id):
     # TODO: Get survey from database, return 404 if not found
-    surveys = [
-        survey for survey in surveys.surveys if survey.metadata.id == survey_id
-    ]  # Mock
-    if not surveys:
+    filtered_surveys = list(
+        filter(
+            lambda survey: survey["metadata"]["id"] == int(survey_id),
+            surveys["surveys"],
+        )
+    )
+    if not filtered_surveys:
         return jsonify({"message": "Survey not found"}), 404
-    return jsonify(surveys[0]), 200
+    return jsonify(filtered_surveys[0]), 200
 
 
 @app.route("/api/v1/surveys/<survey_id>", methods=["DELETE"])
@@ -225,15 +227,18 @@ def delete_survey(survey_id):
     if not survey_id:
         return jsonify({"message": "Missing survey ID"}), 400
     # TODO: Check if survey exists, return 404 if not
-    surveys = [
-        survey for survey in surveys.surveys if survey.metadata.id == survey_id
-    ]  # Mock
-    if not surveys:
+    filtered_surveys = list(
+        filter(
+            lambda survey: survey["metadata"]["id"] == int(survey_id),
+            surveys["surveys"],
+        )
+    )
+    if not filtered_surveys:
         return jsonify({"message": "Survey not found"}), 404
-    if surveys[0].metadata.created_by != request.jwt_sub:
+    if filtered_surveys[0].metadata.created_by != request.jwt_sub:
         return jsonify({"message": "Accessing other admin's surveys is forbidden"}), 403
     # TODO: Delete survey from database
-    surveys.surveys.remove(surveys[0])
+    surveys.surveys.remove(filtered_surveys[0])
 
     return jsonify({"message": "Survey deleted successfully"}), 200
 
@@ -245,12 +250,15 @@ def delete_survey(survey_id):
 def submit_response(survey_id):
     # TODO: Check if survey exists, return 404 if not
     # TODO: Get survey
-    surveys = [
-        survey for survey in surveys.surveys if survey.metadata.id == survey_id
-    ]  # Mock
-    if not surveys:
+    filtered_surveys = list(
+        filter(
+            lambda survey: survey["metadata"]["id"] == int(survey_id),
+            surveys["surveys"],
+        )
+    )
+    if not filtered_surveys:
         return jsonify({"message": "Survey not found"}), 404
-    survey = surveys[0]
+    survey = filtered_surveys[0]
 
     data = request.get_json()
     # TODO: Validate response object against survey object, return 400 if not valid
@@ -269,12 +277,15 @@ def submit_response(survey_id):
 def get_responses(survey_id):
     # TODO: Check if survey exists, return 404 if not
     # TODO: Actually get survey from database
-    surveys = [
-        survey for survey in surveys.surveys if survey.metadata.id == survey_id
-    ]  # Mock
-    if not surveys:
+    filtered_surveys = list(
+        filter(
+            lambda survey: survey["metadata"]["id"] == int(survey_id),
+            surveys["surveys"],
+        )
+    )
+    if not filtered_surveys:
         return jsonify({"message": "Survey not found"}), 404
-    survey = surveys[0]
+    survey = filtered_surveys[0]
     if survey.metadata.created_by != request.jwt_sub:
         return jsonify({"message": "Accessing other admin's surveys is forbidden"}), 403
     # TODO: Get responses from database
@@ -293,12 +304,15 @@ def get_responses(survey_id):
 def get_response(survey_id, response_id):
     # TODO: Check if survey exists, return 404 if not
     # TODO: Actually get survey from database
-    surveys = [
-        survey for survey in surveys.surveys if survey.metadata.id == survey_id
-    ]  # Mock
-    if not surveys:
+    filtered_surveys = list(
+        filter(
+            lambda survey: survey["metadata"]["id"] == int(survey_id),
+            surveys["surveys"],
+        )
+    )
+    if not filtered_surveys:
         return jsonify({"message": "Survey not found"}), 404
-    survey = surveys[0]
+    survey = filtered_surveys[0]
     if survey.metadata.created_by != request.jwt_sub:
         return jsonify({"message": "Accessing other admin's surveys is forbidden"}), 403
     # TODO: Check if response exists, return 404 if not
@@ -317,10 +331,13 @@ def get_response(survey_id, response_id):
 @app.route("/api/v1/surveys/<survey_id>/responses/<response_id>/chat", methods=["POST"])
 def send_chat_message(survey_id, response_id):
     # TODO: Check if survey exists, return 404 if not
-    surveys = [
-        survey for survey in surveys.surveys if survey.metadata.id == survey_id
-    ]  # Mock
-    if not surveys:
+    filtered_surveys = list(
+        filter(
+            lambda survey: survey["metadata"]["id"] == int(survey_id),
+            surveys["surveys"],
+        )
+    )
+    if not filtered_surveys:
         return jsonify({"message": "Survey not found"}), 404
     # TODO: Check if response exists, return 404 if not
     responses = [
