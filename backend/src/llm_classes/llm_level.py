@@ -49,7 +49,7 @@ class ChatLog:
         self.message_list = message_list
         self.current_index = len(message_list)
 
-    def insert_and_update(self, message: str, index: int, is_llm: bool) -> list:
+    def insert_and_update(self, message: str, index: int, is_llm: bool = False) -> list:
         """
         Add a new reply to the conversation chain. If edits are made in the middle, future conversations are deleted.
         Returns a message list.
@@ -74,29 +74,31 @@ def construct_chatlog(survey_initial_responses: str) -> ChatLog:
     return ChatLog([start_dict])
 
 
+if __name__ == "__main__":
 ############### TEST HERE ######################
-# string = """
-# 1. What do you like about colgate toothpaste?
-# Tastes okay, makes teeth feel good
-# 2. Would you recommend it to a friend?
-# No
-# 3. What do you think about colgate toothbrushes?
-# Useful, durable, does not break.
-# 4. Would you recommend it to a friend?
-# Yes
-# 5. Do you have any friends or family working at Colgate?
-# No.
-# 6. What do you think about the taste of colgate toothpaste?
-# It is very bitter and disgusting.
-# 7. How often do you consumer sweet drinks?
-# Every day.
-# """
-# llm = GPT()
-# pipe = construct_chatlog(string)
+###### This should be moved to test folder #####
+    string = """
+    1. What do you like about colgate toothpaste?
+    Tastes okay, makes teeth feel good
+    2. Would you recommend it to a friend?
+    No
+    3. What do you think about colgate toothbrushes?
+    Useful, durable, does not break.
+    4. Would you recommend it to a friend?
+    Yes
+    5. Do you have any friends or family working at Colgate?
+    No.
+    6. What do you think about the taste of colgate toothpaste?
+    It is very bitter and disgusting.
+    7. How often do you consumer sweet drinks?
+    Every day.
+    """
+    llm = GPT()
+    pipe = construct_chatlog(string)
 
-# for i in range(10):
-#     output = (llm.run(pipe.message_list))
-#     print(output)
-#     pipe.insert_and_update(output, pipe.current_index, True) 
-#     pipe.insert_and_update(input(), pipe.current_index, False)
-   
+    for i in range(10):
+        output = (llm.run(pipe.message_list))
+        print(output)
+        pipe.insert_and_update(output, pipe.current_index, is_llm=True) 
+        pipe.insert_and_update(input(), pipe.current_index, is_llm=False)
+    
