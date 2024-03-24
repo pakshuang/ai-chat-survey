@@ -14,9 +14,15 @@ class Question:
     I suggest each type of question aka mrq, mcq be its own subtype, and we can format them differently.
     '''
 
-    def __init__(self, id: str, type: str):
+    def __init__(self, id: str, type: str, question: str, options: str):
         self.id = id
         self.type = type
+        self.question = question
+        self.options = options
+        self.answer = None
+
+    def is_complete(self):
+        return self.answer is None
         
 
     def as_dict(self) -> dict[str, object]:
