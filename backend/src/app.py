@@ -296,13 +296,13 @@ def get_responses():
         return jsonify({"message": "Accessing other admin's surveys is forbidden"}), 403
 
     # TODO: Get responses from database
-    responses = list(
+    filtered_responses = list(
         filter(
             lambda response: response["metadata"]["survey_id"] == int(survey_id),
             responses["responses"],
         )
     )
-    return jsonify(responses), 200
+    return jsonify(filtered_responses), 200
 
 
 @app.route("/api/v1/responses/<response_id>", methods=["GET"])
