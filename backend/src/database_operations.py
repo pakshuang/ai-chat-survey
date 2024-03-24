@@ -100,7 +100,7 @@ def create_survey(connection, data):
 
 # get_surveys()
 # Helper function to create survey object
-def create_survey_object(row):
+def create_survey_object(row, questions=[]):
     survey_object = {
         "metadata": {
             "id": row['survey_id'],
@@ -111,8 +111,25 @@ def create_survey_object(row):
         },
         "title": row['title'],
         "subtitle": row['subtitle'],
-        "questions": [],  # Initialize questions list
+        "questions": questions,  # Include questions list
         "chat_context": row['chat_context']
     }
     return survey_object
+
+
+def append_question_to_survey(survey_objects, survey_id, question_data):
+    if survey_id not in survey_objects:
+        survey_objects[survey_id]['questions'] = []  # Initialize questions list if not exists
+
+    # Check if the question already exists in the list
+    question_exists = any(question['id'] == question_data['question_id'] for question in survey_objects[survey_id]['questions'])
+
+    # If the question does not exist, append it to the list
+    if not question_exists:
+        survey_objects[survey_id]['questions'].append({
+            "id": question_data['question_id'],
+            "type": question_data['question_type'],
+            "question": question_data['question'],
+            "options": [] if question_data['options'] is None else question_data['options'].split(',')
+        })
 
