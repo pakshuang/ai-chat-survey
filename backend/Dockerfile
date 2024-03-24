@@ -20,3 +20,7 @@ EXPOSE 5000
 # Define the command to run the application
 ENTRYPOINT ["pipenv", "run", "python"]
 CMD ["app.py"]
+
+# Healthcheck
+HEALTHCHECK --interval=30s --timeout=30s --start-period=10s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:${BACKEND_CONTAINER_PORT}/api/v1/health || exit 1

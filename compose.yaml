@@ -4,8 +4,6 @@ services:
     image: frontend-react
     container_name: frontend-react
     build: ./frontend-react
-    environment:
-      - NODE_ENV=development
     env_file:
       - .env
     ports:
@@ -21,3 +19,13 @@ services:
       - .env
     ports:
       - 127.0.0.1:${BACKEND_HOST_PORT}:${BACKEND_CONTAINER_PORT} # Only required for accessing the API directly from the host
+
+
+  database:
+    image: database
+    container_name: database
+    build: ./database
+    env_file:
+      - .env
+    ports:
+      - ${DATABASE_HOST_PORT}:${DATABASE_CONTAINER_PORT}
