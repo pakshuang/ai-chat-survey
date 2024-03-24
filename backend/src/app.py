@@ -116,7 +116,7 @@ def admin_token_required(f):
             return jsonify({"message": "Token is invalid!"}), 401
 
         # Pass some payload information to the route function
-        # kwargs["jwt_sub"] = payload["sub"]
+        kwargs["jwt_sub"] = payload["sub"]
 
         return f(*args, **kwargs)
 
@@ -340,21 +340,36 @@ def delete_survey(survey_id, **kwargs):
     if not survey_id:
         return jsonify({"message": "Missing survey ID"}), 400
 
-    # TODO: Check if survey exists, return 404 if not
-    filtered_surveys = list(
-        filter(
-            lambda survey: survey["metadata"]["id"] == int(survey_id),
-            surveys["surveys"],
-        )
-    )
-    if not filtered_surveys:
-        return jsonify({"message": "Survey not found"}), 404
-    if filtered_surveys[0]["metadata"]["created_by"] != request["jwt_sub"]:
-        return jsonify({"message": "Accessing other admin's surveys is forbidden"}), 403
-    # TODO: Delete survey from database
-    surveys.surveys.remove(filtered_surveys[0])
+    # Check if survey exists, return 404 if not
+    # Connect to the database
+    connection = database_operations.connect_to_mysql()
+    if not connection:
+        return jsonify({"message": "Failed to connect to the database"}), 500
 
-    return jsonify({"message": "Survey deleted successfully"}), 200
+    try:
+        # Check if the survey exists
+        survey_query = "SELECT * FROM Surveys WHERE survey_id = %s"
+        survey = database_operations.fetch(connection, survey_query, (survey_id,))
+        if not survey:
+            return jsonify({"message": "Survey not found"}), 404
+
+        # Check if the user has permission to delete the survey
+        if survey[0]['admin_username'] != kwargs['jwt_sub']:
+            return jsonify({"message": "Accessing other admin's surveys is forbidden"}), 403
+
+        # Delete the survey
+        delete_survey_query = "DELETE FROM Surveys WHERE survey_id = %s"
+        database_operations.execute(connection, delete_survey_query, (survey_id,))
+        database_operations.commit(connection)
+
+        return jsonify({"message": "Survey deleted successfully"}), 200
+
+    except Exception as e:
+        print(e, flush=True)
+        return jsonify({"message": "Failed to delete survey"}), 500
+
+    finally:
+        database_operations.close_connection(connection)
 
 
 # Response routes

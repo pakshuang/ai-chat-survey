@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS Questions (
     question_type VARCHAR(255), -- Consider changing to ENUM once all questions types are decided
     options JSON,
     PRIMARY KEY (question_id, survey_id),
-    FOREIGN KEY (survey_id) REFERENCES Surveys(survey_id)
+    FOREIGN KEY (survey_id) REFERENCES Surveys(survey_id) ON DELETE CASCADE
 );
 
 -- Create the Survey_Responses table
@@ -42,8 +42,8 @@ CREATE TABLE IF NOT EXISTS Survey_Responses (
     question_id INT,
     response TEXT,
     submitted_at TIMESTAMP,
-    FOREIGN KEY (survey_id) REFERENCES Surveys(survey_id),
-    FOREIGN KEY (question_id) REFERENCES Questions(question_id)
+    FOREIGN KEY (survey_id) REFERENCES Surveys(survey_id) ON DELETE CASCADE,
+    FOREIGN KEY (question_id) REFERENCES Questions(question_id) ON DELETE CASCADE
 );
 
 -- Create the ChatLog table
