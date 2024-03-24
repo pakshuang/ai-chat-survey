@@ -135,15 +135,30 @@ def create_admin():
 
     # Check if admin already exists
     username = data["username"]
-    if username in admins:  # TODO: Check if admin already exists
-        return jsonify({"message": "Admin already exists"}), 400
+    connection = database_operations.connect_to_mysql()
+    if connection:
+        query = "SELECT * FROM Admins WHERE admin_username = %s"
+        existing_admins = database_operations.fetch(connection, query, (username,))
 
-    hashed_password = generate_password_hash(data["password"], method="bcrypt")
+        # If admin exists
+        if existing_admins:
+            database_operations.close_connection(connection)
+            return jsonify({"message": "Admin already exists"}), 400
 
-    # TODO: Save admin to database
-    admins[username] = hashed_password
+        # Hash password for storage
+        hashed_password = generate_password_hash(
+            data["password"], method="pbkdf2:sha256", salt_length=8
+        )
 
-    return jsonify({"message": f"Admin {username} created successfully"}), 201
+        # Save admin to database
+        query = "INSERT INTO Admins (admin_username, password, created_at) VALUES (%s, %s, NOW())"
+        params = (username, hashed_password)
+        database_operations.execute(connection, query, params)
+
+        database_operations.close_connection(connection)
+        return jsonify({"message": f"Admin {username} created successfully"}), 201
+    else:
+        return jsonify({"message": "Failed to connect to the database"}), 500
 
 
 @app.route("/api/v1/admins/login", methods=["POST"])
@@ -346,6 +361,7 @@ def send_chat_message(survey_id, response_id):
         ),
         201,
     )
+
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=BACKEND_CONTAINER_PORT)

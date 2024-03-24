@@ -9,6 +9,8 @@ openai = "*"
 jwt = "*"
 python-dotenv = "*"
 pymysql = "*"
+requests = "*"
+
 
 [dev-packages]
 
