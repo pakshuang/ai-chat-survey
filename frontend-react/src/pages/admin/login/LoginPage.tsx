@@ -12,28 +12,49 @@ import {
   Link,
   Text,
   VStack,
-} from "@chakra-ui/react"
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons"
-import { useForm, SubmitHandler } from "react-hook-form"
-import { useState } from "react"
-import { LoginSignupData } from "./constants"
-import { login } from "../../hooks/useApi"
+  useToast,
+} from "@chakra-ui/react";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { useState } from "react";
+import { LoginSignupData } from "./constants";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { login } from "../../hooks/useApi";
 
 // TODO: abstract out into different files to avoid repeated logic across login/signup
 
 function LoginPage() {
-  const [showPassword, setShowPassword] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
+  const [isUnauthorised, setIsUnauthorised] = useState(false);
+  const navigate = useNavigate();
+  const toast = useToast();
 
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
-  } = useForm<LoginSignupData>()
+  } = useForm<LoginSignupData>();
 
-  // TODO: update with actual API call
-  const onSubmit: SubmitHandler<LoginSignupData> = (values) => {
-    return login(values)
-  }
+  const onSubmit: SubmitHandler<LoginSignupData> = async (values) => {
+    try {
+      await axios.post("http://localhost:5000/api/v1/admins/login", values);
+      navigate("/admin/survey");
+    } catch (error: any) {
+      console.error("Login failed:", error.response?.data);
+      if (error.response.status === 401) {
+        setIsUnauthorised(true);
+      } else {
+        toast({
+          title: "Error",
+          description: "An error occurred. Please try again later.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    }
+  };
 
   return (
     <Flex
@@ -49,6 +70,11 @@ function LoginPage() {
           <VStack spacing="1rem">
             <Heading size="lg">Welcome back</Heading>
             <VStack spacing="0.5rem" w="100%">
+              {isUnauthorised && (
+                <Text color="red" fontSize="sm">
+                  Your username or password is incorrect. Please try again.
+                </Text>
+              )}
               <FormControl isInvalid={errors.username ? true : undefined}>
                 <Input
                   variant="flushed"
@@ -122,7 +148,7 @@ function LoginPage() {
         </Link>
       </Text>
     </Flex>
-  )
+  );
 }
 
-export default LoginPage
+export default LoginPage;
