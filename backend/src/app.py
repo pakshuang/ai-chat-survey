@@ -106,7 +106,7 @@ def admin_token_required(f):
             # Decode the token
             payload = jwt.decode(token, app.config["SECRET_KEY"], algorithms=["HS256"])
 
-        except:
+        except jwt.InvalidTokenError:
             return jsonify({"message": "Token is invalid!"}), 401
 
         # Pass some payload information to the route function
