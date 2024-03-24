@@ -1,8 +1,8 @@
+import { useState } from "react";
 import { Flex } from "@chakra-ui/react";
 
 import ChatWindow from "./ChatWindow";
 import ChatInput from "./ChatInput";
-import { useState } from "react";
 
 interface Messages {
   sender: "user" | "bot";
