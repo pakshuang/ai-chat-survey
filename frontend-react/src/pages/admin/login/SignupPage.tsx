@@ -38,6 +38,7 @@ function SignupPage() {
   const onSubmit: SubmitHandler<LoginSignupData> = async (values) => {
     try {
       await axios.post("http://localhost:5000/api/v1/admins", values);
+      setIsTaken(false);
       navigate("/admin/survey");
     } catch (error: any) {
       if (

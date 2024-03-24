@@ -38,6 +38,7 @@ function LoginPage() {
   const onSubmit: SubmitHandler<LoginSignupData> = async (values) => {
     try {
       await axios.post("http://localhost:5000/api/v1/admins/login", values);
+      setIsUnauthorised(false);
       navigate("/admin/survey");
     } catch (error: any) {
       if (error.response.status == 401) {
