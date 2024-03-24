@@ -8,10 +8,11 @@ VALUES
     ('admin2', 'password2', NOW());
 
 -- Insert data into the Surveys table
-INSERT INTO Surveys (name, description, title, subtitle, admin_username, created_at)
+INSERT INTO Surveys (name, description, title, subtitle, admin_username, created_at, chat_context)
 VALUES
-    ('Survey 1', 'Description of Survey 1', 'Title of Survey 1', 'Subtitle of Survey 1', 'admin1', NOW()),
-    ('Survey 2', 'Description of Survey 2', 'Title of Survey 2', 'Subtitle of Survey 2', 'admin2', NOW());
+    ('Survey 1', 'Description of Survey 1', 'Title of Survey 1', 'Subtitle of Survey 1', 'admin1', NOW(),
+     'Full stack'),
+    ('Survey 2', 'Description of Survey 2', 'Title of Survey 2', 'Subtitle of Survey 2', 'admin2', NOW(), 'Full send');
 
 -- Insert data into the Questions table
 INSERT INTO Questions (question_id, survey_id, question, question_type, options)

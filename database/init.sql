@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS Surveys (
     subtitle TEXT,
     admin_username VARCHAR(255),
     created_at TIMESTAMP,
+    chat_context TEXT,
     FOREIGN KEY (admin_username) REFERENCES Admins(admin_username)
 );
 

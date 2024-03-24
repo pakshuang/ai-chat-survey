@@ -193,7 +193,9 @@ def login_admin():
             else:
                 return jsonify({"message": "Invalid credentials"}), 401
         else:
-            return jsonify({"message": "Failed to connect to the database"}), 500
+            return jsonify({"message": "Username not found"}), 400
+    else:
+        return jsonify({"message": "Failed to connect to the database"}), 500
 
 # Survey routes
 
