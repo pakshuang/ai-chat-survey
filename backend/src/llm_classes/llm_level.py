@@ -106,7 +106,7 @@ def format_responses_for_gpt(response: dict[str, object]) -> str:
         answers = response["answers"]
         formatted = list(
             map(
-                lambda ans: f"{ans["question_id"]}. {ans["question"]}\n{ans["answer"]}", answers
+                lambda ans: f'{ans["question_id"]}. {ans["question"]}\n{ans["answer"]}', answers
             )
 
         )
