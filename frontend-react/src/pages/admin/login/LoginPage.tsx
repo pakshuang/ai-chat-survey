@@ -12,6 +12,7 @@ import {
   Link,
   Text,
   VStack,
+  useToast,
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -24,7 +25,9 @@ import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const [isUnauthorised, setIsUnauthorised] = useState(false);
   const navigate = useNavigate();
+  const toast = useToast();
 
   const {
     handleSubmit,
@@ -34,14 +37,20 @@ function LoginPage() {
 
   const onSubmit: SubmitHandler<LoginSignupData> = async (values) => {
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/v1/admins/login",
-        values
-      );
-      console.log("Login successful:", response.data.message);
+      await axios.post("http://localhost:5000/api/v1/admins/login", values);
       navigate("/admin/survey");
     } catch (error: any) {
-      console.error("Login failed:", error.response?.data);
+      if (error.response.status == 401) {
+        setIsUnauthorised(true);
+      } else {
+        toast({
+          title: "An unknown error occurred.",
+          description: "Please try again later.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
     }
   };
 
@@ -59,6 +68,11 @@ function LoginPage() {
           <VStack spacing="1rem">
             <Heading size="lg">Welcome back</Heading>
             <VStack spacing="0.5rem" w="100%">
+              {isUnauthorised && (
+                <Text color="red" fontSize="sm">
+                  Your username or password is incorrect. Please try again.
+                </Text>
+              )}
               <FormControl isInvalid={errors.username ? true : undefined}>
                 <Input
                   variant="flushed"

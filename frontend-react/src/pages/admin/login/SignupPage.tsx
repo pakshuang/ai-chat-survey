@@ -12,6 +12,7 @@ import {
   Link,
   Text,
   VStack,
+  useToast,
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -24,7 +25,9 @@ import { useNavigate } from "react-router-dom";
 
 function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const [isTaken, setIsTaken] = useState(false);
   const navigate = useNavigate();
+  const toast = useToast();
 
   const {
     handleSubmit,
@@ -34,14 +37,23 @@ function SignupPage() {
 
   const onSubmit: SubmitHandler<LoginSignupData> = async (values) => {
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/v1/admins",
-        values
-      );
-      console.log("Signup successful:", response.data.message);
+      await axios.post("http://localhost:5000/api/v1/admins", values);
       navigate("/admin/survey");
     } catch (error: any) {
-      console.error("Signup failed:", error.response?.data);
+      if (
+        error.response.status == 400 &&
+        error.response.data.message == "Admin already exists"
+      ) {
+        setIsTaken(true);
+      } else {
+        toast({
+          title: "An unknown error occurred.",
+          description: "Please try again later.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
     }
   };
 
@@ -59,6 +71,12 @@ function SignupPage() {
           <VStack spacing="1rem">
             <Heading size="lg">Create an account</Heading>
             <VStack spacing="0.5rem" w="100%">
+              {isTaken && (
+                <Text color="red" fontSize="sm">
+                  Your username has been taken. Please choose a different
+                  username.
+                </Text>
+              )}
               <FormControl isInvalid={errors.username ? true : undefined}>
                 <Input
                   variant="flushed"
