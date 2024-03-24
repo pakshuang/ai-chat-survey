@@ -45,16 +45,9 @@ class ChatLog:
         After the user replies, decide if you wish to probe further, ask other questions regarding the user's survey responses, or thank the user and end the conversation when you have learnt enough.
         {survey_initial_responses}"""
 
-    def __init__(self, survey_initial_responses: str, start_items=1):
-        start_dict = {
-            "role": "system",
-            "content": ChatLog.SYSPROMPT.format(
-                survey_initial_responses=survey_initial_responses
-            ),
-        }
-
-        self.message_list = [start_dict]
-        self.current_index = 1
+    def __init__(self, message_list: list[dict[str, str]]):
+        self.message_list = message_list
+        self.current_index = len(message_list)
 
     def insert_and_update(self, message: str, index: int, is_llm: bool) -> list:
         """
@@ -71,30 +64,39 @@ class ChatLog:
         self.message_list = self.message_list[: self.current_index]
         return self.message_list
 
+def construct_chatlog(survey_initial_responses: str) -> ChatLog:
+    start_dict = {
+            "role": "system",
+            "content": ChatLog.SYSPROMPT.format(
+                survey_initial_responses=survey_initial_responses
+            ),
+        }
+    return ChatLog([start_dict])
+
 
 ############### TEST HERE ######################
-string = """
-1. What do you like about colgate toothpaste?
-Tastes okay, makes teeth feel good
-2. Would you recommend it to a friend?
-No
-3. What do you think about colgate toothbrushes?
-Useful, durable, does not break.
-4. Would you recommend it to a friend?
-Yes
-5. Do you have any friends or family working at Colgate?
-No.
-6. What do you think about the taste of colgate toothpaste?
-It is very bitter and disgusting.
-7. How often do you consumer sweet drinks?
-Every day.
-"""
-llm = GPT()
-pipe = ChatLog(string)
+# string = """
+# 1. What do you like about colgate toothpaste?
+# Tastes okay, makes teeth feel good
+# 2. Would you recommend it to a friend?
+# No
+# 3. What do you think about colgate toothbrushes?
+# Useful, durable, does not break.
+# 4. Would you recommend it to a friend?
+# Yes
+# 5. Do you have any friends or family working at Colgate?
+# No.
+# 6. What do you think about the taste of colgate toothpaste?
+# It is very bitter and disgusting.
+# 7. How often do you consumer sweet drinks?
+# Every day.
+# """
+# llm = GPT()
+# pipe = construct_chatlog(string)
 
-for i in range(10):
-    output = (llm.run(pipe.message_list))
-    print(output)
-    pipe.insert_and_update(output, pipe.current_index, True) 
-    pipe.insert_and_update(input(), pipe.current_index, False)
+# for i in range(10):
+#     output = (llm.run(pipe.message_list))
+#     print(output)
+#     pipe.insert_and_update(output, pipe.current_index, True) 
+#     pipe.insert_and_update(input(), pipe.current_index, False)
    

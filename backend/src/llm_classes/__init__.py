@@ -1,1 +1,1 @@
-from llm_level import GPT, ChatLog
+from llm_level import GPT, ChatLog, construct_chatlog
