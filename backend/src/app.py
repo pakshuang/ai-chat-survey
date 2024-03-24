@@ -9,7 +9,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 BACKEND_CONTAINER_PORT = os.getenv("BACKEND_CONTAINER_PORT", "5000")
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "default_key_for_development")
+app.config["SECRET_KEY"] = os.environ.get("FLASK_SECRET_KEY", "default_key_for_development")
 
 
 # Mock data
@@ -82,6 +82,7 @@ survey_2 = {
 surveys = {"surveys": [survey_1, survey_2]}
 
 responses = {"responses": []}
+
 
 # JWT
 
