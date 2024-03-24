@@ -164,7 +164,7 @@ def create_admin():
 @app.route("/api/v1/admins/login", methods=["POST"])
 def login_admin():
     data = request.get_json()
-
+    print(data)
     # Basic validation
     if not data or not data["username"] or not data["password"]:
         return jsonify({"message": "Missing data"}), 400
@@ -189,7 +189,7 @@ def login_admin():
                 token = jwt.encode(
                     token_payload, app.config["SECRET_KEY"], algorithm="HS256"
                 )  # Encoded with HMAC SHA-256 algorithm
-                return jsonify({"jwt": token.decode("UTF-8")}), 200
+                return jsonify({"jwt": token}), 200
             else:
                 return jsonify({"message": "Invalid credentials"}), 401
         else:

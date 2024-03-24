@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS Surveys (
 
 -- Create the Questions table
 CREATE TABLE IF NOT EXISTS Questions (
-    question_id INT AUTO_INCREMENT,
+    question_id INT,
     survey_id INT,
     question TEXT,
     question_type VARCHAR(255), -- Consider changing to ENUM once all questions types are decided
@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS Questions (
 CREATE TABLE IF NOT EXISTS Survey_Responses (
     response_id INT AUTO_INCREMENT PRIMARY KEY,
     survey_id INT,
+    question_id INT,
     response TEXT,
     submitted_at TIMESTAMP,
     FOREIGN KEY (survey_id) REFERENCES Surveys(survey_id),

@@ -6,10 +6,11 @@ name = "pypi"
 [packages]
 flask = "*"
 openai = "*"
-jwt = "*"
 python-dotenv = "*"
 pymysql = "*"
+pyjwt = "*"
 requests = "*"
+cryptography = "*"
 
 
 [dev-packages]
