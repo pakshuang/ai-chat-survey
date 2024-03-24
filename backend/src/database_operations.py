@@ -70,7 +70,7 @@ def close_cursor(cursor):
 
 # Helper functions for insertion and creation
 
-# Create Survey
+# create_survey
 def create_survey(connection, data):
     try:
         # Insert survey data into Surveys table
@@ -96,4 +96,23 @@ def create_survey(connection, data):
     except Exception as e:
         print(f"Error creating survey: {e}")
         return None
+
+
+# get_surveys()
+# Helper function to create survey object
+def create_survey_object(row):
+    survey_object = {
+        "metadata": {
+            "id": row['survey_id'],
+            "name": row['name'],
+            "description": row['description'],
+            "created_by": row['admin_username'],
+            "created_at": row['created_at'].strftime("%Y-%m-%d %H:%M:%S"),  # Convert to string
+        },
+        "title": row['title'],
+        "subtitle": row['subtitle'],
+        "questions": [],  # Initialize questions list
+        "chat_context": row['chat_context']
+    }
+    return survey_object
 

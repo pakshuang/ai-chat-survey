@@ -2,9 +2,6 @@ import datetime
 import os
 from functools import wraps
 
-import jwt
-from flask import Flask, jsonify, request
-from werkzeug.security import check_password_hash, generate_password_hash
 from functools import wraps
 import database_operations
 import jwt
@@ -17,7 +14,6 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get(
     "FLASK_SECRET_KEY", "default_key_for_development"
 )
-
 
 # Mock data
 
@@ -211,6 +207,7 @@ def login_admin():
     else:
         return jsonify({"message": "Failed to connect to the database"}), 500
 
+
 # Survey routes
 
 
@@ -240,24 +237,40 @@ def create_survey():
     finally:
         database_operations.close_connection(connection)
 
+
 @app.route("/api/v1/surveys", methods=["GET"])
 def get_surveys():
-    username = request.args.get("admin")
-    if not username:
-        return jsonify({"message": "Missing admin username"}), 400
+    # Connect to the database
+    connection = database_operations.connect_to_mysql()
+    if not connection:
+        return jsonify({"message": "Failed to connect to database"}), 500
 
-    # TODO: Get surveys from database, filtered by admin username if specified
-    filtered_surveys = list(
-        filter(
-            lambda survey: survey["metadata"]["created_by"] == username,
-            surveys["surveys"],
-        )
-    )
+    try:
+        # Check for optional username argument
+        username = request.args.get('admin', None)
+        print(username, flush=True)
+        if username:
+            query = "SELECT * FROM Surveys WHERE admin_username = %s"
+            params = (username,)
+        else:
+            query = "SELECT * FROM Surveys"
+            params = None
 
-    if not filtered_surveys:
-        return jsonify({"message": "No surveys found"}), 404
+        survey_data = database_operations.fetch(connection, query, params)
+        if survey_data is None:
+            return jsonify({"message": "Error fetching surveys"}), 500
+        elif not survey_data:
+            if username:
+                return jsonify({"message": "No surveys found for user '{}'".format(username)}), 404
+            else:
+                return jsonify({"message": "No surveys found"}), 404
 
-    return jsonify(filtered_surveys), 200
+        survey_objects = [database_operations.create_survey_object(row) for row in survey_data]
+
+        return jsonify(survey_objects), 200
+
+    finally:
+        database_operations.close_connection(connection)
 
 
 @app.route("/api/v1/surveys/<survey_id>", methods=["GET"])
@@ -265,18 +278,26 @@ def get_survey(survey_id):
     if not survey_id:
         return jsonify({"message": "Missing survey ID"}), 400
 
-    # TODO: Get survey from database
-    filtered_surveys = list(
-        filter(
-            lambda survey: survey["metadata"]["id"] == int(survey_id),
-            surveys["surveys"],
-        )
-    )
+    # Get survey from database
+    # Connect to the database
+    connection = database_operations.connect_to_mysql()
+    if not connection:
+        return jsonify({"message": "Failed to connect to database"}), 500
 
-    if not filtered_surveys:
-        return jsonify({"message": "Survey not found"}), 404
+    try:
+        query = "SELECT * FROM Surveys WHERE survey_id = %s"
+        params = (survey_id,)
 
-    return jsonify(filtered_surveys[0]), 200
+        survey_data = database_operations.fetch(connection, query, params)
+        if survey_data is None:
+            return jsonify({"message": "Error fetching survey"}), 500
+        elif not survey_data:
+            return jsonify({"message": "No survey found"}), 404
+
+        survey_objects = [database_operations.create_survey_object(row) for row in survey_data]
+        return jsonify(survey_objects), 200
+    finally:
+        database_operations.close_connection(connection)
 
 
 @app.route("/api/v1/surveys/<survey_id>", methods=["DELETE"])
@@ -370,7 +391,7 @@ def get_response(response_id):
     filtered_surveys = list(
         filter(
             lambda survey: survey["metadata"]["id"]
-            == int(response["metadata"]["survey_id"]),
+                           == int(response["metadata"]["survey_id"]),
             surveys["surveys"],
         )
     )
