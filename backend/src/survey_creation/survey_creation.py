@@ -17,14 +17,14 @@ class Question:
     def __init__(self, id: str, type: str):
         self.id = id
         self.type = type
-        self.data = {
+        
+
+    def as_dict(self) -> dict[str, object]:
+        return {
             "id": self.id,
             "type": self.type
             # TO BE UPDATED
         }
-
-    def as_dict(self) -> dict[str, object]:
-        return self.data
     
 class Survey:
     '''
@@ -35,13 +35,13 @@ class Survey:
             title: str, 
             subtitle: str, 
             questions: list[Question], 
-            survey_chat_context: str):
+            chat_context: str):
         
         self.metadata = metadata
         self.title = title
         self.subtitle = subtitle
         self.questions = questions
-        self.survey_chat_context = survey_chat_context
+        self.chat_context = chat_context
 
     def as_dict(self) -> dict[str, object]:
         
@@ -50,7 +50,7 @@ class Survey:
             "title": self.title,
             "subtitle": self.subtitle,
             "questions": list(map(lambda question: question.as_dict(), self.questions)),
-            "survey_chat_context": self.survey_chat_context
+            "chat_context": self.chat_context
         }
 
 
