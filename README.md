@@ -9,10 +9,8 @@ ai-chat-survey/
 │
 ├── compose.yaml               # Docker Compose configuration file
 │
-├── frontend/                  # Frontend specific files
+├── frontend-react/            # Frontend specific files
 │   ├── Dockerfile             # Dockerfile for frontend
-│   ├── Pipfile                # Frontend dependencies
-│   ├── Pipfile.lock           # Frontend dependencies
 │   ├── src/                   # Frontend source files
 │   ├── public/                # Public assets for frontend
 │   ├── ...
@@ -34,7 +32,7 @@ ai-chat-survey/
 │   ├── ...
 │   └── README.md              # Project-wide documentation
 │
-├── example.env                # Dummy environment variables
+├── sample.env                # Sample environment variables
 ├── .gitignore                 # Specifies intentionally untracked files to ignore
 └── README.md                  # Main project README with general information
 ```
