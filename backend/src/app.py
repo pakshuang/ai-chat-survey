@@ -1,29 +1,19 @@
 import datetime
 import os
 from functools import wraps
-
+from llm_classes import GPT, ChatLog, construct_chatlog, format_responses_for_gpt
+import re
+from survey_creation import *
 import jwt
 from flask import Flask, jsonify, request
-from flask_cors import CORS
 from werkzeug.security import check_password_hash, generate_password_hash
 
 BACKEND_CONTAINER_PORT = os.getenv("BACKEND_CONTAINER_PORT", "5000")
 
 app = Flask(__name__)
-CORS(app)
 app.config["SECRET_KEY"] = os.environ.get(
     "FLASK_SECRET_KEY", "default_key_for_development"
 )
-
-
-@app.after_request
-def handle_options(response):
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Credentials"] = "true"
-    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
-    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
-
-    return response
 
 
 # Mock data
@@ -185,15 +175,7 @@ def login_admin():
     token = jwt.encode(
         token_payload, app.config["SECRET_KEY"], algorithm="HS256"
     )  # Encoded with HMAC SHA-256 algorithm
-    return (
-        jsonify(
-            {
-                "jwt": token,
-                "jwt_exp": token_payload["exp"].strftime("%Y-%m-%d %H:%M:%S"),
-            }
-        ),
-        200,
-    )
+    return jsonify({"jwt": token}), 200
 
 
 # Survey routes
@@ -201,7 +183,7 @@ def login_admin():
 
 @app.route("/api/v1/surveys", methods=["POST"])
 @admin_token_required
-def create_survey(**kwargs):
+def create_survey():
     data = request.get_json()
 
     # Validation
@@ -257,7 +239,7 @@ def get_survey(survey_id):
 
 @app.route("/api/v1/surveys/<survey_id>", methods=["DELETE"])
 @admin_token_required
-def delete_survey(survey_id, **kwargs):
+def delete_survey(survey_id):
     if not survey_id:
         return jsonify({"message": "Missing survey ID"}), 400
 
@@ -297,7 +279,7 @@ def submit_response():
 
 @app.route("/api/v1/responses", methods=["GET"])
 @admin_token_required
-def get_responses(**kwargs):
+def get_responses():
     # TODO: Check if survey ID is provided, return 400 if not
     survey_id = request.args.get("survey")
     if not survey_id:
@@ -330,7 +312,7 @@ def get_responses(**kwargs):
 
 @app.route("/api/v1/responses/<response_id>", methods=["GET"])
 @admin_token_required
-def get_response(response_id, **kwargs):
+def get_response(response_id):
     # TODO: Check if response exists, return 404 if not
     filtered_responses = list(
         filter(
@@ -377,20 +359,42 @@ def send_chat_message(response_id):
     if not data or data["content"] is None:
         return jsonify({"message": "Missing data"}), 400
 
+    response = filtered_responses[0]
     # TODO: Save message to database
-    # TODO: Get reply from LLM
-    # TODO: Save reply to database
-
-    import random
-
-    is_last = random.randint(0, 1) < 0.1
-    return (
-        jsonify(
-            {"content": "This is a dummy reply from the chatbot.", "is_last": is_last}
-        ),
-        201,
+    llm = GPT()
+    ### IF CHATLOG DOES NOT EXIST: 
+    # DO
+    pipe = construct_chatlog(
+        format_responses_for_gpt(response)
     )
+    first_question = llm.run(pipe.message_list)
+    pipe.insert_and_update(first_question, pipe.current_index, is_llm=True)
+    ### ELSE IF CHATLOG EXISTS: 
+    # DO
+    f'''READ A LIST OF MESSAGES FROM DB AND ASSIGN TO {pipe}'''
+    f'''pipe = ChatLog(MESSAGE LIST)'''
+    ### END IF
+    ### Assume data["content"] is the respondent's input
+    pipe.insert_and_update(data["content"], pipe.current_index)
+    output = llm.run(pipe.message_list)
+    message_list = pipe.insert_and_update(output, pipe.current_index, is_llm=True)
+    
+    f''' SAVE message_list INTO DB'''
 
+
+    assert message_list[-1]["role"] == "assistant"
+    content = message_list[-1]["content"]
+
+    exit = message_list.copy()
+    exit.append(ChatLog.END_QUERY)
+    result = llm.run(exit)
+    is_last =  re.search(r"[nN]o", result)    
+    ### 
+
+    return jsonify({
+        "content": content, "is_last": is_last
+    }), 201
+    
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=BACKEND_CONTAINER_PORT)
