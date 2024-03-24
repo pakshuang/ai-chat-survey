@@ -1,15 +1,17 @@
 import datetime
-from functools import wraps
 import os
+from functools import wraps
 
-from flask import Flask, request, jsonify
-from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
+from flask import Flask, jsonify, request
+from werkzeug.security import check_password_hash, generate_password_hash
 
 BACKEND_CONTAINER_PORT = os.getenv("BACKEND_CONTAINER_PORT", "5000")
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "default_key_for_development")
+app.config["SECRET_KEY"] = os.environ.get(
+    "FLASK_SECRET_KEY", "default_key_for_development"
+)
 
 
 # Mock data
@@ -45,7 +47,7 @@ survey_1 = {
             "question": "Do you have any feedback about the venue?",
         },
     ],
-    "chat_context": "Full Stack Entertainment is an events company that organises performances such as concerts.",  # The proprietary knowledge that the chatbot needs to have to conduct the chat
+    "chat_context": "Full Stack Entertainment is an events company that organises performances such as concerts.",
 }
 survey_2 = {
     "metadata": {
@@ -75,12 +77,14 @@ survey_2 = {
             "question": "What can we improve?",
         },
     ],
-    "chat_context": "Full Send is a retail courier company that provides mailing services for consumers. We have branches in Bishan, Changi, and Clementi.",  # The proprietary knowledge that the chatbot needs to have to conduct the chat
+    "chat_context": "Full Send is a retail courier company that provides mailing services for consumers. \
+        We have branches in Bishan, Changi, and Clementi.",
 }
 
 surveys = {"surveys": [survey_1, survey_2]}
 
 responses = {"responses": []}
+
 
 # JWT
 
@@ -102,7 +106,7 @@ def admin_token_required(f):
             # Decode the token
             payload = jwt.decode(token, app.config["SECRET_KEY"], algorithms=["HS256"])
 
-        except Exception as e:
+        except jwt.InvalidTokenError:
             return jsonify({"message": "Token is invalid!"}), 401
 
         # Pass some payload information to the route function
@@ -295,28 +299,28 @@ def get_responses():
         return jsonify({"message": "Accessing other admin's surveys is forbidden"}), 403
 
     # TODO: Get responses from database
-    responses = list(
+    filtered_responses = list(
         filter(
             lambda response: response["metadata"]["survey_id"] == int(survey_id),
             responses["responses"],
         )
     )
-    return jsonify(responses), 200
+    return jsonify(filtered_responses), 200
 
 
 @app.route("/api/v1/responses/<response_id>", methods=["GET"])
 @admin_token_required
 def get_response(response_id):
     # TODO: Check if response exists, return 404 if not
-    responses = list(
+    filtered_responses = list(
         filter(
             lambda response: response["metadata"]["response_id"] == int(response_id),
             responses["responses"],
         )
     )
-    if not responses:
+    if not filtered_responses:
         return jsonify({"message": "Response not found"}), 404
-    response = responses[0]
+    response = filtered_responses[0]
 
     # TODO: Check if corresponding survey exists, return 404 if not
     filtered_surveys = list(
@@ -340,13 +344,13 @@ def get_response(response_id):
 @app.route("/api/v1/responses/<response_id>/chat", methods=["POST"])
 def send_chat_message(response_id):
     # TODO: Check if response exists, return 404 if not
-    responses = list(
+    filtered_responses = list(
         filter(
             lambda response: response["metadata"]["response_id"] == int(response_id),
             responses["responses"],
         )
     )
-    if not responses:
+    if not filtered_responses:
         return jsonify({"message": "Response not found"}), 404
 
     data = request.get_json()
