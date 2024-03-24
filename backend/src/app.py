@@ -16,6 +16,16 @@ app.config["SECRET_KEY"] = os.environ.get(
 )
 
 
+@app.after_request
+def handle_options(response):
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Credentials"] = "true"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+
+    return response
+
+
 # Mock data
 
 
@@ -49,7 +59,6 @@ survey_1 = {
             "question": "Do you have any feedback about the venue?",
         },
     ],
-
     "chat_context": "Full Stack Entertainment is an events company that organises performances such as concerts.",
 }
 survey_2 = {
@@ -80,10 +89,8 @@ survey_2 = {
             "question": "What can we improve?",
         },
     ],
-
     "chat_context": "Full Send is a retail courier company that provides mailing services for consumers. \
         We have branches in Bishan, Changi, and Clementi.",
-
 }
 
 surveys = {"surveys": [survey_1, survey_2]}
@@ -178,7 +185,15 @@ def login_admin():
     token = jwt.encode(
         token_payload, app.config["SECRET_KEY"], algorithm="HS256"
     )  # Encoded with HMAC SHA-256 algorithm
-    return jsonify({"jwt": token}), 200
+    return (
+        jsonify(
+            {
+                "jwt": token,
+                "jwt_exp": token_payload["exp"].strftime("%Y-%m-%d %H:%M:%S"),
+            }
+        ),
+        200,
+    )
 
 
 # Survey routes
@@ -186,7 +201,7 @@ def login_admin():
 
 @app.route("/api/v1/surveys", methods=["POST"])
 @admin_token_required
-def create_survey():
+def create_survey(**kwargs):
     data = request.get_json()
 
     # Validation
@@ -242,7 +257,7 @@ def get_survey(survey_id):
 
 @app.route("/api/v1/surveys/<survey_id>", methods=["DELETE"])
 @admin_token_required
-def delete_survey(survey_id):
+def delete_survey(survey_id, **kwargs):
     if not survey_id:
         return jsonify({"message": "Missing survey ID"}), 400
 
@@ -282,7 +297,7 @@ def submit_response():
 
 @app.route("/api/v1/responses", methods=["GET"])
 @admin_token_required
-def get_responses():
+def get_responses(**kwargs):
     # TODO: Check if survey ID is provided, return 400 if not
     survey_id = request.args.get("survey")
     if not survey_id:
@@ -315,7 +330,7 @@ def get_responses():
 
 @app.route("/api/v1/responses/<response_id>", methods=["GET"])
 @admin_token_required
-def get_response(response_id):
+def get_response(response_id, **kwargs):
     # TODO: Check if response exists, return 404 if not
     filtered_responses = list(
         filter(
