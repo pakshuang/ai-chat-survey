@@ -17,11 +17,14 @@ import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useState } from "react";
 import { LoginSignupData } from "./constants";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 // TODO: abstract out into different files to avoid repeated logic across login/signup
 
 function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const {
     handleSubmit,
@@ -29,14 +32,17 @@ function LoginPage() {
     formState: { errors, isSubmitting },
   } = useForm<LoginSignupData>();
 
-  // TODO: update with actual API call
-  const onSubmit: SubmitHandler<LoginSignupData> = (values) => {
-    return new Promise<void>((resolve) => {
-      setTimeout(() => {
-        alert(JSON.stringify(values, null, 2));
-        resolve();
-      }, 3000);
-    });
+  const onSubmit: SubmitHandler<LoginSignupData> = async (values) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/v1/admins/login",
+        values
+      );
+      console.log("Login successful:", response.data.message);
+      navigate("/admin/survey");
+    } catch (error: any) {
+      console.error("Login failed:", error.response?.data);
+    }
   };
 
   return (
@@ -86,11 +92,6 @@ function LoginPage() {
                     {...register("password", {
                       required: "This field is required.",
                       // not sure if login fields typically have these checks
-                      minLength: {
-                        value: 12,
-                        message:
-                          "Your password must be at least 12 characters.",
-                      },
                       maxLength: {
                         value: 255,
                         message:
