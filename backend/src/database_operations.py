@@ -1,5 +1,6 @@
 import os
 import pymysql
+import json
 
 
 def connect_to_mysql():
@@ -71,30 +72,52 @@ def close_cursor(cursor):
 # Helper functions for insertion and creation
 
 # create_survey
+
 def create_survey(connection, data):
     try:
         # Insert survey data into Surveys table
-        insert_query = """
+        insert_survey_query = """
             INSERT INTO Surveys (name, description, title, subtitle, admin_username, created_at, chat_context)
-            VALUES (%s, %s, %s, %s, %s, NOW(), %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
         """
         survey_data = (
-            data['name'],
-            data['description'],
+            data['metadata']['name'],
+            data['metadata']['description'],
             data['title'],
             data['subtitle'],
-            data['admin_username'],
+            data['metadata']['created_by'],
+            data['metadata']['created_at'],
             data['chat_context']
         )
-        execute(connection, insert_query, survey_data)
+        cursor = connection.cursor()
+        cursor.execute(insert_survey_query, survey_data)
 
         # Get the ID of the inserted survey
-        select_query = "SELECT LAST_INSERT_ID() AS survey_id"
-        survey_id = fetch(connection, select_query)[0]['survey_id']
+        survey_id = cursor.lastrowid
+
+        # Insert questions into Questions table
+        for question in data['questions']:
+            insert_question_query = """
+                INSERT INTO Questions (question_id, survey_id, question, question_type, options)
+                VALUES (%s, %s, %s, %s, %s)
+            """
+            question_data = (
+                question['id'],
+                survey_id,
+                question['question'],
+                question['type'],
+                json.dumps(question.get('options', [])) if 'options' in question else None
+            )
+            cursor.execute(insert_question_query, question_data)
+
+        # Commit changes and close cursor
+        connection.commit()
+        cursor.close()
 
         return survey_id
     except Exception as e:
         print(f"Error creating survey: {e}")
+        connection.rollback()
         return None
 
 

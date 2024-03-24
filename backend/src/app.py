@@ -2,14 +2,12 @@ import datetime
 import os
 from functools import wraps
 
-from functools import wraps
-import database_operations
 import jwt
-from flask import Flask, request, jsonify
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from werkzeug.security import check_password_hash, generate_password_hash
+
+import database_operations
 
 BACKEND_CONTAINER_PORT = os.getenv("BACKEND_CONTAINER_PORT", "5000")
 
