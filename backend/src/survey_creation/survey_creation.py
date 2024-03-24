@@ -14,34 +14,59 @@ class Question:
     I suggest each type of question aka mrq, mcq be its own subtype, and we can format them differently.
     '''
 
-    def __init__(self, id: str, type: str):
+    def __init__(self, id: str, type: str, question: str, options: str):
         self.id = id
         self.type = type
-        self.data = {
-            "id": self.id,
-            "type": self.type
-            # TO BE UPDATED
-        }
+        self.question = question
+        self.options = options
+        self.answer = None
 
-    def as_dict(self) -> dict[str, object]:
-        return self.data
+    def is_complete(self):
+        return self.answer is None
+        
+
+    def question_as_dict(self) -> dict[str, object]:
+        '''
+        Returns a question.
+        '''
+        return {
+            "id": self.id,
+            "type": self.type,
+            "question": self.question,  
+            "options": self.options 
+        }
     
+    def answers_as_dict(self) -> dict[str, object]:
+        '''
+        Returns a question-answer.
+        '''
+        if not self.is_complete():
+            raise Exception("Rese not complete!")
+        else:
+            {
+        "question_id": self.id,
+        "type": self.type, 
+        "question": self.question,
+        "options": self.options,
+        "answer": self.answer,
+        }
+        
 class Survey:
     '''
     Constructs a survey. Probably client will use this when building survey.
     '''
     def __init__(
-            self, metadata: str, 
+            self, metadata: dict[str, object], 
             title: str, 
             subtitle: str, 
             questions: list[Question], 
-            survey_chat_context: str):
+            chat_context: str):
         
         self.metadata = metadata
         self.title = title
         self.subtitle = subtitle
         self.questions = questions
-        self.survey_chat_context = survey_chat_context
+        self.chat_context = chat_context
 
     def as_dict(self) -> dict[str, object]:
         
@@ -50,7 +75,7 @@ class Survey:
             "title": self.title,
             "subtitle": self.subtitle,
             "questions": list(map(lambda question: question.as_dict(), self.questions)),
-            "survey_chat_context": self.survey_chat_context
+            "chat_context": self.chat_context
         }
 
 
