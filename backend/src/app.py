@@ -186,7 +186,7 @@ def login_admin():
 
 @app.route("/api/v1/surveys", methods=["POST"])
 @admin_token_required
-def create_survey():
+def create_survey(**kwargs):
     data = request.get_json()
 
     # Validation
@@ -242,7 +242,7 @@ def get_survey(survey_id):
 
 @app.route("/api/v1/surveys/<survey_id>", methods=["DELETE"])
 @admin_token_required
-def delete_survey(survey_id):
+def delete_survey(survey_id, **kwargs):
     if not survey_id:
         return jsonify({"message": "Missing survey ID"}), 400
 
@@ -282,7 +282,7 @@ def submit_response():
 
 @app.route("/api/v1/responses", methods=["GET"])
 @admin_token_required
-def get_responses():
+def get_responses(**kwargs):
     # TODO: Check if survey ID is provided, return 400 if not
     survey_id = request.args.get("survey")
     if not survey_id:
@@ -315,7 +315,7 @@ def get_responses():
 
 @app.route("/api/v1/responses/<response_id>", methods=["GET"])
 @admin_token_required
-def get_response(response_id):
+def get_response(response_id, **kwargs):
     # TODO: Check if response exists, return 404 if not
     filtered_responses = list(
         filter(
