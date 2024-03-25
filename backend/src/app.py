@@ -575,43 +575,43 @@ def get_response(response_id, **kwargs):
         # Close database connection
         database_operations.close_connection(connection)
 
-        # Check if survey exists
-        if not survey:
-            return jsonify({"message": "Survey not found"}), 404
+        # # Check if survey exists
+        # if not survey:
+        #     return jsonify({"message": "Survey not found"}), 404
 
-        # Check if admin has access to survey
-        if survey[0]["admin_username"] != kwargs["jwt_sub"]:
-            return jsonify({"message": "Accessing other admin's surveys is forbidden"}), 403
+        # # Check if admin has access to survey
+        # if survey[0]["admin_username"] != kwargs["jwt_sub"]:
+        #     return jsonify({"message": "Accessing other admin's surveys is forbidden"}), 403
 
-        # Fetch responses from the database
-        query = """
-            SELECT sr.response_id, sr.submitted_at, sr.question_id, q.question_type, q.question, q.options, sr.answer
-            FROM Survey_Responses sr
-            INNER JOIN Questions q ON sr.question_id = q.question_id AND sr.survey_id = q.survey_id
-            INNER JOIN Surveys s ON sr.survey_id = s.survey_id
-            WHERE sr.survey_id = %s AND sr.response_id = %s
-        """
-        responses_data = database_operations.fetch(connection, query, (survey_id, response_id))
+        # # Fetch responses from the database
+        # query = """
+        #     SELECT sr.response_id, sr.submitted_at, sr.question_id, q.question_type, q.question, q.options, sr.answer
+        #     FROM Survey_Responses sr
+        #     INNER JOIN Questions q ON sr.question_id = q.question_id AND sr.survey_id = q.survey_id
+        #     INNER JOIN Surveys s ON sr.survey_id = s.survey_id
+        #     WHERE sr.survey_id = %s AND sr.response_id = %s
+        # """
+        # responses_data = database_operations.fetch(connection, query, (survey_id, response_id))
 
-        # Check if responses exist
-        if not responses_data:
-            return jsonify({"message": "No responses found for the survey"}), 404
+        # # Check if responses exist
+        # if not responses_data:
+        #     return jsonify({"message": "No responses found for the survey"}), 404
 
-        # Create response objects dictionary
-        response_objects = {}
-        for response_data in responses_data:
-            response_id = response_data["response_id"]
-            if response_id not in response_objects:
-                response_objects[response_id] = database_operations.create_response_object(survey_id, response_id, response_data)
-            database_operations.append_answer_to_response(response_objects, response_id, response_data)
-        return jsonify(response_objects), 200
+        # # Create response objects dictionary
+        # response_objects = {}
+        # for response_data in responses_data:
+        #     response_id = response_data["response_id"]
+        #     if response_id not in response_objects:
+        #         response_objects[response_id] = database_operations.create_response_object(survey_id, response_id, response_data)
+        #     database_operations.append_answer_to_response(response_objects, response_id, response_data)
+        # return jsonify(response_objects), 200
 
 
 def check_exit(updated_message_list: list[dict[str, str]], llm: LLM) -> bool:
     exit = updated_message_list.copy()
     exit.append(ChatLog.END_QUERY)
     result = llm.run(exit)
-    is_last =  re.search(r"[nN]o", result)
+    is_last =  bool(re.search(r"[nN]o", result))
     return is_last
 
 @app.route("/api/v1/responses/<response_id>/chat", methods=["POST"])
@@ -679,87 +679,53 @@ def send_chat_message(response_id):
         "chat_log": chat_log
     }
 
-    # initialise LLM
-    llm = GPT()
-    chat_log_dict =  json.loads(llm_input["chat_log"])
-    message_list = chat_log_dict["messages"]
-    
-    def has_no_chat_log(content: str, message_list: list[dict[str, object]]) -> bool:
-        return not content.strip() and not message_list
-
-    has_no_chat_log = has_no_chat_log(data["content"], message_list)
-    if has_no_chat_log:
-        pipe = construct_chatlog(
-            f"""{llm_input["chat_context"]}\n{
-                format_responses_for_gpt(
-                    llm_input["response_object"]
-                )
-            }""", llm=llm
-        )
-        first_question = llm.run(pipe.message_list)
-        updated_message_list =  pipe.insert_and_update(first_question, pipe.current_index, is_llm=True)
-    
-    else:
-        pipe = ChatLog(message_list, llm=llm)
-        pipe.insert_and_update(data["content"], pipe.current_index) # user input
-        next_question = llm.run(pipe.message_list)
-        updated_message_list = pipe.insert_and_update(next_question, pipe.current_index, is_llm=True)
-    
-    updated_chat_log = chat_log_dict.copy()
-    updated_chat_log["messages"] = updated_message_list   
-    updated_chat_log_json = json.dumps(chat_log_dict)
-
-    # Update the ChatLog table
     try:
-        # Update the database
-        database_operations.update_chat_log(connection, survey_id, response_id, updated_chat_log_json)
+        # initialise LLM
+        llm = GPT()
+        chat_log_dict =  json.loads(llm_input["chat_log"])
+        message_list = chat_log_dict["messages"]
+        
+        def has_no_chat_log(content: str, message_list: list[dict[str, object]]) -> bool:
+            return not content.strip() and not message_list
+
+        has_no_chat_log = has_no_chat_log(data["content"], message_list)
+        if has_no_chat_log:
+            pipe = construct_chatlog(
+                f"""{llm_input["chat_context"]}\n{
+                    format_responses_for_gpt(
+                        llm_input["response_object"]
+                    )
+                }""", llm=llm
+            )
+            first_question = llm.run(pipe.message_list)
+            updated_message_list =  pipe.insert_and_update(first_question, pipe.current_index, is_llm=True)
+        
+        else:
+            pipe = ChatLog(message_list, llm=llm)
+            pipe.insert_and_update(data["content"], pipe.current_index) # user input
+            next_question = llm.run(pipe.message_list)
+            updated_message_list = pipe.insert_and_update(next_question, pipe.current_index, is_llm=True)
+        
+        updated_chat_log = chat_log_dict.copy()
+        updated_chat_log["messages"] = updated_message_list   
+        updated_chat_log_json = json.dumps(chat_log_dict)
+
+        # Update the ChatLog table
+        try:
+            # Update the database
+            database_operations.update_chat_log(connection, survey_id, response_id, updated_chat_log_json)
+        except Exception as e:
+            return jsonify({"message": "An error occurred while updating the chat log"}), 500
+        
+        
+        assert updated_message_list[-1]["role"] == "assistant"
+        content, is_last = updated_message_list[-1]["content"], check_exit(updated_message_list, llm)
+        database_operations.close_connection(connection)
+        return jsonify({"content": content, "is_last": is_last}), 201\
+        
     except Exception as e:
-        return jsonify({"message": "An error occurred while updating the chat log"}), 500
-    
-    
-    assert updated_message_list[-1]["role"] == "assistant"
-    content, is_last = updated_message_list[-1]["content"], check_exit(updated_message_list, llm)
-    database_operations.close_connection(connection)
-    return jsonify({"content": content, "is_last": is_last}), 201
+        return jsonify({"message": "An error was encountered while generating a reply:" + str(e)}), 500
 
-    # 
-    #
-    # 
-    #
-    #
-    
-    # 
-    #
-    # exit = updated_message_list.copy()
-    # exit.append(ChatLog.END_QUERY)
-    # result = llm.run(exit)
-    # is_last =  re.search(r"[nN]o", result)
-    # ###
-
-    # TODO: Get updated llm_object from ChatGPT
-    #message = generate_random_text()
-    # TODO: Create the llm_output object - This will be returned from Hung Yee's model
-    # Convert chat log JSON string back to a dictionary
-    llm_output = llm_input.copy()
-    chat_log_dict = json.loads(llm_output["chat_log"])
-
-    # Append new message to the messages list
-    chat_log_dict["messages"].append({
-        "role": "bot",
-        "content": message
-    })
-
-    # Convert the updated chat log dictionary back to a JSON string
-    updated_chat_log = json.dumps(chat_log_dict)
-
-    # Update the chat log in llm_output
-    llm_output["chat_log"] = updated_chat_log
-
-    
-
-    # Close database connection
-    database_operations.close_connection(connection)
-    return jsonify({"content": message, "is_last": False}), 201
 
 # TODO: Remove after testing
 import random
