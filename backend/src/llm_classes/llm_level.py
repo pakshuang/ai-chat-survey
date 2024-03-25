@@ -117,52 +117,92 @@ if __name__ == "__main__":
 ############### TEST HERE ######################
 ###### This should be moved to test folder #####
     string = """
-    
-How satisfied are you with your overall experience using the iPhone 15?
+This survey is for MacDonald's, the fast food chain.   
+How satisfied are you with our product/service?
 
-Answer: Very satisfied, it exceeded my expectations.
-What features of the iPhone 15 do you find most appealing?
+Options:
+-    Very satisfied
+-    Satisfied
+-    Neutral
+-    Dissatisfied
+-    Very dissatisfied
+Answer: Satisfied
+How likely are you to recommend our product/service to others?
 
-Answer: I love the upgraded camera quality and the faster processor.
-On a scale of 1 to 5, how would you rate the battery life of the iPhone 15?
+-   Very likely
+-   Likely
+-   Neutral
+-   Unlikely
+-   Very unlikely
 
-Answer: 4, it lasts significantly longer compared to my previous phone.
-How would you rate the design and aesthetics of the iPhone 15?
+Answer: Very likely
+On a scale of 1 to 10, how would you rate the quality of our product/service?
 
-Answer: 5, it's sleek and stylish.
-Have you encountered any issues or drawbacks while using the iPhone 15? If yes, please specify.
+Answer: 8
+What do you like most about our product/service?
 
-Answer: No, I haven't encountered any major issues so far.
-How likely are you to recommend the iPhone 15 to a friend or family member?
+Answer: The ease of use and reliability.
+What improvements would you suggest for our product/service?
 
-Answer: 9, I would highly recommend it.
-What improvements would you like to see in future versions of the iPhone?
+Answer: More customization options and faster response times.
+How often do you use our product/service?
 
-Answer: Maybe even longer battery life and more customization options.
-How satisfied are you with the performance and speed of the iPhone 15?
+-    Daily
+-    Weekly
+-    Monthly
+-    Occasionally
+-    Rarely
+Answer: Weekly
+How satisfied are you with the customer support provided?
+Options:
+-    Very satisfied
+-    Satisfied
+-    Neutral
+-    Dissatisfied
+-    Very dissatisfied
+Answer: Satisfied
+What made you choose our product/service over competitors?
 
-Answer: 5, it's incredibly fast and responsive.
-Do you find the features of the iPhone 15 intuitive and easy to use?
+Answer: Positive reviews and reputation.
+How would you rate the value for money of our product/service?
 
-Answer: Yes, the interface is user-friendly.
-How would you rate the camera quality of the iPhone 15 for both photos and videos?
+Answer: 7
+How easy was it to purchase/use our product/service?
+Options:
+-    Very easy
+-    Easy
+-    Neutral
+-    Difficult
+-    Very difficult
+Answer: Easy
+Would you consider purchasing from us again in the future?
+Options:
+-    Yes
+-    No
+-    Maybe
+Answer: Yes
+Overall, how satisfied are you with your experience with our company?
+Options:
+-    Very satisfied
+-    Satisfied
+-    Neutral
+-    Dissatisfied
+-    Very dissatisfied
+Answer: Very satisfied
+What improvements would you like to see in our company as a whole?
 
-Answer: 5, the camera quality is exceptional.
-What made you choose the iPhone 15 over other smartphone options?
+Answer: More frequent updates and better communication with customers.
+How did you first hear about our company?
+Options:
+-    Word of mouth
+-    Online advertisement
+-    Social media
+-    Other (please specify)
 
-Answer: I trust the reliability and quality of Apple products.
-Are there any specific apps or functions on the iPhone 15 that you find particularly useful or enjoyable?
+Answer: Word of mouth
+Additional Comments:
+Answer: Keep up the good work!
 
-Answer: I love using FaceTime and the various photography features.
-How satisfied are you with the display quality and resolution of the iPhone 15?
-
-Answer: 5, the display is crisp and vibrant.
-Have you experienced any connectivity issues with the iPhone 15 (e.g., Wi-Fi, Bluetooth)?
-
-Answer: No, connectivity has been smooth.
-Would you consider upgrading to future iPhone models based on your experience with the iPhone 15?
-
-Answer: Yes, if they continue to innovate and improve like they did with this model.
 
     """
     llm = GPT()
