@@ -65,11 +65,11 @@ class ChatLog:
                 If you have more questions to ask the user, or if the user has not replied, please also say 'no'. """
                 }
 
-    def __init__(self, message_list: list[dict[str, str]], llm: LLM = GPT()):
+    def __init__(self, message_list: list[dict[str, str]], llm: LLM = GPT(), from_start: bool=False):
         self.message_list = message_list.copy()
         self.current_index = len(message_list)
         self.llm = llm
-        if self.current_index == 1:
+        if self.current_index == 1 and from_start:
             # insert ai response
             output = self.llm.run(self.message_list)
             
@@ -122,7 +122,7 @@ def construct_chatlog(survey_initial_responses: str, llm: LLM = GPT()) -> ChatLo
                 survey_initial_responses=survey_initial_responses
             ),
         }
-    return ChatLog([start_dict], llm=llm)
+    return ChatLog([start_dict], llm=llm, from_start=True)
 
 def format_responses_for_gpt(response: dict[str, object]) -> str:
         '''
