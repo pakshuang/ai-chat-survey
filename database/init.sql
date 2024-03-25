@@ -43,8 +43,7 @@ CREATE TABLE IF NOT EXISTS Survey_Responses (
     answer TEXT,
     submitted_at TIMESTAMP,
     PRIMARY KEY (response_id, question_id, survey_id),
-    FOREIGN KEY (survey_id) REFERENCES Surveys(survey_id) ON DELETE CASCADE,
-    FOREIGN KEY (question_id) REFERENCES Questions(question_id) ON DELETE CASCADE
+    FOREIGN KEY (survey_id, question_id) REFERENCES Questions(survey_id, question_id) ON DELETE CASCADE
 );
 
 -- Create the ChatLog table

@@ -3,6 +3,7 @@ import os
 from functools import wraps
 
 import jwt
+import requests
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -313,21 +314,17 @@ def get_survey(survey_id):
             return jsonify({"message": "No survey found"}), 404
 
         # Group survey data by survey ID and collect questions
-        survey_objects = {}
+        survey_object = {}
         for row in survey_data:
             survey_id = row['survey_id']
-            if survey_id not in survey_objects:
-                survey_objects[survey_id] = database_operations.create_survey_object(row)
+            if survey_id not in survey_object:
+                survey_object[survey_id] = database_operations.create_survey_object(row)
             if row['question_id']:  # Check if there's a question associated
-                if 'questions' not in survey_objects[survey_id]:
-                    survey_objects[survey_id]['questions'] = []
+                if 'questions' not in survey_object[survey_id]:
+                    survey_object[survey_id]['questions'] = []
                 if row['question_id']:  # Check if there's a question associated
-                    database_operations.append_question_to_survey(survey_objects, survey_id, row)
-
-        # Convert dictionary to list of survey objects
-        survey_objects_list = list(survey_objects.values())
-
-        return jsonify(survey_objects_list), 200
+                    database_operations.append_question_to_survey(survey_object, survey_id, row)
+        return jsonify(survey_object), 200
     finally:
         database_operations.close_connection(connection)
 
@@ -376,15 +373,48 @@ def delete_survey(survey_id, **kwargs):
 @app.route("/api/v1/responses", methods=["POST"])
 def submit_response():
     data = request.get_json()
-    # TODO: Validate response object against survey object, return 400 if not valid
-    # TODO: Save response to database and get the response ID
-    data["metadata"]["response_id"] = len(responses.responses) + 1
-    response_id = len(responses.responses) + 1
-    responses.responses += data
+    # Verify that there is survey_id provided in the metadata
+    survey_id = data.get("metadata", {}).get("survey_id")
+    if not survey_id:
+        return jsonify({"message": "Missing survey ID in metadata"}), 400
 
-    response_body = {"response_id": response_id}
+    # Validate response object against survey object
+    # Retrieve survey object from the database
+    survey_object_response = get_survey(survey_id)
 
-    return jsonify(response_body), 201
+    # If GET request is not successful, return 500
+    if survey_object_response[1] != 200:
+        return jsonify({"message": "Failed to retrieve survey object"}), 500
+
+    # GET request is successful
+    survey_object = survey_object_response[0].json
+    print(survey_object, flush=True)
+    print(survey_object.get('questions', []))
+
+    # Validate response object against survey object
+    validation_error = database_operations.validate_response(data, survey_object[str(survey_id)])
+    if validation_error:
+        return jsonify({"message": validation_error}), 400
+
+    # Connect to the database
+    connection = database_operations.connect_to_mysql()
+    if connection is None:
+        return jsonify({"message": "Failed to connect to the database"}), 500
+
+    # Insert data into database
+    try:
+        # Save response to database and get the response ID
+        response_id = database_operations.save_response_to_database(connection, data, str(survey_id))
+
+        if response_id is None:
+            return jsonify({"message": "Failed to save response to the database"}), 500
+
+        response_body = {"response_id": response_id}
+
+        return jsonify(response_body), 201
+    finally:
+        # Close database connection
+        database_operations.close_connection(connection)
 
 
 @app.route("/api/v1/responses", methods=["GET"])

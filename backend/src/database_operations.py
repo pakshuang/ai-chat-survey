@@ -139,7 +139,8 @@ def create_survey_object(row, questions=[]):
     }
     return survey_object
 
-
+# get_surveys()
+# Helper function to create survey object
 def append_question_to_survey(survey_objects, survey_id, question_data):
     if survey_id not in survey_objects:
         survey_objects[survey_id]['questions'] = []  # Initialize questions list if not exists
@@ -153,6 +154,94 @@ def append_question_to_survey(survey_objects, survey_id, question_data):
             "id": question_data['question_id'],
             "type": question_data['question_type'],
             "question": question_data['question'],
-            "options": [] if question_data['options'] is None else question_data['options'].split(',')
+            "options": json.loads(question_data['options']) if question_data['options'] else []
         })
+
+# submit_response()
+# Helper function to insert response data into DB
+def save_response_to_database(connection, data, survey_id):
+    try:
+        query = """
+        SELECT MAX(response_id) FROM Survey_Responses WHERE survey_id = %s
+        """
+
+        # Execute the query with the survey ID as a parameter
+        result = fetch(connection, query, (survey_id,))
+
+        # If there are no results or the result is None, return 1
+        if not result or result[0]['MAX(response_id)'] is None:
+            last_response_id = 0
+        else:
+            # Extract the last response ID and return it
+            last_response_id = result[0]['MAX(response_id)']
+
+
+        # Increment the last response_id by 1 to generate a new response_id
+        new_response_id = last_response_id + 1
+
+        # Save each question's response to the database
+        for answer in data['answers']:
+            survey_id = data['metadata']['survey_id']
+            question_id = answer['question_id']
+            answer_text = answer['answer']
+
+            # Insert the survey response into the database with the new_response_id
+            query = """
+                INSERT INTO Survey_Responses (response_id, survey_id, question_id, answer, submitted_at)
+                VALUES (%s, %s, %s, %s, CURRENT_TIMESTAMP)
+            """
+            params = (new_response_id, survey_id, question_id, answer_text)
+            execute(connection, query, params)
+
+        # Commit the transaction
+        connection.commit()
+
+        return new_response_id
+    except Exception as e:
+        print(f"Error saving response to database: {e}")
+        return None
+
+
+# submit_response()
+# Helper function to validate response data structure
+def validate_response(response_data, survey_object):
+    response_questions = response_data.get("answers", [])
+    print(response_questions, flush=True)
+    survey_questions = survey_object.get("questions", [])
+    print(survey_questions, flush=True)
+
+    # Check if the number of questions match
+    if len(response_questions) != len(survey_questions):
+        return "Number of questions in response does not match survey"
+
+    # Iterate through each question in the response
+    for response_question in response_questions:
+        # Find the corresponding question in the survey
+        matching_survey_question = next(
+            (question for question in survey_questions if question["id"] == response_question["question_id"]),
+            None
+        )
+        if not matching_survey_question:
+            return f"Question with ID {response_question['question_id']} not found in survey"
+
+        # Check if the type matches
+        if response_question["type"] != matching_survey_question["type"]:
+            return f"Question type mismatch for question with ID {response_question['question_id']}"
+
+        # Check if the question matches
+        if response_question["question"] != matching_survey_question["question"]:
+            return f"Question text mismatch for question with ID {response_question['question_id']}"
+
+        # If the question type is 'multiple_choice', check if the options match
+        if response_question["type"] == "multiple_choice":
+            # Check if the number of options match
+            if len(response_question.get("options", [])) != len(matching_survey_question.get("options", [])):
+                return f"Number of options mismatch for question with ID {response_question['question_id']}"
+            # Check if each option in the response exists in the survey question's options
+            for option in response_question.get("options", []):
+                if option not in matching_survey_question.get("options", []):
+                    return f"Option '{option}' not found in question with ID {response_question['question_id']}'s options"
+
+    # If all checks pass, the response object is valid
+    return None
 
