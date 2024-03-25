@@ -659,7 +659,8 @@ def helper_send_message(llm_input: dict[str, object], data_content: str, connect
         assert updated_message_list[-1]["role"] == "assistant"
         content, is_last = updated_message_list[-1]["content"], check_exit(updated_message_list, llm)
         close_connection(connection)
-        return jsonify({"content": content, "is_last": is_last}), 201\
+        return jsonify({"content": content, "is_last": is_last,\
+                         "updated_message_list": updated_message_list}), 201\
         
     except Exception as e:
         return jsonify({"message": "An error was encountered while generating a reply:" + str(e)}), 500
