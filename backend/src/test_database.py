@@ -245,7 +245,7 @@ def test_send_chat_message():
 
     # Prepare response data
     response_data = {
-        "content": ""
+        "content": "Please be correct"
     }
 
     # Send POST request to send chat message
@@ -258,16 +258,6 @@ def test_send_chat_message():
     # Example: assert response.json()["content"] == "Expected content"
 
 if __name__ == "__main__":
-    # test_create_admin()
-    # test_login_admin()
-    # test_create_survey()
-    # test_get_surveys()
-    # test_get_survey()
-    # test_delete_survey()
-    # test_submit_response()
-    # test_get_surveys()
-    # test_get_survey()
-
     test_create_admin()
     test_create_survey()
     test_get_surveys()
