@@ -1,13 +1,15 @@
 import datetime
 import os
 from functools import wraps
-from llm_classes import GPT, ChatLog, construct_chatlog, format_responses_for_gpt
 import re
 from survey_creation import *
 import jwt
+import json
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from werkzeug.security import check_password_hash, generate_password_hash
+
+import database_operations
 
 BACKEND_CONTAINER_PORT = os.getenv("BACKEND_CONTAINER_PORT", "5000")
 
@@ -150,17 +152,30 @@ def create_admin():
         return jsonify({"message": "Missing data"}), 400
 
     username = data["username"]
+    connection = database_operations.connect_to_mysql()
+    if connection:
+        query = "SELECT * FROM Admins WHERE admin_username = %s"
+        existing_admins = database_operations.fetch(connection, query, (username,))
 
-    # TODO: Check if admin already exists
-    if username in admins:
-        return jsonify({"message": "Admin already exists"}), 400
+        # If admin exists
+        if existing_admins:
+            database_operations.close_connection(connection)
+            return jsonify({"message": "Admin already exists"}), 400
 
-    hashed_password = generate_password_hash(data["password"])
+        # Hash password for storage
+        hashed_password = generate_password_hash(
+            data["password"], method="pbkdf2:sha256", salt_length=8
+        )
 
-    # TODO: Save admin to database
-    admins[username] = hashed_password
+        # Save admin to database
+        query = "INSERT INTO Admins (admin_username, password, created_at) VALUES (%s, %s, NOW())"
+        params = (username, hashed_password)
+        database_operations.execute(connection, query, params)
 
-    return jsonify({"message": f"Admin {username} created successfully"}), 201
+        database_operations.close_connection(connection)
+        return jsonify({"message": f"Admin {username} created successfully"}), 201
+    else:
+        return jsonify({"message": "Failed to connect to the database"}), 500
 
 
 @app.route("/api/v1/admins/login", methods=["POST"])
@@ -171,30 +186,40 @@ def login_admin():
     if not data or not data["username"] or not data["password"]:
         return jsonify({"message": "Missing data"}), 400
 
-    # TODO: Get admin's hashed password from database for authentication
-    if data["username"] not in admins or not check_password_hash(
-        admins[data["username"]], data["password"]
-    ):
-        return jsonify({"message": "Invalid credentials"}), 401
+    # Retrieve hashed password from database
+    # Connect to database
+    connection = database_operations.connect_to_mysql()
+    if connection:
+        # Retrieve admin_usernames
+        query = "SELECT password FROM Admins WHERE admin_username = %s"
+        result = database_operations.fetch(connection, query, (data["username"],))
+        if result:
+            hashed_password = result[0]["password"]
+            # Check if the provided password matches the hashed password
+            if check_password_hash(hashed_password, data["password"]):
+                # Generate the jwt_token
+                token_payload = {
+                    "exp": datetime.datetime.now(datetime.UTC) + datetime.timedelta(hours=24),
+                    "iat": datetime.datetime.now(datetime.UTC),
+                    "sub": data["username"],  # Admin's username
+                }
+                token = jwt.encode(
+                    token_payload, app.config["SECRET_KEY"], algorithm="HS256"
+                )  # Encoded with HMAC SHA-256 algorithm
 
-    # Generate JWT token
-    token_payload = {
-        "exp": datetime.datetime.now(datetime.UTC) + datetime.timedelta(hours=24),
-        "iat": datetime.datetime.now(datetime.UTC),
-        "sub": data["username"],  # Admin's username
-    }
-    token = jwt.encode(
-        token_payload, app.config["SECRET_KEY"], algorithm="HS256"
-    )  # Encoded with HMAC SHA-256 algorithm
-    return (
-        jsonify(
-            {
-                "jwt": token,
-                "jwt_exp": token_payload["exp"].strftime("%Y-%m-%d %H:%M:%S"),
-            }
-        ),
-        200,
-    )
+                # Close the connection
+                database_operations.close_connection(connection)
+                return jsonify({"jwt": token}), 200
+            else:
+                # Close the connection
+                database_operations.close_connection(connection)
+                return jsonify({"message": "Invalid credentials"}), 401
+        else:
+            # Close the connection
+            database_operations.close_connection(connection)
+            return jsonify({"message": "Username not found"}), 400
+    else:
+        return jsonify({"message": "Failed to connect to the database"}), 500
 
 
 # Survey routes
@@ -206,35 +231,102 @@ def create_survey(**kwargs):
     data = request.get_json()
 
     # Validation
-    if not data:  # TODO: Implement survey object validation
+    if not data:
         return jsonify({"message": "Invalid data"}), 400
 
-    # TODO: Save survey to database, record the survey ID for response
-    data["metadata"]["id"] = len(surveys.surveys) + 1  # Mock
-    surveys.surveys += data
-    survey_id = len(surveys.surveys)  # Mock
+    # Connect to the database
+    connection = database_operations.connect_to_mysql()
+    if not connection:
+        return jsonify({"message": "Error connecting to database"}), 500
 
-    return jsonify({"survey_id": survey_id}), 201
+    try:
+        # Create the survey
+        survey_id = database_operations.create_survey(connection, data)
 
+        if survey_id:
+            return jsonify({"survey_id": survey_id}), 201
+        else:
+            return jsonify({"message": "Error creating survey"}), 400
+
+    finally:
+        database_operations.close_connection(connection)
 
 @app.route("/api/v1/surveys", methods=["GET"])
 def get_surveys():
-    username = request.args.get("admin")
-    if not username:
-        return jsonify({"message": "Missing admin username"}), 400
+    # Connect to the database
+    connection = database_operations.connect_to_mysql()
+    if not connection:
+        return jsonify({"message": "Failed to connect to database"}), 500
 
-    # TODO: Get surveys from database, filtered by admin username if specified
-    filtered_surveys = list(
-        filter(
-            lambda survey: survey["metadata"]["created_by"] == username,
-            surveys["surveys"],
-        )
-    )
+    try:
+        # Check for optional username argument
+        username = request.args.get('admin', None)
 
-    if not filtered_surveys:
-        return jsonify({"message": "No surveys found"}), 404
+        if username:
+            query = "SELECT Surveys.*, Questions.* FROM Surveys LEFT JOIN Questions ON Surveys.survey_id = Questions.survey_id WHERE Surveys.admin_username = %s"
+            params = (username,)
 
-    return jsonify(filtered_surveys), 200
+            survey_data = database_operations.fetch(connection, query, params)
+
+            if survey_data is None:
+                return jsonify({"message": "Error fetching surveys"}), 500
+            elif not survey_data:
+                if username:
+                    return jsonify({"message": "No surveys found for user '{}'".format(username)}), 404
+                else:
+                    return jsonify({"message": "No surveys found"}), 404
+
+            # Group survey data by survey ID and collect questions
+            survey_objects = {}
+            for row in survey_data:
+                survey_id = row['survey_id']
+                if survey_id not in survey_objects:
+                    survey_objects[survey_id] = database_operations.create_survey_object(row)
+                if row['question_id']:  # Check if there's a question associated
+                    database_operations.append_question_to_survey(survey_objects, survey_id, row)
+
+            # Convert dictionary to list of survey objects
+            survey_objects_list = list(survey_objects.values())
+
+            return jsonify(survey_objects_list), 200
+        else:
+            get_usernames = "SELECT admin_username FROM Admins"
+            usernames_data = database_operations.fetch(connection, get_usernames)
+            all_survey_objects = []
+
+            for row in usernames_data:
+                query = """SELECT s.name, s.description, s.title, s.subtitle, s.admin_username, s.created_at, s.chat_context,
+                        q.question_id, s.survey_id, q.question, q.question_type, q.options
+                         FROM Surveys s
+                         LEFT JOIN Questions q ON s.survey_id = q.survey_id 
+                         WHERE s.admin_username = %s"""
+                params = (row["admin_username"],)
+
+                survey_data = database_operations.fetch(connection, query, params)
+
+                if survey_data is None:
+                    return jsonify({"message": "Error fetching surveys"}), 500
+                elif not survey_data:
+                    if username:
+                        return jsonify({"message": "No surveys found for user '{}'".format(username)}), 404
+                    else:
+                        return jsonify({"message": "No surveys found"}), 404
+
+                # Group survey data by survey ID and collect questions
+                survey_objects = {}
+                for row in survey_data:
+                    survey_id = row['survey_id']
+                    if survey_id not in survey_objects:
+                        survey_objects[survey_id] = database_operations.create_survey_object(row)
+                    if row['question_id']:  # Check if there's a question associated
+                        database_operations.append_question_to_survey(survey_objects, survey_id, row)
+                all_survey_objects.extend(list(survey_objects.values()))
+            # Convert dictionary to list of survey objects
+            all_survey_objects_list = list(all_survey_objects)
+
+            return jsonify(all_survey_objects_list), 200
+    finally:
+        database_operations.close_connection(connection)
 
 
 @app.route("/api/v1/surveys/<survey_id>", methods=["GET"])
@@ -242,18 +334,42 @@ def get_survey(survey_id):
     if not survey_id:
         return jsonify({"message": "Missing survey ID"}), 400
 
-    # TODO: Get survey from database
-    filtered_surveys = list(
-        filter(
-            lambda survey: survey["metadata"]["id"] == int(survey_id),
-            surveys["surveys"],
-        )
-    )
+    # Get survey from database
+    # Connect to the database
+    connection = database_operations.connect_to_mysql()
+    if not connection:
+        return jsonify({"message": "Failed to connect to database"}), 500
 
-    if not filtered_surveys:
-        return jsonify({"message": "Survey not found"}), 404
+    try:
+        query = """
+            SELECT Surveys.*, Questions.* 
+            FROM Surveys 
+            LEFT JOIN Questions ON Surveys.survey_id = Questions.survey_id 
+            WHERE Surveys.survey_id = %s
+        """
+        params = (survey_id,)
 
-    return jsonify(filtered_surveys[0]), 200
+        survey_data = database_operations.fetch(connection, query, params)
+        if survey_data is None:
+            return jsonify({"message": "Error fetching survey"}), 500
+        elif not survey_data:
+            return jsonify({"message": "No survey found"}), 404
+
+        # Group survey data by survey ID and collect questions
+        survey_object = {}
+        for row in survey_data:
+            survey_id = row['survey_id']
+            if survey_id not in survey_object:
+                survey_object[survey_id] = database_operations.create_survey_object(row)
+            if row['question_id']:  # Check if there's a question associated
+                if 'questions' not in survey_object[survey_id]:
+                    survey_object[survey_id]['questions'] = []
+                if row['question_id']:  # Check if there's a question associated
+                    database_operations.append_question_to_survey(survey_object, survey_id, row)
+        survey_object = survey_object[int(survey_id)]
+        return jsonify(survey_object), 200
+    finally:
+        database_operations.close_connection(connection)
 
 
 @app.route("/api/v1/surveys/<survey_id>", methods=["DELETE"])
@@ -262,21 +378,35 @@ def delete_survey(survey_id, **kwargs):
     if not survey_id:
         return jsonify({"message": "Missing survey ID"}), 400
 
-    # TODO: Check if survey exists, return 404 if not
-    filtered_surveys = list(
-        filter(
-            lambda survey: survey["metadata"]["id"] == int(survey_id),
-            surveys["surveys"],
-        )
-    )
-    if not filtered_surveys:
-        return jsonify({"message": "Survey not found"}), 404
-    if filtered_surveys[0]["metadata"]["created_by"] != request["jwt_sub"]:
-        return jsonify({"message": "Accessing other admin's surveys is forbidden"}), 403
-    # TODO: Delete survey from database
-    surveys.surveys.remove(filtered_surveys[0])
+    # Check if survey exists, return 404 if not
+    # Connect to the database
+    connection = database_operations.connect_to_mysql()
+    if not connection:
+        return jsonify({"message": "Failed to connect to the database"}), 500
 
-    return jsonify({"message": "Survey deleted successfully"}), 200
+    try:
+        # Check if the survey exists
+        survey_query = "SELECT * FROM Surveys WHERE survey_id = %s"
+        survey = database_operations.fetch(connection, survey_query, (survey_id,))
+        if not survey:
+            return jsonify({"message": "Survey not found"}), 404
+
+        # Check if the user has permission to delete the survey
+        if survey[0]['admin_username'] != kwargs['jwt_sub']:
+            return jsonify({"message": "Accessing other admin's surveys is forbidden"}), 403
+
+        # Delete the survey
+        delete_survey_query = "DELETE FROM Surveys WHERE survey_id = %s"
+        database_operations.execute(connection, delete_survey_query, (survey_id,))
+        database_operations.commit(connection)
+
+        return jsonify({"message": "Survey deleted successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"message": "Failed to delete survey"}), 500
+
+    finally:
+        database_operations.close_connection(connection)
 
 
 # Response routes
@@ -285,138 +415,311 @@ def delete_survey(survey_id, **kwargs):
 @app.route("/api/v1/responses", methods=["POST"])
 def submit_response():
     data = request.get_json()
-    # TODO: Validate response object against survey object, return 400 if not valid
-    # TODO: Save response to database and get the response ID
-    data["metadata"]["response_id"] = len(responses.responses) + 1
-    response_id = len(responses.responses) + 1
-    responses.responses += data
+    # Verify that there is survey_id provided in the metadata
+    survey_id = data.get("metadata", {}).get("survey_id")
+    if not survey_id:
+        return jsonify({"message": "Missing survey ID in metadata"}), 400
 
-    response_body = {"response_id": response_id}
+    # Validate response object against survey object
+    # Retrieve survey object from the database
+    survey_object_response = get_survey(survey_id)
 
-    return jsonify(response_body), 201
+    # If GET request is not successful, return 500
+    if survey_object_response[1] != 200:
+        return jsonify({"message": "Failed to retrieve survey object"}), 500
+
+    # GET request is successful
+    survey_object = survey_object_response[0].json
+
+    # Validate response object against survey object
+    validation_error = database_operations.validate_response(data, survey_object)
+    if validation_error:
+        return jsonify({"message": validation_error}), 400
+
+    # Connect to the database
+    connection = database_operations.connect_to_mysql()
+    if connection is None:
+        return jsonify({"message": "Failed to connect to the database"}), 500
+
+    # Insert data into database
+    try:
+        # Save response to database and get the response ID
+        response_id = database_operations.save_response_to_database(connection, data, str(survey_id))
+
+        if response_id is None:
+            return jsonify({"message": "Failed to save response to the database"}), 500
+
+        response_body = {"response_id": response_id}
+
+        return jsonify(response_body), 201
+    finally:
+        # Close database connection
+        database_operations.close_connection(connection)
 
 
 @app.route("/api/v1/responses", methods=["GET"])
 @admin_token_required
 def get_responses(**kwargs):
-    # TODO: Check if survey ID is provided, return 400 if not
+    # Check if survey ID is provided, return 400 if not
     survey_id = request.args.get("survey")
     if not survey_id:
         return jsonify({"message": "Missing survey ID"}), 400
 
-    # TODO: Check if survey exists, return 404 if not
-    filtered_surveys = list(
-        filter(
-            lambda survey: survey["metadata"]["id"] == int(survey_id),
-            surveys["surveys"],
-        )
-    )
-    if not filtered_surveys:
-        return jsonify({"message": "Survey not found"}), 404
+    # Connect to MySQL database
+    connection = database_operations.connect_to_mysql()
+    if not connection:
+        return jsonify({"message": "Failed to connect to the database"}), 500
+    try:
+        # Fetch survey from the database
+        query = """
+            SELECT * FROM Surveys WHERE survey_id = %s
+        """
+        survey = database_operations.fetch(connection, query, (survey_id,))
 
-    # TODO: Check if admin has access to survey, return 403 if not
-    survey = filtered_surveys[0]
-    if survey["metadata"]["created_by"] != request["jwt_sub"]:
-        return jsonify({"message": "Accessing other admin's surveys is forbidden"}), 403
+        # Check if survey exists
+        if not survey:
+            return jsonify({"message": "Survey not found"}), 404
 
-    # TODO: Get responses from database
-    filtered_responses = list(
-        filter(
-            lambda response: response["metadata"]["survey_id"] == int(survey_id),
-            responses["responses"],
-        )
-    )
-    return jsonify(filtered_responses), 200
+        # Check if admin has access to survey, return 403 if not
+        if survey[0]["admin_username"] != kwargs["jwt_sub"]:
+            return jsonify({"message": "Accessing other admin's surveys is forbidden"}), 403
+
+        # Fetch responses from the database
+        query = """
+            SELECT sr.response_id, sr.submitted_at, sr.question_id, q.question_type, q.question, q.options, sr.answer
+            FROM Survey_Responses sr
+            INNER JOIN Questions q ON sr.question_id = q.question_id AND sr.survey_id = q.survey_id
+            INNER JOIN Surveys s ON sr.survey_id = s.survey_id
+            WHERE sr.survey_id = %s
+        """
+        responses_data = database_operations.fetch(connection, query, (survey_id,))
+
+        # Check if responses exist
+        if not responses_data:
+            return jsonify({"message": "No responses found for the survey"}), 404
+
+        # Create response objects dictionary
+        response_objects = {}
+        for response_data in responses_data:
+            response_id = response_data["response_id"]
+            if response_id not in response_objects:
+                response_objects[response_id] = database_operations.create_response_object(survey_id, response_id, response_data)
+            database_operations.append_answer_to_response(response_objects, response_id, response_data)
+
+        # Convert dictionary to list of response objects
+        response_objects_list = list(response_objects.values())
+
+        return jsonify(response_objects_list), 200
+    finally:
+        # Close database connection
+        database_operations.close_connection(connection)
 
 
 @app.route("/api/v1/responses/<response_id>", methods=["GET"])
 @admin_token_required
 def get_response(response_id, **kwargs):
-    # TODO: Check if response exists, return 404 if not
-    filtered_responses = list(
-        filter(
-            lambda response: response["metadata"]["response_id"] == int(response_id),
-            responses["responses"],
-        )
-    )
-    if not filtered_responses:
-        return jsonify({"message": "Response not found"}), 404
-    response = filtered_responses[0]
+    if not response_id:
+        return jsonify({"message": "Missing response ID"}), 400
 
-    # TODO: Check if corresponding survey exists, return 404 if not
-    filtered_surveys = list(
-        filter(
-            lambda survey: survey["metadata"]["id"]
-            == int(response["metadata"]["survey_id"]),
-            surveys["surveys"],
-        )
-    )
-    if not filtered_surveys:
-        return jsonify({"message": "Survey not found"}), 404
-    survey = filtered_surveys[0]
+    # Check if survey ID is provided, return 400 if not
+    survey_id = request.args.get("survey")
+    if not survey_id:
+        return jsonify({"message": "Missing survey ID"}), 400
 
-    # TODO: Check if admin has access to survey, return 403 if not
-    if survey["metadata"]["created_by"] != request["jwt_sub"]:
-        return jsonify({"message": "Accessing other admin's surveys is forbidden"}), 403
+    # Connect to MySQL database
+    connection = database_operations.connect_to_mysql()
+    if not connection:
+        return jsonify({"message": "Failed to connect to the database"}), 500
 
-    return jsonify(response), 200
+    try:
+        # Fetch survey from the database
+        query = """
+            SELECT * FROM Surveys WHERE survey_id = %s
+        """
+        survey = database_operations.fetch(connection, query, (survey_id,))
+
+        # Check if survey exists
+        if not survey:
+            return jsonify({"message": "Survey not found"}), 404
+
+        # Check if admin has access to survey
+        if survey[0]["admin_username"] != kwargs["jwt_sub"]:
+            return jsonify({"message": "Accessing other admin's surveys is forbidden"}), 403
+
+        # Fetch responses from the database
+        query = """
+            SELECT sr.response_id, sr.submitted_at, sr.question_id, q.question_type, q.question, q.options, sr.answer
+            FROM Survey_Responses sr
+            INNER JOIN Questions q ON sr.question_id = q.question_id AND sr.survey_id = q.survey_id
+            INNER JOIN Surveys s ON sr.survey_id = s.survey_id
+            WHERE sr.survey_id = %s AND sr.response_id = %s
+        """
+        responses_data = database_operations.fetch(connection, query, (survey_id, response_id))
+
+        # Check if responses exist
+        if not responses_data:
+            return jsonify({"message": "No responses found for the survey"}), 404
+
+        # Create response objects dictionary
+        response_objects = {}
+        for response_data in responses_data:
+            response_id = response_data["response_id"]
+            if response_id not in response_objects:
+                response_objects[response_id] = database_operations.create_response_object(survey_id, response_id, response_data)
+            database_operations.append_answer_to_response(response_objects, response_id, response_data)
+        response_objects = response_objects[int(response_id)]
+        return jsonify(response_objects), 200
+    finally:
+        # Close database connection
+        database_operations.close_connection(connection)
 
 
 @app.route("/api/v1/responses/<response_id>/chat", methods=["POST"])
 def send_chat_message(response_id):
-    # TODO: Check if response exists, return 404 if not
-    filtered_responses = list(
-        filter(
-            lambda response: response["metadata"]["response_id"] == int(response_id),
-            responses["responses"],
-        )
-    )
-    if not filtered_responses:
-        return jsonify({"message": "Response not found"}), 404
+    if not response_id:
+        return jsonify({"message": "Missing response ID"}), 400
 
+    # Check if survey ID is provided, return 400 if not
+    survey_id = request.args.get("survey")
+    if not survey_id:
+        return jsonify({"message": "Missing survey ID"}), 400
+
+    # Step 1: Retrieve Response Object
+    response_object = get_response(response_id=response_id, survey_id=survey_id)
+
+    # If GET request is not successful, return 500
+    if response_object[1] != 200:
+        return jsonify({"message": "Failed to retrieve survey object"}), 500
+
+    # GET request is successful
+    response_object = response_object[0].json
+
+    # Connect to MySQL database
+    connection = database_operations.connect_to_mysql()
+    if not connection:
+        return jsonify({"message": "Failed to connect to the database"}), 500
+
+    # Step 2: Insert message to DB
+    # Get json for request body, containing message sent by user
     data = request.get_json()
-    if not data or data["content"] is None:
-        return jsonify({"message": "Missing data"}), 400
+    # If there is content, append to chatLog
+    if "content" in data:
+        try:
+            chat_log = database_operations.get_chat_log(connection, survey_id, response_id)
+            chat_log_dict = json.loads(chat_log)
 
-    response = filtered_responses[0]
-    # TODO: Save message to database
-    llm = GPT()
-    ### IF CHATLOG DOES NOT EXIST: 
-    # DO
-    pipe = construct_chatlog(
-        # I NEED THE SURVEY CHAT CONTEXT HERE
-        format_responses_for_gpt(
-            response
-            )
-    )
-    first_question = llm.run(pipe.message_list)
-    pipe.insert_and_update(first_question, pipe.current_index, is_llm=True)
-    ### ELSE IF CHATLOG EXISTS: 
-    # DO
-    f'''READ A LIST OF MESSAGES FROM DB AND ASSIGN TO {pipe}'''
-    f'''pipe = ChatLog(MESSAGE LIST)'''
-    ### END IF
-    ### Assume data["content"] is the respondent's input
-    pipe.insert_and_update(data["content"], pipe.current_index)
-    output = llm.run(pipe.message_list)
-    message_list = pipe.insert_and_update(output, pipe.current_index, is_llm=True)
-    
-    f''' SAVE message_list INTO DB'''
+            # Append new message to the messages list
+            chat_log_dict["messages"].append({
+                "role": "user",
+                "content": data["content"]
+            })
 
+            # Convert the updated chat log dictionary back to a JSON string
+            updated_chat_log = json.dumps(chat_log_dict)
+            database_operations.update_chat_log(connection, survey_id, response_id, updated_chat_log)
+        except Exception as e:
+            return jsonify({"message": "An error occurred while updating chat log with user message"}), 500
 
-    assert message_list[-1]["role"] == "assistant"
-    content = message_list[-1]["content"]
+    # Step 3: Retrieve chat_context
+    try:
+        chat_context = database_operations.fetch_chat_context(connection, survey_id)
+    except Exception as e:
+        return jsonify({"message": "An error occurred while fetching chat context"}), 500
 
-    exit = message_list.copy()
-    exit.append(ChatLog.END_QUERY)
-    result = llm.run(exit)
-    is_last =  re.search(r"[nN]o", result)    
-    ### 
+    # Step 4: Retrieve chatLog object
+    try:
+        chat_log = database_operations.get_chat_log(connection, survey_id, response_id)
+    except Exception as e:
+        return jsonify({"message": "An error occurred while fetching chat log"}), 500
 
-    return jsonify({
-        "content": content, "is_last": is_last
-    }), 201
-    
+    # Create the object to parse into ChatGPT
+    llm_input = {
+        "chat_context": chat_context,
+        "response_object": response_object,
+        "chat_log": chat_log
+    }
+
+    # TODO: Send llm_object to ChatGPT
+    # llm = GPT()
+    # ### IF CHATLOG DOES NOT EXIST:
+    # # DO
+    # pipe = construct_chatlog(
+    #     # I NEED THE SURVEY CHAT CONTEXT HERE
+    #     format_responses_for_gpt(
+    #         response
+    #         )
+    # )
+    # first_question = llm.run(pipe.message_list)
+    # pipe.insert_and_update(first_question, pipe.current_index, is_llm=True)
+    # ### ELSE IF CHATLOG EXISTS:
+    # # DO
+    # f'''READ A LIST OF MESSAGES FROM DB AND ASSIGN TO {pipe}'''
+    # f'''pipe = ChatLog(MESSAGE LIST)'''
+    # ### END IF
+    # ### Assume data["content"] is the respondent's input
+    # pipe.insert_and_update(data["content"], pipe.current_index)
+    # output = llm.run(pipe.message_list)
+    # message_list = pipe.insert_and_update(output, pipe.current_index, is_llm=True)
+    #
+    # f''' SAVE message_list INTO DB'''
+    #
+    #
+    # assert message_list[-1]["role"] == "assistant"
+    # content = message_list[-1]["content"]
+    #
+    # exit = message_list.copy()
+    # exit.append(ChatLog.END_QUERY)
+    # result = llm.run(exit)
+    # is_last =  re.search(r"[nN]o", result)
+    # ###
+
+    # TODO: Get updated llm_object from ChatGPT
+    message = generate_random_text()
+    # TODO: Create the llm_output object - This will be returned from Hung Yee's model
+    # Convert chat log JSON string back to a dictionary
+    llm_output = llm_input.copy()
+    chat_log_dict = json.loads(llm_output["chat_log"])
+
+    # Append new message to the messages list
+    chat_log_dict["messages"].append({
+        "role": "bot",
+        "content": message
+    })
+
+    # Convert the updated chat log dictionary back to a JSON string
+    updated_chat_log = json.dumps(chat_log_dict)
+
+    # Update the chat log in llm_output
+    llm_output["chat_log"] = updated_chat_log
+
+    # Update the ChatLog table
+    try:
+        # Update the database
+        database_operations.update_chat_log(connection, survey_id, response_id, llm_output["chat_log"])
+    except Exception as e:
+        return jsonify({"message": "An error occurred while updating the chat log"}), 500
+
+    # Close database connection
+    database_operations.close_connection(connection)
+    return jsonify({"content": message, "is_last": False}), 201
+
+# TODO: Remove after testing
+import random
+
+def generate_random_text(words=20):
+    vocabulary = [
+        "apple", "banana", "orange", "grape", "strawberry", "kiwi", "melon", "peach", "pear", "plum",
+        "carrot", "broccoli", "spinach", "potato", "tomato", "cucumber", "lettuce", "onion", "pepper", "garlic",
+        "dog", "cat", "rabbit", "hamster", "goldfish", "turtle", "parrot", "snake", "frog", "lizard",
+        "chair", "table", "couch", "bed", "wardrobe", "desk", "lamp", "mirror", "rug", "bookshelf",
+        "bicycle", "car", "motorcycle", "bus", "train", "airplane", "boat", "truck", "helicopter", "rocket",
+        "house", "apartment", "bungalow", "cabin", "mansion", "castle", "cottage", "igloo", "tent", "treehouse",
+        "computer", "phone", "tablet", "television", "camera", "watch", "headphones", "speaker", "keyboard", "mouse",
+        "pizza", "hamburger", "sandwich", "pasta", "sushi", "taco", "burrito", "salad", "soup", "steak"
+    ]
+
+    random_text = ' '.join(random.choices(vocabulary, k=words))
+    return random_text
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=BACKEND_CONTAINER_PORT)
