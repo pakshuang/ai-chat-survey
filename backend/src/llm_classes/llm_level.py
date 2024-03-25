@@ -17,7 +17,7 @@ class LLM(ABC):
 
 class GPT(LLM):
     '''
-    Wrapper class around GPT-4 from OpenAI.
+    Wrapper class around the GPT models from OpenAI.
     '''
     def __init__(self, model="gpt-4"):
         load_dotenv()
@@ -34,35 +34,57 @@ class GPT(LLM):
         )
         return output.choices[0].message.content
 
-class ChatLog:
-    
+class ChatLog: 
     '''
     A simple wrapper around a list of messages that supports the deletion of future messages.
     '''
 
-    SYSPROMPT = """You are an assistant who is trying to gather user responses for a product.
+    SYSPROMPT = """You are an assistant who is trying to gather user experiences about a product.
         You have collected some survey responses, and you would like to probe further about what the user thinks about the product.
-        The user responses are provided below. Given these responses, pretend you are an interview and please generate one and only one question for the user.
+        The user responses are provided below. Given these responses, pretend you are an interviewer and generate a few questions to ask the user.
         {survey_initial_responses}"""
 
-    def __init__(self, survey_initial_responses: str, start_items=1):
-        start_dict = {
-            "role": "system",
-            "content": ChatLog.SYSPROMPT.format(
-                survey_initial_responses=survey_initial_responses
-            ),
-        }
+    SYSPROMPT2 = """Remember these few questions. This is a semi-structured interview, and try to keep asking questions, based on the user replies, or the questions you generated to ask the user. 
+    When you have no more questions left to ask, remember to thank the user for their time. Only ask the user one question at a time. 
+    After that, the system will ask you if you would like to end the interview. Please reply 'yes' or 'no' only. ONLY SAY 'yes' AFTER YOU HAVE THANKED THE USER.
+    Now, please ask the user a question.
+    """
+    
+    END_QUERY = {
+                "role": "system",
+                "content": """Would you like to end the interview here? If you have not thanked the user, please say 'no'. 
+                If you have more questions to ask the user, or if the user has not replied, please also say 'no'. """
+                }
 
-        self.message_list = [start_dict]
-        self.current_index = 1
+    def __init__(self, message_list: list[dict[str, str]], llm: LLM = GPT()):
+        self.message_list = message_list
+        self.current_index = len(message_list)
+        self.llm = llm
+        if self.current_index == 1:
+            # insert ai response
+            output = self.llm.run(self.message_list)
+            
+            self.insert_and_update(output, self.current_index, is_llm=True) 
+            # system response
+            self.insert_and_update(ChatLog.SYSPROMPT2, self.current_index, is_sys=True)
+            # output = self.llm.run(self.message_list)
+            # self.insert_and_update(output, self.current_index, is_llm=True) 
 
-    def insert_and_update(self, message: str, index: int, is_llm: bool) -> list:
+           
+
+
+    def insert_and_update(self, message: str, index: int, is_llm: bool = False, is_sys: bool = False) -> list:
         """
         Add a new reply to the conversation chain. If edits are made in the middle, future conversations are deleted.
         Returns a message list.
         """
+        if is_llm and is_sys:
+            raise Exception("Double roles!")
+        
         if is_llm:
             role = "assistant"
+        elif is_sys:
+            role = "system"
         else:
             role = "user"
 
@@ -71,14 +93,140 @@ class ChatLog:
         self.message_list = self.message_list[: self.current_index]
         return self.message_list
 
+def construct_chatlog(survey_initial_responses: str) -> ChatLog:
+    start_dict = {
+            "role": "system",
+            "content": ChatLog.SYSPROMPT.format(
+                survey_initial_responses=survey_initial_responses
+            ),
+        }
+    return ChatLog([start_dict])
 
-################ TEST HERE ######################
-# string = """
-# 1. What do you like about colgate toothpaste?
-# Tastes okay, makes teeth feel good
-# 2. Would you recommend it to a friend?
-# No
-# """
-# llm = GPT()
-# pipe = ChatLog(string)
-# print(llm.run(pipe.message_list))
+def format_responses_for_gpt(response: dict[str, object]) -> str:
+        '''
+        Converts a response dictionary object into a string of questions and answers.
+        '''
+        answers = response["answers"]
+        formatted = list(
+            map(
+                lambda ans: f'{ans["question_id"]}. {ans["question"]}\n{ans["answer"]}', answers
+            )
+
+        )
+        return "\n".join(formatted)   
+
+
+if __name__ == "__main__":
+############### TEST HERE ######################
+###### This should be moved to test folder #####
+    string = """
+This survey is for MacDonald's, the fast food chain.   
+How satisfied are you with our product/service?
+
+Options:
+-    Very satisfied
+-    Satisfied
+-    Neutral
+-    Dissatisfied
+-    Very dissatisfied
+Answer: Satisfied
+How likely are you to recommend our product/service to others?
+
+-   Very likely
+-   Likely
+-   Neutral
+-   Unlikely
+-   Very unlikely
+
+Answer: Very likely
+On a scale of 1 to 10, how would you rate the quality of our product/service?
+
+Answer: 8
+What do you like most about our product/service?
+
+Answer: The ease of use and reliability.
+What improvements would you suggest for our product/service?
+
+Answer: More customization options and faster response times.
+How often do you use our product/service?
+
+-    Daily
+-    Weekly
+-    Monthly
+-    Occasionally
+-    Rarely
+Answer: Weekly
+How satisfied are you with the customer support provided?
+Options:
+-    Very satisfied
+-    Satisfied
+-    Neutral
+-    Dissatisfied
+-    Very dissatisfied
+Answer: Satisfied
+What made you choose our product/service over competitors?
+
+Answer: Positive reviews and reputation.
+How would you rate the value for money of our product/service?
+
+Answer: 7
+How easy was it to purchase/use our product/service?
+Options:
+-    Very easy
+-    Easy
+-    Neutral
+-    Difficult
+-    Very difficult
+Answer: Easy
+Would you consider purchasing from us again in the future?
+Options:
+-    Yes
+-    No
+-    Maybe
+Answer: Yes
+Overall, how satisfied are you with your experience with our company?
+Options:
+-    Very satisfied
+-    Satisfied
+-    Neutral
+-    Dissatisfied
+-    Very dissatisfied
+Answer: Very satisfied
+What improvements would you like to see in our company as a whole?
+
+Answer: More frequent updates and better communication with customers.
+How did you first hear about our company?
+Options:
+-    Word of mouth
+-    Online advertisement
+-    Social media
+-    Other (please specify)
+
+Answer: Word of mouth
+Additional Comments:
+Answer: Keep up the good work!
+
+
+    """
+    llm = GPT()
+    pipe = construct_chatlog(string)
+    import re
+    for i in range(100):
+        output = (llm.run(pipe.message_list))
+        print(output)     
+        pipe.insert_and_update(output, pipe.current_index, is_llm=True) 
+
+        bye = pipe.message_list.copy()
+        bye.append(
+            ChatLog.END_QUERY
+        )
+        result = llm.run(bye)
+        if re.search(r"[yY]es", result):
+            break
+
+        pipe.insert_and_update(input(), pipe.current_index, is_llm=False)
+    
+
+
+
+   
