@@ -1,6 +1,5 @@
 import os
 from abc import ABC, abstractmethod
-
 from dotenv import load_dotenv
 from openai import OpenAI
 
@@ -12,8 +11,7 @@ class LLM(ABC):
     '''
     @abstractmethod
     def run(self, messages: list) -> str:
-        pass
-
+        return
 
 class GPT(LLM):
     '''

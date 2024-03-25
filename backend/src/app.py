@@ -1,10 +1,10 @@
+from llm_classes import GPT, ChatLog, LLM, construct_chatlog, format_responses_for_gpt
 import datetime
 import os
 from functools import wraps
 from database_operations import update_chat_log
 import re
 from survey_creation import *
-from llm_classes import GPT, LLM, ChatLog, construct_chatlog, format_responses_for_gpt
 import jwt
 import json
 from flask import Flask, jsonify, request
@@ -656,11 +656,11 @@ def send_chat_message(response_id):
     has_no_chat_log = has_no_chat_log(data["content"], message_list)
     if has_no_chat_log:
         pipe = construct_chatlog(
-            f"{llm_input["chat_context"]}\n{
+            f"""{llm_input["chat_context"]}\n{
                 format_responses_for_gpt(
                     llm_input["response_object"]
                 )
-            }", llm=llm
+            }""", llm=llm
         )
         first_question = llm.run(pipe.message_list)
         updated_message_list =  pipe.insert_and_update(first_question, pipe.current_index, is_llm=True)
