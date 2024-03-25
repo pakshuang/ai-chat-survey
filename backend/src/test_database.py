@@ -13,7 +13,6 @@ def test_create_admin():
     # assert response.status_code == 201
     # assert response.json()["message"] == "Admin test_admin created successfully"
 
-
 def test_login_admin():
     url = "http://localhost:{}/api/v1/admins/login".format("5000")  # Assuming BACKEND_CONTAINER_PORT is defined
     data = {"username": "test_admin", "password": "test_password"}
