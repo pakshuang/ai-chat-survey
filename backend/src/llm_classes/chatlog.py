@@ -1,4 +1,4 @@
-from llm_level import LLM, GPT, RoleException
+from llm_classes.llm_level import LLM, GPT, RoleException
 
 class ChatLog: 
     '''

@@ -1,4 +1,5 @@
-from chatlog import LLM, GPT, ChatLog
+from llm_classes.llm_level import LLM, GPT
+from llm_classes.chatlog import ChatLog
 
 def construct_chatlog(survey_initial_responses: str, llm: LLM = GPT()) -> ChatLog:
     start_dict = {
