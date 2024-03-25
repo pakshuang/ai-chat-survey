@@ -418,7 +418,6 @@ def submit_response():
 @admin_token_required
 def get_responses(**kwargs):
     # Check if survey ID is provided, return 400 if not
-    # TODO: Clarify why this is an optional argument
     survey_id = request.args.get("survey")
     if not survey_id:
         return jsonify({"message": "Missing survey ID"}), 400
@@ -476,34 +475,59 @@ def get_responses(**kwargs):
 @app.route("/api/v1/responses/<response_id>", methods=["GET"])
 @admin_token_required
 def get_response(response_id, **kwargs):
-    # TODO: Check if response exists, return 404 if not
-    filtered_responses = list(
-        filter(
-            lambda response: response["metadata"]["response_id"] == int(response_id),
-            responses["responses"],
-        )
-    )
-    if not filtered_responses:
-        return jsonify({"message": "Response not found"}), 404
-    response = filtered_responses[0]
+    if not response_id:
+        return jsonify({"message": "Missing response ID"}), 400
 
-    # TODO: Check if corresponding survey exists, return 404 if not
-    filtered_surveys = list(
-        filter(
-            lambda survey: survey["metadata"]["id"]
-                           == int(response["metadata"]["survey_id"]),
-            surveys["surveys"],
-        )
-    )
-    if not filtered_surveys:
-        return jsonify({"message": "Survey not found"}), 404
-    survey = filtered_surveys[0]
+    # Check if survey ID is provided, return 400 if not
+    survey_id = request.args.get("survey")
+    if not survey_id:
+        return jsonify({"message": "Missing survey ID"}), 400
 
-    # TODO: Check if admin has access to survey, return 403 if not
-    if survey["metadata"]["created_by"] != request["jwt_sub"]:
-        return jsonify({"message": "Accessing other admin's surveys is forbidden"}), 403
+    # Connect to MySQL database
+    connection = database_operations.connect_to_mysql()
+    if not connection:
+        return jsonify({"message": "Failed to connect to the database"}), 500
 
-    return jsonify(response), 200
+    try:
+        # Fetch survey from the database
+        query = """
+            SELECT * FROM Surveys WHERE survey_id = %s
+        """
+        survey = database_operations.fetch(connection, query, (survey_id,))
+
+        # Check if survey exists
+        if not survey:
+            return jsonify({"message": "Survey not found"}), 404
+
+        # Check if admin has access to survey
+        if survey[0]["admin_username"] != kwargs["jwt_sub"]:
+            return jsonify({"message": "Accessing other admin's surveys is forbidden"}), 403
+
+        # Fetch responses from the database
+        query = """
+            SELECT sr.response_id, sr.submitted_at, sr.question_id, q.question_type, q.question, q.options, sr.answer
+            FROM Survey_Responses sr
+            INNER JOIN Questions q ON sr.question_id = q.question_id AND sr.survey_id = q.survey_id
+            INNER JOIN Surveys s ON sr.survey_id = s.survey_id
+            WHERE sr.survey_id = %s AND sr.response_id = %s
+        """
+        responses_data = database_operations.fetch(connection, query, (survey_id, response_id))
+
+        # Check if responses exist
+        if not responses_data:
+            return jsonify({"message": "No responses found for the survey"}), 404
+
+        # Create response objects dictionary
+        response_objects = {}
+        for response_data in responses_data:
+            response_id = response_data["response_id"]
+            if response_id not in response_objects:
+                response_objects[response_id] = database_operations.create_response_object(survey_id, response_id, response_data)
+            database_operations.append_answer_to_response(response_objects, response_id, response_data)
+        return jsonify(response_objects), 200
+    finally:
+        # Close database connection
+        database_operations.close_connection(connection)
 
 
 @app.route("/api/v1/responses/<response_id>/chat", methods=["POST"])
