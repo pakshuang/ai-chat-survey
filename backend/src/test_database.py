@@ -1,6 +1,7 @@
 import requests
 import time
 
+
 def test_create_admin():
     url = "http://localhost:{}/api/v1/admins".format(
         "5000"
@@ -244,7 +245,7 @@ def test_send_chat_message():
 
     # Prepare response data
     response_data = {
-        "content": "Please be correct"
+        "content": "Hello!"
     }
 
     # Send POST request to send chat message
@@ -254,7 +255,7 @@ def test_send_chat_message():
     # Check if the response is successful
     assert response.status_code == 201
     # Add more assertions based on your expected behavior
-    print(response.json()["content"])
+    
 
 if __name__ == "__main__":
     test_create_admin()
