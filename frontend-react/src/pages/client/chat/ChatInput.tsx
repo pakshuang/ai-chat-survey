@@ -1,5 +1,5 @@
 import { Button, Input, Flex } from "@chakra-ui/react";
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, useRef, useEffect } from "react";
 
 interface ChatInputProps {
   sendMessage: (message: string) => void;
@@ -8,6 +8,7 @@ interface ChatInputProps {
 function ChatInput({ sendMessage }: ChatInputProps) {
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -19,6 +20,10 @@ function ChatInput({ sendMessage }: ChatInputProps) {
       setMessage("");
     }, 500);
   }
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [message]);
 
   return (
     <form onSubmit={(e) => handleSubmit(e)}>
@@ -36,6 +41,7 @@ function ChatInput({ sendMessage }: ChatInputProps) {
           onChange={(e) => setMessage(e.target.value)}
           value={message}
           isDisabled={isSubmitting}
+          ref={inputRef}
         />
         <Button
           type="submit"
