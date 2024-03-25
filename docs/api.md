@@ -196,15 +196,18 @@ These endpoints are used to create, read, update, and delete surveys, which are 
   - `404` - Not Found
   - `500` - Internal Server Error
 
-## Responses
+## Survey Responses
+> [!WARNING] **Survey Responses (Response objects) are not to be confused with API Responses!**
+> Survey responses/reponse objects are collections of data from survey and chat and are json objects. API Responses are outputs from a server!
 
-These endpoints are used to submit, read, update, and delete responses, which are the combined data collected from the survey and chat completed by a single respondent.
+These endpoints are used to submit, read, update, and delete responses response objects, which are the combined data collected from the survey and chat completed by a single respondent.
 
-### 1. Submit Response
+
+### 1. Submit Survey Response
 
 - **Endpoint:** `/api/v1/responses`
 - **Method:** `POST`
-- **Description:** Submit a new response.
+- **Description:** Submit a new survey response (response object).
 - **Request Body:**
 
   ```json
@@ -228,7 +231,7 @@ These endpoints are used to submit, read, update, and delete responses, which ar
 
   ```json
   {
-    "response_id": "integer"
+    "response_id": "integer" # survey response id.
   }
   ```
 
@@ -239,12 +242,14 @@ These endpoints are used to submit, read, update, and delete responses, which ar
   - `404` - Not Found
   - `500` - Internal Server Error
 
-### 2. Get Responses
+### 2. Get Survey Responses
 
 - **Endpoint:** `/api/v1/responses?survey={survey_id}`
 - **Method:** `GET`
-- **Description:** Get all responses for a survey. An admin JWT that corresponds to the survey creator is required.
+- **Description:** Get all response objects for a survey. An admin JWT that corresponds to the survey creator is required.
+
 - **Response:**
+> [!NOTE] **API Response!**
 
   ```json
   {
@@ -265,11 +270,11 @@ These endpoints are used to submit, read, update, and delete responses, which ar
   - `404` - Not Found
   - `500` - Internal Server Error
 
-### 3. Get Response
+### 3. Get Survey Response
 
 - **Endpoint:** `/api/v1/ responses?survey={survey_id}`
 - **Method:** `GET`
-- **Description:** Get a response by ID. An admin JWT that corresponds to the survey creator is required.
+- **Description:** Get a response object by ID. An admin JWT that corresponds to the survey creator is required.
 - **Response:**
 
   ```json
