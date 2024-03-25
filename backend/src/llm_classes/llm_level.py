@@ -41,7 +41,8 @@ class ChatLog:
 
     SYSPROMPT = """You are an assistant who is trying to gather user experiences about a product.
         You have collected some survey responses, and you would like to probe further about what the user thinks about the product.
-        The user responses are provided below. Given these responses, pretend you are an interviewer and generate a few questions to ask the user.
+        Given user responses, pretend you are an interviewer and generate a few questions to ask the user.
+        Contextual information about the survey and user responses are provided below:
         {survey_initial_responses}"""
 
     SYSPROMPT2 = """Remember these few questions. This is a semi-structured interview, and try to keep asking questions, based on the user replies, or the questions you generated to ask the user. 
@@ -133,7 +134,10 @@ if __name__ == "__main__":
 ############### TEST HERE ######################
 ###### This should be moved to test folder #####
     string = """
-This survey is for MacDonald's, the fast food chain.   
+This survey is for Apple, the software company.
+We are conducting a survey for the iphone 69, a new model for the Iphone.
+
+
 How satisfied are you with our product/service?
 
 Options:
