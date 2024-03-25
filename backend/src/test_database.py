@@ -270,6 +270,8 @@ if __name__ == "__main__":
 
     test_create_admin()
     test_create_survey()
+    test_get_surveys()
+    test_get_survey()
     test_submit_response()
     test_get_responses()
     test_get_response()

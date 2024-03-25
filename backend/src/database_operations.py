@@ -118,7 +118,7 @@ def create_survey(connection, data):
 
 # get_surveys()
 # Helper function to create survey object
-def create_survey_object(row, questions=[]):
+def create_survey_object(row):
     survey_object = {
         "metadata": {
             "id": row['survey_id'],
@@ -129,7 +129,7 @@ def create_survey_object(row, questions=[]):
         },
         "title": row['title'],
         "subtitle": row['subtitle'],
-        "questions": questions,  # Include questions list
+        "questions": [],
         "chat_context": row['chat_context']
     }
     return survey_object
@@ -137,20 +137,16 @@ def create_survey_object(row, questions=[]):
 # get_surveys()
 # Helper function to create survey object
 def append_question_to_survey(survey_objects, survey_id, question_data):
-    if survey_id not in survey_objects:
-        survey_objects[survey_id]['questions'] = []  # Initialize questions list if not exists
-
     # Check if the question already exists in the list
-    question_exists = any(question['id'] == question_data['question_id'] for question in survey_objects[survey_id]['questions'])
+    # question_exists = any(question['id'] == question_data['question_id'] for question in survey_objects[survey_id]['questions'])
 
     # If the question does not exist, append it to the list
-    if not question_exists:
-        survey_objects[survey_id]['questions'].append({
-            "id": question_data['question_id'],
-            "type": question_data['question_type'],
-            "question": question_data['question'],
-            "options": json.loads(question_data['options']) if question_data['options'] else []
-        })
+    survey_objects[survey_id]['questions'].append({
+        "id": question_data['question_id'],
+        "type": question_data['question_type'],
+        "question": question_data['question'],
+        "options": json.loads(question_data['options']) if question_data['options'] else []
+    })
 
 # submit_response()
 # Helper function to insert response data into DB
@@ -200,9 +196,7 @@ def save_response_to_database(connection, data, survey_id):
 # Helper function to validate response data structure
 def validate_response(response_data, survey_object):
     response_questions = response_data.get("answers", [])
-    print(response_questions, flush=True)
     survey_questions = survey_object.get("questions", [])
-    print(survey_questions, flush=True)
 
     # Check if the number of questions match
     if len(response_questions) != len(survey_questions):

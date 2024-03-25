@@ -295,7 +295,11 @@ def get_surveys():
             all_survey_objects = []
 
             for row in usernames_data:
-                query = "SELECT Surveys.*, Questions.* FROM Surveys LEFT JOIN Questions ON Surveys.survey_id = Questions.survey_id WHERE Surveys.admin_username = %s"
+                query = """SELECT s.name, s.description, s.title, s.subtitle, s.admin_username, s.created_at, s.chat_context,
+                        q.question_id, s.survey_id, q.question, q.question_type, q.options
+                         FROM Surveys s
+                         LEFT JOIN Questions q ON s.survey_id = q.survey_id 
+                         WHERE s.admin_username = %s"""
                 params = (row["admin_username"],)
 
                 survey_data = database_operations.fetch(connection, query, params)
@@ -425,10 +429,6 @@ def submit_response():
 
     # GET request is successful
     survey_object = survey_object_response[0].json
-    print("survey", flush=True)
-    print(survey_object[str(survey_id)], flush=True)
-    print("response", flush=True)
-    print(data, flush=True)
 
     # Validate response object against survey object
     validation_error = database_operations.validate_response(data, survey_object[str(survey_id)])
