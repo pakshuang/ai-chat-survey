@@ -19,7 +19,6 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { useState } from "react";
 import { LoginSignupData } from "./constants";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { login } from "../../hooks/useApi";
 
 // TODO: abstract out into different files to avoid repeated logic across login/signup
@@ -38,7 +37,7 @@ function LoginPage() {
 
   const onSubmit: SubmitHandler<LoginSignupData> = async (values) => {
     try {
-      await axios.post("http://localhost:5000/api/v1/admins/login", values);
+      await login(values);
       navigate("/admin/survey");
     } catch (error: any) {
       console.error("Login failed:", error.response?.data);
