@@ -21,9 +21,7 @@ def connect_to_mysql():
         print("Connected to MySQL database successfully!")
         return connection
     except pymysql.Error as e:
-        print(f"Error connecting to MySQL database: {e}")
-        return None
-
+        raise e
 
 def get_cursor(connection):
     return connection.cursor()
@@ -50,8 +48,7 @@ def execute(connection, query, params=None):
             cursor.execute(query, params)
             commit(connection)  # Commit changes after successful execution
     except Exception as e:
-        print(f"Error executing query: {e}")
-        rollback(connection)  # Rollback changes in case of error
+        raise e
 
 
 def fetch(connection, query, params=None):
@@ -60,8 +57,7 @@ def fetch(connection, query, params=None):
             cursor.execute(query, params)
             return cursor.fetchall()
     except Exception as e:
-        print(f"Error fetching results: {e}")
-        return None  # Return None in case of error
+        raise e
 
 
 def close_cursor(cursor):
@@ -116,9 +112,8 @@ def create_survey(connection, data):
 
         return survey_id
     except Exception as e:
-        print(f"Error creating survey: {e}")
         connection.rollback()
-        return None
+        raise e
 
 
 # get_surveys()
@@ -198,8 +193,7 @@ def save_response_to_database(connection, data, survey_id):
 
         return new_response_id
     except Exception as e:
-        print(f"Error saving response to database: {e}")
-        return None
+        return e
 
 
 # submit_response()
@@ -270,3 +264,66 @@ def append_answer_to_response(response_objects, response_id, response_data):
         "answer": response_data["answer"]
     }
     response_objects[response_id]["answers"].append(answer)
+
+# send_chat_message()
+# Helper function to fetch the chat_context from Surveys
+def fetch_chat_context(connection, survey_id):
+    try:
+        # Fetch chat context from the database
+        chat_context_query = """
+        SELECT chat_context FROM Surveys WHERE survey_id = %s
+        """
+        result = fetch(connection, chat_context_query, (survey_id,))
+        # Check if chat context exists
+        if not result:
+            raise
+
+        # If chat context exists, return it
+        result = result[0]["chat_context"]
+        return result
+    except Exception as e:
+        raise e
+
+# send_chat_message()
+# Helper function to get the chatLog or create a new chatLog
+def get_chat_log(connection, survey_id, response_id):
+    try:
+        # Check if chat log exists for the survey
+        chat_log_query = """
+        SELECT chat_log FROM ChatLog WHERE survey_id = %s AND response_id = %s
+        """
+        result = fetch(connection, chat_log_query, (survey_id, response_id))
+
+        # If chat log doesn't exist, create a new chat_log
+        if not result:
+            insert_chat_log_query = """
+            INSERT INTO ChatLog (survey_id, response_id, chat_log, created_at) VALUES (%s, %s, %s, CURRENT_TIMESTAMP)
+            """
+            # Define the initial chat log structure
+            initial_chat_log = {
+                "messages": []
+            }
+            initial_chat_log = json.dumps(initial_chat_log)
+            execute(connection, insert_chat_log_query, (survey_id, response_id, initial_chat_log))
+            chat_log = initial_chat_log
+        else:
+            chat_log = result[0]["chat_log"]
+
+        return chat_log  # Return chat log
+
+    except Exception as e:
+        raise e
+
+# send_chat_message()
+# Helper function update chat log
+def update_chat_log(connection, survey_id, response_id, updated_chat_log):
+    try:
+        # Update chat_log in the database
+        update_chat_log_query = """
+        UPDATE ChatLog SET chat_log = %s WHERE survey_id = %s AND response_id = %s
+        """
+        execute(connection, update_chat_log_query, (updated_chat_log, survey_id, response_id))
+
+        return True
+    except Exception as e:
+        raise e

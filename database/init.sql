@@ -50,7 +50,9 @@ CREATE TABLE IF NOT EXISTS Survey_Responses (
 CREATE TABLE IF NOT EXISTS ChatLog (
     chat_id INT AUTO_INCREMENT PRIMARY KEY,
     survey_id INT,
+    response_id INT,
     chat_log JSON,
     created_at TIMESTAMP,
-    FOREIGN KEY (survey_id) REFERENCES Surveys(survey_id)
+    FOREIGN KEY (survey_id) REFERENCES Surveys(survey_id) ON DELETE CASCADE,
+    FOREIGN KEY (response_id) REFERENCES Survey_Responses(response_id) ON DELETE CASCADE
 );

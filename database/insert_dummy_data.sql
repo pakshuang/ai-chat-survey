@@ -30,7 +30,7 @@ VALUES
     (1, 2, 1, 'Football, Tennis', NOW());
 
 -- Insert data into the ChatLog table
-INSERT INTO ChatLog (survey_id, chat_log, created_at)
+INSERT INTO ChatLog (survey_id, response_id, chat_log, created_at)
 VALUES
-    (1, '{"messages": [{"sender": "client", "message": "User message 1", "timestamp": "2024-03-23 10:00:00"}, {"sender": "bot", "message": "Bot response 1", "timestamp": "2024-03-23 10:05:00"}, {"sender": "client", "message": "User message 2", "timestamp": "2024-03-23 10:10:00"}, {"sender": "bot", "message": "Bot response 2", "timestamp": "2024-03-23 10:15:00"}]}', NOW()),
-    (2, '{"messages": [{"sender": "client", "message": "User message 1", "timestamp": "2024-03-23 11:00:00"}, {"sender": "bot", "message": "Bot response 1", "timestamp": "2024-03-23 11:05:00"}, {"sender": "client", "message": "User message 2", "timestamp": "2024-03-23 11:10:00"}, {"sender": "bot", "message": "Bot response 2", "timestamp": "2024-03-23 11:15:00"}]}', NOW());
+    (1, 1, '{"messages": [{"sender": "client", "message": "User message 1", "timestamp": "2024-03-23 10:00:00"}, {"sender": "bot", "message": "Bot response 1", "timestamp": "2024-03-23 10:05:00"}, {"sender": "client", "message": "User message 2", "timestamp": "2024-03-23 10:10:00"}, {"sender": "bot", "message": "Bot response 2", "timestamp": "2024-03-23 10:15:00"}]}', NOW()),
+    (2, 1, '{"messages": [{"sender": "client", "message": "User message 1", "timestamp": "2024-03-23 11:00:00"}, {"sender": "bot", "message": "Bot response 1", "timestamp": "2024-03-23 11:05:00"}, {"sender": "client", "message": "User message 2", "timestamp": "2024-03-23 11:10:00"}, {"sender": "bot", "message": "Bot response 2", "timestamp": "2024-03-23 11:15:00"}]}', NOW());

@@ -1,10 +1,10 @@
 import datetime
 import os
 from functools import wraps
-from llm_classes import GPT, ChatLog, construct_chatlog, format_responses_for_gpt
 import re
 from survey_creation import *
 import jwt
+import json
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -265,34 +265,62 @@ def get_surveys():
         if username:
             query = "SELECT Surveys.*, Questions.* FROM Surveys LEFT JOIN Questions ON Surveys.survey_id = Questions.survey_id WHERE Surveys.admin_username = %s"
             params = (username,)
+
+            survey_data = database_operations.fetch(connection, query, params)
+
+            if survey_data is None:
+                return jsonify({"message": "Error fetching surveys"}), 500
+            elif not survey_data:
+                if username:
+                    return jsonify({"message": "No surveys found for user '{}'".format(username)}), 404
+                else:
+                    return jsonify({"message": "No surveys found"}), 404
+
+            # Group survey data by survey ID and collect questions
+            survey_objects = {}
+            for row in survey_data:
+                survey_id = row['survey_id']
+                if survey_id not in survey_objects:
+                    survey_objects[survey_id] = database_operations.create_survey_object(row)
+                if row['question_id']:  # Check if there's a question associated
+                    database_operations.append_question_to_survey(survey_objects, survey_id, row)
+
+            # Convert dictionary to list of survey objects
+            survey_objects_list = list(survey_objects.values())
+
+            return jsonify(survey_objects_list), 200
         else:
-            query = "SELECT Surveys.*, Questions.* FROM Surveys LEFT JOIN Questions ON Surveys.survey_id = Questions.survey_id"
-            params = None
+            get_usernames = "SELECT admin_username FROM Admins"
+            usernames_data = database_operations.fetch(connection, get_usernames)
+            all_survey_objects = []
 
-        survey_data = database_operations.fetch(connection, query, params)
+            for row in usernames_data:
+                query = "SELECT Surveys.*, Questions.* FROM Surveys LEFT JOIN Questions ON Surveys.survey_id = Questions.survey_id WHERE Surveys.admin_username = %s"
+                params = (row["admin_username"],)
 
-        if survey_data is None:
-            return jsonify({"message": "Error fetching surveys"}), 500
-        elif not survey_data:
-            if username:
-                return jsonify({"message": "No surveys found for user '{}'".format(username)}), 404
-            else:
-                return jsonify({"message": "No surveys found"}), 404
+                survey_data = database_operations.fetch(connection, query, params)
 
-        # Group survey data by survey ID and collect questions
-        survey_objects = {}
-        for row in survey_data:
-            survey_id = row['survey_id']
-            if survey_id not in survey_objects:
-                survey_objects[survey_id] = database_operations.create_survey_object(row)
-            if row['question_id']:  # Check if there's a question associated
-                database_operations.append_question_to_survey(survey_objects, survey_id, row)
+                if survey_data is None:
+                    return jsonify({"message": "Error fetching surveys"}), 500
+                elif not survey_data:
+                    if username:
+                        return jsonify({"message": "No surveys found for user '{}'".format(username)}), 404
+                    else:
+                        return jsonify({"message": "No surveys found"}), 404
 
-        # Convert dictionary to list of survey objects
-        survey_objects_list = list(survey_objects.values())
+                # Group survey data by survey ID and collect questions
+                survey_objects = {}
+                for row in survey_data:
+                    survey_id = row['survey_id']
+                    if survey_id not in survey_objects:
+                        survey_objects[survey_id] = database_operations.create_survey_object(row)
+                    if row['question_id']:  # Check if there's a question associated
+                        database_operations.append_question_to_survey(survey_objects, survey_id, row)
+                all_survey_objects.extend(list(survey_objects.values()))
+            # Convert dictionary to list of survey objects
+            all_survey_objects_list = list(all_survey_objects)
 
-        return jsonify(survey_objects_list), 200
-
+            return jsonify(all_survey_objects_list), 200
     finally:
         database_operations.close_connection(connection)
 
@@ -397,6 +425,10 @@ def submit_response():
 
     # GET request is successful
     survey_object = survey_object_response[0].json
+    print("survey", flush=True)
+    print(survey_object[str(survey_id)], flush=True)
+    print("response", flush=True)
+    print(data, flush=True)
 
     # Validate response object against survey object
     validation_error = database_operations.validate_response(data, survey_object[str(survey_id)])
@@ -542,59 +574,150 @@ def get_response(response_id, **kwargs):
 
 @app.route("/api/v1/responses/<response_id>/chat", methods=["POST"])
 def send_chat_message(response_id):
-    # TODO: Check if response exists, return 404 if not
-    filtered_responses = list(
-        filter(
-            lambda response: response["metadata"]["response_id"] == int(response_id),
-            responses["responses"],
-        )
-    )
-    if not filtered_responses:
-        return jsonify({"message": "Response not found"}), 404
+    if not response_id:
+        return jsonify({"message": "Missing response ID"}), 400
 
+    # Check if survey ID is provided, return 400 if not
+    survey_id = request.args.get("survey")
+    if not survey_id:
+        return jsonify({"message": "Missing survey ID"}), 400
+
+    # Step 1: Retrieve Response Object
+    response_object = get_response(response_id=response_id, survey_id=survey_id)
+
+    # If GET request is not successful, return 500
+    if response_object[1] != 200:
+        return jsonify({"message": "Failed to retrieve survey object"}), 500
+
+    # GET request is successful
+    response_object = response_object[0].json
+
+    # Connect to MySQL database
+    connection = database_operations.connect_to_mysql()
+    if not connection:
+        return jsonify({"message": "Failed to connect to the database"}), 500
+
+    # Step 2: Insert message to DB
+    # Get json for request body, containing message sent by user
     data = request.get_json()
-    if not data or data["content"] is None:
-        return jsonify({"message": "Missing data"}), 400
+    # If there is content, append to chatLog
+    if "content" in data:
+        try:
+            chat_log = database_operations.get_chat_log(connection, survey_id, response_id)
+            chat_log_dict = json.loads(chat_log)
 
-    response = filtered_responses[0]
-    # TODO: Save message to database
-    llm = GPT()
-    ### IF CHATLOG DOES NOT EXIST:
-    # DO
-    pipe = construct_chatlog(
-        # I NEED THE SURVEY CHAT CONTEXT HERE
-        format_responses_for_gpt(
-            response
-            )
-    )
-    first_question = llm.run(pipe.message_list)
-    pipe.insert_and_update(first_question, pipe.current_index, is_llm=True)
-    ### ELSE IF CHATLOG EXISTS:
-    # DO
-    f'''READ A LIST OF MESSAGES FROM DB AND ASSIGN TO {pipe}'''
-    f'''pipe = ChatLog(MESSAGE LIST)'''
-    ### END IF
-    ### Assume data["content"] is the respondent's input
-    pipe.insert_and_update(data["content"], pipe.current_index)
-    output = llm.run(pipe.message_list)
-    message_list = pipe.insert_and_update(output, pipe.current_index, is_llm=True)
+            # Append new message to the messages list
+            chat_log_dict["messages"].append({
+                "role": "user",
+                "content": data["content"]
+            })
 
-    f''' SAVE message_list INTO DB'''
+            # Convert the updated chat log dictionary back to a JSON string
+            updated_chat_log = json.dumps(chat_log_dict)
+            database_operations.update_chat_log(connection, survey_id, response_id, updated_chat_log)
+        except Exception as e:
+            return jsonify({"message": "An error occurred while updating chat log with user message"}), 500
 
+    # Step 3: Retrieve chat_context
+    try:
+        chat_context = database_operations.fetch_chat_context(connection, survey_id)
+    except Exception as e:
+        return jsonify({"message": "An error occurred while fetching chat context"}), 500
 
-    assert message_list[-1]["role"] == "assistant"
-    content = message_list[-1]["content"]
+    # Step 4: Retrieve chatLog object
+    try:
+        chat_log = database_operations.get_chat_log(connection, survey_id, response_id)
+    except Exception as e:
+        return jsonify({"message": "An error occurred while fetching chat log"}), 500
 
-    exit = message_list.copy()
-    exit.append(ChatLog.END_QUERY)
-    result = llm.run(exit)
-    is_last =  re.search(r"[nN]o", result)
-    ###
+    # Create the object to parse into ChatGPT
+    llm_input = {
+        "chat_context": chat_context,
+        "response_object": response_object,
+        "chat_log": chat_log
+    }
 
-    return jsonify({
-        "content": content, "is_last": is_last
-    }), 201
+    # TODO: Send llm_object to ChatGPT
+    # llm = GPT()
+    # ### IF CHATLOG DOES NOT EXIST:
+    # # DO
+    # pipe = construct_chatlog(
+    #     # I NEED THE SURVEY CHAT CONTEXT HERE
+    #     format_responses_for_gpt(
+    #         response
+    #         )
+    # )
+    # first_question = llm.run(pipe.message_list)
+    # pipe.insert_and_update(first_question, pipe.current_index, is_llm=True)
+    # ### ELSE IF CHATLOG EXISTS:
+    # # DO
+    # f'''READ A LIST OF MESSAGES FROM DB AND ASSIGN TO {pipe}'''
+    # f'''pipe = ChatLog(MESSAGE LIST)'''
+    # ### END IF
+    # ### Assume data["content"] is the respondent's input
+    # pipe.insert_and_update(data["content"], pipe.current_index)
+    # output = llm.run(pipe.message_list)
+    # message_list = pipe.insert_and_update(output, pipe.current_index, is_llm=True)
+    #
+    # f''' SAVE message_list INTO DB'''
+    #
+    #
+    # assert message_list[-1]["role"] == "assistant"
+    # content = message_list[-1]["content"]
+    #
+    # exit = message_list.copy()
+    # exit.append(ChatLog.END_QUERY)
+    # result = llm.run(exit)
+    # is_last =  re.search(r"[nN]o", result)
+    # ###
 
+    # TODO: Get updated llm_object from ChatGPT
+    message = generate_random_text()
+    # TODO: Create the llm_output object - This will be returned from Hung Yee's model
+    # Convert chat log JSON string back to a dictionary
+    llm_output = llm_input.copy()
+    chat_log_dict = json.loads(llm_output["chat_log"])
+
+    # Append new message to the messages list
+    chat_log_dict["messages"].append({
+        "role": "bot",
+        "content": message
+    })
+
+    # Convert the updated chat log dictionary back to a JSON string
+    updated_chat_log = json.dumps(chat_log_dict)
+
+    # Update the chat log in llm_output
+    llm_output["chat_log"] = updated_chat_log
+
+    # Update the ChatLog table
+    try:
+        # Update the database
+        database_operations.update_chat_log(connection, survey_id, response_id, llm_output["chat_log"])
+    except Exception as e:
+        return jsonify({"message": "An error occurred while updating the chat log"}), 500
+
+    # Close database connection
+    database_operations.close_connection(connection)
+    return jsonify({"content": message, "is_last": False}), 201
+
+# TODO: Remove after testing
+import random
+
+def generate_random_text(words=20):
+    vocabulary = [
+        "apple", "banana", "orange", "grape", "strawberry", "kiwi", "melon", "peach", "pear", "plum",
+        "carrot", "broccoli", "spinach", "potato", "tomato", "cucumber", "lettuce", "onion", "pepper", "garlic",
+        "dog", "cat", "rabbit", "hamster", "goldfish", "turtle", "parrot", "snake", "frog", "lizard",
+        "chair", "table", "couch", "bed", "wardrobe", "desk", "lamp", "mirror", "rug", "bookshelf",
+        "bicycle", "car", "motorcycle", "bus", "train", "airplane", "boat", "truck", "helicopter", "rocket",
+        "house", "apartment", "bungalow", "cabin", "mansion", "castle", "cottage", "igloo", "tent", "treehouse",
+        "computer", "phone", "tablet", "television", "camera", "watch", "headphones", "speaker", "keyboard", "mouse",
+        "pizza", "hamburger", "sandwich", "pasta", "sushi", "taco", "burrito", "salad", "soup", "steak"
+    ]
+
+    random_text = ' '.join(random.choices(vocabulary, k=words))
+    return random_text
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=BACKEND_CONTAINER_PORT)
