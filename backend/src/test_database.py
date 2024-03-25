@@ -129,7 +129,7 @@ def test_delete_survey():
     }
 
     # URL for deleting a survey
-    delete_survey_url = "http://localhost:{}/api/v1/surveys/5".format("5000")
+    delete_survey_url = "http://localhost:{}/api/v1/surveys/3".format("5000")
     # Assuming you already have a valid survey_id for testing
 
     # Send DELETE request to delete the survey
@@ -266,3 +266,5 @@ if __name__ == "__main__":
     test_get_responses()
     test_get_response()
     test_send_chat_message()
+
+    # test_delete_survey()

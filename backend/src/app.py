@@ -366,6 +366,7 @@ def get_survey(survey_id):
                     survey_object[survey_id]['questions'] = []
                 if row['question_id']:  # Check if there's a question associated
                     database_operations.append_question_to_survey(survey_object, survey_id, row)
+        survey_object = survey_object[int(survey_id)]
         return jsonify(survey_object), 200
     finally:
         database_operations.close_connection(connection)
@@ -431,7 +432,7 @@ def submit_response():
     survey_object = survey_object_response[0].json
 
     # Validate response object against survey object
-    validation_error = database_operations.validate_response(data, survey_object[str(survey_id)])
+    validation_error = database_operations.validate_response(data, survey_object)
     if validation_error:
         return jsonify({"message": validation_error}), 400
 
@@ -566,6 +567,7 @@ def get_response(response_id, **kwargs):
             if response_id not in response_objects:
                 response_objects[response_id] = database_operations.create_response_object(survey_id, response_id, response_data)
             database_operations.append_answer_to_response(response_objects, response_id, response_data)
+        response_objects = response_objects[int(response_id)]
         return jsonify(response_objects), 200
     finally:
         # Close database connection
