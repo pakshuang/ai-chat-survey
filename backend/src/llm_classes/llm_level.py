@@ -70,6 +70,19 @@ class ChatLog:
             # output = self.llm.run(self.message_list)
             # self.insert_and_update(output, self.current_index, is_llm=True) 
 
+    def __str__(self):
+        '''
+        Returns a stringified form of the chatlog. DOES NOT INCLUDE SYSPROMPT
+        '''
+        start = "======= CONVERSATION START ======="
+        conversation = "\n".join(
+            list(
+                map(
+            lambda msg: f"{msg['role']}: {msg['content']}", self.message_list
+                )
+            )[3:]
+        )
+        return f"{start}\n\n{conversation}"
            
 
 
@@ -225,6 +238,8 @@ Answer: Keep up the good work!
             break
 
         pipe.insert_and_update(input(), pipe.current_index, is_llm=False)
+
+    print(pipe)
     
 
 
