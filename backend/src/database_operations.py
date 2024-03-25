@@ -245,3 +245,28 @@ def validate_response(response_data, survey_object):
     # If all checks pass, the response object is valid
     return None
 
+# get_responses()
+# Helper method create response_object()
+def create_response_object(survey_id, response_id, row):
+    response_object = {
+        "metadata": {
+            "survey_id": int(survey_id),
+            "response_id": response_id,
+            "submitted_at": row["submitted_at"].strftime("%Y-%m-%d %H:%M:%S")
+        },
+        "answers": []
+    }
+    return response_object
+
+
+# get_responses()
+# Helper function to create response object
+def append_answer_to_response(response_objects, response_id, response_data):
+    answer = {
+        "question_id": response_data["question_id"],
+        "type": response_data["question_type"],
+        "question": response_data["question"],
+        "options": json.loads(response_data['options']) if response_data['options'] else [],
+        "answer": response_data["answer"]
+    }
+    response_objects[response_id]["answers"].append(answer)
