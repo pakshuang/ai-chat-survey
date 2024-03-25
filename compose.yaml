@@ -16,6 +16,8 @@ services:
     image: backend
     container_name: backend
     build: ./backend
+    depends_on:
+      - database
     env_file:
       - .env
     ports:

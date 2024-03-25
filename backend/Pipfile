@@ -9,6 +9,9 @@ openai = "*"
 python-dotenv = "*"
 pymysql = "*"
 pyjwt = "*"
+requests = "*"
+cryptography = "*"
+
 flask-cors = "*"
 
 [dev-packages]
