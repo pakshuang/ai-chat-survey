@@ -2,7 +2,13 @@
 rem You should already be here in ai-chat-survey
 setlocal
 git pull origin main
-cp sample.env .env
+
+set "envFile=.env"
+if not exist "%envFile%" (
+    echo Setting up variables.
+    cp sample.env .env
+)
+
 :ask
 set /p "response=Do you wish to set an OpenAI API key (Strongly recommended)? (Y/N): "
 if /i "%response%" == "N" goto docker

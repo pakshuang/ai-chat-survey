@@ -1,6 +1,6 @@
 # Setup
 
-This document describes how to set up the project for development. It is intended to be read by developers and other technical stakeholders.
+This document describes how to set up the project. It is intended to be read by developers and other technical stakeholders.
 
 ## Prerequisites
 
@@ -9,10 +9,22 @@ This document describes how to set up the project for development. It is intende
 
 ## Installation
 
+### For Windows
+
 1. Clone the repository:
 
     ```shell
-    git clone
+        git clone https://github.com/pakshuang/ai-chat-survey.git
+    ```
+
+2. Open the ai-chat-survey folder on Windows Explorer and click `windows_run.bat`.
+
+### For Others
+
+1. Clone the repository:
+
+    ```shell
+    git clone https://github.com/pakshuang/ai-chat-survey.git
     ```
 
 2. Change into the project directory:
