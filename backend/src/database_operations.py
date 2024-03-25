@@ -1,6 +1,7 @@
 import os
 import pymysql
 import json
+from llm_classes import ChatLog
 
 
 def connect_to_mysql():

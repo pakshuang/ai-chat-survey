@@ -1,8 +1,10 @@
 import datetime
 import os
 from functools import wraps
+from database_operations import update_chat_log
 import re
 from survey_creation import *
+from llm_classes import GPT, LLM, ChatLog, construct_chatlog, format_responses_for_gpt
 import jwt
 import json
 from flask import Flask, jsonify, request
@@ -571,6 +573,12 @@ def get_response(response_id, **kwargs):
         # Close database connection
         database_operations.close_connection(connection)
 
+def check_exit(updated_message_list: list[dict[str, str]], llm: LLM) -> bool:
+    exit = updated_message_list.copy()
+    exit.append(ChatLog.END_QUERY)
+    result = llm.run(exit)
+    is_last =  re.search(r"[nN]o", result)
+    return is_last
 
 @app.route("/api/v1/responses/<response_id>/chat", methods=["POST"])
 def send_chat_message(response_id):
@@ -637,42 +645,65 @@ def send_chat_message(response_id):
         "chat_log": chat_log
     }
 
-    # TODO: Send llm_object to ChatGPT
-    # llm = GPT()
-    # ### IF CHATLOG DOES NOT EXIST:
-    # # DO
-    # pipe = construct_chatlog(
-    #     # I NEED THE SURVEY CHAT CONTEXT HERE
-    #     format_responses_for_gpt(
-    #         response
-    #         )
-    # )
-    # first_question = llm.run(pipe.message_list)
-    # pipe.insert_and_update(first_question, pipe.current_index, is_llm=True)
-    # ### ELSE IF CHATLOG EXISTS:
-    # # DO
-    # f'''READ A LIST OF MESSAGES FROM DB AND ASSIGN TO {pipe}'''
-    # f'''pipe = ChatLog(MESSAGE LIST)'''
-    # ### END IF
-    # ### Assume data["content"] is the respondent's input
-    # pipe.insert_and_update(data["content"], pipe.current_index)
-    # output = llm.run(pipe.message_list)
-    # message_list = pipe.insert_and_update(output, pipe.current_index, is_llm=True)
+    # initialise LLM
+    llm = GPT()
+    chat_log_dict = llm_input["chat_log"]
+    message_list = chat_log_dict["messages"]
+    
+    def has_no_chat_log(content: str, message_list: list[dict[str, object]]) -> bool:
+        return not content.strip() and not message_list
+
+    has_no_chat_log = has_no_chat_log(data["content"], message_list)
+    if has_no_chat_log:
+        pipe = construct_chatlog(
+            f"{llm_input["chat_context"]}\n{
+                format_responses_for_gpt(
+                    llm_input["response_object"]
+                )
+            }", llm=llm
+        )
+        first_question = llm.run(pipe.message_list)
+        updated_message_list =  pipe.insert_and_update(first_question, pipe.current_index, is_llm=True)
+    
+    else:
+        pipe = ChatLog(message_list, llm=llm)
+        pipe.insert_and_update(data["content"], pipe.current_index) # user input
+        next_question = llm.run(pipe.message_list)
+        updated_message_list = pipe.insert_and_update(next_question, pipe.current_index, is_llm=True)
+    
+    updated_chat_log = chat_log_dict.copy()
+    updated_chat_log["messages"] = updated_message_list   
+    updated_chat_log_json = json.dumps(chat_log_dict)
+
+    # Update the ChatLog table
+    try:
+        # Update the database
+        database_operations.update_chat_log(connection, survey_id, response_id, updated_chat_log_json)
+    except Exception as e:
+        return jsonify({"message": "An error occurred while updating the chat log"}), 500
+    
+    
+    assert updated_message_list[-1]["role"] == "assistant"
+    content, is_last = updated_message_list[-1]["content"], check_exit(updated_message_list, llm)
+    database_operations.close_connection(connection)
+    return jsonify({"content": content, "is_last": is_last}), 201
+
+    # 
     #
-    # f''' SAVE message_list INTO DB'''
+    # 
     #
     #
-    # assert message_list[-1]["role"] == "assistant"
-    # content = message_list[-1]["content"]
+    
+    # 
     #
-    # exit = message_list.copy()
+    # exit = updated_message_list.copy()
     # exit.append(ChatLog.END_QUERY)
     # result = llm.run(exit)
     # is_last =  re.search(r"[nN]o", result)
     # ###
 
     # TODO: Get updated llm_object from ChatGPT
-    message = generate_random_text()
+    #message = generate_random_text()
     # TODO: Create the llm_output object - This will be returned from Hung Yee's model
     # Convert chat log JSON string back to a dictionary
     llm_output = llm_input.copy()
@@ -690,12 +721,7 @@ def send_chat_message(response_id):
     # Update the chat log in llm_output
     llm_output["chat_log"] = updated_chat_log
 
-    # Update the ChatLog table
-    try:
-        # Update the database
-        database_operations.update_chat_log(connection, survey_id, response_id, llm_output["chat_log"])
-    except Exception as e:
-        return jsonify({"message": "An error occurred while updating the chat log"}), 500
+    
 
     # Close database connection
     database_operations.close_connection(connection)
