@@ -1,6 +1,5 @@
 import os
 from abc import ABC, abstractmethod
-
 from dotenv import load_dotenv
 from openai import OpenAI
 
@@ -12,8 +11,7 @@ class LLM(ABC):
     '''
     @abstractmethod
     def run(self, messages: list) -> str:
-        pass
-
+        return
 
 class GPT(LLM):
     '''
@@ -38,10 +36,12 @@ class ChatLog:
     '''
     A simple wrapper around a list of messages that supports the deletion of future messages.
     '''
+    MAX_LEN = 30
 
     SYSPROMPT = """You are an assistant who is trying to gather user experiences about a product.
         You have collected some survey responses, and you would like to probe further about what the user thinks about the product.
-        The user responses are provided below. Given these responses, pretend you are an interviewer and generate a few questions to ask the user.
+        Given user responses, pretend you are an interviewer and generate a few questions to ask the user.
+        Contextual information about the survey and user responses are provided below:
         {survey_initial_responses}"""
 
     SYSPROMPT2 = """Remember these few questions. This is a semi-structured interview, and try to keep asking questions, based on the user replies, or the questions you generated to ask the user. 
@@ -57,7 +57,7 @@ class ChatLog:
                 }
 
     def __init__(self, message_list: list[dict[str, str]], llm: LLM = GPT()):
-        self.message_list = message_list
+        self.message_list = message_list.copy()
         self.current_index = len(message_list)
         self.llm = llm
         if self.current_index == 1:
@@ -70,7 +70,22 @@ class ChatLog:
             # output = self.llm.run(self.message_list)
             # self.insert_and_update(output, self.current_index, is_llm=True) 
 
-           
+    def __str__(self):
+        '''
+        Returns a stringified form of the chatlog. DOES NOT INCLUDE SYSPROMPT
+        '''
+        start = "======= CONVERSATION START ======="
+        conversation = "\n".join(
+            list(
+                map(
+            lambda msg: f"{msg['role']}: {msg['content']}", self.message_list
+                )
+            )[3:]
+        )
+        return f"{start}\n\n{conversation}"
+    
+    def __len__(self):
+        return len(self.message_list) - 3   
 
 
     def insert_and_update(self, message: str, index: int, is_llm: bool = False, is_sys: bool = False) -> list:
@@ -93,14 +108,14 @@ class ChatLog:
         self.message_list = self.message_list[: self.current_index]
         return self.message_list
 
-def construct_chatlog(survey_initial_responses: str) -> ChatLog:
+def construct_chatlog(survey_initial_responses: str, llm: LLM = GPT()) -> ChatLog:
     start_dict = {
             "role": "system",
             "content": ChatLog.SYSPROMPT.format(
                 survey_initial_responses=survey_initial_responses
             ),
         }
-    return ChatLog([start_dict])
+    return ChatLog([start_dict], llm=llm)
 
 def format_responses_for_gpt(response: dict[str, object]) -> str:
         '''
@@ -120,7 +135,10 @@ if __name__ == "__main__":
 ############### TEST HERE ######################
 ###### This should be moved to test folder #####
     string = """
-This survey is for MacDonald's, the fast food chain.   
+This survey is for Apple, the software company.
+We are conducting a survey for the iphone 69, a new model for the Iphone.
+
+
 How satisfied are you with our product/service?
 
 Options:
@@ -209,7 +227,7 @@ Answer: Keep up the good work!
 
     """
     llm = GPT()
-    pipe = construct_chatlog(string)
+    pipe = construct_chatlog(string, llm=llm)
     import re
     for i in range(100):
         output = (llm.run(pipe.message_list))
@@ -225,6 +243,8 @@ Answer: Keep up the good work!
             break
 
         pipe.insert_and_update(input(), pipe.current_index, is_llm=False)
+
+    print(pipe)
     
 
 

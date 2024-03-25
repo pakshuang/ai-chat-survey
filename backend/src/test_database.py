@@ -252,9 +252,9 @@ def test_send_chat_message():
     print(response.json())
 
     # Check if the response is successful
-    # assert response.status_code == 201
+    assert response.status_code == 201
     # Add more assertions based on your expected behavior
-    # Example: assert response.json()["content"] == "Expected content"
+    print(response.json()["content"])
 
 if __name__ == "__main__":
     test_create_admin()
