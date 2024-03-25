@@ -647,7 +647,7 @@ def send_chat_message(response_id):
 
     # initialise LLM
     llm = GPT()
-    chat_log_dict = llm_input["chat_log"]
+    chat_log_dict =  json.loads(llm_input["chat_log"])
     message_list = chat_log_dict["messages"]
     
     def has_no_chat_log(content: str, message_list: list[dict[str, object]]) -> bool:
