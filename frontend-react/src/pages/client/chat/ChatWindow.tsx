@@ -1,10 +1,22 @@
-import { Flex, Box } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
+import { useRef, useEffect } from "react";
+import ChatMessage from "./ChatMessage";
 
 interface ChatWindowProps {
   messages: { sender: "user" | "bot"; message: string }[];
 }
 
 function ChatWindow({ messages }: ChatWindowProps) {
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   return (
     <Box
       overflowY="auto"
@@ -28,21 +40,10 @@ function ChatWindow({ messages }: ChatWindowProps) {
         },
       }}
     >
-      {messages.map((item, index) =>
-        item.sender === "user" ? (
-          <Flex key={index} justifyContent="flex-end" alignItems="center">
-            <Box bg="green.300" rounded="lg" p="2" maxW="xs">
-              {item.message}
-            </Box>
-          </Flex>
-        ) : (
-          <Flex key={index} justifyContent="flex-start" alignItems="center">
-            <Box bg="blue.300" rounded="lg" p="2" maxW="xs">
-              {item.message}
-            </Box>
-          </Flex>
-        )
-      )}
+      {messages.map((item) => (
+        <ChatMessage sender={item.sender}>{item.message}</ChatMessage>
+      ))}
+      <div ref={messagesEndRef} />
     </Box>
   );
 }
