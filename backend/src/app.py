@@ -331,7 +331,7 @@ def get_responses(**kwargs):
 
 @app.route("/api/v1/responses/<response_id>", methods=["GET"])
 @admin_token_required
-ef get_response(response_id, **kwargs):
+def get_response(response_id, **kwargs):
     # TODO: Check if response exists, return 404 if not
     filtered_responses = list(
         filter(
