@@ -16,7 +16,7 @@ Admins are the users who have access to the admin portal. There will be no endpo
   ```json
   {
     "username": "string",
-    "password": "string",
+    "password": "string"
   }
   ```
 
@@ -29,6 +29,7 @@ Admins are the users who have access to the admin portal. There will be no endpo
   ```
 
 - **Status Codes:**
+
   - `201` - Created
   - `400` - Bad Request
   - `500` - Internal Server Error
@@ -43,7 +44,7 @@ Admins are the users who have access to the admin portal. There will be no endpo
   ```json
   {
     "username": "string",
-    "password": "string",
+    "password": "string"
   }
   ```
 
@@ -57,6 +58,7 @@ Admins are the users who have access to the admin portal. There will be no endpo
   ```
 
 - **Status Codes:**
+
   - `200` - OK
   - `400` - Bad Request
   - `401` - Unauthorized
@@ -94,7 +96,7 @@ These endpoints are used to create, read, update, and delete surveys, which are 
     "chat_context": "string" # The proprietary knowledge that the chatbot needs to have to conduct the chat
   }
   ```
-  
+
 - **Response:**
 
   ```json
@@ -104,6 +106,7 @@ These endpoints are used to create, read, update, and delete surveys, which are 
   ```
 
 - **Status Codes:**
+
   - `201` - Created
   - `400` - Bad Request
   - `401` - Unauthorized
@@ -127,6 +130,7 @@ These endpoints are used to create, read, update, and delete surveys, which are 
   ```
 
 - **Status Codes:**
+
   - `200` - OK
   - `400` - Bad Request
   - `401` - Unauthorized
@@ -165,6 +169,7 @@ These endpoints are used to create, read, update, and delete surveys, which are 
   ```
 
 - **Status Codes:**
+
   - `200` - OK
   - `404` - Not Found
   - `500` - Internal Server Error
@@ -183,6 +188,7 @@ These endpoints are used to create, read, update, and delete surveys, which are 
   ```
 
 - **Status Codes:**
+
   - `200` - OK
   - `400` - Bad Request
   - `401` - Unauthorized
@@ -222,11 +228,12 @@ These endpoints are used to submit, read, update, and delete responses, which ar
 
   ```json
   {
-    "response_id": "integer",
+    "response_id": "integer"
   }
   ```
 
 - **Status Codes:**
+
   - `201` - Created
   - `400` - Bad Request
   - `404` - Not Found
@@ -250,6 +257,7 @@ These endpoints are used to submit, read, update, and delete responses, which ar
   ```
 
 - **Status Codes:**
+
   - `200` - OK
   - `400` - Bad Request
   - `401` - Unauthorized
@@ -259,7 +267,7 @@ These endpoints are used to submit, read, update, and delete responses, which ar
 
 ### 3. Get Response
 
-- **Endpoint:** `/api/v1/responses/{response_id}`
+- **Endpoint:** `/api/v1/ responses?survey={survey_id}`
 - **Method:** `GET`
 - **Description:** Get a response by ID. An admin JWT that corresponds to the survey creator is required.
 - **Response:**
@@ -284,6 +292,7 @@ These endpoints are used to submit, read, update, and delete responses, which ar
   ```
 
 - **Status Codes:**
+
   - `200` - OK
   - `401` - Unauthorized
   - `403` - Forbidden
@@ -292,7 +301,7 @@ These endpoints are used to submit, read, update, and delete responses, which ar
 
 ### 4. Send Chat Message
 
-- **Endpoint:** `/api/v1/responses/{response_id}/chat`
+- **Endpoint:** `/api/v1/responses/{response_id}/chat?survey={survey_id}`
 - **Method:** `POST`
 - **Description:** Send a message to the chatbot. The chatbot will respond with a message.
 - **Request Body:**
@@ -313,6 +322,7 @@ These endpoints are used to submit, read, update, and delete responses, which ar
   ```
 
 - **Status Codes:**
+
   - `201` - Created
   - `400` - Bad Request
   - `404` - Not Found
