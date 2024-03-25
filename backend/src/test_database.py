@@ -13,7 +13,6 @@ def test_create_admin():
     # assert response.status_code == 201
     # assert response.json()["message"] == "Admin test_admin created successfully"
 
-
 def test_login_admin():
     url = "http://localhost:{}/api/v1/admins/login".format("5000")  # Assuming BACKEND_CONTAINER_PORT is defined
     data = {"username": "test_admin", "password": "test_password"}
@@ -129,7 +128,7 @@ def test_delete_survey():
     }
 
     # URL for deleting a survey
-    delete_survey_url = "http://localhost:{}/api/v1/surveys/5".format("5000")
+    delete_survey_url = "http://localhost:{}/api/v1/surveys/3".format("5000")
     # Assuming you already have a valid survey_id for testing
 
     # Send DELETE request to delete the survey
@@ -245,7 +244,7 @@ def test_send_chat_message():
 
     # Prepare response data
     response_data = {
-        "content": ""
+        "content": "Please be correct"
     }
 
     # Send POST request to send chat message
@@ -258,16 +257,6 @@ def test_send_chat_message():
     # Example: assert response.json()["content"] == "Expected content"
 
 if __name__ == "__main__":
-    # test_create_admin()
-    # test_login_admin()
-    # test_create_survey()
-    # test_get_surveys()
-    # test_get_survey()
-    # test_delete_survey()
-    # test_submit_response()
-    # test_get_surveys()
-    # test_get_survey()
-
     test_create_admin()
     test_create_survey()
     test_get_surveys()
@@ -276,3 +265,5 @@ if __name__ == "__main__":
     test_get_responses()
     test_get_response()
     test_send_chat_message()
+
+    # test_delete_survey()

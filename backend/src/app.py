@@ -368,6 +368,7 @@ def get_survey(survey_id):
                     survey_object[survey_id]['questions'] = []
                 if row['question_id']:  # Check if there's a question associated
                     database_operations.append_question_to_survey(survey_object, survey_id, row)
+        survey_object = survey_object[int(survey_id)]
         return jsonify(survey_object), 200
     finally:
         database_operations.close_connection(connection)
@@ -433,7 +434,7 @@ def submit_response():
     survey_object = survey_object_response[0].json
 
     # Validate response object against survey object
-    validation_error = database_operations.validate_response(data, survey_object[str(survey_id)])
+    validation_error = database_operations.validate_response(data, survey_object)
     if validation_error:
         return jsonify({"message": validation_error}), 400
 
@@ -568,10 +569,43 @@ def get_response(response_id, **kwargs):
             if response_id not in response_objects:
                 response_objects[response_id] = database_operations.create_response_object(survey_id, response_id, response_data)
             database_operations.append_answer_to_response(response_objects, response_id, response_data)
+        response_objects = response_objects[int(response_id)]
         return jsonify(response_objects), 200
     finally:
         # Close database connection
         database_operations.close_connection(connection)
+
+        # Check if survey exists
+        if not survey:
+            return jsonify({"message": "Survey not found"}), 404
+
+        # Check if admin has access to survey
+        if survey[0]["admin_username"] != kwargs["jwt_sub"]:
+            return jsonify({"message": "Accessing other admin's surveys is forbidden"}), 403
+
+        # Fetch responses from the database
+        query = """
+            SELECT sr.response_id, sr.submitted_at, sr.question_id, q.question_type, q.question, q.options, sr.answer
+            FROM Survey_Responses sr
+            INNER JOIN Questions q ON sr.question_id = q.question_id AND sr.survey_id = q.survey_id
+            INNER JOIN Surveys s ON sr.survey_id = s.survey_id
+            WHERE sr.survey_id = %s AND sr.response_id = %s
+        """
+        responses_data = database_operations.fetch(connection, query, (survey_id, response_id))
+
+        # Check if responses exist
+        if not responses_data:
+            return jsonify({"message": "No responses found for the survey"}), 404
+
+        # Create response objects dictionary
+        response_objects = {}
+        for response_data in responses_data:
+            response_id = response_data["response_id"]
+            if response_id not in response_objects:
+                response_objects[response_id] = database_operations.create_response_object(survey_id, response_id, response_data)
+            database_operations.append_answer_to_response(response_objects, response_id, response_data)
+        return jsonify(response_objects), 200
+
 
 def check_exit(updated_message_list: list[dict[str, str]], llm: LLM) -> bool:
     exit = updated_message_list.copy()
