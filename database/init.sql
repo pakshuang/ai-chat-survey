@@ -37,11 +37,12 @@ CREATE TABLE IF NOT EXISTS Questions (
 
 -- Create the Survey_Responses table
 CREATE TABLE IF NOT EXISTS Survey_Responses (
-    response_id INT AUTO_INCREMENT PRIMARY KEY,
+    response_id INT,
     survey_id INT,
     question_id INT,
-    response TEXT,
+    answer TEXT,
     submitted_at TIMESTAMP,
+    PRIMARY KEY (response_id, question_id, survey_id),
     FOREIGN KEY (survey_id) REFERENCES Surveys(survey_id) ON DELETE CASCADE,
     FOREIGN KEY (question_id) REFERENCES Questions(question_id) ON DELETE CASCADE
 );

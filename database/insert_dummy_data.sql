@@ -23,11 +23,11 @@ VALUES
     (1, 2, 'Which of the following sports do you like?', 'Multiple Choice', '{"options": ["Football", "Basketball", "Tennis", "Swimming"]}');
 
 -- Insert data into the Survey_Responses table
-INSERT INTO Survey_Responses (survey_id, question_id, response, submitted_at)
+INSERT INTO Survey_Responses (response_id, survey_id, question_id, answer, submitted_at)
 VALUES
-    (1, 1, 'Blue', NOW()),
-    (1, 2, '25', NOW()),
-    (2, 1, 'Football, Tennis', NOW());
+    (1, 1, 1, 'Blue', NOW()),
+    (1, 1, 2, '25', NOW()),
+    (1, 2, 1, 'Football, Tennis', NOW());
 
 -- Insert data into the ChatLog table
 INSERT INTO ChatLog (survey_id, chat_log, created_at)
