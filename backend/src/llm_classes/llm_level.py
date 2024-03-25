@@ -31,6 +31,15 @@ class GPT(LLM):
             stream=False,
         )
         return output.choices[0].message.content
+    
+class RoleException(Exception):
+    '''
+    Raised when choosing multiple roles.
+    '''
+    def __init__(self) -> None:
+        self.message = "Cannot be both assistant and llm!"
+        super().__init__(self.message)
+
 
 class ChatLog: 
     '''
@@ -67,8 +76,7 @@ class ChatLog:
             self.insert_and_update(output, self.current_index, is_llm=True) 
             # system response
             self.insert_and_update(ChatLog.SYSPROMPT2, self.current_index, is_sys=True)
-            # output = self.llm.run(self.message_list)
-            # self.insert_and_update(output, self.current_index, is_llm=True) 
+      
 
     def __str__(self):
         '''
@@ -94,8 +102,7 @@ class ChatLog:
         Returns a message list.
         """
         if is_llm and is_sys:
-            raise Exception("Double roles!")
-        
+            raise RoleException()
         if is_llm:
             role = "assistant"
         elif is_sys:

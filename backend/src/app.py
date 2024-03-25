@@ -608,6 +608,9 @@ def get_response(response_id, **kwargs):
 
 
 def check_exit(updated_message_list: list[dict[str, str]], llm: LLM) -> bool:
+    '''
+    Checks if the interactive survey has come to a conclusion. Returns a boolean.
+    '''
     exit = updated_message_list.copy()
     exit.append(ChatLog.END_QUERY)
     result = llm.run(exit)
@@ -615,7 +618,9 @@ def check_exit(updated_message_list: list[dict[str, str]], llm: LLM) -> bool:
     return is_last
 
 def helper_send_message(llm_input: dict[str, object], data_content: str, connection, survey_id, response_id):
-    
+    '''
+    Generates a response from a large language mode.
+    '''
     def has_no_chat_log(content: str, message_list: list[dict[str, object]]) -> bool:
         return not content.strip() and not message_list
     
