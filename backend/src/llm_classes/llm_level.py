@@ -38,6 +38,7 @@ class ChatLog:
     '''
     A simple wrapper around a list of messages that supports the deletion of future messages.
     '''
+    MAX_LEN = 30
 
     SYSPROMPT = """You are an assistant who is trying to gather user experiences about a product.
         You have collected some survey responses, and you would like to probe further about what the user thinks about the product.
@@ -58,7 +59,7 @@ class ChatLog:
                 }
 
     def __init__(self, message_list: list[dict[str, str]], llm: LLM = GPT()):
-        self.message_list = message_list
+        self.message_list = message_list.copy()
         self.current_index = len(message_list)
         self.llm = llm
         if self.current_index == 1:
@@ -84,7 +85,9 @@ class ChatLog:
             )[3:]
         )
         return f"{start}\n\n{conversation}"
-           
+    
+    def __len__(self):
+        return len(self.message_list) - 3   
 
 
     def insert_and_update(self, message: str, index: int, is_llm: bool = False, is_sys: bool = False) -> list:
@@ -107,14 +110,14 @@ class ChatLog:
         self.message_list = self.message_list[: self.current_index]
         return self.message_list
 
-def construct_chatlog(survey_initial_responses: str) -> ChatLog:
+def construct_chatlog(survey_initial_responses: str, llm: LLM = GPT()) -> ChatLog:
     start_dict = {
             "role": "system",
             "content": ChatLog.SYSPROMPT.format(
                 survey_initial_responses=survey_initial_responses
             ),
         }
-    return ChatLog([start_dict])
+    return ChatLog([start_dict], llm=llm)
 
 def format_responses_for_gpt(response: dict[str, object]) -> str:
         '''
@@ -226,7 +229,7 @@ Answer: Keep up the good work!
 
     """
     llm = GPT()
-    pipe = construct_chatlog(string)
+    pipe = construct_chatlog(string, llm=llm)
     import re
     for i in range(100):
         output = (llm.run(pipe.message_list))
