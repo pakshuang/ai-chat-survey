@@ -17,7 +17,7 @@ class LLM(ABC):
 
 class GPT(LLM):
     '''
-    Wrapper class around GPT-4 from OpenAI.
+    Wrapper class around the GPT models from OpenAI.
     '''
     def __init__(self, model="gpt-4"):
         load_dotenv()
@@ -44,13 +44,16 @@ class ChatLog:
         The user responses are provided below. Given these responses, pretend you are an interviewer and generate a few questions to ask the user.
         {survey_initial_responses}"""
 
-    SYSPROMPT2 = """Remember these few questions. Now generate one and only one question for the user. Try to keep asking questions. 
-    When you have no more questions left to ask, remember to thank the user by saying "Thank you and goodbye!". 
-    The system will ask you if you have any more questions, to which you will say 'no' if you are finished with the interview, or 'yes' if you have more questions."""
+    SYSPROMPT2 = """Remember these few questions. This is a semi-structured interview, and try to keep asking questions, based on the user replies, or the questions you generated to ask the user. 
+    When you have no more questions left to ask, remember to thank the user for their time. Only ask the user one question at a time. 
+    After that, the system will ask you if you would like to end the interview. Please reply 'yes' or 'no' only. ONLY SAY 'yes' AFTER YOU HAVE THANKED THE USER.
+    Now, please ask the user a question.
+    """
     
     END_QUERY = {
                 "role": "system",
-                "content": "Do you have any more questions for the user?"
+                "content": """Would you like to end the interview here? If you have not thanked the user, please say 'no'. 
+                If you have more questions to ask the user, or if the user has not replied, please also say 'no'. """
                 }
 
     def __init__(self, message_list: list[dict[str, str]], llm: LLM = GPT()):
@@ -218,7 +221,7 @@ Answer: Keep up the good work!
             ChatLog.END_QUERY
         )
         result = llm.run(bye)
-        if re.search(r"[nN]o", result):
+        if re.search(r"[yY]es", result):
             break
 
         pipe.insert_and_update(input(), pipe.current_index, is_llm=False)
