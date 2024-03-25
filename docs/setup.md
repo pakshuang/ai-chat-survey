@@ -17,7 +17,7 @@ This document describes how to set up the project. It is intended to be read by 
         git clone https://github.com/pakshuang/ai-chat-survey.git
     ```
 
-2. Open the ai-chat-survey folder on Windows Explorer and click `windows_run.bat`.
+2. Open the ai-chat-survey folder on Windows Explorer and click `windows-dev.bat`.
 
 ### For Others
 
