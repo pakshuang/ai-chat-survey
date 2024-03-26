@@ -1,4 +1,5 @@
 from llm_classes.llm_level import LLM, GPT, RoleException
+import random 
 
 class ChatLog: 
     '''
@@ -24,13 +25,13 @@ class ChatLog:
                 If you have more questions to ask the user, or if the user has not replied, please also say 'no'. """
                 }
 
-    def __init__(self, message_list: list[dict[str, str]], llm: LLM = GPT(), from_start: bool=False):
+    def __init__(self, message_list: list[dict[str, str]], llm: LLM = GPT(), from_start: bool=False, seed: int=random.randint(1, 9999)):
         self.message_list = message_list.copy()
         self.current_index = len(message_list)
         self.llm = llm
         if self.current_index == 1 and from_start:
             # insert ai response
-            output = self.llm.run(self.message_list)
+            output = self.llm.run(self.message_list, seed=seed)
             
             self.insert_and_update(output, self.current_index, is_llm=True) 
             # system response
