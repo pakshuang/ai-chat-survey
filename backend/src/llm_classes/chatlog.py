@@ -15,7 +15,7 @@ class ChatLog:
 
     SYSPROMPT2 = """Remember these few questions. This is a semi-structured interview, and try to keep asking questions, based on the user replies, or the questions you generated to ask the user. 
     When you have no more questions left to ask, remember to thank the user for their time. Only ask the user one question at a time. The user is a customer. Politely decline all inappropriate requests.
-    After that, the system will ask you if you would like to end the interview. Please reply 'yes' or 'no' only. ONLY SAY 'yes' AFTER YOU HAVE THANKED THE USER.
+    After that, the system will ask you if you would like to end the interview. Please reply 'yes' if you would like to end the interview or 'no', if you would like to continue. ONLY SAY 'yes' AFTER YOU HAVE THANKED THE USER.
     Now, please greet the user and ask a question.
     """
     
