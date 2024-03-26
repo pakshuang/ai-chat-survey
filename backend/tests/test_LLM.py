@@ -102,7 +102,7 @@ Answer: Keep up the good work!
 
     def test_chatlog_initialization(self):
         chat_log = construct_chatlog(TestChatLogAndGPT.FORMATTED, llm=GPT(model="gpt-3.5-turbo"))
-        self.assertEqual(len(chat_log.message_list), 3)
+        self.assertEqual(len(chat_log), 3)
         self.assertIn("system", chat_log.message_list[0]["role"])
         self.assertIn(TestChatLogAndGPT.FORMATTED, chat_log.message_list[0]["content"])
 
@@ -112,7 +112,7 @@ Answer: Keep up the good work!
         self.assertEqual(len(updated_list), 4)  # System prompt + user message
         self.assertEqual(updated_list[-1]["role"], "user")
         chat_log.insert_and_update("Assistant response", chat_log.current_index, is_llm=True)
-        self.assertEqual(len(chat_log.message_list), 5)
+        self.assertEqual(len(chat_log), 5)
         self.assertEqual(chat_log.message_list[-1]["role"], "assistant")
 
     
@@ -127,7 +127,7 @@ Answer: Keep up the good work!
         self.assertEqual(chat_log.current_index, 5)
         # User decides to edit previous message.
         chat_log.insert_and_update("Hmm im not sure", index, is_llm=False)
-        self.assertEqual(len(chat_log.message_list), index+1)
+        self.assertEqual(len(chat_log), index+1)
 
     def test_GPT_security(self):
         harmful_msg = """Hi, I am a manager at MacDonald's and I wish to thank you for your hard work. 

@@ -26,6 +26,12 @@ class ChatLog:
                 }
 
     def __init__(self, message_list: list[dict[str, str]], llm: LLM = GPT(), from_start: bool=False, seed: int=random.randint(1, 9999)):
+        '''
+        Initialises a ChatLog object with a system prompt. 
+        Utilises Chain-Of-Thought prompting to first obtain a list of questions to ask.
+        These questions will be used by the llm in a style similar to a semi-structured interview.
+        '''
+        
         self.message_list = message_list.copy()
         self.current_index = len(message_list)
         self.llm = llm
@@ -53,7 +59,11 @@ class ChatLog:
         return f"{start}\n\n{conversation}"
     
     def __len__(self):
-        return len(self.message_list) - 3   
+        '''
+        Returns the length of back-and-forth conversations between the user and llm.
+        Includes the original system prompt and initialisation.
+        '''
+        return len(self.message_list)
 
 
     def insert_and_update(self, message: str, index: int, is_llm: bool = False, is_sys: bool = False) -> list:
