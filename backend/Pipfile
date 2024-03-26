@@ -11,10 +11,11 @@ pymysql = "*"
 pyjwt = "*"
 requests = "*"
 cryptography = "*"
-
 flask-cors = "*"
+pytest-cov = "*"
 
 [dev-packages]
+pytest = "*"
 
 [requires]
 python_version = "3.11"
