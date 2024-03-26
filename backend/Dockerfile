@@ -1,5 +1,5 @@
 # Use an official Python runtime as the base image
-FROM python:3.11.8-alpine
+FROM python:3.11.8
 
 # Set the working directory in the container
 WORKDIR /src
