@@ -11,7 +11,6 @@ pymysql = "*"
 pyjwt = "*"
 requests = "*"
 cryptography = "*"
-flask-cors = "*"
 pytest-cov = "*"
 
 [dev-packages]
