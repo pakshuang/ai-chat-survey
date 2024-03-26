@@ -1,8 +1,5 @@
 # Fetching the latest node image on alpine linux
-FROM node:alpine AS development
-
-# Declaring env
-ENV NODE_ENV development
+FROM node:alpine AS build-stage
 
 # Setting up the work directory
 WORKDIR /react-app
@@ -15,12 +12,15 @@ RUN npm install
 # Copying all the files in our project
 COPY . .
 
-# Expose the port on which the application will run
-EXPOSE 5173
+# Building the static files
+RUN npm run build
 
-# Starting our application
-CMD ["npm","run","dev"]
+# Fetching the latest nginx image on alpine linux
+FROM nginx:alpine
+COPY --from=build-stage /app/build /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/nginx.conf
+CMD ["nginx", "-g", "daemon off;"]
 
 # Healthcheck
 HEALTHCHECK --interval=30s --timeout=30s --start-period=10s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:${FRONTEND_CONTAINER_PORT}/admin/login || exit 1
+  CMD wget --no-verbose --tries=1 --spider http://localhost/admin/login || exit 1
