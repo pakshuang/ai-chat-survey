@@ -53,3 +53,4 @@ class TestChatLogAndGPT(TestCase):
         with self.assertRaises(Exception) as context:
             gpt.run([{"role": "system", "content": "Some prompt"}])
         self.assertTrue("API limit reached or network error" in str(context.exception))
+        
