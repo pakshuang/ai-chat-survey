@@ -24,8 +24,20 @@ goto asktwo
 :save
 
 echo OPENAI_API_KEY=%openaiapi% >> .env
-endlocal
+
 :docker
-docker-compose up --build
-echo Press any key to continue.
+docker-compose build
+
+:run
+set /p "response=Docker built! Run the container? (Y/N): " 
+if /i "%response%" == "N" goto exit
+if /i "%response%" == "Y" (
+    docker-compose up 
+    goto exit
+)
+echo Invalid Response.
+goto run
+:exit
+echo Installation complete!
+endlocal
 pause
