@@ -94,8 +94,8 @@ Answer: Keep up the good work!
 
 
     """
-    def test_check_exit(self):
-        chatlog = construct_chatlog(TestGPTFunctions.FORMATTED)
+    def test_check_exit_true(self):
+        chatlog = construct_chatlog(TestGPTFunctions.FORMATTED, seed=120)
         chatlog.insert_and_update(
             "I wish to end the interview now. I do not want to cooperate. Please end it now.", chatlog.current_index
             )
@@ -106,5 +106,19 @@ Answer: Keep up the good work!
         for seed in seeds:
             is_last = check_exit(chatlog.message_list, llm=GPT(), seed=seed)
             self.assertTrue(is_last)
+
+    def test_check_exit_false(self):
+        chatlog = construct_chatlog(TestGPTFunctions.FORMATTED, seed=120)
+        chatlog.insert_and_update(
+            "Hi, pleased to meet you! I have lots to share, but I would like to take another question. Is that okay?", chatlog.current_index
+            )
+        chatlog.insert_and_update(
+            "Of course! Here is another question. What do you think about the Big Mac?", chatlog.current_index, is_llm=True
+            )
+        seeds = [120, 240, 360]
+        for seed in seeds:
+            is_last = check_exit(chatlog.message_list, llm=GPT(), seed=seed)
+            self.assertFalse(is_last)
+
 
 
