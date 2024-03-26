@@ -7,9 +7,8 @@ This document describes how to set up the project. It is intended to be read by 
 - [Docker](https://www.docker.com/)
 - [Python](https://www.python.org/)
 
-## Installation
 
-### For Windows
+## Quick Installation For Windows
 
 1. Clone the repository:
 
@@ -17,9 +16,11 @@ This document describes how to set up the project. It is intended to be read by 
        git clone https://github.com/pakshuang/ai-chat-survey.git
    ```
 
-2. Open the ai-chat-survey folder on Windows Explorer and click `windows-dev.bat`.
+2. Open the ai-chat-survey folder on Windows Explorer and click `installer_win.bat`.
 
-### For Others
+3. Enter your `OPENAI_API_KEY` and follow the instructions in the file.
+
+## Installation (General)
 
 1. Clone the repository:
 

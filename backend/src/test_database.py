@@ -11,8 +11,8 @@ def test_create_admin():
     print(response)
     # Print the response content
     print("Response content:", response.json())
-    # assert response.status_code == 201
-    # assert response.json()["message"] == "Admin test_admin created successfully"
+    assert response.status_code == 201
+    assert response.json()["message"] == "Admin test_admin created successfully"
 
 def test_login_admin():
     url = "http://localhost:{}/api/v1/admins/login".format("5000")  # Assuming BACKEND_CONTAINER_PORT is defined
@@ -183,8 +183,8 @@ def test_submit_response():
     response = requests.post(url, json=response_data)
     print(response.json())
     # # Assert the status code and response message
-    # assert response.status_code == 201
-    # assert "response_id" in response.json()
+    assert response.status_code == 201
+    assert "response_id" in response.json()
 
 def test_get_responses():
     url = "http://localhost:{}/api/v1/responses".format("5000")  # Assuming BACKEND_CONTAINER_PORT is defined
@@ -204,7 +204,8 @@ def test_get_responses():
 
     # Send GET request to get responses for the survey
     response = requests.get(url, params={"survey": survey_id}, headers=headers)
-    print(response.json())
+    
+    assert response.status_code == 201
 
 
 def test_get_response():
@@ -226,22 +227,10 @@ def test_get_response():
     # Send GET request to get responses for the survey
     response = requests.get(url, headers=headers)
     print(response.json())
+    assert response.status_code == 201
 
 def test_send_chat_message():
     url = "http://localhost:{}/api/v1/responses/{}/chat?survey={}".format("5000", 1, 3)
-
-    login_url = "http://localhost:{}/api/v1/admins/login".format("5000")  # Assuming BACKEND_CONTAINER_PORT is defined
-    # Login first
-    data = {"username": "test_admin", "password": "test_password"}
-    response = requests.post(login_url, json=data)
-
-    # Get jwt token
-    jwt_token = response.json()['jwt']
-
-    headers = {
-        "Authorization": "Bearer " + jwt_token,  # Include your admin token here
-        "Content-Type": "application/json"
-    }
 
     # Prepare response data
     response_data = {
@@ -249,22 +238,12 @@ def test_send_chat_message():
     }
 
     # Send POST request to send chat message
-    response = requests.post(url, json=response_data, headers=headers)
+    response = requests.post(url, json=response_data)
     print(response.json())
 
     # Check if the response is successful
     assert response.status_code == 201
     # Add more assertions based on your expected behavior
-    
 
-if __name__ == "__main__":
-    test_create_admin()
-    test_create_survey()
-    test_get_surveys()
-    test_get_survey()
-    test_submit_response()
-    test_get_responses()
-    test_get_response()
-    test_send_chat_message()
 
     # test_delete_survey()

@@ -23,12 +23,12 @@ services:
     ports:
       - ${BACKEND_HOST_PORT}:${BACKEND_CONTAINER_PORT}
 
-
   database:
-    image: database
+    image: mysql:8.3.0
     container_name: database
-    build: ./database
     env_file:
       - .env
+    volumes:
+      - ./scripts:/docker-entrypoint-initdb.d
     ports:
       - ${DATABASE_HOST_PORT}:${DATABASE_CONTAINER_PORT}
