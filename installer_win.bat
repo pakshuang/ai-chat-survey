@@ -25,7 +25,7 @@ echo Invalid response
 goto asktwo
 :save
 rem Add a new line to .env
-echo OPENAI_API_KEY=%openaiapi% >> .env
+echo %openaiapi% >> .env
 echo API key set!
 
 rem Build docker image.
