@@ -31,6 +31,7 @@ def handle_options(response):
 
     return response
 
+
 # Mock data
 
 
@@ -252,6 +253,7 @@ def create_survey(**kwargs):
 
     finally:
         close_connection(connection)
+
 
 @app.route("/api/v1/surveys", methods=["GET"])
 def get_surveys():
@@ -505,7 +507,8 @@ def get_responses(**kwargs):
         for response_data in responses_data:
             response_id = response_data["response_id"]
             if response_id not in response_objects:
-                response_objects[response_id] = database_operations.create_response_object(survey_id, response_id, response_data)
+                response_objects[response_id] = database_operations.create_response_object(survey_id, response_id,
+                                                                                           response_data)
             database_operations.append_answer_to_response(response_objects, response_id, response_data)
 
         # Convert dictionary to list of response objects
@@ -567,44 +570,14 @@ def get_response(response_id, **kwargs):
         for response_data in responses_data:
             response_id = response_data["response_id"]
             if response_id not in response_objects:
-                response_objects[response_id] = database_operations.create_response_object(survey_id, response_id, response_data)
+                response_objects[response_id] = database_operations.create_response_object(survey_id, response_id,
+                                                                                           response_data)
             database_operations.append_answer_to_response(response_objects, response_id, response_data)
         response_objects = response_objects[int(response_id)]
         return jsonify(response_objects), 200
     finally:
         # Close database connection
         close_connection(connection)
-
-        # # Check if survey exists
-        # if not survey:
-        #     return jsonify({"message": "Survey not found"}), 404
-
-        # # Check if admin has access to survey
-        # if survey[0]["admin_username"] != kwargs["jwt_sub"]:
-        #     return jsonify({"message": "Accessing other admin's surveys is forbidden"}), 403
-
-        # # Fetch responses from the database
-        # query = """
-        #     SELECT sr.response_id, sr.submitted_at, sr.question_id, q.question_type, q.question, q.options, sr.answer
-        #     FROM Survey_Responses sr
-        #     INNER JOIN Questions q ON sr.question_id = q.question_id AND sr.survey_id = q.survey_id
-        #     INNER JOIN Surveys s ON sr.survey_id = s.survey_id
-        #     WHERE sr.survey_id = %s AND sr.response_id = %s
-        # """
-        # responses_data = database_operations.fetch(connection, query, (survey_id, response_id))
-
-        # # Check if responses exist
-        # if not responses_data:
-        #     return jsonify({"message": "No responses found for the survey"}), 404
-
-        # # Create response objects dictionary
-        # response_objects = {}
-        # for response_data in responses_data:
-        #     response_id = response_data["response_id"]
-        #     if response_id not in response_objects:
-        #         response_objects[response_id] = database_operations.create_response_object(survey_id, response_id, response_data)
-        #     database_operations.append_answer_to_response(response_objects, response_id, response_data)
-        # return jsonify(response_objects), 200
 
 
 def check_exit(updated_message_list: list[dict[str, str]], llm: LLM) -> bool:
@@ -614,8 +587,9 @@ def check_exit(updated_message_list: list[dict[str, str]], llm: LLM) -> bool:
     exit = updated_message_list.copy()
     exit.append(ChatLog.END_QUERY)
     result = llm.run(exit)
-    is_last =  bool(re.search(r"[nN]o", result))
+    is_last = bool(re.search(r"[nN]o", result))
     return is_last
+
 
 def helper_send_message(llm_input: dict[str, object], data_content: str, connection, survey_id, response_id):
     '''
@@ -682,7 +656,7 @@ def send_chat_message(response_id):
         return jsonify({"message": "Missing survey ID"}), 400
 
     # Step 1: Retrieve Response Object
-    response_object = get_response(response_id=response_id, survey_id=survey_id)
+    response_object = get_response_no_auth(response_id=response_id, survey_id=survey_id)
 
     # If GET request is not successful, return 500
     if response_object[1] != 200:
@@ -738,11 +712,68 @@ def send_chat_message(response_id):
 
     return helper_send_message(
         llm_input, data["content"], connection, survey_id, response_id
-        )
+    )
+
+
+# Function to get response object without admin token required
+# Exactly the same as get_response except it is not an endpoint, and there is no admin verification token.
+def get_response_no_auth(response_id, **kwargs):
+    if not response_id:
+        return jsonify({"message": "Missing response ID"}), 400
+
+    # Check if survey ID is provided, return 400 if not
+    survey_id = request.args.get("survey")
+    if not survey_id:
+        return jsonify({"message": "Missing survey ID"}), 400
+
+    # Connect to MySQL database
+    connection = database_operations.connect_to_mysql()
+    if not connection:
+        return jsonify({"message": "Failed to connect to the database"}), 500
+
+    try:
+        # Fetch survey from the database
+        query = """
+            SELECT * FROM Surveys WHERE survey_id = %s
+        """
+        survey = database_operations.fetch(connection, query, (survey_id,))
+
+        # Check if survey exists
+        if not survey:
+            return jsonify({"message": "Survey not found"}), 404
+
+        # Fetch responses from the database
+        query = """
+            SELECT sr.response_id, sr.submitted_at, sr.question_id, q.question_type, q.question, q.options, sr.answer
+            FROM Survey_Responses sr
+            INNER JOIN Questions q ON sr.question_id = q.question_id AND sr.survey_id = q.survey_id
+            INNER JOIN Surveys s ON sr.survey_id = s.survey_id
+            WHERE sr.survey_id = %s AND sr.response_id = %s
+        """
+        responses_data = database_operations.fetch(connection, query, (survey_id, response_id))
+
+        # Check if responses exist
+        if not responses_data:
+            return jsonify({"message": "No responses found for the survey"}), 404
+
+        # Create response objects dictionary
+        response_objects = {}
+        for response_data in responses_data:
+            response_id = response_data["response_id"]
+            if response_id not in response_objects:
+                response_objects[response_id] = database_operations.create_response_object(survey_id, response_id,
+                                                                                           response_data)
+            database_operations.append_answer_to_response(response_objects, response_id, response_data)
+        response_objects = response_objects[int(response_id)]
+        return jsonify(response_objects), 200
+    finally:
+        # Close database connection
+        close_connection(connection)
 
 
 # TODO: Remove after testing
 import random
+
 
 def generate_random_text(words=20):
     vocabulary = [
@@ -758,6 +789,7 @@ def generate_random_text(words=20):
 
     random_text = ' '.join(random.choices(vocabulary, k=words))
     return random_text
+
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=BACKEND_CONTAINER_PORT)
