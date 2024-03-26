@@ -1,15 +1,13 @@
 import os
 import pymysql
 import json
-from llm_classes import ChatLog
-
 
 def connect_to_mysql():
     # Connect to MySQL
-    mysql_host = os.getenv("MYSQL_HOST", "database")
-    mysql_user = os.getenv("MYSQL_USER", "root")
-    mysql_password = os.getenv("MYSQL_PASSWORD", "password")
-    mysql_db = os.getenv("MYSQL_DB", "ai_chat_survey_db")
+    mysql_host = os.environ.get("API_MYSQL_HOST", "database")
+    mysql_user = os.environ.get("API_MYSQL_USER", "root")
+    mysql_password = os.environ.get("API_MYSQL_PASSWORD", "password")
+    mysql_db = os.environ.get("API_MYSQL_DB", "ai_chat_survey_db")
 
     try:
         connection = pymysql.connect(
