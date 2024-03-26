@@ -25,6 +25,9 @@ class GPT(LLM):
         super().__init__()
 
     def run(self, messages: list, seed: int = random.randint(1, 9999)) -> str:
+        '''
+        Runs the llm given a current conversation and seed and outputs a string.
+        '''
         output = self.client.chat.completions.create(
             model=self.model,
             messages=messages,
