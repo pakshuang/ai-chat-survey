@@ -1,9 +1,7 @@
-import sys,os
 from openai import OpenAI
 from unittest import TestCase
 from unittest.mock import patch, MagicMock
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from backend.src.llm_classes.llm_level import LLM,GPT,ChatLog
+from ..src.llm_classes import LLM,GPT,ChatLog
 class TestChatLogAndGPT(TestCase):
 
     def test_chatlog_initialization(self):
