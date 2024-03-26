@@ -593,7 +593,7 @@ def check_exit(updated_message_list: list[dict[str, str]], llm: LLM) -> bool:
 
 def helper_send_message(llm_input: dict[str, object], data_content: str, connection, survey_id, response_id):
     '''
-    Generates a response from a large language mode.
+    Generates a response from a large language model.
     '''
     def has_no_chat_log(content: str, message_list: list[dict[str, object]]) -> bool:
         return not content.strip() and not message_list
@@ -625,7 +625,7 @@ def helper_send_message(llm_input: dict[str, object], data_content: str, connect
         
         updated_chat_log = chat_log_dict.copy()
         updated_chat_log["messages"] = updated_message_list   
-        updated_chat_log_json = json.dumps(chat_log_dict)
+        updated_chat_log_json = json.dumps(updated_chat_log)
 
         # Update the ChatLog table
         try:
