@@ -99,10 +99,13 @@ Answer: Keep up the good work!
 
 
     """
+    def test_chatlog_length(self):
+        chat_log = construct_chatlog(TestChatLogAndGPT.FORMATTED, llm=GPT(model="gpt-3.5-turbo"))
+        self.assertEqual(len(chat_log), 3)
+
 
     def test_chatlog_initialization(self):
         chat_log = construct_chatlog(TestChatLogAndGPT.FORMATTED, llm=GPT(model="gpt-3.5-turbo"))
-        self.assertEqual(len(chat_log), 3)
         self.assertIn("system", chat_log.message_list[0]["role"])
         self.assertIn(TestChatLogAndGPT.FORMATTED, chat_log.message_list[0]["content"])
 
