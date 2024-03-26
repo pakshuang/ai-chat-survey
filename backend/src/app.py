@@ -647,6 +647,11 @@ def helper_send_message(llm_input: dict[str, object], data_content: str, connect
 
 @app.route("/api/v1/responses/<response_id>/chat", methods=["POST"])
 def send_chat_message(response_id):
+    # Check that there is "content" in request body
+    data = request.get_json()
+    if "content" not in data:
+        return jsonify({"message": "Missing content"}), 400
+
     if not response_id:
         return jsonify({"message": "Missing response ID"}), 400
 
@@ -671,25 +676,21 @@ def send_chat_message(response_id):
         return jsonify({"message": "Failed to connect to the database"}), 500
 
     # Step 2: Insert message to DB
-    # Get json for request body, containing message sent by user
-    data = request.get_json()
-    # If there is content, append to chatLog
-    if "content" in data:
-        try:
-            chat_log = get_chat_log(connection, survey_id, response_id)
-            chat_log_dict = json.loads(chat_log)
+    try:
+        chat_log = get_chat_log(connection, survey_id, response_id)
+        chat_log_dict = json.loads(chat_log)
 
-            # Append new message to the messages list
-            chat_log_dict["messages"].append({
-                "role": "user",
-                "content": data["content"]
-            })
+        # Append new message to the messages list
+        chat_log_dict["messages"].append({
+            "role": "user",
+            "content": data["content"]
+        })
 
-            # Convert the updated chat log dictionary back to a JSON string
-            updated_chat_log = json.dumps(chat_log_dict)
-            database_operations.update_chat_log(connection, survey_id, response_id, updated_chat_log)
-        except Exception as e:
-            return jsonify({"message": "An error occurred while updating chat log with user message"}), 500
+        # Convert the updated chat log dictionary back to a JSON string
+        updated_chat_log = json.dumps(chat_log_dict)
+        database_operations.update_chat_log(connection, survey_id, response_id, updated_chat_log)
+    except Exception as e:
+        return jsonify({"message": "An error occurred while updating chat log with user message"}), 500
 
     # Step 3: Retrieve chat_context
     try:
