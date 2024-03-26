@@ -9,8 +9,11 @@ interface ChatMessageProps {
 function ChatMessage({ children, sender }: ChatMessageProps) {
   return sender === "user" ? (
     <Flex justifyContent="flex-end" alignItems="center">
-      <Box bg="green.300" rounded="lg" p="2" maxW="xs">
-        {children}
+      <Box bg="green.300" rounded="lg" p="2" maxW="xs" mx="1" my="2">
+        <Text fontWeight="bold">
+          {sender.charAt(0).toUpperCase() + sender.slice(1)}
+        </Text>
+        <Text>{children}</Text>
       </Box>
       <Avatar name="User" size="md" ml="1" />
     </Flex>
@@ -22,7 +25,7 @@ function ChatMessage({ children, sender }: ChatMessageProps) {
         mr="1"
         mt="2"
       />
-      <Box bg="blue.300" rounded="lg" p="2" maxW="sm" m="2">
+      <Box bg="blue.300" rounded="lg" p="2" maxW="sm" mx="1" my="2">
         <Text fontWeight="bold">
           {sender.charAt(0).toUpperCase() + sender.slice(1)}
         </Text>
