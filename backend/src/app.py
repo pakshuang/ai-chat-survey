@@ -4,7 +4,6 @@ import os
 from functools import wraps
 from database_operations import close_connection, get_chat_log, update_chat_log
 import re
-from survey_creation import *
 import jwt
 import json
 from flask import Flask, jsonify, request
@@ -634,9 +633,8 @@ def helper_send_message(llm_input: dict[str, object], data_content: str, connect
         except Exception as e:
             return jsonify({"message": "An error occurred while updating the chat log"}), 500
         
-        
-        assert updated_message_list[-1]["role"] == "assistant"
-        content, is_last = updated_message_list[-1]["content"], check_exit(updated_message_list, llm)
+        content = updated_message_list[-1]["content"]
+        is_last = check_exit(updated_message_list, llm) or len(updated_message_list) > ChatLog.MAX_LEN
         close_connection(connection)
         return jsonify({"content": content, "is_last": is_last,\
                          "updated_message_list": updated_message_list}), 201\
