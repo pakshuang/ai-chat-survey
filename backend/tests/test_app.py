@@ -1,8 +1,3 @@
-import sys,os
-from pathlib import Path
-import unittest
-backend_dir = Path(__file__).resolve().parent.parent
-sys.path.append(str(backend_dir))
 from ..src.app import app
 
 class TestFlaskApp:

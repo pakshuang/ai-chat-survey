@@ -1,29 +1,24 @@
-import pytest
-import sys,os
-from pathlib import Path
 from openai import OpenAI
 from unittest import TestCase
 from unittest.mock import patch, MagicMock
-backend_dir = Path(__file__).resolve().parent
-sys.path.append(str(backend_dir))
-from src.llm_classes import LLM,GPT,ChatLog
-class TestChatLogAndGPT:
+from ..src.llm_classes import LLM,GPT,ChatLog
+class TestChatLogAndGPT(TestCase):
 
     def test_chatlog_initialization(self):
         initial_responses = "User responses go here."
         chat_log = ChatLog(initial_responses)
-        assert len(chat_log.message_list) == 1
-        assert "system" in chat_log.message_list[0]["role"]
-        assert initial_responses in chat_log.message_list[0]["content"]
+        self.assertEqual(len(chat_log.message_list), 1)
+        self.assertIn("system", chat_log.message_list[0]["role"])
+        self.assertIn(initial_responses, chat_log.message_list[0]["content"])
 
     def test_chatlog_insert_and_update(self):
         chat_log = ChatLog("Initial responses.")
         updated_list = chat_log.insert_and_update("User response", 1, is_llm=False)
-        assert len(updated_list) == 2# System prompt + user message
-        assert updated_list[1]["role"] == "user"
+        self.assertEqual(len(updated_list), 2)  # System prompt + user message
+        self.assertEqual(updated_list[1]["role"], "user")
         chat_log.insert_and_update("Assistant response", 2, is_llm=True)
-        assert len(chat_log.message_list) == 3
-        assert chat_log.message_list[2]["role"] == "assistant"
+        self.assertEqual(len(chat_log.message_list), 3)
+        self.assertEqual(chat_log.message_list[2]["role"], "assistant")
 
     @patch("backend.src.llm_classes.llm_level.OpenAI")
     def test_gpt_run(self, mock_openai):
@@ -36,7 +31,7 @@ class TestChatLogAndGPT:
 
         gpt = GPT()
         response = gpt.run([{"role": "system", "content": "Some prompt"}])
-        assert response == "Mocked response"
+        self.assertEqual(response, "Mocked response")
         mock_client.chat.completions.create.assert_called_once()
     
     def test_chatlog_multiple_messages(self):
@@ -44,9 +39,9 @@ class TestChatLogAndGPT:
         chat_log.insert_and_update("First user response", 1, is_llm=False)
         chat_log.insert_and_update("Assistant response", 2, is_llm=True)
         chat_log.insert_and_update("Second user response", 3, is_llm=False)
-        assert len(chat_log.message_list) == 4# Includes initial system message
-        assert chat_log.message_list[3]["role"] == "user"
-        assert "Second user response" in chat_log.message_list[3]["content"]
+        self.assertEqual(len(chat_log.message_list), 4)  # Includes initial system message
+        self.assertEqual(chat_log.message_list[3]["role"], "user")
+        self.assertIn("Second user response", chat_log.message_list[3]["content"])
         
     @patch("backend.src.llm_classes.llm_level.OpenAI")
     def test_gpt_exception_handling(self, mock_openai):
@@ -55,6 +50,6 @@ class TestChatLogAndGPT:
         mock_client.chat.completions.create.side_effect = Exception("API limit reached or network error")
         
         gpt = GPT()
-        with pytest.raises(Exception) as context:
+        with self.assertRaises(Exception) as context:
             gpt.run([{"role": "system", "content": "Some prompt"}])
-        assert "API limit reached or network error" in str(context.exception)
+        self.assertTrue("API limit reached or network error" in str(context.exception))
