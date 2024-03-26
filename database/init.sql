@@ -20,34 +20,39 @@ CREATE TABLE IF NOT EXISTS Surveys (
     subtitle TEXT,
     admin_username VARCHAR(255),
     created_at TIMESTAMP,
+    chat_context TEXT,
     FOREIGN KEY (admin_username) REFERENCES Admins(admin_username)
 );
 
 -- Create the Questions table
 CREATE TABLE IF NOT EXISTS Questions (
-    question_id INT AUTO_INCREMENT,
+    question_id INT,
     survey_id INT,
     question TEXT,
     question_type VARCHAR(255), -- Consider changing to ENUM once all questions types are decided
     options JSON,
     PRIMARY KEY (question_id, survey_id),
-    FOREIGN KEY (survey_id) REFERENCES Surveys(survey_id)
+    FOREIGN KEY (survey_id) REFERENCES Surveys(survey_id) ON DELETE CASCADE
 );
 
 -- Create the Survey_Responses table
 CREATE TABLE IF NOT EXISTS Survey_Responses (
-    response_id INT AUTO_INCREMENT PRIMARY KEY,
+    response_id INT,
     survey_id INT,
-    response TEXT,
+    question_id INT,
+    answer TEXT,
     submitted_at TIMESTAMP,
-    FOREIGN KEY (survey_id) REFERENCES Surveys(survey_id)
+    PRIMARY KEY (response_id, question_id, survey_id),
+    FOREIGN KEY (survey_id, question_id) REFERENCES Questions(survey_id, question_id) ON DELETE CASCADE
 );
 
 -- Create the ChatLog table
 CREATE TABLE IF NOT EXISTS ChatLog (
     chat_id INT AUTO_INCREMENT PRIMARY KEY,
     survey_id INT,
+    response_id INT,
     chat_log JSON,
     created_at TIMESTAMP,
-    FOREIGN KEY (survey_id) REFERENCES Surveys(survey_id)
+    FOREIGN KEY (survey_id) REFERENCES Surveys(survey_id) ON DELETE CASCADE,
+    FOREIGN KEY (response_id) REFERENCES Survey_Responses(response_id) ON DELETE CASCADE
 );

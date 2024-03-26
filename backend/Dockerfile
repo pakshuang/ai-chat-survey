@@ -15,8 +15,12 @@ RUN pipenv install --deploy
 COPY /src /src
 
 # Expose the port on which the application will run
-EXPOSE 5000
+EXPOSE ${BACKEND_CONTAINER_PORT}
 
 # Define the command to run the application
 ENTRYPOINT ["pipenv", "run", "python"]
 CMD ["app.py"]
+
+# Healthcheck
+HEALTHCHECK --interval=30s --timeout=30s --start-period=10s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:${BACKEND_CONTAINER_PORT}/api/v1/health || exit 1
