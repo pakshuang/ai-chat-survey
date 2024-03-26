@@ -717,6 +717,7 @@ def send_chat_message(response_id):
     )
 
 
+# TODO: Think of a better way than having the same function without authentication
 # Function to get response object without admin token required
 # Exactly the same as get_response except it is not an endpoint, and there is no admin verification token.
 def get_response_no_auth(response_id, **kwargs):
