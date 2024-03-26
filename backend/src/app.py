@@ -625,7 +625,7 @@ def helper_send_message(llm_input: dict[str, object], data_content: str, connect
         
         updated_chat_log = chat_log_dict.copy()
         updated_chat_log["messages"] = updated_message_list   
-        updated_chat_log_json = json.dumps(chat_log_dict)
+        updated_chat_log_json = json.dumps(updated_chat_log)
 
         # Update the ChatLog table
         try:
@@ -680,15 +680,16 @@ def send_chat_message(response_id):
         chat_log = get_chat_log(connection, survey_id, response_id)
         chat_log_dict = json.loads(chat_log)
 
-        # Append new message to the messages list
-        chat_log_dict["messages"].append({
-            "role": "user",
-            "content": data["content"]
-        })
+        if data["content"]:
+            # Append new message to the messages list
+            chat_log_dict["messages"].append({
+                "role": "user",
+                "content": data["content"]
+            })
 
-        # Convert the updated chat log dictionary back to a JSON string
-        updated_chat_log = json.dumps(chat_log_dict)
-        database_operations.update_chat_log(connection, survey_id, response_id, updated_chat_log)
+            # Convert the updated chat log dictionary back to a JSON string
+            updated_chat_log = json.dumps(chat_log_dict)
+            database_operations.update_chat_log(connection, survey_id, response_id, updated_chat_log)
     except Exception as e:
         return jsonify({"message": "An error occurred while updating chat log with user message"}), 500
 
