@@ -1,6 +1,7 @@
 import os
 import pymysql
 import json
+from llm_classes import GPT
 
 def connect_to_mysql():
     # Connect to MySQL
@@ -67,6 +68,20 @@ def close_cursor(cursor):
 # Helper functions for insertion and creation
 
 # create_survey
+def summarise(chat_context: str) -> str:
+    MAX_LEN = 1500
+    if len(chat_context) > MAX_LEN:
+        llm = GPT()
+        output = llm.run([
+            {"role": "system", "content": "You are an assistant who summarises text."},
+            {"role": "user", "content": f"The following text will supply contextual knowledge needed for a survey. \
+             Summarise it in less than 5 sentences, paying attention to what the survey is about and/or the product: {chat_context}"}
+        ])
+        output = output[:MAX_LEN]
+        return output
+    else:
+        return chat_context
+
 
 def create_survey(connection, data):
     try:
@@ -82,7 +97,7 @@ def create_survey(connection, data):
             data['subtitle'],
             data['metadata']['created_by'],
             data['metadata']['created_at'],
-            data['chat_context']
+            summarise(data['chat_context'])
         )
         cursor = connection.cursor()
         cursor.execute(insert_survey_query, survey_data)
