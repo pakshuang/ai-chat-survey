@@ -75,7 +75,11 @@ def summarise(chat_context: str) -> str:
         output = llm.run([
             {"role": "system", "content": "You are an assistant who summarises text."},
             {"role": "user", "content": f"The following text will supply contextual knowledge needed for a survey. \
+<<<<<<< HEAD
              Summarise it in less than 5 sentences: {chat_context}"}
+=======
+             Summarise it in less than 5 sentences, paying attention to what the survey is about and/or the product: {chat_context}"}
+>>>>>>> 7edf911fde48bb6e0faad8311d1c5e614ebf8622
         ])
         output = output[:MAX_LEN]
         return output
