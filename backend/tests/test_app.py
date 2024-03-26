@@ -1,11 +1,13 @@
 import sys,os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from pathlib import Path
 import unittest
-from backend.src.app import app
+backend_dir = Path(__file__).resolve().parent.parent
+sys.path.append(str(backend_dir))
+from ..src.app import app
 
-class FlaskAppTestCase(unittest.TestCase):
+class TestFlaskApp:
 
-    def setUp(self):
+    def setup_method(self):
         # creates a test client
         self.app = app.test_client()
         # propagate the exceptions to the test client
@@ -17,7 +19,7 @@ class FlaskAppTestCase(unittest.TestCase):
         response = self.app.get('/api/v1/health')
 
         # assert the status code of the response
-        self.assertEqual(response.status_code, 200)
+        assert response.status_code == 200
 
         # assert the response data
-        self.assertIn(b'Server is running!', response.data)
+        assert b'Server is running!' in response.data
