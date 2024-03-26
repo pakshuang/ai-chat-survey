@@ -205,7 +205,7 @@ def test_get_responses():
     # Send GET request to get responses for the survey
     response = requests.get(url, params={"survey": survey_id}, headers=headers)
     
-    assert response.status_code == 201
+    assert response.status_code == 200
 
 
 def test_get_response():
@@ -227,14 +227,14 @@ def test_get_response():
     # Send GET request to get responses for the survey
     response = requests.get(url, headers=headers)
     print(response.json())
-    assert response.status_code == 201
+    assert response.status_code == 200
 
 def test_send_chat_message():
     url = "http://localhost:{}/api/v1/responses/{}/chat?survey={}".format("5000", 1, 3)
 
     # Prepare response data
     response_data = {
-        "content": "Hello!"
+        "content": ""
     }
 
     # Send POST request to send chat message
@@ -245,5 +245,3 @@ def test_send_chat_message():
     assert response.status_code == 201
     # Add more assertions based on your expected behavior
 
-
-    # test_delete_survey()
