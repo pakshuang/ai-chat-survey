@@ -1,4 +1,4 @@
-from llm_classes import GPT, ChatLog, LLM, construct_chatlog, format_responses_for_gpt
+from llm_classes import GPT, ChatLog, check_exit, construct_chatlog, format_responses_for_gpt
 import datetime
 import os
 from functools import wraps
@@ -578,16 +578,6 @@ def get_response(response_id, **kwargs):
         # Close database connection
         close_connection(connection)
 
-
-def check_exit(updated_message_list: list[dict[str, str]], llm: LLM) -> bool:
-    '''
-    Checks if the interactive survey has come to a conclusion. Returns a boolean.
-    '''
-    exit = updated_message_list.copy()
-    exit.append(ChatLog.END_QUERY)
-    result = llm.run(exit)
-    is_last = bool(re.search(r"[nN]o", result))
-    return is_last
 
 
 def helper_send_message(llm_input: dict[str, object], data_content: str, connection, survey_id, response_id):
