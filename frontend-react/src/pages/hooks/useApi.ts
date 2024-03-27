@@ -25,11 +25,4 @@ export const login = (data: LoginSignupData) =>
   })
 
 export const submitSurvey = (data: Survey) =>
-  AdminApiService(localStorage.getItem("jwt") ?? "")
-    .post("/surveys", data)
-    .then((res) => {
-      console.log(res)
-    })
-    .catch((e) => {
-      console.log(e)
-    })
+  AdminApiService(localStorage.getItem("jwt") ?? "").post("/surveys", data)

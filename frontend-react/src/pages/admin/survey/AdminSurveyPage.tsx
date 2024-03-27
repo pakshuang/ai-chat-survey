@@ -14,6 +14,7 @@ import AdminSurveyTitle from "./AdminSurveyTitle"
 import { useState } from "react"
 import { submitSurvey } from "../../hooks/useApi"
 import dayjs from "dayjs"
+import { useNavigate } from "react-router-dom"
 
 function AdminSurveyPage() {
   const methods = useForm<Survey>({
@@ -44,6 +45,7 @@ function AdminSurveyPage() {
   })
 
   const toast = useToast()
+  const navigate = useNavigate()
 
   const { handleSubmit } = methods
 
@@ -57,9 +59,29 @@ function AdminSurveyPage() {
     data.metadata.created_at = dayjs().format("YYYY-MM-DD HH:mm:ss")
     console.log(data)
     submitSurvey(data)
+      .then((res) => {
+        console.log(res)
+        navigate("admin/survey")
+      })
+      .catch((e) => {
+        console.log(e)
+      })
   }
 
   const onInvalid = () => {
+    const errors = methods.formState.errors
+    const errorKeys = Object.keys(methods.formState.errors)
+    if (
+      errorKeys.includes("chat_context") &&
+      errors["chat_context"]?.type === "maxLength"
+    ) {
+      toast({
+        title: "Please keep chatbot context less than 1000 characters",
+        status: "error",
+        isClosable: true,
+      })
+      return
+    }
     if (Object.keys(methods.formState.errors).length > 0) {
       toast({
         title: "Please fill all fields",
