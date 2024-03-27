@@ -1,6 +1,6 @@
 import axios from "axios"
 import { LoginResponse, LoginSignupData } from "../admin/login/constants"
-import { Survey } from "../admin/survey/constants"
+import { GetSurvey, Survey } from "../admin/survey/constants"
 
 const baseUrl: string = import.meta.env.VITE_BASE_URL
 
@@ -26,3 +26,10 @@ export const login = (data: LoginSignupData) =>
 
 export const submitSurvey = (data: Survey) =>
   AdminApiService(localStorage.getItem("jwt") ?? "").post("/surveys", data)
+
+export const getSurveys = (): Promise<GetSurvey> => {
+  const username = localStorage.getItem("username") ?? ""
+  return AdminApiService(localStorage.getItem("jwt") ?? "")
+    .get(`surveys/?admin=${username}`)
+    .then((res) => res.data)
+}

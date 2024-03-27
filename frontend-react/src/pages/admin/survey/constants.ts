@@ -43,3 +43,15 @@ export const createNewQuestion = (): Question => {
 export const validate = (str: string) => {
   return str.trim().length > 0
 }
+
+export type GetSurveyMetadata = SurveyMetadata & {
+  id: number
+}
+
+export type GetSurvey = {
+  title: string
+  subtitle: string
+  chat_context: string
+  questions: Question[]
+  metadata: GetSurveyMetadata
+}

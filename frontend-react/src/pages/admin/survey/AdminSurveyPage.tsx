@@ -61,7 +61,12 @@ function AdminSurveyPage() {
     submitSurvey(data)
       .then((res) => {
         console.log(res)
-        navigate("admin/survey")
+        toast({
+          title: "New survey created",
+          status: "success",
+          isClosable: true,
+        })
+        navigate("/admin/survey")
       })
       .catch((e) => {
         console.log(e)
