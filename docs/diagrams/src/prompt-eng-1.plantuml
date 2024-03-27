@@ -9,7 +9,7 @@ start
 #LightSalmon:System prompt (Ask a question);
 while ()
     #LightCyan:User input;
-    #LightPink:LLM question/input;  
+    #LightPink:LLM output;  
     endwhile
     -[hidden]->
     detach
