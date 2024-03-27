@@ -2,6 +2,9 @@ from llm_classes.llm_level import LLM, GPT
 from llm_classes.chatlog import ChatLog
 import re
 import random
+from database_operations import update_chat_log, close_connection
+import json
+from flask import jsonify
 
 def construct_chatlog(survey_initial_responses: str, llm: LLM = GPT(), seed=random.randint(1, 9999)) -> ChatLog:
     '''
@@ -39,6 +42,61 @@ def check_exit(
     result = llm.run(exit, seed=seed)
     is_last = bool(re.search(r"[yY]es", result))
     return is_last
+
+
+def helper_send_message(llm_input: dict[str, object], data_content: str, connection, survey_id, response_id):
+    '''
+    Generates a response from a large language model.
+    '''
+    def has_no_chat_log(content: str, message_list: list[dict[str, object]]) -> bool:
+        return not content.strip() and not message_list
+    
+    try:
+        # initialise LLM
+        llm = GPT()
+        chat_log_dict =  json.loads(llm_input["chat_log"])
+        message_list = chat_log_dict["messages"]
+        
+
+        has_no_chat_log = has_no_chat_log(data_content, message_list)
+        if has_no_chat_log:
+            pipe = construct_chatlog(
+                f"""{llm_input["chat_context"]}\n{
+                    format_responses_for_gpt(
+                        llm_input["response_object"]
+                    )
+                }""", llm=llm
+            )
+            first_question = llm.run(pipe.message_list)
+            updated_message_list =  pipe.insert_and_update(first_question, pipe.current_index, is_llm=True)
+        
+        else:
+            pipe = ChatLog(message_list, llm=llm)
+            pipe.insert_and_update(data_content, pipe.current_index) # user input
+            next_question = llm.run(pipe.message_list)
+            updated_message_list = pipe.insert_and_update(next_question, pipe.current_index, is_llm=True)
+        
+        updated_chat_log = chat_log_dict.copy()
+        updated_chat_log["messages"] = updated_message_list   
+        updated_chat_log_json = json.dumps(updated_chat_log)
+
+        # Update the ChatLog table
+        try:
+            # Update the database
+            update_chat_log(connection, survey_id, response_id, updated_chat_log_json)
+        except Exception as e:
+            return jsonify({"message": "An error occurred while updating the chat log"}), 500
+        
+        content = updated_message_list[-1]["content"]
+        is_last = check_exit(updated_message_list, llm) or len(updated_message_list) > ChatLog.MAX_LEN
+        close_connection(connection)
+        return jsonify({"content": content, "is_last": is_last,\
+                         "updated_message_list": updated_message_list}), 201\
+        
+    except Exception as e:
+        return jsonify({"message": "An error was encountered while generating a reply:" + str(e)}), 500
+    
+
 
 
 
