@@ -1,12 +1,13 @@
-import { Box } from "@chakra-ui/react";
+import { Box, SkeletonCircle } from "@chakra-ui/react";
 import { useRef, useEffect } from "react";
 import ChatMessage from "./ChatMessage";
 
 interface ChatWindowProps {
   messages: { sender: "user" | "bot"; message: string }[];
+  isBotThinking: boolean;
 }
 
-function ChatWindow({ messages }: ChatWindowProps) {
+function ChatWindow({ messages, isBotThinking }: ChatWindowProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -43,6 +44,11 @@ function ChatWindow({ messages }: ChatWindowProps) {
       {messages.map((item) => (
         <ChatMessage sender={item.sender}>{item.message}</ChatMessage>
       ))}
+      {isBotThinking && (
+        <ChatMessage sender="bot">
+          <SkeletonCircle size="6" />
+        </ChatMessage>
+      )}
       <div ref={messagesEndRef} />
     </Box>
   );

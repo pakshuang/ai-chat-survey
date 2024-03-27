@@ -2,23 +2,18 @@ import { Button, Input, Flex } from "@chakra-ui/react";
 import { FormEvent, useState, useRef, useEffect } from "react";
 
 interface ChatInputProps {
-  sendMessage: (message: string) => void;
+  onSubmitMessage: (message: string) => void;
+  isSubmitting: boolean;
 }
 
-function ChatInput({ sendMessage }: ChatInputProps) {
+function ChatInput({ onSubmitMessage, isSubmitting }: ChatInputProps) {
   const [message, setMessage] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    setIsSubmitting(true);
-    // test button loading
-    setTimeout(() => {
-      setIsSubmitting(false);
-      sendMessage(message);
-      setMessage("");
-    }, 500);
+    onSubmitMessage(message);
+    setMessage("");
   }
 
   useEffect(() => {
