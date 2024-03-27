@@ -1,5 +1,4 @@
 import requests
-import time
 
 
 def test_create_admin():
