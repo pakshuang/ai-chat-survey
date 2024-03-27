@@ -1,5 +1,5 @@
 ---
-# This workflow executes several linters on changed files based on 
+# This workflow executes several linters on changed files based on
 # languages used in your code base whenever
 # you push a code or open a pull request.
 #
@@ -13,7 +13,7 @@ on:
   pull_request:
     branches: [main]
 permissions:
-  contents: read  # This line specifies read-only permissions for the workflow
+  contents: read # This line specifies read-only permissions for the workflow
 jobs:
   run-lint:
     runs-on: ubuntu-latest
@@ -21,7 +21,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          # Full git history is needed to get a proper list of 
+          # Full git history is needed to get a proper list of
           # changed files within `super-linter`
           fetch-depth: 0
       - name: Super-Linter
@@ -30,3 +30,9 @@ jobs:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          # Enable only specified linters
+          VALIDATE_DOCKERFILE_HADOLINT: true
+          VALIDATE_GITLEAKS: true
+          VALIDATE_PYTHON_BLACK: true
+          VALIDATE_PYTHON_ISORT: true
