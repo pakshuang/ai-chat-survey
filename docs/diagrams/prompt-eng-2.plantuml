@@ -13,7 +13,7 @@ while ()
     #LightPink:LLM question/input; 
     if () then
         #LightSalmon:LLM decides conversation is over; 
-        end
+        stop
     else 
         #LightSalmon:LLM decides conversation is not over;
     endif
