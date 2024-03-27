@@ -37,7 +37,7 @@ However, the large language model will have a tendency to ask further questions 
 
 Therefore, instead of a one-step initialisation, where the LLM is initialised with one system prompt (and awaits for a user input), we have constructed a three-step initialisation phase for the LLM. 
 
-1. Firstly, the LLM is initialised with a system prompt with the survey context and response, as usual. However, instead of one question, the LLM will be tasked with generating a list of questions to ask the user.
+1. Firstly, the LLM is initialised with a system prompt with the survey context and response as usual. However, instead of one question, the LLM will be tasked with generating a list of questions to ask the user.
 2. The LLM will generate a list of questions for the user, based on the survey response.
 3. A new system message will be added. This system message will task the LLM to greet the user and choose 1 question to ask the user. It will also be tasked with remembering the list of questions it had generated.
 
