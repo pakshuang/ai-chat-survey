@@ -1,68 +1,41 @@
-import {
-  Flex,
-  Card,
-  Button,
-  Input,
-  InputGroup,
-  InputRightElement,
-  VStack,
-  Text,
-  Heading,
-  Link,
-  IconButton,
-} from "@chakra-ui/react";
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-
+import { SubmitHandler } from "react-hook-form";
 import { useState } from "react";
+import { LoginSignupData, errorToast } from "./constants";
+import { useNavigate } from "react-router-dom";
+import { signup } from "../../hooks/useApi";
+import { LoginSignupForm } from "./LoginSignupForm";
 
 function SignupPage() {
-  const [showPassword, setShowPassword] = useState(false);
+  const [isTaken, setIsTaken] = useState(false);
+  const navigate = useNavigate();
+
+  const onSubmit: SubmitHandler<LoginSignupData> = async (values) => {
+    try {
+      await signup(values);
+      navigate("/admin/survey");
+    } catch (error: any) {
+      if (
+        error.response.status === 400 &&
+        error.response.data.message == "Admin already exists"
+      ) {
+        setIsTaken(true);
+      } else {
+        errorToast();
+      }
+    }
+  };
 
   return (
-    <Flex
-      flexDirection="column"
-      minH="100vh"
-      bg="gray.100"
-      justifyContent="center"
-      alignItems="center"
-      gap="1rem"
-    >
-      <Card bg="white" padding="2rem">
-        <VStack spacing="1rem">
-          <Heading size="lg">Create an account</Heading>
-          <VStack spacing="0.5rem" w="100%">
-            <Input variant="flushed" placeholder="Username"></Input>
-            <InputGroup size="md">
-              <Input
-                variant="flushed"
-                pr="1.75rem"
-                type={showPassword ? "text" : "password"}
-                placeholder="Password"
-              />
-              <InputRightElement width="1.75rem">
-                <IconButton
-                  variant="flushed"
-                  h="1.75rem"
-                  aria-label="View Password"
-                  size="sm"
-                  onClick={() => setShowPassword(!showPassword)}
-                  icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
-                />
-              </InputRightElement>
-            </InputGroup>
-          </VStack>
-          <Button bg="gray.100" w="100%">
-            Sign up
-          </Button>
-        </VStack>
-      </Card>
-      <Text>
-        Already have an account?{" "}
-        <Link fontWeight="700" href="/admin/login">
-          Log in
-        </Link>
-      </Text>
-    </Flex>
+    <LoginSignupForm
+      onSubmit={onSubmit}
+      heading="Create an account"
+      hasSubmitError={isTaken}
+      submitErrorMessage="Your username has been taken. Please choose another username."
+      submitButtonText="Sign up"
+      redirectText="Already have an account?"
+      redirectLink="/admin/login"
+      redirectTo="Log in"
+    />
   );
 }
 

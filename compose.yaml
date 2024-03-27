@@ -1,3 +1,4 @@
+---
 version: "3"
 services:
   frontend-react:
@@ -15,17 +16,19 @@ services:
     image: backend
     container_name: backend
     build: ./backend
+    depends_on:
+      - database
     env_file:
       - .env
     ports:
-      - 127.0.0.1:${BACKEND_HOST_PORT}:${BACKEND_CONTAINER_PORT} # Only required for accessing the API directly from the host
-
+      - ${BACKEND_HOST_PORT}:${BACKEND_CONTAINER_PORT}
 
   database:
-    image: database
+    image: mysql:8.3.0
     container_name: database
-    build: ./database
     env_file:
       - .env
+    volumes:
+      - ./scripts:/docker-entrypoint-initdb.d
     ports:
       - ${DATABASE_HOST_PORT}:${DATABASE_CONTAINER_PORT}

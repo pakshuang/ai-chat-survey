@@ -6,11 +6,16 @@ name = "pypi"
 [packages]
 flask = "*"
 openai = "*"
-jwt = "*"
 python-dotenv = "*"
 pymysql = "*"
+pyjwt = "*"
+requests = "*"
+cryptography = "*"
+flask-cors = "*"
+pytest-cov = "*"
 
 [dev-packages]
+pytest = "*"
 
 [requires]
 python_version = "3.11"

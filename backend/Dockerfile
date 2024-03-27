@@ -1,5 +1,5 @@
 # Use an official Python runtime as the base image
-FROM python:3.11.8-alpine
+FROM python:3.11.8
 
 # Set the working directory in the container
 WORKDIR /src
@@ -15,7 +15,7 @@ RUN pipenv install --deploy
 COPY /src /src
 
 # Expose the port on which the application will run
-EXPOSE 5000
+EXPOSE ${BACKEND_CONTAINER_PORT}
 
 # Define the command to run the application
 ENTRYPOINT ["pipenv", "run", "python"]

@@ -35,6 +35,7 @@ interface Props {
   survey_id: number;
 }
 
+
 function SurveyPage({survey_id}:Props) {
   const navigate = useNavigate();
   const [currentQuestion, setCurrentQuestion] = useState<number>(0);
