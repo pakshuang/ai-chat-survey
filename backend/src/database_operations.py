@@ -1,7 +1,9 @@
-import os
-import pymysql
 import json
+import os
+
+import pymysql
 from llm_classes import GPT
+
 
 def connect_to_mysql():
     # Connect to MySQL
@@ -22,6 +24,7 @@ def connect_to_mysql():
         return connection
     except pymysql.Error as e:
         raise e
+
 
 def get_cursor(connection):
     return connection.cursor()
@@ -67,17 +70,26 @@ def close_cursor(cursor):
 
 # Helper functions for insertion and creation
 
+
 # create_survey
 def summarise(chat_context: str) -> str:
     MAX_LEN = 1500
     if len(chat_context) > MAX_LEN:
         llm = GPT()
-        output = llm.run([
-            {"role": "system", "content": "You are an assistant who summarises text."},
-            {"role": "user", "content": f"""The following text will supply contextual knowledge needed for a survey. 
+        output = llm.run(
+            [
+                {
+                    "role": "system",
+                    "content": "You are an assistant who summarises text.",
+                },
+                {
+                    "role": "user",
+                    "content": f"""The following text will supply contextual knowledge needed for a survey. 
              Summarise it in less than 5 sentences, paying attention to what the survey is about and/or the product: 
-             {chat_context}"""}
-        ])
+             {chat_context}""",
+                },
+            ]
+        )
         output = output[:MAX_LEN]
         return output
     else:
@@ -92,13 +104,13 @@ def create_survey(connection, data):
             VALUES (%s, %s, %s, %s, %s, %s, %s)
         """
         survey_data = (
-            data['metadata']['name'],
-            data['metadata']['description'],
-            data['title'],
-            data['subtitle'],
-            data['metadata']['created_by'],
-            data['metadata']['created_at'],
-            summarise(data['chat_context'])
+            data["metadata"]["name"],
+            data["metadata"]["description"],
+            data["title"],
+            data["subtitle"],
+            data["metadata"]["created_by"],
+            data["metadata"]["created_at"],
+            summarise(data["chat_context"]),
         )
         cursor = connection.cursor()
         cursor.execute(insert_survey_query, survey_data)
@@ -107,17 +119,21 @@ def create_survey(connection, data):
         survey_id = cursor.lastrowid
 
         # Insert questions into Questions table
-        for question in data['questions']:
+        for question in data["questions"]:
             insert_question_query = """
                 INSERT INTO Questions (question_id, survey_id, question, question_type, options)
                 VALUES (%s, %s, %s, %s, %s)
             """
             question_data = (
-                question['id'],
+                question["id"],
                 survey_id,
-                question['question'],
-                question['type'],
-                json.dumps(question.get('options', [])) if 'options' in question else None
+                question["question"],
+                question["type"],
+                (
+                    json.dumps(question.get("options", []))
+                    if "options" in question
+                    else None
+                ),
             )
             cursor.execute(insert_question_query, question_data)
 
@@ -128,6 +144,7 @@ def create_survey(connection, data):
         return survey_id
     except Exception as e:
         connection.rollback()
+        print(e)
         raise e
 
 
@@ -136,18 +153,21 @@ def create_survey(connection, data):
 def create_survey_object(row):
     survey_object = {
         "metadata": {
-            "id": row['survey_id'],
-            "name": row['name'],
-            "description": row['description'],
-            "created_by": row['admin_username'],
-            "created_at": row['created_at'].strftime("%Y-%m-%d %H:%M:%S"),  # Convert to string
+            "id": row["survey_id"],
+            "name": row["name"],
+            "description": row["description"],
+            "created_by": row["admin_username"],
+            "created_at": row["created_at"].strftime(
+                "%Y-%m-%d %H:%M:%S"
+            ),  # Convert to string
         },
-        "title": row['title'],
-        "subtitle": row['subtitle'],
+        "title": row["title"],
+        "subtitle": row["subtitle"],
         "questions": [],
-        "chat_context": row['chat_context']
+        "chat_context": row["chat_context"],
     }
     return survey_object
+
 
 # get_surveys()
 # Helper function to create survey object
@@ -156,12 +176,17 @@ def append_question_to_survey(survey_objects, survey_id, question_data):
     # question_exists = any(question['id'] == question_data['question_id'] for question in survey_objects[survey_id]['questions'])
 
     # If the question does not exist, append it to the list
-    survey_objects[survey_id]['questions'].append({
-        "id": question_data['question_id'],
-        "type": question_data['question_type'],
-        "question": question_data['question'],
-        "options": json.loads(question_data['options']) if question_data['options'] else []
-    })
+    survey_objects[survey_id]["questions"].append(
+        {
+            "id": question_data["question_id"],
+            "type": question_data["question_type"],
+            "question": question_data["question"],
+            "options": (
+                json.loads(question_data["options"]) if question_data["options"] else []
+            ),
+        }
+    )
+
 
 # submit_response()
 # Helper function to insert response data into DB
@@ -175,21 +200,20 @@ def save_response_to_database(connection, data, survey_id):
         result = fetch(connection, query, (survey_id,))
 
         # If there are no results or the result is None, return 1
-        if not result or result[0]['MAX(response_id)'] is None:
+        if not result or result[0]["MAX(response_id)"] is None:
             last_response_id = 0
         else:
             # Extract the last response ID and return it
-            last_response_id = result[0]['MAX(response_id)']
-
+            last_response_id = result[0]["MAX(response_id)"]
 
         # Increment the last response_id by 1 to generate a new response_id
         new_response_id = last_response_id + 1
 
         # Save each question's response to the database
-        for answer in data['answers']:
-            survey_id = data['metadata']['survey_id']
-            question_id = answer['question_id']
-            answer_text = answer['answer']
+        for answer in data["answers"]:
+            survey_id = data["metadata"]["survey_id"]
+            question_id = answer["question_id"]
+            answer_text = answer["answer"]
 
             # Insert the survey response into the database with the new_response_id
             query = """
@@ -221,8 +245,12 @@ def validate_response(response_data, survey_object):
     for response_question in response_questions:
         # Find the corresponding question in the survey
         matching_survey_question = next(
-            (question for question in survey_questions if question["id"] == response_question["question_id"]),
-            None
+            (
+                question
+                for question in survey_questions
+                if question["id"] == response_question["question_id"]
+            ),
+            None,
         )
         if not matching_survey_question:
             return f"Question with ID {response_question['question_id']} not found in survey"
@@ -238,7 +266,9 @@ def validate_response(response_data, survey_object):
         # If the question type is 'multiple_choice', check if the options match
         if response_question["type"] == "multiple_choice":
             # Check if the number of options match
-            if len(response_question.get("options", [])) != len(matching_survey_question.get("options", [])):
+            if len(response_question.get("options", [])) != len(
+                matching_survey_question.get("options", [])
+            ):
                 return f"Number of options mismatch for question with ID {response_question['question_id']}"
             # Check if each option in the response exists in the survey question's options
             for option in response_question.get("options", []):
@@ -248,6 +278,7 @@ def validate_response(response_data, survey_object):
     # If all checks pass, the response object is valid
     return None
 
+
 # get_responses()
 # Helper method create response_object()
 def create_response_object(survey_id, response_id, row):
@@ -255,9 +286,9 @@ def create_response_object(survey_id, response_id, row):
         "metadata": {
             "survey_id": int(survey_id),
             "response_id": response_id,
-            "submitted_at": row["submitted_at"].strftime("%Y-%m-%d %H:%M:%S")
+            "submitted_at": row["submitted_at"].strftime("%Y-%m-%d %H:%M:%S"),
         },
-        "answers": []
+        "answers": [],
     }
     return response_object
 
@@ -269,10 +300,13 @@ def append_answer_to_response(response_objects, response_id, response_data):
         "question_id": response_data["question_id"],
         "type": response_data["question_type"],
         "question": response_data["question"],
-        "options": json.loads(response_data['options']) if response_data['options'] else [],
-        "answer": response_data["answer"]
+        "options": (
+            json.loads(response_data["options"]) if response_data["options"] else []
+        ),
+        "answer": response_data["answer"],
     }
     response_objects[response_id]["answers"].append(answer)
+
 
 # send_chat_message()
 # Helper function to fetch the chat_context from Surveys
@@ -293,6 +327,7 @@ def fetch_chat_context(connection, survey_id):
     except Exception as e:
         raise e
 
+
 # send_chat_message()
 # Helper function to get the chatLog or create a new chatLog
 def get_chat_log(connection, survey_id, response_id):
@@ -309,11 +344,13 @@ def get_chat_log(connection, survey_id, response_id):
             INSERT INTO ChatLog (survey_id, response_id, chat_log, created_at) VALUES (%s, %s, %s, CURRENT_TIMESTAMP)
             """
             # Define the initial chat log structure
-            initial_chat_log = {
-                "messages": []
-            }
+            initial_chat_log = {"messages": []}
             initial_chat_log = json.dumps(initial_chat_log)
-            execute(connection, insert_chat_log_query, (survey_id, response_id, initial_chat_log))
+            execute(
+                connection,
+                insert_chat_log_query,
+                (survey_id, response_id, initial_chat_log),
+            )
             chat_log = initial_chat_log
         else:
             chat_log = result[0]["chat_log"]
@@ -323,6 +360,7 @@ def get_chat_log(connection, survey_id, response_id):
     except Exception as e:
         raise e
 
+
 # send_chat_message()
 # Helper function update chat log
 def update_chat_log(connection, survey_id, response_id, updated_chat_log):
@@ -331,7 +369,11 @@ def update_chat_log(connection, survey_id, response_id, updated_chat_log):
         update_chat_log_query = """
         UPDATE ChatLog SET chat_log = %s WHERE survey_id = %s AND response_id = %s
         """
-        execute(connection, update_chat_log_query, (updated_chat_log, survey_id, response_id))
+        execute(
+            connection,
+            update_chat_log_query,
+            (updated_chat_log, survey_id, response_id),
+        )
 
         return True
     except Exception as e:
