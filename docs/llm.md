@@ -43,7 +43,7 @@ Therefore, instead of a one-step initialisation, where the LLM is initialised wi
 
 This method follows a similar idea as self-ask, a Chain-of-Thought prompting technique (Press et al., [2022](https://arxiv.org/pdf/2210.03350.pdf)). By asking it to generate a list of chat questions to ask and tasking it with remembering these questions, it is hoped that the LLM would remember to continue with other interesting aspects of the interview.
 
-This resolves problems 3.
+This resolves problem 3.
 
 ### Pipeline Step 2
 <img src="./diagrams/images/prompt-eng-1.png" alt="drawing" style="height:250px;"/>
