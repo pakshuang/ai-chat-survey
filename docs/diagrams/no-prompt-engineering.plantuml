@@ -1,0 +1,15 @@
+@startuml
+
+skinparam shadowing false
+skinparam BackgroundColor transparent
+
+start
+#LightSalmon:System prompt (First Insruction);
+while (User has input?)
+    #LightCyan:User input;
+    #LightPink:LLM reply;  
+    endwhile
+    -[hidden]->
+    detach
+
+@enduml
