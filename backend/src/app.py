@@ -1,3 +1,14 @@
+import datetime
+import json
+import os
+import re
+from functools import wraps
+
+import database_operations
+import jwt
+from database_operations import close_connection, get_chat_log, update_chat_log
+from flask import Flask, jsonify, request
+from flask_cors import CORS
 from llm_classes import (
     GPT,
     ChatLog,
@@ -5,18 +16,7 @@ from llm_classes import (
     construct_chatlog,
     format_responses_for_gpt,
 )
-import datetime
-import os
-from functools import wraps
-from database_operations import close_connection, get_chat_log, update_chat_log
-import re
-import jwt
-import json
-from flask import Flask, jsonify, request
-from flask_cors import CORS
 from werkzeug.security import check_password_hash, generate_password_hash
-
-import database_operations
 
 BACKEND_CONTAINER_PORT = os.getenv("BACKEND_CONTAINER_PORT", "5000")
 
