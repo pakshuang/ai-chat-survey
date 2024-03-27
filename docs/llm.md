@@ -10,8 +10,9 @@ Large language models usually process conversations through this simple pipeline
 3. The model generates an output.
 
 ### Problem Outline and Basic Pipeline
-![Basic Pipeline](./diagrams/images/no-prompt-eng.png)
 
+<img src="./diagrams/images/no-prompt-eng.png" alt="drawing" style="height:200px;"/>
+<br>
 However, it will become apparent that the barebones pipeline as described above is insufficient in addressing the business problem. The following difficulties/questions arise:
 1. The interview is conducted by the AI assistant. Therefore, the user should not be entering an input first.
 2. Where to supply The AI assistant with contextual information for the survey, which includes:
@@ -45,8 +46,8 @@ This method follows a similar idea as self-ask, a Chain-of-Thought prompting tec
 This resolves problems 3.
 
 ### Pipeline Step 2
-![Formatted Prompt](./diagrams/images/prompt-eng-1.png)
-
+<img src="./diagrams/images/prompt-eng-1.png" alt="drawing" style="height:250px;"/>
+<br>
 ### Step 3
 
 In our current implementation of the app, the LLM has to decide when to end the chat/interview. This is to prevent the user from exiting the interview stage prematurely without any consideration to the questions. The user may still request the LLM via the chat to end the interview, just as one would in real life. However, this will take more explicit effort, and hopefully, by interacting with the chat interface, the user may be less inclined to exit the interview stage without any consideration for the questions.
