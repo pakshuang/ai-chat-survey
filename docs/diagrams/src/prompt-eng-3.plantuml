@@ -6,7 +6,7 @@ skinparam BackgroundColor transparent
 start
 #LightSalmon:System prompt (Survey Information);
 #LightPink:LLM generates a list of \n potential questions;
-#LightSalmon:System prompt:\n(Ask question, security-related instruction);
+#LightSalmon:System prompt:\n(Ask question __**and add security-related instruction**__);
 
 while ()
     #LightCyan:User input;
