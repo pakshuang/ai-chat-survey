@@ -10,21 +10,30 @@ interface Messages {
 }
 
 function ChatPage() {
-  const [messages, setMessages] = useState<Messages[]>([
-    { sender: "user", message: "Hello" },
-    { sender: "bot", message: "Hello, how are you?" },
-    {
-      sender: "bot",
-      message:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc et cursus purus. Ut gravida ac eros a fermentum. Praesent imperdiet sapien eget mauris vulputate, at mollis justo pharetra. Vestibulum ultricies pulvinar dolor nec iaculis. Vivamus tincidunt efficitur egestas. Donec sed diam vel augue imperdiet viverra. Sed turpis urna, tempus at tellus vel, finibus lacinia tellus. Nulla dictum orci vel volutpat imperdiet. Proin id dui vitae lacus rutrum molestie. Curabitur lobortis porta arcu vitae efficitur. Maecenas mollis odio eros, at vulputate quam lacinia et. Ut tincidunt dui ut mauris sodales, ac egestas sapien maximus. Vestibulum vitae posuere dolor, id mollis felis.",
-    },
-  ]);
+  const [messages, setMessages] = useState<Messages[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [token, setToken] = useState("test");
   const [surveyID, setSurveyID] = useState(0);
   const [responseID, setResponseId] = useState(0);
 
   function sendMessage(message: string) {
+    setIsLoading(true);
+    setMessages([...messages, { sender: "user", message: message }]);
+
+    // test bot thinking
+    setTimeout(() => {
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        {
+          sender: "bot",
+          message:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque asperiores ratione incidunt quasi accusamus facilis beatae a cupiditate aut minus. Autem ab sit voluptate commodi ducimus quis at officia mollitia.",
+        },
+      ]);
+      setIsLoading(false);
+    }, 1000);
+
     // TODO: replace with axios
     // test api for subsequent messages
     fetch(
@@ -38,14 +47,13 @@ function ChatPage() {
       }
     )
       .then((res) => res.json())
-      .then((data) =>
-        setMessages(
-          messages.concat(
-            { sender: "user", message: message },
-            { sender: "bot", message: data["content"] }
-          )
-        )
-      );
+      .then((data) => {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { sender: "bot", message: data["content"] },
+        ]);
+        setIsLoading(false);
+      });
 
     // dummy messages
     // setMessages(
@@ -210,17 +218,19 @@ function ChatPage() {
       console.log("initializing message ...");
       await init_message();
       console.log("done");
+      setIsLoading(false);
     };
 
     // console.log("use effect running");
     run();
+    setIsLoading(false);
     // console.log("use effect done");
   }, []);
 
   return (
     <Flex flexDirection="column" bg="gray.100" h="100vh" p="1">
-      <ChatWindow messages={messages} />
-      <ChatInput sendMessage={sendMessage} />
+      <ChatWindow messages={messages} isBotThinking={isLoading} />
+      <ChatInput onSubmitMessage={sendMessage} isSubmitting={isLoading} />
     </Flex>
   );
 }

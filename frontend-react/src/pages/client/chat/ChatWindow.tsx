@@ -1,19 +1,28 @@
-import { Box } from "@chakra-ui/react";
-import { useRef, useEffect } from "react";
+import { Box, SkeletonCircle } from "@chakra-ui/react";
+import { useRef, useEffect, useState } from "react";
 import ChatMessage from "./ChatMessage";
+import TypingEffect from "./TypingEffect";
 
 interface ChatWindowProps {
   messages: { sender: "user" | "bot"; message: string }[];
+  isBotThinking: boolean;
 }
 
-function ChatWindow({ messages }: ChatWindowProps) {
+function ChatWindow({ messages, isBotThinking }: ChatWindowProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [botResponded, setBotResponded] = useState(false);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
+    if (messages.slice(-1)[0]?.sender === "bot") {
+      setBotResponded(true);
+    }
+    if (messages.slice(-1)[0]?.sender === "user") {
+      setBotResponded(false);
+    }
     scrollToBottom();
   }, [messages]);
 
@@ -40,9 +49,22 @@ function ChatWindow({ messages }: ChatWindowProps) {
         },
       }}
     >
-      {messages.map((item) => (
-        <ChatMessage sender={item.sender}>{item.message}</ChatMessage>
-      ))}
+      {messages.map((item, index) => {
+        if (index === messages.length - 1 && botResponded) {
+          return (
+            <ChatMessage sender="bot">
+              <TypingEffect text={messages.slice(-1)[0].message} />
+            </ChatMessage>
+          );
+        } else {
+          return <ChatMessage sender={item.sender}>{item.message}</ChatMessage>;
+        }
+      })}
+      {isBotThinking && (
+        <ChatMessage sender="bot">
+          <SkeletonCircle size="6" />
+        </ChatMessage>
+      )}
       <div ref={messagesEndRef} />
     </Box>
   );
