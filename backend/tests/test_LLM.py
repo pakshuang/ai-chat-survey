@@ -158,4 +158,4 @@ Answer: Keep up the good work!
             }
         ]
         output_final = llm.run(msg, seed=seed)
-        self.assertTrue(bool(re.search(r"[yY]es|[tT]rue",  output_final)) )
+        self.assertTrue(bool(re.search(r"[yY]es|[tT]rue",  output_final)))
