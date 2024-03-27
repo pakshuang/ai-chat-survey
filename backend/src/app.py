@@ -1,10 +1,9 @@
-from llm_classes import GPT, ChatLog, LLM, construct_chatlog, format_responses_for_gpt
+from llm_classes import GPT, ChatLog, check_exit, construct_chatlog, format_responses_for_gpt
 import datetime
 import os
 from functools import wraps
 from database_operations import close_connection, get_chat_log, update_chat_log
 import re
-from survey_creation import *
 import jwt
 import json
 from flask import Flask, jsonify, request
@@ -580,16 +579,6 @@ def get_response(response_id, **kwargs):
         close_connection(connection)
 
 
-def check_exit(updated_message_list: list[dict[str, str]], llm: LLM) -> bool:
-    '''
-    Checks if the interactive survey has come to a conclusion. Returns a boolean.
-    '''
-    exit = updated_message_list.copy()
-    exit.append(ChatLog.END_QUERY)
-    result = llm.run(exit)
-    is_last = bool(re.search(r"[nN]o", result))
-    return is_last
-
 
 def helper_send_message(llm_input: dict[str, object], data_content: str, connection, survey_id, response_id):
     '''
@@ -634,9 +623,8 @@ def helper_send_message(llm_input: dict[str, object], data_content: str, connect
         except Exception as e:
             return jsonify({"message": "An error occurred while updating the chat log"}), 500
         
-        
-        assert updated_message_list[-1]["role"] == "assistant"
-        content, is_last = updated_message_list[-1]["content"], check_exit(updated_message_list, llm)
+        content = updated_message_list[-1]["content"]
+        is_last = check_exit(updated_message_list, llm) or len(updated_message_list) > ChatLog.MAX_LEN
         close_connection(connection)
         return jsonify({"content": content, "is_last": is_last,\
                          "updated_message_list": updated_message_list}), 201\
