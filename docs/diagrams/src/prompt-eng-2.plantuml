@@ -1,0 +1,24 @@
+@startuml prompt-eng-2
+
+skinparam shadowing false
+skinparam BackgroundColor transparent
+
+start
+#LightSalmon:System prompt (Survey Information);
+#LightPink:LLM generates a list of \n potential questions;
+#LightSalmon:System prompt (Ask a question);
+
+while ()
+    #LightCyan:User input;
+    #LightPink:LLM output; 
+    if () then
+        #LightSalmon:LLM decides conversation is over; 
+        stop
+    else 
+        #LightSalmon:LLM decides conversation is not over;
+    endif
+    endwhile
+    -[hidden]->
+    detach
+
+@enduml
