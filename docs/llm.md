@@ -27,7 +27,7 @@ We will improve the base pipeline in several steps.
 
 ### Step 1
 
-To ensure that the AI assistant understands the survey and the context behind it, we can simply add this context to the system prompt, and ask it to generate a chat question for the user, while, essentially, still using the basic pipeline. 
+To ensure that the AI assistant understands the survey and the context behind it, we can simply add this context to the system prompt and ask it to generate a chat question for the user while essentially still using the basic pipeline. 
 
 This immediately resolves problem 1. and 2.
 
