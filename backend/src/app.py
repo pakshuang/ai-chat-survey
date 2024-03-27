@@ -212,14 +212,9 @@ def login_admin():
                 # Close the connection
                 close_connection(connection)
                 return jsonify({"jwt": token}), 200
-            else:
-                # Close the connection
-                close_connection(connection)
-                return jsonify({"message": "Invalid credentials"}), 401
-        else:
-            # Close the connection
-            close_connection(connection)
-            return jsonify({"message": "Username not found"}), 400
+        # Close the connection
+        close_connection(connection)
+        return jsonify({"message": "Invalid credentials"}), 401
     else:
         return jsonify({"message": "Failed to connect to the database"}), 500
 
