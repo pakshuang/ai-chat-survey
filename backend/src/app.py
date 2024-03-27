@@ -212,14 +212,9 @@ def login_admin():
                 # Close the connection
                 close_connection(connection)
                 return jsonify({"jwt": token}), 200
-            else:
-                # Close the connection
-                close_connection(connection)
-                return jsonify({"message": "Invalid credentials"}), 401
-        else:
-            # Close the connection
-            close_connection(connection)
-            return jsonify({"message": "Username not found"}), 400
+        # Close the connection
+        close_connection(connection)
+        return jsonify({"message": "Invalid credentials"}), 401
     else:
         return jsonify({"message": "Failed to connect to the database"}), 500
 
@@ -268,68 +263,36 @@ def get_surveys():
         if username:
             query = "SELECT Surveys.*, Questions.* FROM Surveys LEFT JOIN Questions ON Surveys.survey_id = Questions.survey_id WHERE Surveys.admin_username = %s"
             params = (username,)
-
-            survey_data = database_operations.fetch(connection, query, params)
-
-            if survey_data is None:
-                return jsonify({"message": "Error fetching surveys"}), 500
-            elif not survey_data:
-                if username:
-                    return jsonify({"message": "No surveys found for user '{}'".format(username)}), 404
-                else:
-                    return jsonify({"message": "No surveys found"}), 404
-
-            # Group survey data by survey ID and collect questions
-            survey_objects = {}
-            for row in survey_data:
-                survey_id = row['survey_id']
-                if survey_id not in survey_objects:
-                    survey_objects[survey_id] = database_operations.create_survey_object(row)
-                if row['question_id']:  # Check if there's a question associated
-                    database_operations.append_question_to_survey(survey_objects, survey_id, row)
-
-            # Convert dictionary to list of survey objects
-            survey_objects_list = list(survey_objects.values())
-
-            return jsonify(survey_objects_list), 200
         else:
-            get_usernames = "SELECT admin_username FROM Admins"
-            usernames_data = database_operations.fetch(connection, get_usernames)
-            all_survey_objects = []
+            query = "SELECT Surveys.*, Questions.* FROM Surveys LEFT JOIN Questions ON Surveys.survey_id = Questions.survey_id"
+            params = None
 
-            for row in usernames_data:
-                query = """SELECT s.name, s.description, s.title, s.subtitle, s.admin_username, s.created_at, s.chat_context,
-                        q.question_id, s.survey_id, q.question, q.question_type, q.options
-                         FROM Surveys s
-                         LEFT JOIN Questions q ON s.survey_id = q.survey_id 
-                         WHERE s.admin_username = %s"""
-                params = (row["admin_username"],)
+        survey_data = database_operations.fetch(connection, query, params)
 
-                survey_data = database_operations.fetch(connection, query, params)
+        if survey_data is None:
+            return jsonify({"message": "Error fetching surveys"}), 500
+        elif not survey_data:
+            if username:
+                return jsonify({"message": "No surveys found for user '{}'".format(username)}), 404
+            else:
+                return jsonify({"message": "No surveys found"}), 404
 
-                if survey_data is None:
-                    return jsonify({"message": "Error fetching surveys"}), 500
-                elif not survey_data:
-                    if username:
-                        return jsonify({"message": "No surveys found for user '{}'".format(username)}), 404
-                    else:
-                        return jsonify({"message": "No surveys found"}), 404
+        # Group survey data by survey ID and collect questions
+        survey_objects = {}
+        for row in survey_data:
+            survey_id = row['survey_id']
+            if survey_id not in survey_objects:
+                survey_objects[survey_id] = database_operations.create_survey_object(row)
+            if row['question_id']:  # Check if there's a question associated
+                database_operations.append_question_to_survey(survey_objects, survey_id, row)
 
-                # Group survey data by survey ID and collect questions
-                survey_objects = {}
-                for row in survey_data:
-                    survey_id = row['survey_id']
-                    if survey_id not in survey_objects:
-                        survey_objects[survey_id] = database_operations.create_survey_object(row)
-                    if row['question_id']:  # Check if there's a question associated
-                        database_operations.append_question_to_survey(survey_objects, survey_id, row)
-                all_survey_objects.extend(list(survey_objects.values()))
-            # Convert dictionary to list of survey objects
-            all_survey_objects_list = list(all_survey_objects)
+        # Convert dictionary to list of survey objects
+        survey_objects_list = list(survey_objects.values())
 
-            return jsonify(all_survey_objects_list), 200
+        return jsonify(survey_objects_list), 200
+
     finally:
-        close_connection(connection)
+        database_operations.close_connection(connection)
 
 
 @app.route("/api/v1/surveys/<survey_id>", methods=["GET"])

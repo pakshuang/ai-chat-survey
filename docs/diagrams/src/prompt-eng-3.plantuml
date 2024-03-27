@@ -1,0 +1,24 @@
+@startuml prompt-eng-3
+
+skinparam shadowing false
+skinparam BackgroundColor transparent
+
+start
+#LightSalmon:System Prompt (Survey Information);
+#LightPink:LLM generates a list of \n potential questions;
+#LightSalmon:System Prompt:\n(Ask question __**and add security-related instruction**__);
+
+while ()
+    #LightCyan:User Input;
+    #LightPink:LLM output; 
+    if () then
+        #LightSalmon:LLM decides conversation is over; 
+        stop
+    else 
+        #LightSalmon:LLM decides conversation is not over;
+    endif
+    endwhile
+    -[hidden]->
+    detach
+
+@enduml
