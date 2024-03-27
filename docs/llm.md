@@ -63,7 +63,7 @@ Therefore, the LLM will have to access the current state of the conversation and
 
 ### Step 4
 
-To address the last problem of security (4.), additional efforts are needed to finetune the system prompt. The results are promising. Here are transcripts of conversations before and after the security feature was implemented.
+To address the last problem of security (problem 4), additional efforts are needed to finetune the system prompt. The results are promising. Here are transcripts of conversations before and after the security feature was implemented.
 
 #### Before Security:
 ```
