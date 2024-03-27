@@ -29,7 +29,7 @@ We will improve the base pipeline in several steps.
 
 To ensure that the AI assistant understands the survey and the context behind it, we can simply add this context to the system prompt and ask it to generate a chat question for the user while essentially still using the basic pipeline. 
 
-This immediately resolves problem 1. and 2.
+This immediately resolves problems 1 and 2.
 
 However, the large language model will have a tendency to ask further questions which are only based on what the user has said, without moving on to other interesting aspects of the survey response. This decreases the quality of the interview drastically, and problem 3. remains.
 
