@@ -14,6 +14,7 @@ Large language models usually process conversations through this simple pipeline
 <img src="./diagrams/images/no-prompt-eng.png" alt="drawing" style="height:200px;"/>
 <br>
 However, it will become apparent that the barebones pipeline as described above is insufficient in addressing the business problem. The following difficulties/questions arise:
+
 1. The interview is conducted by the AI assistant. Therefore, the user should not be entering an input first.
 2. Where to supply The AI assistant with contextual information for the survey, which includes:
     - Basic information about the product/service/brand.
