@@ -1,6 +1,12 @@
 # These owners will be the default owners for everything in
 # the repo unless a later match takes precedence.
-*       @pakshuang
-/backend @sumhungyee
-/backend/tests @limchoonhao
-/frontend-react @nixonwidjaja
+* @limchoonhao
+.github/ @limchoonhao
+.github/CODEOWNERS @pakshuang
+/backend/ @sumhungyee
+/backend/tests/ @limchoonhao
+/frontend-react/ @nixonwidjaja
+/docs/ @junhuiii @valerietanhx
+README.md @junhuiii @valerietanhx
+compose.yaml @pakshuang
+Dockerfile @pakshuang
