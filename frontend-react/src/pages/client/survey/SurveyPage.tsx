@@ -97,7 +97,7 @@ function SurveyPage({survey_id}:Props) {
   };
 
   const goToPreviousQuestion = () => {
-    if (currentQuestion > 0){
+    if (currentQuestion > 0) {
       setCurrentQuestion(currentQuestion - 1);
     } 
   };
