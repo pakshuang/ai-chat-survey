@@ -49,6 +49,7 @@ This resolves problem 3.
 ### Pipeline Step 2
 <img src="./diagrams/images/prompt-eng-1.png" alt="drawing" style="height:250px;"/>
 <br>
+
 ### Step 3
 
 In our current implementation of the app, the LLM has to decide when to end the chat/interview. This is to prevent the user from exiting the interview stage prematurely without any consideration to the questions. The user may still request the LLM via the chat to end the interview, just as one would in real life. However, this will take more explicit effort, and hopefully, by interacting with the chat interface, the user may be less inclined to exit the interview stage without any consideration for the questions.
