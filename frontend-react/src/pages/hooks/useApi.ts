@@ -27,9 +27,9 @@ export const login = (data: LoginSignupData) =>
 export const submitSurvey = (data: Survey) =>
   AdminApiService(localStorage.getItem("jwt") ?? "").post("/surveys", data)
 
-export const getSurveys = (): Promise<GetSurvey> => {
+export const getSurveys = (): Promise<GetSurvey[]> => {
   const username = localStorage.getItem("username") ?? ""
   return AdminApiService(localStorage.getItem("jwt") ?? "")
-    .get(`surveys/?admin=${username}`)
+    .get(`surveys?admin=${username}`)
     .then((res) => res.data)
 }
