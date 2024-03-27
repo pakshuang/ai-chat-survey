@@ -1,4 +1,4 @@
-@startuml
+@startuml no-prompt-eng
 
 skinparam shadowing false
 skinparam BackgroundColor transparent

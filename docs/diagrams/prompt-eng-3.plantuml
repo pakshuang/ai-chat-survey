@@ -1,4 +1,4 @@
-@startuml prompt-eng-2
+@startuml prompt-eng-3
 
 skinparam shadowing false
 skinparam BackgroundColor transparent
@@ -6,7 +6,7 @@ skinparam BackgroundColor transparent
 start
 #LightSalmon:System prompt (Survey Information);
 #LightPink:LLM generates a list of \n potential questions;
-#LightSalmon:System prompt (Ask a quesstion);
+#LightSalmon:System prompt:\n(Ask question, security-related instruction);
 
 while ()
     #LightCyan:User input;
