@@ -53,7 +53,8 @@ In our current implementation of the app, the LLM has to decide when to end the 
 
 Therefore, the LLM will have to access the current state of the conversation and decide if there are further responses/questions left.
 
-> ![NOTE] We have also left a conversation limit such that the conversation does not last forever.
+> **Note:**
+> We have also left a conversation limit such that the conversation does not last forever.
 
 ### Pipeline Step 3
 
