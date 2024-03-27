@@ -4,7 +4,6 @@ import re
 
 from database_operations import close_connection, update_chat_log
 from flask import jsonify
-
 from llm_classes.chatlog import ChatLog
 from llm_classes.llm_level import GPT, LLM
 
