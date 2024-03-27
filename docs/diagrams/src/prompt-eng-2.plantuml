@@ -10,7 +10,7 @@ start
 
 while ()
     #LightCyan:User input;
-    #LightPink:LLM question/input; 
+    #LightPink:LLM output; 
     if () then
         #LightSalmon:LLM decides conversation is over; 
         stop
