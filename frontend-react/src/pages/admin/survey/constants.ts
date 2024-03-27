@@ -1,7 +1,8 @@
 export enum QuestionType {
-  MCQ = "MCQ",
-  MRQ = "MRQ",
-  ShortAnswer = "Short Answer",
+  MCQ = "multiple_choice",
+  MRQ = "multiple_response",
+  ShortAnswer = "short_answer",
+  LongAnswer = "long_answer",
 }
 
 export const needOptions = (type: QuestionType): boolean => {
@@ -9,19 +10,30 @@ export const needOptions = (type: QuestionType): boolean => {
 }
 
 export type Question = {
+  id: number
   question: string
   type: QuestionType
-  options?: { value: string }[]
+  options?: (string | { value: string })[]
 }
 
 export type Survey = {
   title: string
-  description: string
+  subtitle: string
+  chat_context: string
   questions: Question[]
+  metadata: SurveyMetadata
+}
+
+export type SurveyMetadata = {
+  name: string
+  description: string
+  created_by: string
+  created_at: string
 }
 
 export const createNewQuestion = (): Question => {
   return {
+    id: 0,
     question: "",
     type: QuestionType.MCQ,
     options: [{ value: "" }],

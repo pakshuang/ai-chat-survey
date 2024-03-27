@@ -22,7 +22,15 @@ function AdminSurveyTitle() {
         size="md"
         fontSize="xl"
         mt="1rem"
-        {...register("description", { validate })}
+        {...register("subtitle", { validate })}
+      />
+      <Input
+        placeholder="Overall context for the chatbot"
+        variant="flushed"
+        size="md"
+        fontSize="xl"
+        mt="1rem"
+        {...register("chat_context", { validate, maxLength: 1000 })}
       />
     </Card>
   )

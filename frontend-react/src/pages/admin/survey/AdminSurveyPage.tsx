@@ -12,13 +12,22 @@ import { useForm, FormProvider, useFieldArray } from "react-hook-form"
 import { createNewQuestion, Survey } from "./constants"
 import AdminSurveyTitle from "./AdminSurveyTitle"
 import { useState } from "react"
+import { submitSurvey } from "../../hooks/useApi"
+import dayjs from "dayjs"
 
 function AdminSurveyPage() {
   const methods = useForm<Survey>({
     defaultValues: {
       title: "",
-      description: "",
+      subtitle: "",
+      chat_context: "",
       questions: [createNewQuestion()],
+      metadata: {
+        name: "",
+        description: "",
+        created_by: localStorage.getItem("username") ?? "",
+        created_at: "",
+      },
     },
     mode: "onSubmit",
   })
@@ -38,7 +47,17 @@ function AdminSurveyPage() {
 
   const { handleSubmit } = methods
 
-  const onSubmit = (data: Survey) => console.log(data)
+  const onSubmit = (data: Survey) => {
+    data.questions.forEach((q, i) => {
+      q.id = i
+      // @ts-ignore
+      const options: string[] = q.options?.map((o) => o.value) ?? []
+      q.options = options
+    })
+    data.metadata.created_at = dayjs().format("YYYY-MM-DD HH:mm:ss")
+    console.log(data)
+    submitSurvey(data)
+  }
 
   const onInvalid = () => {
     if (Object.keys(methods.formState.errors).length > 0) {
