@@ -22,17 +22,17 @@ function ChatPage() {
     setMessages([...messages, { sender: "user", message: message }]);
 
     // test bot thinking
-    // setTimeout(() => {
-    //   setMessages((prevMessages) => [
-    //     ...prevMessages,
-    //     {
-    //       sender: "bot",
-    //       message:
-    //         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque asperiores ratione incidunt quasi accusamus facilis beatae a cupiditate aut minus. Autem ab sit voluptate commodi ducimus quis at officia mollitia.",
-    //     },
-    //   ]);
-    //   setIsLoading(false);
-    // }, 1000);
+    setTimeout(() => {
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        {
+          sender: "bot",
+          message:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque asperiores ratione incidunt quasi accusamus facilis beatae a cupiditate aut minus. Autem ab sit voluptate commodi ducimus quis at officia mollitia.",
+        },
+      ]);
+      setIsLoading(false);
+    }, 1000);
 
     // TODO: replace with axios
     // test api for subsequent messages
@@ -223,6 +223,7 @@ function ChatPage() {
 
     // console.log("use effect running");
     run();
+    setIsLoading(false);
     // console.log("use effect done");
   }, []);
 
