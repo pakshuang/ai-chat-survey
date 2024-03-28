@@ -11,11 +11,16 @@ import SurveyCard from "./SurveyCard"
 import NewSurveyCard from "./NewSurveyCard"
 import { useQuery } from "react-query"
 import { getSurveys } from "../hooks/useApi"
+import { useEffect } from "react"
 
 function AdminHomePage() {
-  const { data: surveys, isLoading } = useQuery("surveys", getSurveys)
+  const { data: surveys, isLoading, refetch } = useQuery("surveys", getSurveys)
 
-  if (isLoading)
+  useEffect(() => {
+    refetch()
+  }, [])
+
+  if (isLoading || !surveys)
     return (
       <Center mt="3rem">
         <Spinner />
@@ -33,7 +38,7 @@ function AdminHomePage() {
             <NewSurveyCard />
           </GridItem>
           {surveys?.map((survey) => (
-            <GridItem w="100%" h="20rem">
+            <GridItem w="100%" h="20rem" key={survey.metadata.id}>
               <SurveyCard survey={survey} />
             </GridItem>
           ))}

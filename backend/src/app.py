@@ -290,12 +290,7 @@ def get_surveys():
             return jsonify({"message": "Error fetching surveys"}), 500
         elif not survey_data:
             if username:
-                return (
-                    jsonify(
-                        {"message": "No surveys found for user '{}'".format(username)}
-                    ),
-                    404,
-                )
+                return jsonify([]), 200
             else:
                 return jsonify({"message": "No surveys found"}), 404
 
