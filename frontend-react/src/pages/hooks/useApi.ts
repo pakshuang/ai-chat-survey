@@ -33,3 +33,11 @@ export const getSurveys = (): Promise<GetSurvey[]> => {
     .get(`surveys?admin=${username}`)
     .then((res) => res.data)
 }
+
+export const getUserSurvey = (survey_id: number): Promise<any> => {
+  return ApiService.get(`http://localhost:5000/api/v1/surveys/${survey_id}`);
+};
+
+export const submitBaseSurvey = (body:object): Promise<any> => {
+  return ApiService.post(`/api/v1/responses`,body);
+};

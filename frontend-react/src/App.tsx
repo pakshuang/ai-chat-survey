@@ -17,7 +17,7 @@ const router = createBrowserRouter([
   { path: "/admin/login", element: <LoginPage /> },
   { path: "/admin/survey", element: <AdminHomePage /> },
   { path: "/admin/survey/create", element: <AdminSurveyPage /> },
-  { path: "/survey", element: <SurveyPage /> },
+  { path: "/survey/:survey_id", element: <SurveyPage /> },
   { path: "/chat", element: <ChatPage /> },
 ])
 
