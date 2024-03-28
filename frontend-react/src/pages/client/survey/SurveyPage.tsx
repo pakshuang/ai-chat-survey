@@ -1,4 +1,4 @@
-import { Box, Button,Flex, CircularProgress} from '@chakra-ui/react';
+import { Box, Text, Button,Flex, CircularProgress} from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import axios from 'axios'
@@ -30,6 +30,18 @@ const sampleQuestions = [
   }
 ];
 
+const sampleSurvey ={
+  "metadata": {
+    "id": "integer",
+    "name": "string",
+    "description": "string",
+    "created_by": "string",
+    "created_at": "string",
+  },
+  "title": "title",
+  "subtitle": "subtitle",
+  'questions':sampleQuestions,
+}
 
 interface Props {
   survey_id: number;
@@ -38,34 +50,27 @@ interface Props {
 
 function SurveyPage({survey_id}:Props) {
   const navigate = useNavigate();
-  const [currentQuestion, setCurrentQuestion] = useState<number>(0);
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [survey,setSurvey]=useState(sampleSurvey)
   const [error,setError]=useState(false);
-  const [questions, setQuestions] = useState<Question[]>(sampleQuestions);
   const answersCookie = Cookies.get(`answers_${survey_id}`);
   const answers = answersCookie ? JSON.parse(answersCookie) : [];
   useEffect(()=>{
     axios.get(`/api/v1/surveys/${survey_id}`).then((rep)=>{
-      setQuestions(
-        rep.questions.map((ele,index)=>{
-          ele.id=index
-          return ele
-        })
-      )
+      setSurvey(rep.data)
     }
     ).catch((error)=>{
+
     }).finally(()=>{
-      console.log(answers)
-      setCurrentQuestion(Math.min(answers.length,questions.length-1))
-        const mappedQuestions = questions.map((question, index) => {
+        const answeredQuestions = survey.questions.map((question, index) => {
             return {
                 ...question,
                 id: index,
                 answer: answers[index]
             };
         });
-        setQuestions(mappedQuestions)
+        setSurvey({...survey,questions: answeredQuestions})
     })
   },[survey_id])
   const audio = new Audio('/src/assets/survey/verify-step-complete.mp3');
@@ -76,7 +81,7 @@ function SurveyPage({survey_id}:Props) {
       "metadata": {
         "survey_id": survey_id
       },
-      "answers": questions
+      "answers": survey.questions
     }
     setIsLoading(true);
     setSubmitted(true);
@@ -92,57 +97,57 @@ function SurveyPage({survey_id}:Props) {
       setIsLoading(false);
     })
   };
-  const goToNextQuestion = () => {
-    setCurrentQuestion(currentQuestion + 1);
-  };
-
-  const goToPreviousQuestion = () => {
-    if (currentQuestion > 0) {
-      setCurrentQuestion(currentQuestion - 1);
-    } 
-  };
   const handleQuestionResponse = (id: number, val: string | number) => {
-    setQuestions(questions => {
-      const updatedQuestions = [...questions];
-      updatedQuestions[id].answer = val;
-      Cookies.set(`answers_${survey_id}`, JSON.stringify(updatedQuestions.filter(ele=>ele.answer!==undefined).map(ele=>{
-        return ele.answer
-      })));
-      return updatedQuestions;
-    });
+    const updatedQuestions = [...survey.questions];
+    updatedQuestions[id].answer = val;
+    Cookies.set(`answers_${survey_id}`, JSON.stringify(updatedQuestions.filter(ele=>ele.answer!==undefined).map(ele=>{
+      return ele.answer
+    })));
+    setSurvey({...survey,questions: updatedQuestions})
   };
   if (error){
     return <NotFoundPage></NotFoundPage>
   }
+  if (submitted){
+    return <Box maxW="md" mx="auto" mt={10} p={6} borderWidth="1px" borderRadius="lg">
+    <Flex align="center">
+      <img src="src/assets/survey/tick.svg" alt="Image" />
+      <Text ml={3}>Now, let's get onto your talk!</Text>
+    </Flex>
+  </Box>
+  }
   return (
-    <>
-    <Box maxW="md" mx="auto" mt={10} p={6} borderWidth="1px" borderRadius="lg">
-        { submitted ? <Box>
-        <img src="src/assets/survey/tick.svg" alt="Image" />
-        Now, lets get onto your talk!
-        </Box>
-          : <form>
-          <Question questionData={questions[currentQuestion]} handleQuestionResponse={handleQuestionResponse}></Question>
-          <Flex mt={6} justifyContent="flex-end">
-          {currentQuestion >0 &&<Button colorScheme="blue" onClick={goToPreviousQuestion} mr={2}>
-                  Previous
-                </Button>}
-              {currentQuestion < questions.length-1 ? (
-                <Button colorScheme="blue" onClick={goToNextQuestion}  isDisabled={!questions[currentQuestion].answer}>
-                  Next
-                </Button>
-              ) : (
-              isLoading ? <CircularProgress> </CircularProgress> :
-                <Button colorScheme="blue" onClick={handleSubmit} isDisabled={!questions[currentQuestion].answer}>
+    <Box>
+    <Box
+      maxW="md"
+      mx="auto"
+      mt={10}
+      p={6}
+      borderWidth="1px"
+      borderRadius="lg"
+    >
+      <Text fontWeight="bold" fontSize="xl" mb={2}>{survey.title}</Text>
+      <Text >{survey.subtitle}</Text>
+    </Box>
+      <form>
+            {
+              survey.questions.map((question)=>{
+                return <Box maxW="md" mx="auto" mt={10} p={6} borderWidth="1px" borderRadius="lg">
+                  <Question questionData={question} handleQuestionResponse={handleQuestionResponse}></Question>
+                </Box>
+              })
+            } 
+          <Box maxW="md" mx="auto" mt={6}>
+            <Flex justifyContent="flex-end">
+              {isLoading ? <CircularProgress> </CircularProgress> :
+                <Button colorScheme="blue" onClick={handleSubmit} >
                   Submit
                 </Button>
-              )}
-          </Flex>
+              }
+            </Flex>
+          </Box>
         </form>
-          }
     </Box>
-    <ResumeSnackbar answers ={answers}/>
-    </>
   );
 }
 
