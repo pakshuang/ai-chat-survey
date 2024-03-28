@@ -1,14 +1,15 @@
 import datetime
 import json
 import os
-import re
 from functools import wraps
 
-import database_operations
 import jwt
-from database_operations import close_connection, get_chat_log, update_chat_log
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+from werkzeug.security import check_password_hash, generate_password_hash
+
+import database_operations
+from database_operations import close_connection, get_chat_log, update_chat_log
 from llm_classes import (
     GPT,
     ChatLog,
@@ -16,7 +17,6 @@ from llm_classes import (
     construct_chatlog,
     format_responses_for_gpt,
 )
-from werkzeug.security import check_password_hash, generate_password_hash
 
 BACKEND_CONTAINER_PORT = os.getenv("BACKEND_CONTAINER_PORT", "5000")
 
@@ -35,78 +35,6 @@ def handle_options(response):
     response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
 
     return response
-
-
-# Mock data
-
-
-admins = {}
-
-survey_1 = {
-    "metadata": {
-        "id": 1,
-        "name": "name",
-        "description": "description",
-        "created_by": "admin",  # admin username
-        "created_at": "2024-03-22 15:24:10",  # YYYY-MM-DD HH:MM:SS
-    },
-    "title": "title",
-    "subtitle": "subtitle",
-    "questions": [
-        {
-            "id": 1,
-            "type": "multiple_choice",  # multiple_choice, short_answer, long_answer, etc.
-            "question": "Which performance did you enjoy the most?",
-            "options": ["Clowns", "Acrobats", "Jugglers", "Magicians", "Choon"],
-        },
-        {
-            "id": 2,
-            "type": "short_answer",
-            "question": "What did you like about the performance?",
-        },
-        {
-            "id": 3,
-            "type": "long_answer",
-            "question": "Do you have any feedback about the venue?",
-        },
-    ],
-    "chat_context": "Full Stack Entertainment is an events company that organises performances such as concerts.",
-}
-survey_2 = {
-    "metadata": {
-        "id": 2,
-        "name": "name",
-        "description": "description",
-        "created_by": "admin",  # admin username
-        "created_at": "2024-03-22 15:25:10",  # YYYY-MM-DD HH:MM:SS
-    },
-    "title": "title",
-    "subtitle": "subtitle",
-    "questions": [
-        {
-            "id": 1,
-            "type": "multiple_choice",  # multiple_choice, short_answer, long_answer, etc.
-            "question": "Rate your experience with our service:",
-            "options": ["1", "2", "3", "4", "5"],
-        },
-        {
-            "id": 2,
-            "type": "short_answer",
-            "question": "Who assisted you?",
-        },
-        {
-            "id": 3,
-            "type": "long_answer",
-            "question": "What can we improve?",
-        },
-    ],
-    "chat_context": "Full Send is a retail courier company that provides mailing services for consumers. \
-        We have branches in Bishan, Changi, and Clementi.",
-}
-
-surveys = {"surveys": [survey_1, survey_2]}
-
-responses = {"responses": []}
 
 
 # JWT
@@ -261,7 +189,8 @@ def create_survey(**kwargs):
             return jsonify({"survey_id": survey_id}), 201
         else:
             return jsonify({"message": "Error creating survey"}), 400
-
+    except Exception as e:
+        return jsonify({"message": "Error creating survey"}), 400
     finally:
         close_connection(connection)
 
@@ -278,10 +207,21 @@ def get_surveys():
         username = request.args.get("admin", None)
 
         if username:
-            query = "SELECT Surveys.*, Questions.* FROM Surveys LEFT JOIN Questions ON Surveys.survey_id = Questions.survey_id WHERE Surveys.admin_username = %s"
+            query = """
+                    SELECT Surveys.*, Questions.* 
+                    FROM Surveys 
+                    LEFT JOIN Questions ON Surveys.survey_id = Questions.survey_id 
+                    WHERE Surveys.admin_username = %s 
+                    ORDER BY Surveys.survey_id DESC, Questions.question_id  
+            """
             params = (username,)
         else:
-            query = "SELECT Surveys.*, Questions.* FROM Surveys LEFT JOIN Questions ON Surveys.survey_id = Questions.survey_id"
+            query = """
+            SELECT Surveys.*, Questions.* 
+            FROM Surveys 
+            LEFT JOIN Questions ON Surveys.survey_id = Questions.survey_id 
+            ORDER BY Surveys.survey_id DESC, Questions.question_id
+            """
             params = None
 
         survey_data = database_operations.fetch(connection, query, params)
@@ -307,7 +247,7 @@ def get_surveys():
                 survey_objects[survey_id] = database_operations.create_survey_object(
                     row
                 )
-            if row["question_id"]:  # Check if there's a question associated
+            if row["question_id"] is not None:  # Check if there's a question associated
                 database_operations.append_question_to_survey(
                     survey_objects, survey_id, row
                 )
@@ -316,7 +256,8 @@ def get_surveys():
         survey_objects_list = list(survey_objects.values())
 
         return jsonify(survey_objects_list), 200
-
+    except Exception as e:
+        return jsonify({"message": "Error fetching surveys"}), 500
     finally:
         database_operations.close_connection(connection)
 
@@ -338,6 +279,7 @@ def get_survey(survey_id):
             FROM Surveys 
             LEFT JOIN Questions ON Surveys.survey_id = Questions.survey_id 
             WHERE Surveys.survey_id = %s
+            ORDER BY Surveys.survey_id DESC, Questions.question_id
         """
         params = (survey_id,)
 
@@ -353,15 +295,14 @@ def get_survey(survey_id):
             survey_id = row["survey_id"]
             if survey_id not in survey_object:
                 survey_object[survey_id] = database_operations.create_survey_object(row)
-            if row["question_id"]:  # Check if there's a question associated
-                if "questions" not in survey_object[survey_id]:
-                    survey_object[survey_id]["questions"] = []
-                if row["question_id"]:  # Check if there's a question associated
-                    database_operations.append_question_to_survey(
-                        survey_object, survey_id, row
-                    )
+            if row["question_id"] is not None:  # Check if there's a question associated
+                database_operations.append_question_to_survey(
+                    survey_object, survey_id, row
+                )
         survey_object = survey_object[int(survey_id)]
         return jsonify(survey_object), 200
+    except Exception as e:
+        return jsonify({"message": "Error fetching surveys"}), 500
     finally:
         close_connection(connection)
 
