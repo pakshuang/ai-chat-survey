@@ -33,3 +33,9 @@ export const getSurveys = (): Promise<GetSurvey[]> => {
     .get(`surveys?admin=${username}`)
     .then((res) => res.data)
 }
+
+export const getSurveyById = (id: string): Promise<GetSurvey> => {
+  return AdminApiService(localStorage.getItem("jwt") ?? "")
+    .get(`/surveys/${id}`)
+    .then((res) => res.data)
+}
