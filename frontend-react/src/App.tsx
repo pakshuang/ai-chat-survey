@@ -14,7 +14,6 @@ import ViewAdminSurvey from "./pages/admin/survey/ViewAdminSurvey"
 import NotFoundPage from "./pages/client/survey/NotFoundPage"
 
 const router = createBrowserRouter([
-  { path: "/", element: <Home /> },
   { path: "/admin", element: <LoginPage /> },
   { path: "/admin/signup", element: <SignupPage /> },
   { path: "/admin/login", element: <LoginPage /> },
