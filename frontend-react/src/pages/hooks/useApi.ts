@@ -35,7 +35,7 @@ export const getSurveys = (): Promise<GetSurvey[]> => {
 }
 
 export const getUserSurvey = (survey_id: number): Promise<any> => {
-  return ApiService.get(`http://localhost:5000/api/v1/surveys/${survey_id}`);
+  return ApiService.get(`/api/v1/surveys/${survey_id}`);
 };
 
 export const submitBaseSurvey = (body:object): Promise<any> => {
