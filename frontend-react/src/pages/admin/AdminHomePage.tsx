@@ -1,4 +1,5 @@
 import {
+  Button,
   Center,
   Flex,
   Grid,
@@ -10,15 +11,29 @@ import {
 import SurveyCard from "./SurveyCard"
 import NewSurveyCard from "./NewSurveyCard"
 import { useQuery } from "react-query"
-import { getSurveys } from "../hooks/useApi"
+import { getSurveys, logout, shouldLogout } from "../hooks/useApi"
 import { useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 
 function AdminHomePage() {
   const { data: surveys, isLoading, refetch } = useQuery("surveys", getSurveys)
 
+  const navigate = useNavigate()
+
   useEffect(() => {
     refetch()
   }, [])
+
+  useEffect(() => {
+    if (shouldLogout()) {
+      logout()
+      navigate("/admin/login")
+    }
+  }, [
+    localStorage.getItem("username"),
+    localStorage.getItem("jwt"),
+    localStorage.getItem("jwtExp"),
+  ])
 
   if (isLoading || !surveys)
     return (
@@ -30,9 +45,22 @@ function AdminHomePage() {
   return (
     <Flex minH="100vh" w="100%" bg="gray.100" minW="80rem">
       <VStack mx="auto" my="5rem" spacing="3rem">
-        <Heading mx="auto" as="h1" fontSize="5xl">
-          Recent Surveys
-        </Heading>
+        <Flex alignItems="center" justifyContent="space-between" w="full">
+          <Flex w="88px"></Flex>
+          <Heading mx="auto" as="h1" fontSize="5xl">
+            Recent Surveys
+          </Heading>
+          <Button
+            colorScheme="red"
+            variant="outline"
+            onClick={() => {
+              logout()
+              navigate("/admin/login")
+            }}
+          >
+            Logout
+          </Button>
+        </Flex>
         <Grid templateColumns="repeat(3, 1fr)" gap={12} h="100%" w="70rem">
           <GridItem w="100%" h="20rem">
             <NewSurveyCard />

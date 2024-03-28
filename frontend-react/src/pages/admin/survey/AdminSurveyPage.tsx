@@ -11,8 +11,8 @@ import { AddIcon, ExternalLinkIcon } from "@chakra-ui/icons"
 import { useForm, FormProvider, useFieldArray } from "react-hook-form"
 import { createNewQuestion, Survey } from "./constants"
 import AdminSurveyTitle from "./AdminSurveyTitle"
-import { useState } from "react"
-import { submitSurvey } from "../../hooks/useApi"
+import { useEffect, useState } from "react"
+import { logout, shouldLogout, submitSurvey } from "../../hooks/useApi"
 import dayjs from "dayjs"
 import { useNavigate } from "react-router-dom"
 
@@ -46,6 +46,17 @@ function AdminSurveyPage() {
 
   const toast = useToast()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (shouldLogout()) {
+      logout()
+      navigate("/admin/login")
+    }
+  }, [
+    localStorage.getItem("username"),
+    localStorage.getItem("jwt"),
+    localStorage.getItem("jwtExp"),
+  ])
 
   const { handleSubmit } = methods
 
