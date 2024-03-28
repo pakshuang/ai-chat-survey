@@ -10,12 +10,14 @@ import ChatPage from "./pages/client/chat/ChatPage"
 import { ChakraProvider } from "@chakra-ui/react"
 import { theme } from "./components/theme"
 import { QueryClient, QueryClientProvider } from "react-query"
+import ViewAdminSurvey from "./pages/admin/survey/ViewAdminSurvey"
 
 const router = createBrowserRouter([
   { path: "/", element: <Home /> },
   { path: "/admin/signup", element: <SignupPage /> },
   { path: "/admin/login", element: <LoginPage /> },
   { path: "/admin/survey", element: <AdminHomePage /> },
+  { path: "/admin/survey/:id", element: <ViewAdminSurvey /> },
   { path: "/admin/survey/create", element: <AdminSurveyPage /> },
   { path: "/survey/:survey_id", element: <SurveyPage /> },
   { path: "/chat", element: <ChatPage /> },

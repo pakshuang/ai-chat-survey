@@ -41,3 +41,8 @@ export const getUserSurvey = (survey_id: number): Promise<any> => {
 export const submitBaseSurvey = (body:object): Promise<any> => {
   return ApiService.post(`/api/v1/responses`,body);
 };
+export const getSurveyById = (id: string): Promise<GetSurvey> => {
+  return AdminApiService(localStorage.getItem("jwt") ?? "")
+    .get(`/surveys/${id}`)
+    .then((res) => res.data)
+}
