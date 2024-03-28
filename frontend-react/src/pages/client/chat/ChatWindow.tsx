@@ -53,7 +53,10 @@ function ChatWindow({ messages, isBotThinking }: ChatWindowProps) {
         if (index === messages.length - 1 && botResponded) {
           return (
             <ChatMessage sender="bot">
-              <TypingEffect text={messages.slice(-1)[0].message} />
+              <TypingEffect
+                text={messages.slice(-1)[0].message}
+                scrollToBottom={scrollToBottom}
+              />
             </ChatMessage>
           );
         } else {
