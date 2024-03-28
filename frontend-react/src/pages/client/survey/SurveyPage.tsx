@@ -1,19 +1,36 @@
-import { Box, Text, Button,Flex, CircularProgress, FormControl} from '@chakra-ui/react';
+import { Box, Text, Button,Flex } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import axios from 'axios'
 import { useNavigate, useParams } from 'react-router-dom';
 import Question from './Question';
 import NotFoundPage from './NotFoundPage';
 import { getUserSurvey,submitBaseSurvey } from '../../hooks/useApi';
 
-
+interface Survey {
+  title: string;
+  subtitle: string;
+  chat_context: string;
+  metadata: {
+    created_at: string;
+    created_by: string;
+    description: string;
+    id: number;
+    name: string;
+  };
+  questions: {
+    id: number;
+    question_id:number;
+    question: string;
+    type: string;
+    options?: string[];
+  }[];
+}
 function SurveyPage() {
   const navigate = useNavigate();
   const {survey_id} =useParams()
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [survey,setSurvey]=useState(null)
+  const [survey,setSurvey]=useState<Survey>(null)
   const [notFound,setNotFound]=useState(false);
   const answersCookie = Cookies.get(`answers_${survey_id}`);
   const answers = answersCookie ? JSON.parse(answersCookie) : [];
@@ -22,7 +39,6 @@ function SurveyPage() {
       const answeredQuestions = rep.data.questions.map((question, index) => {
         return {
             ...question,
-            id: index,
             answer: answers[index]
         };
       });
@@ -41,8 +57,12 @@ function SurveyPage() {
       "metadata": {
         "survey_id": survey_id
       },
-      "answers": survey.questions
+      "answers": survey.questions.map(ele=>{
+        ele.question_id=ele.id;
+        return ele
+      })
     }
+    console.log(body)
     submitBaseSurvey(body)
     setIsLoading(true);
     setSubmitted(true);
@@ -53,7 +73,7 @@ function SurveyPage() {
   };
   const handleQuestionResponse = (id: number, val: string | number) => {
     const updatedQuestions = [...survey.questions];
-    updatedQuestions[id].answer = val;
+    updatedQuestions[id-1].answer = val;
     Cookies.set(`answers_${survey_id}`, JSON.stringify(updatedQuestions.filter(ele=>ele.answer!==undefined).map(ele=>{
       return ele.answer
     })));
@@ -67,7 +87,7 @@ function SurveyPage() {
   }
   if (submitted){
     return <Box maxW="md" mx="auto" mt={10} p={6} borderWidth="1px" borderRadius="lg">
-      <img src="src/assets/survey/tick.svg" alt="Image" />
+      <img src="/src/assets/survey/tick.svg" alt="Image" />
       <Text>Now, let's get onto your talk!</Text>
   </Box>
   }
