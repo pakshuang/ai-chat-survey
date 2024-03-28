@@ -55,7 +55,7 @@ const Question = ({ questionData, handleQuestionResponse }: QuestionProps) => {
         return (
           <FormControl >
             <FormLabel>{question}</FormLabel>
-            <Input type="text" onChange={(e) => handleQuestionResponse(id, e.target.value)} />
+            <Input type="text" value={answer}  onChange={(e) => handleQuestionResponse(id, e.target.value)} />
           </FormControl>
         );
       case 'long_answer':
