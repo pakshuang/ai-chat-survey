@@ -26,6 +26,7 @@ function AdminSurveyOption({
         variant="flushed"
         placeholder="Option"
         w="25rem"
+        autoComplete="off"
         {...register(`questions.${index}.options.${k}.value`, { validate })}
       />
       <Button
