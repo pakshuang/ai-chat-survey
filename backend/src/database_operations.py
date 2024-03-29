@@ -151,9 +151,7 @@ def create_survey(connection, data):
 def create_survey_object(row):
     survey_object = {
         "metadata": {
-            "id": row["survey_id"],
-            "name": row["name"],
-            "description": row["description"],
+            "survey_id": row["survey_id"],
             "created_by": row["admin_username"],
             "created_at": row["created_at"].strftime(
                 "%Y-%m-%d %H:%M:%S"
@@ -173,7 +171,7 @@ def append_question_to_survey(survey_objects, survey_id, question_data):
     # If the question does not exist, append it to the list
     survey_objects[survey_id]["questions"].append(
         {
-            "id": question_data["question_id"],
+            "question_id": question_data["question_id"],
             "type": question_data["question_type"],
             "question": question_data["question"],
             "options": (

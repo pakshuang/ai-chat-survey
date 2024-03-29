@@ -84,14 +84,10 @@ def test_create_survey():
         create_survey_url, json=survey_data, headers=headers
     )
 
-    # Assertions
-    # assert create_survey_response.status_code == 201, "Survey creation failed"
-    # assert "survey_id" in create_survey_response.json(), "Survey ID not returned"
     print(create_survey_response.json())
-    # print(
-    #     "Survey created successfully. Survey ID:",
-    #     create_survey_response.json()["survey_id"],
-    # )
+    # Assertions
+    assert create_survey_response.status_code == 201, "Survey creation failed"
+    assert "survey_id" in create_survey_response.json(), "Survey ID not returned"
 
 
 def test_get_surveys():
@@ -264,8 +260,8 @@ def test_delete_survey():
 if __name__ == "__main__":
     test_create_admin()
     test_create_survey()
-    # test_get_surveys()
-    # test_get_survey()
+    test_get_surveys()
+    test_get_survey()
     # test_submit_response()
     # test_get_responses()
     # test_get_response()

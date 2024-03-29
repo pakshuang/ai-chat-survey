@@ -171,7 +171,7 @@ def login_admin():
 def create_survey(**kwargs):
     data = request.get_json()
 
-    # Validation
+    # TODO: Add more Validation of survey object to check all fields are present
     if not data:
         return jsonify({"message": "Invalid data"}), 400
 
