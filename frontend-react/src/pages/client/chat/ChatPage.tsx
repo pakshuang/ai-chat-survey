@@ -1,23 +1,24 @@
 import { useEffect, useState } from "react";
-import { Flex } from "@chakra-ui/react";
+import { Flex ,Button} from "@chakra-ui/react";
 
 import ChatWindow from "./ChatWindow";
 import ChatInput from "./ChatInput";
-import SurveyPage from "../survey/SurveyPage";
+import { getUserSurvey,submitBaseSurvey } from '../../hooks/useApi';
+import QuestionInput from "./QuestionInput";
 
 interface Messages {
   sender: "user" | "bot";
   message: string;
+  question:any,
 }
 
 function ChatPage() {
   const [messages, setMessages] = useState<Messages[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [preSurveyDone,setPreSurveyDone]=useState(false);
+  const [surveyState,setSurveyState] =useState({displayIndex:0,submitted:false})
   const [token, setToken] = useState("test");
-  const [surveyID, setSurveyID] = useState(0);
+  const [surveyID, setSurveyID] = useState(1);
   const [responseID, setResponseId] = useState(0);
-
   function sendMessage(message: string) {
     setIsLoading(true);
     setMessages([...messages, { sender: "user", message: message }]);
@@ -93,97 +94,56 @@ function ChatPage() {
       tmp_token = responseData["jwt"];
       console.log(tmp_token);
     };
-
-    // dummy survey creation
-    const create = async () => {
-      const dummy_survey = {
-        metadata: {
-          id: tmp_sid,
-          name: "Test Survey",
-          description: "This is a test survey",
-          created_by: "admin",
-          created_at: "2024-03-22 15:24:10",
-        },
-        title: "Test Title",
-        subtitle: "Test Subtitle",
-        questions: [
-          {
-            id: 1,
-            type: "multiple_choice",
-            question: "Which performance did you enjoy the most?",
-            options: ["Clowns", "Acrobats", "Jugglers", "Magicians", "Choon"],
-          },
-          {
-            id: 2,
-            type: "short_answer",
-            question: "What did you like about the performance?",
-            options: [],
-          },
-          {
-            id: 3,
-            type: "long_answer",
-            question: "Do you have any feedback about the venue?",
-            options: [],
-          },
-        ],
-        chat_context:
-          "Full Stack Entertainment is an events company that organises performances such as concerts.",
-      };
-
-      const response = await fetch("http://localhost:5000/api/v1/surveys", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${tmp_token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(dummy_survey),
-      });
-      const responseData = await response.json();
-      setSurveyID(responseData["survey_id"]);
-      tmp_sid = responseData["survey_id"];
+    getUserSurvey(surveyID).then((rep)=>{
+        const answeredQuestions = rep.data.questions.map((question, index) => {
+          return {
+              sender:'bot',
+              message:question.question,
+              question:question
+          };
+        });
+        setMessages([...answeredQuestions])
+      }
+    )
+    const run = async () => {
+      // console.log("signing up ...");
+      // await signup();
+      // console.log("done");
+      // console.log("logging in ...");
+      // await login();
+      // await init_message();
+      console.log("done");
+      setIsLoading(false);
     };
 
-    // dummy survey response
-    const answer = async () => {
-      const dummy_answer = {
-        metadata: {
-          survey_id: tmp_sid,
-        },
-        answers: [
-          {
-            question_id: 1,
-            type: "multiple_choice",
-            question: "Which performance did you enjoy the most?",
-            options: ["Clowns", "Acrobats", "Jugglers", "Magicians", "Choon"],
-            answer: "Clowns",
-          },
-          {
-            question_id: 2,
-            type: "short_answer",
-            question: "What did you like about the performance?",
-            options: [],
-            answer: "I enjoyed the acrobatic stunts.",
-          },
-          {
-            question_id: 3,
-            type: "long_answer",
-            question: "Do you have any feedback about the venue?",
-            options: [],
-            answer: "The venue was spacious and well-maintained.",
-          },
-        ],
-      };
-      const response = await fetch("http://localhost:5000/api/v1/responses", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(dummy_answer),
-      });
-      const responseData = await response.json();
-      setResponseId(responseData["response_id"]);
-      tmp_rid = responseData["response_id"];
-      console.log(responseData);
-    };
-    // test api for initial message
+    // console.log("use effect running");
+    run();
+    // console.log("use effect done");
+  }, []);
+  const handleQuestionResponse = (id: number, val: string | number) => {
+    const updatedQuestions = [...messages];
+    updatedQuestions[id-1].question.answer = val;
+    const updId=Math.max(id,surveyState.displayIndex)
+    setSurveyState({...surveyState, displayIndex:updId});
+    setMessages(updatedQuestions)
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const body ={
+      "metadata": {
+        "survey_id": surveyID
+      },
+      "answers": messages.map(ele=>{
+        ele.question.question_id=ele.question.id;
+        return ele.question
+      })
+    }
+    await submitBaseSurvey(body)
+    setSurveyState({...surveyState,submitted:true})
+    let tmp_token = ""
+    let tmp_sid = 3;
+    let tmp_rid = 1;
     const init_message = async () => {
       const response = await fetch(
         `http://localhost:5000/api/v1/responses/${tmp_rid}/chat?survey=${tmp_sid}`,
@@ -198,43 +158,19 @@ function ChatPage() {
       );
       const responseData = await response.json();
       console.log(responseData);
-      setMessages([{ sender: "bot", message: responseData["content"] }]);
+      setMessages([...messages,{ sender: "bot", message: responseData["content"] }]);
     };
-
-    const run = async () => {
-      console.log("signing up ...");
-      await signup();
-      console.log("done");
-      console.log("logging in ...");
-      await login();
-      console.log("done");
-      // console.log(tmp_token);
-      console.log("Creating survey ...");
-      await create();
-      console.log("done");
-      console.log("answering survey ...");
-      await answer();
-      console.log("done");
-      console.log("initializing message ...");
-      await init_message();
-      console.log("done");
-      setIsLoading(false);
-    };
-
-    // console.log("use effect running");
-    run();
-    // console.log("use effect done");
-  }, []);
-
+    await init_message()
+  };
+  console.log(messages.length)
+  const displayMessages = surveyState.submitted ? messages:messages.slice(0,surveyState.displayIndex+1)
   return (
     <Flex flexDirection="column" bg="gray.100" h="100vh" p="1">
-      {!preSurveyDone?
-      <SurveyPage survey_id={1}></SurveyPage>
-       :<>
-       <ChatWindow messages={messages} isBotThinking={isLoading} />
-      <ChatInput onSubmitMessage={sendMessage} isSubmitting={isLoading} />
-      </>
-        }
+       <ChatWindow messages={displayMessages} isBotThinking={isLoading} handleQuestionResponse={handleQuestionResponse} submitted={surveyState.submitted}/>
+      {messages.length===surveyState.displayIndex &&  !surveyState.submitted && <Button onClick={handleSubmit}>
+            Submit
+          </Button>}
+      { surveyState.submitted &&<ChatInput onSubmitMessage={sendMessage} isSubmitting={isLoading} />}
     </Flex>
   );
 }

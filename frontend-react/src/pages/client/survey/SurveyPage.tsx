@@ -1,9 +1,7 @@
 import { Box, Text, Button,Flex } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import { useNavigate, useParams } from 'react-router-dom';
 import Question from './Question';
-import NotFoundPage from './NotFoundPage';
 import { getUserSurvey,submitBaseSurvey } from '../../hooks/useApi';
 
 interface Survey {
