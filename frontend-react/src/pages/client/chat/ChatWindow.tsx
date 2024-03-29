@@ -1,4 +1,4 @@
-import { Box, SkeletonCircle ,Button} from "@chakra-ui/react";
+import { Box, SkeletonCircle ,Button, Text, Flex} from "@chakra-ui/react";
 import { useRef, useEffect, useState } from "react";
 import ChatMessage from "./ChatMessage";
 import TypingEffect from "./TypingEffect";
@@ -6,19 +6,22 @@ import QuestionInput from "./QuestionInput";
 interface ChatWindowProps {
   messages: { sender: "user" | "bot"; message: string }[];
   isBotThinking: boolean;
+  surveyState: any;
   handleQuestionResponse: (id: number, val: string  | number) => void;
-  submitted:boolean;
-  displayIndex:number;
-  subtitle:string;
   handleSubmit: ()=>void
 }
 
-function ChatWindow({ messages, isBotThinking ,handleQuestionResponse,submitted,handleSubmit,subtitle}: ChatWindowProps) {
+function ChatWindow({ messages, isBotThinking ,handleQuestionResponse,surveyState,handleSubmit}: ChatWindowProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [botResponded, setBotResponded] = useState(false);
+  const [showConfirm,setShowConfirm]= useState(false)
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messages[surveyState.displayIndex]){
+      setShowConfirm(true)
+    }
   };
+
 
   useEffect(() => {
     if (messages.slice(-1)[0]?.sender === "bot" ) {
@@ -53,55 +56,43 @@ function ChatWindow({ messages, isBotThinking ,handleQuestionResponse,submitted,
       }}
     >
       <ChatMessage sender="bot">
-        {subtitle}
+        {surveyState.subtitle}
       </ChatMessage>
       {messages.map((item, index) => {
-        if (item.message==='pre-survey-end'){
-          if (!submitted){
-            return      <ChatMessage sender={'bot'}>
-                            <TypingEffect
-                text={'Your previous responses will become uneditable'}
-                scrollToBottom={scrollToBottom}
-              />
-            <Button onClick={handleSubmit}>
-                  Submit
-            </Button>
-          </ChatMessage>
-          } else {
-            return <ChatMessage sender={'bot'}>
-              You submitted the pre-survey
-            </ChatMessage>
-          }
-        }
+
         if (index === messages.length - 1 && botResponded) {
+          if (item.message==='You submitted the pre-survey'){
+            return <ChatMessage sender={'bot'}>
+              <Flex flexDirection='column'>
+                <TypingEffect 
+                text="Thank you for your responses. Please confirm your answers now, as they can't be changed later. Once confirmed, we'll continue with our discussion"
+                scrollToBottom={scrollToBottom} >
+                </TypingEffect>
+              <Box>
+              <Button onClick={handleSubmit} colorScheme="green">
+                Confirm
+              </Button>
+              </Box>
+              </Flex>
+          </ChatMessage>
+          }
           return (
-            <>
             <ChatMessage sender="bot">
               <TypingEffect
                 text={messages.slice(-1)[0].message}
                 scrollToBottom={scrollToBottom}
               />
+              {
+              item.question  && item.question.type !=='Open-ended' && 
+              <QuestionInput questionData={item.question} handleQuestionResponse={handleQuestionResponse} submitted={surveyState.submitted}></QuestionInput>
+                }
             </ChatMessage>
-            {
-              item.question  && item.question.type !=='Open-ended' && <ChatMessage sender={'user'}>
-              <QuestionInput questionData={item.question} handleQuestionResponse={handleQuestionResponse} submitted={submitted}></QuestionInput>
-              </ChatMessage>
-            }
-            </>
           )
         } else {
-          return <>
-            <ChatMessage sender={item.sender}>{item.message}</ChatMessage>
-          {
-              item.question &&  (submitted ?
-              <ChatMessage sender={'user'}>
-                {item.question.answer}
-              </ChatMessage>
-              :<ChatMessage sender={'user'}>
-              <QuestionInput questionData={item.question} handleQuestionResponse={handleQuestionResponse} submitted={submitted}></QuestionInput>
-              </ChatMessage> )
-            }
-          </>
+          return <ChatMessage sender={item.sender}>{item.message}
+              {item.question &&<QuestionInput questionData={item.question} handleQuestionResponse={handleQuestionResponse} submitted={surveyState.submitted}></QuestionInput>}
+            </ChatMessage>
+
         }
       })}
       {isBotThinking && (

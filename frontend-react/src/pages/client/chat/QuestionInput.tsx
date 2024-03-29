@@ -40,9 +40,9 @@ const QuestionInput = ({ questionData, handleQuestionResponse ,submitted}: Quest
             value={answer} onChange={(e) => {
               handleQuestionResponse(id, e)
             }}>
-              <Stack direction="column">
+              <Stack direction="column"  >
                 {options.map((option: string, index: number) => (
-                  <Radio  isDisabled={submitted} key={index} value={option}>
+                  <Radio  borderColor="black"  colorScheme='green'  isDisabled={submitted} key={index} value={option}>
                     {option}
                   </Radio>
                 ))}
@@ -51,7 +51,18 @@ const QuestionInput = ({ questionData, handleQuestionResponse ,submitted}: Quest
         );
       case 'Open-ended':
         return (
-            <Textarea  value={answer} onChange={(e) => handleQuestionResponse(id, e.target.value)} />
+          <Textarea
+          background="white"
+          borderColor="gray.500"
+          _hover={{ borderColor: "gray.500" }}
+          _focus={{
+            borderColor: "gray.500",
+            boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+          }}
+          onChange={(e) => handleQuestionResponse(id, e.target.value)}
+          value={answer}
+          isDisabled={submitted}
+          />
         );
       default:
         return null;

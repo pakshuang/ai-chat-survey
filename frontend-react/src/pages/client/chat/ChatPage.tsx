@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Flex } from "@chakra-ui/react";
+import { Flex ,Text} from "@chakra-ui/react";
 
 import ChatWindow from "./ChatWindow";
 import ChatInput from "./ChatInput";
@@ -14,7 +14,7 @@ interface Messages {
 function ChatPage() {
   const [messages, setMessages] = useState<Messages[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [surveyState,setSurveyState] =useState({displayIndex:0,submitted:false,subtitle:""})
+  const [surveyState,setSurveyState] =useState({displayIndex:0,submitted:false,subtitle:"",title:""})
   const [token, setToken] = useState("test");
   const [surveyID, setSurveyID] = useState(1);
   const [responseID, setResponseId] = useState(0);
@@ -106,8 +106,8 @@ function ChatPage() {
               question:question
           };
         });
-        setSurveyState({...surveyState,subtitle:rep.data.subtitle})
-        setMessages([...answeredQuestions,{'sender':'bot','message':"pre-survey-end"}])
+        setSurveyState({...surveyState,subtitle:rep.data.subtitle,title:rep.data.title})
+        setMessages([...answeredQuestions,{'sender':'bot','message':"You submitted the pre-survey"}])
       }
     )
     const run = async () => {
@@ -161,7 +161,6 @@ function ChatPage() {
         }
       );
       const responseData = await response.json();
-      console.log(responseData);
       setMessages([...messages,{ sender: "bot", message: responseData["content"] }]);
     };
     await init_message()
@@ -169,7 +168,12 @@ function ChatPage() {
   const displayMessages = surveyState.submitted ? messages:messages.slice(0,surveyState.displayIndex+1)
   return (
     <Flex flexDirection="column" bg="gray.100" h="100vh" p="1">
-       <ChatWindow subtitle={surveyState.subtitle}handleSubmit={handleSubmit} messages={displayMessages} isBotThinking={isLoading} handleQuestionResponse={handleQuestionResponse} submitted={surveyState.submitted} displayIndex={surveyState.displayIndex}/>
+      <Flex justifyContent='center'>
+        <Text fontSize="xl">
+          {surveyState.title}
+        </Text>
+      </Flex>
+       <ChatWindow handleSubmit={handleSubmit} messages={displayMessages} isBotThinking={isLoading} handleQuestionResponse={handleQuestionResponse} surveyState={surveyState}/>
        {messages[surveyState.displayIndex] && messages[surveyState.displayIndex].question && messages[surveyState.displayIndex].question.type==='Open-ended' &&<ChatInput onSubmitMessage={sendMessage} isSubmitting={isLoading} />}
       { surveyState.submitted  &&<ChatInput onSubmitMessage={sendMessage} isSubmitting={isLoading} />}
     </Flex>
