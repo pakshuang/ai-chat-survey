@@ -172,9 +172,6 @@ def create_survey_object(row):
 # get_surveys()
 # Helper function to create survey object
 def append_question_to_survey(survey_objects, survey_id, question_data):
-    # Check if the question already exists in the list
-    # question_exists = any(question['id'] == question_data['question_id'] for question in survey_objects[survey_id]['questions'])
-
     # If the question does not exist, append it to the list
     survey_objects[survey_id]["questions"].append(
         {
