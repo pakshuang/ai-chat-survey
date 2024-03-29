@@ -12,7 +12,7 @@ function SignupPage() {
   const onSubmit: SubmitHandler<LoginSignupData> = async (values) => {
     try {
       await signup(values)
-      navigate("/admin/login")
+      navigate("/admin/survey")
     } catch (error: any) {
       if (
         error.response.status === 400 &&
