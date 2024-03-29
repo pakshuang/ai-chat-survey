@@ -2,7 +2,6 @@ import json
 import os
 
 import pymysql
-
 from llm_classes import GPT
 
 
