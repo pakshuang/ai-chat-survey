@@ -63,7 +63,7 @@ def test_create_survey():
             },
             {
                 "question_id": 2,
-                "type": "short_answer",
+                "type": "multiple_response",
                 "question": "What did you like about the performance?",
                 "options": [],  # Empty list for open-ended question
             },
@@ -137,14 +137,14 @@ def test_submit_response():
                 "type": "multiple_choice",
                 "question": "Which performance did you enjoy the most?",
                 "options": ["Clowns", "Acrobats", "Jugglers", "Magicians", "Choon"],
-                "answer": "Clowns",
+                "answer": ["Clowns"],
             },
             {
                 "question_id": 2,
-                "type": "short_answer",
+                "type": "multiple_response",
                 "question": "What did you like about the performance?",
-                "options": [],  # Empty list provided for short answer question
-                "answer": "I enjoyed the acrobatic stunts.",
+                "options": ["This", "Is", "A", "Test"],  # Empty list provided for short answer question
+                "answer": ["A", "Test"],
             },
             {
                 "question_id": 3,
@@ -262,7 +262,7 @@ if __name__ == "__main__":
     test_create_survey()
     test_get_surveys()
     test_get_survey()
-    # test_submit_response()
+    test_submit_response()
     # test_get_responses()
     # test_get_response()
     # test_send_chat_message()
