@@ -18,9 +18,9 @@ VALUES
 -- Insert data into the Questions table
 INSERT INTO Questions (question_id, survey_id, question, question_type, options)
 VALUES
-    (1, 1, 'What is your favorite color?', 'Multiple Choice', '{"options": ["Red", "Blue", "Green"]}'),
+    (1, 1, 'What is your favorite color?', 'Multiple Choice', '["Red", "Blue", "Green"]'),
     (2, 1, 'How old are you?', 'Open-ended', NULL),
-    (1, 2, 'Which of the following sports do you like?', 'Multiple Choice', '{"options": ["Football", "Basketball", "Tennis", "Swimming"]}');
+    (1, 2, 'Which of the following sports do you like?', 'Multiple Choice', '["Football", "Basketball", "Tennis", "Swimming"]');
 
 -- Insert data into the Survey_Responses table
 INSERT INTO Survey_Responses (response_id, survey_id, question_id, answer, submitted_at)
