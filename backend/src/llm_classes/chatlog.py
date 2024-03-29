@@ -1,9 +1,13 @@
-from llm_classes.llm_level import LLM, GPT, RoleException
+import random
 
-class ChatLog: 
-    '''
+from llm_classes.llm_level import GPT, LLM, RoleException
+
+
+class ChatLog:
+    """
     A simple wrapper around a list of messages that supports the deletion of future messages.
-    '''
+    """
+
     MAX_LEN = 30
 
     SYSPROMPT = """You are an assistant who is trying to gather user experiences about a product.
@@ -14,48 +18,62 @@ class ChatLog:
 
     SYSPROMPT2 = """Remember these few questions. This is a semi-structured interview, and try to keep asking questions, based on the user replies, or the questions you generated to ask the user. 
     When you have no more questions left to ask, remember to thank the user for their time. Only ask the user one question at a time. The user is a customer. Politely decline all inappropriate requests.
-    After that, the system will ask you if you would like to end the interview. Please reply 'yes' or 'no' only. ONLY SAY 'yes' AFTER YOU HAVE THANKED THE USER.
-    Now, please greet the user and ask a question.
+    After that, the system will ask you if you would like to end the interview. Please reply 'yes' if you would like to end the interview or 'no', if you would like to continue. ONLY SAY 'yes' AFTER YOU HAVE THANKED THE USER.
+    Now, please ask the user a question.
     """
-    
-    END_QUERY = {
-                "role": "system",
-                "content": """Would you like to end the interview here? If you have not thanked the user, please say 'no'. 
-                If you have more questions to ask the user, or if the user has not replied, please also say 'no'. """
-                }
 
-    def __init__(self, message_list: list[dict[str, str]], llm: LLM = GPT(), from_start: bool=False):
+    END_QUERY = {
+        "role": "system",
+        "content": """Would you like to end the interview here? If you have not thanked the user, please say 'no'. 
+                If you have more questions to ask the user, or if the user has not replied, please also say 'no'. """,
+    }
+
+    def __init__(
+        self,
+        message_list: list[dict[str, str]],
+        llm: LLM = GPT(),
+        from_start: bool = False,
+        seed: int = random.randint(1, 9999),
+    ):
+        """
+        Initialises a ChatLog object with a system prompt.
+        Utilises Chain-Of-Thought prompting to first obtain a list of questions to ask.
+        These questions will be used by the llm in a style similar to a semi-structured interview.
+        """
+
         self.message_list = message_list.copy()
         self.current_index = len(message_list)
         self.llm = llm
         if self.current_index == 1 and from_start:
             # insert ai response
-            output = self.llm.run(self.message_list)
-            
-            self.insert_and_update(output, self.current_index, is_llm=True) 
+            output = self.llm.run(self.message_list, seed=seed)
+
+            self.insert_and_update(output, self.current_index, is_llm=True)
             # system response
             self.insert_and_update(ChatLog.SYSPROMPT2, self.current_index, is_sys=True)
-      
 
     def __str__(self):
-        '''
+        """
         Returns a stringified form of the chatlog. DOES NOT INCLUDE SYSPROMPT
-        '''
+        """
         start = "======= CONVERSATION START ======="
         conversation = "\n".join(
             list(
-                map(
-            lambda msg: f"{msg['role']}: {msg['content']}", self.message_list
-                )
+                map(lambda msg: f"{msg['role']}: {msg['content']}", self.message_list)
             )[3:]
         )
         return f"{start}\n\n{conversation}"
-    
+
     def __len__(self):
-        return len(self.message_list) - 3   
+        """
+        Returns the length of back-and-forth conversations between the user and llm.
+        Includes the original system prompt and initialisation.
+        """
+        return len(self.message_list)
 
-
-    def insert_and_update(self, message: str, index: int, is_llm: bool = False, is_sys: bool = False) -> list:
+    def insert_and_update(
+        self, message: str, index: int, is_llm: bool = False, is_sys: bool = False
+    ) -> list:
         """
         Add a new reply to the conversation chain. If edits are made in the middle, future conversations are deleted.
         Returns a message list.

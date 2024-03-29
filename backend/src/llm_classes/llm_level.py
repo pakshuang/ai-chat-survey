@@ -2,6 +2,7 @@ import os
 from abc import ABC, abstractmethod
 from dotenv import load_dotenv
 from openai import OpenAI
+import random
 
 class LLM(ABC):
     '''
@@ -23,11 +24,15 @@ class GPT(LLM):
         self.model = model
         super().__init__()
 
-    def run(self, messages: list) -> str:
+    def run(self, messages: list, seed: int = random.randint(1, 9999)) -> str:
+        '''
+        Runs the llm given a current conversation and seed and outputs a string.
+        '''
         output = self.client.chat.completions.create(
             model=self.model,
             messages=messages,
             stream=False,
+            seed=seed
         )
         return output.choices[0].message.content
     

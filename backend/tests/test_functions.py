@@ -1,7 +1,8 @@
-from llm_classes import *
-############### TEST HERE ######################
-###### This should be moved to test folder #####
-string = """
+from ..src.llm_classes import  GPT, construct_chatlog, check_exit
+from unittest import TestCase
+
+class TestGPTFunctions(TestCase):
+    FORMATTED = """
 This survey is for Macdonald's, the fast food chain.
 We are conducting a survey for the new seaweed shaker fries.
 
@@ -93,22 +94,31 @@ Answer: Keep up the good work!
 
 
     """
-llm = GPT()
-pipe = construct_chatlog(string, llm=llm)
-import re
-for i in range(100):
-    output = (llm.run(pipe.message_list))
-    print(output)     
-    pipe.insert_and_update(output, pipe.current_index, is_llm=True) 
+    def test_check_exit_true(self):
+        chatlog = construct_chatlog(TestGPTFunctions.FORMATTED, seed=120)
+        chatlog.insert_and_update(
+            "I wish to end the interview now. I do not want to cooperate. Please end it now.", chatlog.current_index
+            )
+        chatlog.insert_and_update(
+            "Okay, understood. Thank you for your time, and goodbye!", chatlog.current_index, is_llm=True
+            )
+        seeds = [120, 240, 360]
+        for seed in seeds:
+            is_last = check_exit(chatlog.message_list, llm=GPT(), seed=seed)
+            self.assertTrue(is_last)
 
-    bye = pipe.message_list.copy()
-    bye.append(
-        ChatLog.END_QUERY
-    )
-    result = llm.run(bye)
-    if re.search(r"[yY]es", result):
-        break
+    def test_check_exit_false(self):
+        chatlog = construct_chatlog(TestGPTFunctions.FORMATTED, seed=120)
+        chatlog.insert_and_update(
+            "Hi, pleased to meet you! I have lots to share, but I would like to take another question. Is that okay?", chatlog.current_index
+            )
+        chatlog.insert_and_update(
+            "Of course! Here is another question. What do you think about the Big Mac?", chatlog.current_index, is_llm=True
+            )
+        seeds = [120, 240, 360]
+        for seed in seeds:
+            is_last = check_exit(chatlog.message_list, llm=GPT(), seed=seed)
+            self.assertFalse(is_last)
 
-    pipe.insert_and_update(input(), pipe.current_index, is_llm=False)
 
-print(pipe)
+

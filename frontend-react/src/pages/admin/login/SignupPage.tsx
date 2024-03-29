@@ -1,29 +1,29 @@
-import { SubmitHandler } from "react-hook-form";
-import { useState } from "react";
-import { LoginSignupData, errorToast } from "./constants";
-import { useNavigate } from "react-router-dom";
-import { signup } from "../../hooks/useApi";
-import { LoginSignupForm } from "./LoginSignupForm";
+import { SubmitHandler } from "react-hook-form"
+import { useState } from "react"
+import { LoginSignupData, errorToast } from "./constants"
+import { useNavigate } from "react-router-dom"
+import { signup } from "../../hooks/useApi"
+import { LoginSignupForm } from "./LoginSignupForm"
 
 function SignupPage() {
-  const [isTaken, setIsTaken] = useState(false);
-  const navigate = useNavigate();
+  const [isTaken, setIsTaken] = useState(false)
+  const navigate = useNavigate()
 
   const onSubmit: SubmitHandler<LoginSignupData> = async (values) => {
     try {
-      await signup(values);
-      navigate("/admin/survey");
+      await signup(values)
+      navigate("/admin/login")
     } catch (error: any) {
       if (
         error.response.status === 400 &&
         error.response.data.message == "Admin already exists"
       ) {
-        setIsTaken(true);
+        setIsTaken(true)
       } else {
-        errorToast();
+        errorToast()
       }
     }
-  };
+  }
 
   return (
     <LoginSignupForm
@@ -36,7 +36,7 @@ function SignupPage() {
       redirectLink="/admin/login"
       redirectTo="Log in"
     />
-  );
+  )
 }
 
-export default SignupPage;
+export default SignupPage

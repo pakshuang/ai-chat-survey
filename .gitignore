@@ -161,3 +161,9 @@ cython_debug/
 
 # pdf files
 *.pdf
+
+#DS_store
+**/.DS_Store
+
+#Ignore VSCode Settings
+.vscode/settings.json

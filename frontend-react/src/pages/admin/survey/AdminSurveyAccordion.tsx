@@ -85,6 +85,7 @@ function AdminSurveyAccordion({
             <option value={QuestionType.MCQ}>Multiple Choice Question</option>
             <option value={QuestionType.MRQ}>Multiple Response Question</option>
             <option value={QuestionType.ShortAnswer}>Short Answer</option>
+            <option value={QuestionType.LongAnswer}>Long Answer</option>
           </Select>
           {needOptions(type) && (
             <AdminSurveyOptions index={index} control={control} />
