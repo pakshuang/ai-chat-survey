@@ -3,6 +3,7 @@ import { Flex } from "@chakra-ui/react";
 
 import ChatWindow from "./ChatWindow";
 import ChatInput from "./ChatInput";
+import SurveyPage from "../survey/SurveyPage";
 
 interface Messages {
   sender: "user" | "bot";
@@ -12,7 +13,7 @@ interface Messages {
 function ChatPage() {
   const [messages, setMessages] = useState<Messages[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-
+  const [preSurveyDone,setPreSurveyDone]=useState(false);
   const [token, setToken] = useState("test");
   const [surveyID, setSurveyID] = useState(0);
   const [responseID, setResponseId] = useState(0);
@@ -182,7 +183,6 @@ function ChatPage() {
       tmp_rid = responseData["response_id"];
       console.log(responseData);
     };
-
     // test api for initial message
     const init_message = async () => {
       const response = await fetch(
@@ -228,8 +228,13 @@ function ChatPage() {
 
   return (
     <Flex flexDirection="column" bg="gray.100" h="100vh" p="1">
-      <ChatWindow messages={messages} isBotThinking={isLoading} />
+      {!preSurveyDone?
+      <SurveyPage survey_id={1}></SurveyPage>
+       :<>
+       <ChatWindow messages={messages} isBotThinking={isLoading} />
       <ChatInput onSubmitMessage={sendMessage} isSubmitting={isLoading} />
+      </>
+        }
     </Flex>
   );
 }

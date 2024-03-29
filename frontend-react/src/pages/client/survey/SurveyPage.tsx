@@ -25,13 +25,11 @@ interface Survey {
     options?: string[];
   }[];
 }
-function SurveyPage() {
-  const navigate = useNavigate();
-  const {survey_id} =useParams()
-  const [submitted, setSubmitted] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+interface Props {
+  survey_id:number;
+}
+function SurveyPage({survey_id}:Props) {
   const [survey,setSurvey]=useState<Survey>(null)
-  const [notFound,setNotFound]=useState(false);
   const answersCookie = Cookies.get(`answers_${survey_id}`);
   const answers = answersCookie ? JSON.parse(answersCookie) : [];
   useEffect(()=>{
@@ -44,12 +42,8 @@ function SurveyPage() {
       });
       setSurvey({...rep.data,questions: answeredQuestions})
     }
-    ).catch((error)=>{
-      setNotFound(true)
-    })
+    )
   },[survey_id])
-  const audio = new Audio('/src/assets/survey/verify-step-complete.mp3');
-  audio.volume=1
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -62,14 +56,7 @@ function SurveyPage() {
         return ele
       })
     }
-    console.log(body)
     submitBaseSurvey(body)
-    setIsLoading(true);
-    setSubmitted(true);
-    audio.play()
-    setTimeout(() => {
-      navigate('/chat');
-    }, 1000);
   };
   const handleQuestionResponse = (id: number, val: string | number) => {
     const updatedQuestions = [...survey.questions];
@@ -79,17 +66,8 @@ function SurveyPage() {
     })));
     setSurvey({...survey,questions: updatedQuestions})
   };
-  if (notFound){
-    return <NotFoundPage></NotFoundPage>
-  }
   if (survey==null){
     return null
-  }
-  if (submitted){
-    return <Box maxW="md" mx="auto" mt={10} p={6} borderWidth="1px" borderRadius="lg">
-      <img src="/src/assets/survey/tick.svg" alt="Image" />
-      <Text>Now, let's get onto your talk!</Text>
-  </Box>
   }
   return (
     <Box>
