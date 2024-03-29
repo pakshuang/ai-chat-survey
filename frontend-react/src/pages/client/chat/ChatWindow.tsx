@@ -1,4 +1,4 @@
-import { Box, SkeletonCircle } from "@chakra-ui/react";
+import { Box, SkeletonCircle ,Button} from "@chakra-ui/react";
 import { useRef, useEffect, useState } from "react";
 import ChatMessage from "./ChatMessage";
 import TypingEffect from "./TypingEffect";
@@ -8,12 +8,13 @@ interface ChatWindowProps {
   isBotThinking: boolean;
   handleQuestionResponse: (id: number, val: string  | number) => void;
   submitted:boolean;
+  displayIndex:number;
+  handleSubmit: ()=>void
 }
 
-function ChatWindow({ messages, isBotThinking ,handleQuestionResponse,submitted}: ChatWindowProps) {
+function ChatWindow({ messages, isBotThinking ,handleQuestionResponse,submitted,handleSubmit}: ChatWindowProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [botResponded, setBotResponded] = useState(false);
-
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -50,7 +51,25 @@ function ChatWindow({ messages, isBotThinking ,handleQuestionResponse,submitted}
         },
       }}
     >
+    
       {messages.map((item, index) => {
+        if (item.message==='pre-survey-end'){
+          if (!submitted){
+            return      <ChatMessage sender={'bot'}>
+                            <TypingEffect
+                text={'Your previous responses will become uneditable'}
+                scrollToBottom={scrollToBottom}
+              />
+            <Button onClick={handleSubmit}>
+                  Submit
+            </Button>
+          </ChatMessage>
+          } else {
+            return <ChatMessage sender={'bot'}>
+              You submitted the pre-survey
+            </ChatMessage>
+          }
+        }
         if (index === messages.length - 1 && botResponded) {
           return (
             <>
@@ -61,7 +80,7 @@ function ChatWindow({ messages, isBotThinking ,handleQuestionResponse,submitted}
               />
             </ChatMessage>
             {
-              item.question && <ChatMessage sender={'user'}>
+              item.question  && item.question.type !=='Open-ended' && <ChatMessage sender={'user'}>
               <QuestionInput questionData={item.question} handleQuestionResponse={handleQuestionResponse} submitted={submitted}></QuestionInput>
               </ChatMessage>
             }
@@ -71,9 +90,13 @@ function ChatWindow({ messages, isBotThinking ,handleQuestionResponse,submitted}
           return <>
             <ChatMessage sender={item.sender}>{item.message}</ChatMessage>;
           {
-              item.question && <ChatMessage sender={'user'}>
-              <QuestionInput questionData={item.question} handleQuestionResponse={handleQuestionResponse} submitted={submitted}></QuestionInput>
+              item.question &&  (submitted ?
+              <ChatMessage sender={'user'}>
+                {item.question.answer}
               </ChatMessage>
+              :<ChatMessage sender={'user'}>
+              <QuestionInput questionData={item.question} handleQuestionResponse={handleQuestionResponse} submitted={submitted}></QuestionInput>
+              </ChatMessage> )
             }
           </>
         }

@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { Flex ,Button} from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 
 import ChatWindow from "./ChatWindow";
 import ChatInput from "./ChatInput";
 import { getUserSurvey,submitBaseSurvey } from '../../hooks/useApi';
-import QuestionInput from "./QuestionInput";
 
 interface Messages {
   sender: "user" | "bot";
@@ -20,43 +19,49 @@ function ChatPage() {
   const [surveyID, setSurveyID] = useState(1);
   const [responseID, setResponseId] = useState(0);
   function sendMessage(message: string) {
-    setIsLoading(true);
-    setMessages([...messages, { sender: "user", message: message }]);
-
-    // test bot thinking
-    // setTimeout(() => {
-    //   setMessages((prevMessages) => [
-    //     ...prevMessages,
-    //     {
-    //       sender: "bot",
-    //       message:
-    //         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque asperiores ratione incidunt quasi accusamus facilis beatae a cupiditate aut minus. Autem ab sit voluptate commodi ducimus quis at officia mollitia.",
-    //     },
-    //   ]);
-    //   setIsLoading(false);
-    // }, 1000);
-
-    // TODO: replace with axios
-    // test api for subsequent messages
-    fetch(
-      `http://localhost:5000/api/v1/responses/${responseID}/chat?survey=${surveyID}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ content: message }),
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { sender: "bot", message: data["content"] },
-        ]);
-        setIsLoading(false);
-      });
-
+    console.log(surveyState)
+    if (surveyState.submitted){
+      setIsLoading(true);
+      setMessages([...messages, { sender: "user", message: message }]);
+  
+      // test bot thinking
+      // setTimeout(() => {
+      //   setMessages((prevMessages) => [
+      //     ...prevMessages,
+      //     {
+      //       sender: "bot",
+      //       message:
+      //         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque asperiores ratione incidunt quasi accusamus facilis beatae a cupiditate aut minus. Autem ab sit voluptate commodi ducimus quis at officia mollitia.",
+      //     },
+      //   ]);
+      //   setIsLoading(false);
+      // }, 1000);
+  
+      // TODO: replace with axios
+      // test api for subsequent messages
+      fetch(
+        `http://localhost:5000/api/v1/responses/${responseID}/chat?survey=${surveyID}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ content: message }),
+        }
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            { sender: "bot", message: data["content"] },
+          ]);
+          setIsLoading(false);
+        });
+  
+    } else {  
+      handleQuestionResponse(surveyState.displayIndex+1,message);
+    }
+  
     // dummy messages
     // setMessages(
     //   messages.concat(
@@ -102,7 +107,7 @@ function ChatPage() {
               question:question
           };
         });
-        setMessages([...answeredQuestions])
+        setMessages([...answeredQuestions,{'sender':'bot','message':"pre-survey-end"}])
       }
     )
     const run = async () => {
@@ -127,19 +132,19 @@ function ChatPage() {
     setSurveyState({...surveyState, displayIndex:updId});
     setMessages(updatedQuestions)
   };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  console.log(surveyState)
+  const handleSubmit = async () => {
     const body ={
       "metadata": {
         "survey_id": surveyID
       },
-      "answers": messages.map(ele=>{
+      "answers": messages.slice(0,messages.length-1).map(ele=>{
         ele.question.question_id=ele.question.id;
         return ele.question
       })
     }
     await submitBaseSurvey(body)
+
     setSurveyState({...surveyState,submitted:true})
     let tmp_token = ""
     let tmp_sid = 3;
@@ -162,15 +167,12 @@ function ChatPage() {
     };
     await init_message()
   };
-  console.log(messages.length)
   const displayMessages = surveyState.submitted ? messages:messages.slice(0,surveyState.displayIndex+1)
   return (
     <Flex flexDirection="column" bg="gray.100" h="100vh" p="1">
-       <ChatWindow messages={displayMessages} isBotThinking={isLoading} handleQuestionResponse={handleQuestionResponse} submitted={surveyState.submitted}/>
-      {messages.length===surveyState.displayIndex &&  !surveyState.submitted && <Button onClick={handleSubmit}>
-            Submit
-          </Button>}
-      { surveyState.submitted &&<ChatInput onSubmitMessage={sendMessage} isSubmitting={isLoading} />}
+       <ChatWindow handleSubmit={handleSubmit} messages={displayMessages} isBotThinking={isLoading} handleQuestionResponse={handleQuestionResponse} submitted={surveyState.submitted} displayIndex={surveyState.displayIndex}/>
+       {messages[surveyState.displayIndex] && messages[surveyState.displayIndex].question && messages[surveyState.displayIndex].question.type==='Open-ended' &&<ChatInput onSubmitMessage={sendMessage} isSubmitting={isLoading} />}
+      { surveyState.submitted  &&<ChatInput onSubmitMessage={sendMessage} isSubmitting={isLoading} />}
     </Flex>
   );
 }

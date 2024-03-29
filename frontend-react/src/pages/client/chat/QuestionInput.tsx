@@ -49,13 +49,9 @@ const QuestionInput = ({ questionData, handleQuestionResponse ,submitted}: Quest
               </Stack>
             </RadioGroup>
         );
-      case 'short_answer':
-        return (
-            <Input type="text" value={answer}  onChange={(e) => handleQuestionResponse(id, e.target.value)} />
-        );
       case 'Open-ended':
         return (
-            <Textarea  isDisabled={submitted}value={answer} onChange={(e) => handleQuestionResponse(id, e.target.value)} />
+            <Textarea  value={answer} onChange={(e) => handleQuestionResponse(id, e.target.value)} />
         );
       default:
         return null;

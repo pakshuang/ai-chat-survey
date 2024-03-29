@@ -23,10 +23,8 @@ interface Survey {
     options?: string[];
   }[];
 }
-interface Props {
-  survey_id:number;
-}
-function SurveyPage({survey_id}:Props) {
+function SurveyPage() {
+  const survey_id=1
   const [survey,setSurvey]=useState<Survey>(null)
   const answersCookie = Cookies.get(`answers_${survey_id}`);
   const answers = answersCookie ? JSON.parse(answersCookie) : [];
@@ -90,7 +88,7 @@ function SurveyPage({survey_id}:Props) {
             } 
           <Box maxW="md" mx="auto" mt={6}>
             <Flex justifyContent="flex-end">
-                <Button colorScheme="blue"   type="submit" disabled={isLoading}>
+                <Button colorScheme="blue"   type="submit" >
                   Submit
                 </Button>
             </Flex>
