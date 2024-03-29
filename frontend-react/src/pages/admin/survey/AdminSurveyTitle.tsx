@@ -14,6 +14,7 @@ function AdminSurveyTitle() {
         fontSize="4xl"
         fontWeight="bold"
         autoFocus
+        autoComplete="off"
         {...register("title", { validate })}
       />
       <Input
@@ -22,6 +23,7 @@ function AdminSurveyTitle() {
         size="md"
         fontSize="xl"
         mt="1rem"
+        autoComplete="off"
         {...register("subtitle", { validate })}
       />
       <Input
@@ -30,6 +32,7 @@ function AdminSurveyTitle() {
         size="md"
         fontSize="xl"
         mt="1rem"
+        autoComplete="off"
         {...register("chat_context", { validate, maxLength: 1000 })}
       />
     </Card>
