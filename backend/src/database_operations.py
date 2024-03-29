@@ -95,6 +95,29 @@ def summarise(chat_context: str) -> str:
     else:
         return chat_context
 
+def validate_survey_object(data):
+    if not isinstance(data, dict):
+        return False, "Survey data must be a dictionary"
+
+    required_keys = ["metadata", "title", "subtitle", "questions", "chat_context"]
+    for key in required_keys:
+        if key not in data or not data[key]:
+            return False, f"Missing or empty '{key}' field"
+
+    if not isinstance(data["questions"], list):
+        return False, "Questions field must be a list"
+
+    for question in data["questions"]:
+        required_question_keys = ["question_id", "type", "question", "options"]
+        for key in required_question_keys:
+            if key not in question:
+                return False, f"Missing or empty '{key}' field in a question"
+
+        if not isinstance(question["options"], list):
+            return False, "Options field in a question must be a list"
+
+    return True, "Survey object format is valid"
+
 
 def create_survey(connection, data):
     try:

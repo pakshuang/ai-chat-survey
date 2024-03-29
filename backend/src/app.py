@@ -174,6 +174,10 @@ def create_survey(**kwargs):
     # TODO: Add more Validation of survey object to check all fields are present
     if not data:
         return jsonify({"message": "Invalid data"}), 400
+    # Validate survey object format
+    is_valid, message = database_operations.validate_survey_object(data)
+    if not is_valid:
+        return jsonify({"message": message}), 400
 
     # Connect to the database
     connection = database_operations.connect_to_mysql()
