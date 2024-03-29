@@ -3,52 +3,36 @@ import { Flex ,Text} from "@chakra-ui/react";
 
 import ChatWindow from "./ChatWindow";
 import ChatInput from "./ChatInput";
-import { getUserSurvey,submitBaseSurvey } from '../../hooks/useApi';
-
+import { getUserSurvey,sendMessageApi,submitBaseSurvey,init_message } from '../../hooks/useApi';
+import { useParams } from "react-router-dom";
+import NotFoundPage from "./NotFound";
+interface Question {
+  id: number;
+  question_id:number;
+  question: string;
+  type: string;
+  options?: string[];
+  answer?:string,
+}
 interface Messages {
   sender: "user" | "bot";
   message: string;
-  question:any,
+  question?:Question
 }
 
 function ChatPage() {
+  const {surveyID} = useParams();
   const [messages, setMessages] = useState<Messages[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [surveyState,setSurveyState] =useState({displayIndex:0,submitted:false,subtitle:"",title:""})
   const [token, setToken] = useState("test");
-  const [surveyID, setSurveyID] = useState(1);
   const [responseID, setResponseId] = useState(0);
   function sendMessage(message: string) {
     if (surveyState.submitted){
       setIsLoading(true);
       setMessages([...messages, { sender: "user", message: message }]);
-  
-      // test bot thinking
-      // setTimeout(() => {
-      //   setMessages((prevMessages) => [
-      //     ...prevMessages,
-      //     {
-      //       sender: "bot",
-      //       message:
-      //         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque asperiores ratione incidunt quasi accusamus facilis beatae a cupiditate aut minus. Autem ab sit voluptate commodi ducimus quis at officia mollitia.",
-      //     },
-      //   ]);
-      //   setIsLoading(false);
-      // }, 1000);
-  
-      // TODO: replace with axios
-      // test api for subsequent messages
-      fetch(
-        `http://localhost:5000/api/v1/responses/${responseID}/chat?survey=${surveyID}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ content: message }),
-        }
-      )
-        .then((res) => res.json())
+      sendMessageApi(responseID,surveyID,message)
+        .then((res) => res.data)
         .then((data) => {
           setMessages((prevMessages) => [
             ...prevMessages,
@@ -60,20 +44,10 @@ function ChatPage() {
     } else {  
       handleQuestionResponse(surveyState.displayIndex+1,message);
     }
-  
-    // dummy messages
-    // setMessages(
-    //   messages.concat(
-    //     { sender: "user", message: message },
-    //     { sender: "bot", message: "Hi, I'm a bot" }
-    //   )
-    // );
   }
 
   useEffect(() => {
     let tmp_token = "";
-    let tmp_sid = 3;
-    let tmp_rid = 1;
     // dummy signup and login to test api
     const signup = async () => {
       await fetch("http://localhost:5000/api/v1/admins", {
@@ -96,7 +70,6 @@ function ChatPage() {
       console.log(responseData);
       setToken(responseData["jwt"]);
       tmp_token = responseData["jwt"];
-      console.log(tmp_token);
     };
     getUserSurvey(surveyID).then((rep)=>{
         const answeredQuestions = rep.data.questions.map((question, index) => {
@@ -110,20 +83,6 @@ function ChatPage() {
         setMessages([...answeredQuestions,{'sender':'bot','message':"You submitted the pre-survey"}])
       }
     )
-    const run = async () => {
-      // console.log("signing up ...");
-      // await signup();
-      // console.log("done");
-      // console.log("logging in ...");
-      // await login();
-      // await init_message();
-      console.log("done");
-      setIsLoading(false);
-    };
-
-    // console.log("use effect running");s
-    run();
-    // console.log("use effect done");
   }, []);
   const handleQuestionResponse = (id: number, val: string | number) => {
     const updatedQuestions = [...messages];
@@ -148,24 +107,18 @@ function ChatPage() {
     let tmp_token = ""
     let tmp_sid = 3;
     let tmp_rid = 1;
-    const init_message = async () => {
-      const response = await fetch(
-        `http://localhost:5000/api/v1/responses/${tmp_rid}/chat?survey=${tmp_sid}`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${tmp_token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ content: "" }),
-        }
-      );
-      const responseData = await response.json();
-      setMessages([...messages,{ sender: "bot", message: responseData["content"] }]);
-    };
-    await init_message()
+    init_message(surveyID,tmp_rid,tmp_token).then(
+      (rep)=>{
+        const responseData = rep.data
+        setMessages([...messages,{ sender: "bot", message: responseData["content"] }])
+      }
+    )
   };
   const displayMessages = surveyState.submitted ? messages:messages.slice(0,surveyState.displayIndex+1)
+
+  if (surveyID===undefined){
+    return <NotFoundPage></NotFoundPage>
+  }
   return (
     <Flex flexDirection="column" bg="gray.100" h="100vh" p="1">
       <Flex justifyContent='center'>

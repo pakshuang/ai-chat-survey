@@ -46,3 +46,27 @@ export const getSurveyById = (id: string): Promise<GetSurvey> => {
     .get(`/surveys/${id}`)
     .then((res) => res.data)
 }
+export const init_message = async (rid :number,sid :number,token : string) : Promise<AxiosResponse>  => {
+  return  ApiService.post(
+      `/responses/${rid}/chat?survey=${sid}`,
+      { content: "" },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+};
+
+export const sendMessageApi = async (responseID :number, surveyID:number, message : string): Promise<AxiosResponse>   =>{
+  return ApiService.post(
+  `/responses/${responseID}/chat?survey=${surveyID}`,
+  { content: message },
+  {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }
+  )
+}

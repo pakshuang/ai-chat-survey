@@ -5,7 +5,6 @@ import AdminHomePage from "./pages/admin/AdminHomePage"
 import AdminSurveyPage from "./pages/admin/survey/AdminSurveyPage"
 import SignupPage from "./pages/admin/login/SignupPage"
 import LoginPage from "./pages/admin/login/LoginPage"
-import SurveyPage from "./pages/client/survey/SurveyPage"
 import ChatPage from "./pages/client/chat/ChatPage"
 import { ChakraProvider } from "@chakra-ui/react"
 import { theme } from "./components/theme"
@@ -20,7 +19,7 @@ const router = createBrowserRouter([
   { path: "/admin/survey/:id", element: <ViewAdminSurvey /> },
   { path: "/admin/survey/create", element: <AdminSurveyPage /> },
   { path: "/chat", element: <ChatPage /> },
-  { path: "/chat/:survey_id", element: <ChatPage /> },
+  { path: "/chat/:surveyID", element: <ChatPage /> },
 ])
 
 function App() {
