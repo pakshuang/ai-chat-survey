@@ -12,89 +12,57 @@ This survey is for Macdonald's, the fast food chain.
 We are conducting a survey for the new seaweed shaker fries.
 
 
-How satisfied are you with our product/service?
+1. How satisfied are you with our product/service?
 
 Options:
--    Very satisfied
--    Satisfied
--    Neutral
--    Dissatisfied
--    Very dissatisfied
+Very satisfied, Satisfied, Neutral, Dissatisfied, Very dissatisfied
 Answer: Satisfied
-How likely are you to recommend our product/service to others?
 
--   Very likely
--   Likely
--   Neutral
--   Unlikely
--   Very unlikely
+2. How likely are you to recommend our product/service to others?
+
+Very likely, Likely, Neutral, Unlikely, Very unlikely
 
 Answer: Very likely
-On a scale of 1 to 10, how would you rate the quality of our product/service?
+3. On a scale of 1 to 10, how would you rate the quality of our product/service?
 
 Answer: 8
-What do you like most about our product/service?
+4. What do you like most about our product/service?
 
 Answer: The ease of use and reliability.
-What improvements would you suggest for our product/service?
+5. What improvements would you suggest for our product/service?
 
 Answer: More customization options and faster response times.
-How often do you use our product/service?
+6. How often do you use our product/service?
 
--    Daily
--    Weekly
--    Monthly
--    Occasionally
--    Rarely
+Daily, Weekly, Monthly, Rarely
 Answer: Weekly
-How satisfied are you with the customer support provided?
+7. How satisfied are you with the customer support provided?
 Options:
--    Very satisfied
--    Satisfied
--    Neutral
--    Dissatisfied
--    Very dissatisfied
+Very Satisfied, Satisfied, Neutral, Unsatisfied, Very unsatisfied
 Answer: Satisfied
-What made you choose our product/service over competitors?
-
+8. What made you choose our product/service over competitors?
 Answer: Positive reviews and reputation.
-How would you rate the value for money of our product/service?
-
+9. How would you rate the value for money of our product/service?
 Answer: 7
-How easy was it to purchase/use our product/service?
+10. How easy was it to purchase/use our product/service?
 Options:
--    Very easy
--    Easy
--    Neutral
--    Difficult
--    Very difficult
+Very easy, Easy, Neutral, Difficult, Very difficult
 Answer: Easy
-Would you consider purchasing from us again in the future?
+11. Would you consider purchasing from us again in the future?
 Options:
--    Yes
--    No
--    Maybe
+Yes, No, Maybe
 Answer: Yes
-Overall, how satisfied are you with your experience with our company?
+12. Overall, how satisfied are you with your experience with our company?
 Options:
--    Very satisfied
--    Satisfied
--    Neutral
--    Dissatisfied
--    Very dissatisfied
+Very Satisfied, Satisfied, Neutral, Unsatisfied, Very unsatisfied
 Answer: Very satisfied
-What improvements would you like to see in our company as a whole?
-
+13. What improvements would you like to see in our company as a whole?
 Answer: More frequent updates and better communication with customers.
-How did you first hear about our company?
+14. How did you first hear about our company?
 Options:
--    Word of mouth
--    Online advertisement
--    Social media
--    Other (please specify)
-
+Word of mouth, Online advertisement, Social media, Other (please specify)
 Answer: Word of mouth
-Additional Comments:
+15. Additional Comments:
 Answer: Keep up the good work!
 
 
