@@ -123,7 +123,7 @@ user: nope
 assistant: Thank you for your time and valuable feedback. We truly appreciate it. Have a great day!
 ```
 
-In this conversation, notice that the LLM focuses only on the user's desire for a new type of burger. This conversation immediately presents a problem: There is a tendency for the LLM to focus on a specific answer in the survey, and not other responses, which may prove very interesting.
+In this conversation, notice that the LLM focuses only on the user's desire for a new type of burger. This conversation immediately presents a problem: There is a tendency for the LLM to focus on a specific answer in the survey, and not other responses which may prove very interesting, therefore forgoing important insights.
 
 ### Step 2
 
