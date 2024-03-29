@@ -82,10 +82,7 @@ function ChatWindow({ messages, isBotThinking ,handleQuestionResponse,surveyStat
                 text={messages.slice(-1)[0].message}
                 scrollToBottom={scrollToBottom}
               />
-              {
-              item.question  && item.question.type !=='Open-ended' && 
               <QuestionInput questionData={item.question} handleQuestionResponse={handleQuestionResponse} submitted={surveyState.submitted}></QuestionInput>
-                }
             </ChatMessage>
           )
         } else {

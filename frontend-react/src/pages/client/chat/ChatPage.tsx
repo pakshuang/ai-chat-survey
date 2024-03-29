@@ -79,6 +79,7 @@ function ChatPage() {
               question:question
           };
         });
+        setIsLoading(false)
         setSurveyState({...surveyState,subtitle:rep.data.subtitle,title:rep.data.title})
         setMessages([...answeredQuestions,{'sender':'bot','message':"You submitted the pre-survey"}])
       }
@@ -127,7 +128,6 @@ function ChatPage() {
         </Text>
       </Flex>
        <ChatWindow handleSubmit={handleSubmit} messages={displayMessages} isBotThinking={isLoading} handleQuestionResponse={handleQuestionResponse} surveyState={surveyState}/>
-       {messages[surveyState.displayIndex] && messages[surveyState.displayIndex].question && messages[surveyState.displayIndex].question.type==='Open-ended' &&<ChatInput onSubmitMessage={sendMessage} isSubmitting={isLoading} />}
       { surveyState.submitted  &&<ChatInput onSubmitMessage={sendMessage} isSubmitting={isLoading} />}
     </Flex>
   );

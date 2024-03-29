@@ -1,4 +1,4 @@
-import { Box, Flex, Button, Textarea, Radio, RadioGroup, Stack, Input } from '@chakra-ui/react';
+import { CheckboxGroup ,Checkbox, Textarea, Radio, RadioGroup, Stack, Input } from '@chakra-ui/react';
 interface Question {
   id:number,
   question:string,
@@ -16,24 +16,7 @@ const QuestionInput = ({ questionData, handleQuestionResponse ,submitted}: Quest
   const { id, type, options,answer } = questionData;
   const renderQuestionType = () => {
     switch (type) {
-      case 'rating':
-        return (
-          <Flex>
-            {[1, 2, 3, 4, 5].map((rating) => (
-              <Box key={rating} as="span" mr="1">
-                <Button
-                  isDisabled={submitted}
-                  variant={rating === answer ? "solid" : "outline"}
-                  colorScheme={rating == answer ? "teal" : "gray"}
-                  onClick={() => handleQuestionResponse(id, rating)}
-                >
-                  {rating}
-                </Button>
-              </Box>
-            ))}
-          </Flex>
-        );
-      case 'Multiple Choice':
+      case 'multiple_choice':
         return (
             <RadioGroup 
             isDisabled={submitted}
@@ -49,7 +32,46 @@ const QuestionInput = ({ questionData, handleQuestionResponse ,submitted}: Quest
               </Stack>
             </RadioGroup>
         );
-      case 'Open-ended':
+      case 'multiple_response':
+        return (
+          <CheckboxGroup 
+          isDisabled={submitted}
+          value={answer} 
+          onChange={(values) => {
+            handleQuestionResponse(id, values)
+          }}
+        >
+          <Stack direction="column">
+            {options.map((option: string, index: number) => (
+              <Checkbox  
+                borderColor="black"  
+                colorScheme='green'  
+                isDisabled={submitted} 
+                key={index} 
+                value={option}
+              >
+                {option}
+              </Checkbox>
+            ))}
+          </Stack>
+        </CheckboxGroup>
+        );
+      case 'short_answer':
+          return (
+            <Input
+            background="white"
+            borderColor="gray.500"
+            _hover={{ borderColor: "gray.500" }}
+            _focus={{
+              borderColor: "gray.500",
+              boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+            }}
+            onChange={(e) => handleQuestionResponse(id, e.target.value)}
+            value={answer}
+            isDisabled={submitted}
+            />
+          );
+      case 'long_answer':
         return (
           <Textarea
           background="white"
@@ -65,7 +87,7 @@ const QuestionInput = ({ questionData, handleQuestionResponse ,submitted}: Quest
           />
         );
       default:
-        return null;
+        return type;
     }
   };
 
