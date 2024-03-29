@@ -11,7 +11,7 @@ Large language models usually process conversations through this simple pipeline
 
 ### Problem Outline and Basic Pipeline
 
-<img src="./diagrams/images/no-prompt-eng.png" alt="drawing" style="height:200px;"/>
+<img src="./diagrams/images/no-prompt-eng.png" alt="drawing" style="height:250px;"/>
 <br>
 However, it will become apparent that the barebones pipeline as described above is insufficient in addressing the business problem. The following difficulties/questions arise:
 
@@ -137,7 +137,7 @@ This method follows a similar idea as self-ask, a Chain-of-Thought prompting tec
 This resolves problem 3.
 
 ### Pipeline Step 2
-<img src="./diagrams/images/prompt-eng-1.png" alt="drawing" style="height:250px;"/>
+<img src="./diagrams/images/prompt-eng-1.png" alt="drawing" style="height:350px;"/>
 <br>
 
 ### Step 3
@@ -152,7 +152,7 @@ Therefore, the LLM will have to access the current state of the conversation and
 ### Pipeline Step 3
 
 
-<img src="./diagrams/images/prompt-eng-2.png" alt="drawing" style="height:350px;"/>
+<img src="./diagrams/images/prompt-eng-2.png" alt="drawing" style="height:400px;"/>
 <br>
 
 ### Step 4
@@ -210,8 +210,8 @@ proceed with the discussion about your experience with our product?
 
 ### Pipeline Stage 4
 
-
-![Security](./diagrams/images/prompt-eng-3.png)
+<img src="./diagrams/images/prompt-eng-2.png" alt="drawing" style="height:400px;"/>
+<br>
 
 ## Final Product
 This is a sample conversation of our final product. In this conversation, we reuse the original survey in Step 1. Notice that in this sample conversation, the LLM is able to probe the user for any further clarifications and insights, but it does not lose track of other interesting aspects in the survey. 
