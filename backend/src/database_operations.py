@@ -100,12 +100,10 @@ def create_survey(connection, data):
     try:
         # Insert survey data into Surveys table
         insert_survey_query = """
-            INSERT INTO Surveys (name, description, title, subtitle, admin_username, created_at, chat_context)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO Surveys (title, subtitle, admin_username, created_at, chat_context)
+            VALUES (%s, %s, %s, %s, %s)
         """
         survey_data = (
-            data["metadata"]["name"],
-            data["metadata"]["description"],
             data["title"],
             data["subtitle"],
             data["metadata"]["created_by"],
@@ -125,7 +123,7 @@ def create_survey(connection, data):
                 VALUES (%s, %s, %s, %s, %s)
             """
             question_data = (
-                question["id"],
+                question["question_id"],
                 survey_id,
                 question["question"],
                 question["type"],
