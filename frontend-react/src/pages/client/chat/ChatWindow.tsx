@@ -9,10 +9,11 @@ interface ChatWindowProps {
   handleQuestionResponse: (id: number, val: string  | number) => void;
   submitted:boolean;
   displayIndex:number;
+  subtitle:string;
   handleSubmit: ()=>void
 }
 
-function ChatWindow({ messages, isBotThinking ,handleQuestionResponse,submitted,handleSubmit}: ChatWindowProps) {
+function ChatWindow({ messages, isBotThinking ,handleQuestionResponse,submitted,handleSubmit,subtitle}: ChatWindowProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [botResponded, setBotResponded] = useState(false);
   const scrollToBottom = () => {
@@ -51,7 +52,9 @@ function ChatWindow({ messages, isBotThinking ,handleQuestionResponse,submitted,
         },
       }}
     >
-    
+      <ChatMessage sender="bot">
+        {subtitle}
+      </ChatMessage>
       {messages.map((item, index) => {
         if (item.message==='pre-survey-end'){
           if (!submitted){
@@ -85,10 +88,10 @@ function ChatWindow({ messages, isBotThinking ,handleQuestionResponse,submitted,
               </ChatMessage>
             }
             </>
-          );
+          )
         } else {
           return <>
-            <ChatMessage sender={item.sender}>{item.message}</ChatMessage>;
+            <ChatMessage sender={item.sender}>{item.message}</ChatMessage>
           {
               item.question &&  (submitted ?
               <ChatMessage sender={'user'}>

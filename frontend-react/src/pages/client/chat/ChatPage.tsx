@@ -14,12 +14,11 @@ interface Messages {
 function ChatPage() {
   const [messages, setMessages] = useState<Messages[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [surveyState,setSurveyState] =useState({displayIndex:0,submitted:false})
+  const [surveyState,setSurveyState] =useState({displayIndex:0,submitted:false,subtitle:""})
   const [token, setToken] = useState("test");
   const [surveyID, setSurveyID] = useState(1);
   const [responseID, setResponseId] = useState(0);
   function sendMessage(message: string) {
-    console.log(surveyState)
     if (surveyState.submitted){
       setIsLoading(true);
       setMessages([...messages, { sender: "user", message: message }]);
@@ -107,6 +106,7 @@ function ChatPage() {
               question:question
           };
         });
+        setSurveyState({...surveyState,subtitle:rep.data.subtitle})
         setMessages([...answeredQuestions,{'sender':'bot','message':"pre-survey-end"}])
       }
     )
@@ -121,7 +121,7 @@ function ChatPage() {
       setIsLoading(false);
     };
 
-    // console.log("use effect running");
+    // console.log("use effect running");s
     run();
     // console.log("use effect done");
   }, []);
@@ -132,7 +132,6 @@ function ChatPage() {
     setSurveyState({...surveyState, displayIndex:updId});
     setMessages(updatedQuestions)
   };
-  console.log(surveyState)
   const handleSubmit = async () => {
     const body ={
       "metadata": {
@@ -170,7 +169,7 @@ function ChatPage() {
   const displayMessages = surveyState.submitted ? messages:messages.slice(0,surveyState.displayIndex+1)
   return (
     <Flex flexDirection="column" bg="gray.100" h="100vh" p="1">
-       <ChatWindow handleSubmit={handleSubmit} messages={displayMessages} isBotThinking={isLoading} handleQuestionResponse={handleQuestionResponse} submitted={surveyState.submitted} displayIndex={surveyState.displayIndex}/>
+       <ChatWindow subtitle={surveyState.subtitle}handleSubmit={handleSubmit} messages={displayMessages} isBotThinking={isLoading} handleQuestionResponse={handleQuestionResponse} submitted={surveyState.submitted} displayIndex={surveyState.displayIndex}/>
        {messages[surveyState.displayIndex] && messages[surveyState.displayIndex].question && messages[surveyState.displayIndex].question.type==='Open-ended' &&<ChatInput onSubmitMessage={sendMessage} isSubmitting={isLoading} />}
       { surveyState.submitted  &&<ChatInput onSubmitMessage={sendMessage} isSubmitting={isLoading} />}
     </Flex>
