@@ -66,9 +66,12 @@ Admins are the users who have access to the admin portal. There will be no endpo
 
 ## Surveys
 
-These endpoints are used to create, read, update, and delete surveys, which are the first phase of the survey process.
+These endpoints are used to create, read, and delete surveys, which are the first phase of the survey process.
 
 ### 1. Create Survey
+
+> [!IMPORTANT]
+> A JWT is required.
 
 - **Endpoint:** `/api/v1/surveys`
 - **Method:** `POST`
@@ -86,7 +89,7 @@ These endpoints are used to create, read, update, and delete surveys, which are 
     "questions": [
       {
         "question_id": "integer",
-        "type": "string", # multiple_choice, short_answer, long_answer, etc.
+        "type": "string", # multiple_choice, multiple_reponse, free_response
         "question": "string",
         "options": ["string"]
       }
@@ -155,7 +158,7 @@ These endpoints are used to create, read, update, and delete surveys, which are 
     "questions": [
       {
         "question_id": "integer",
-        "type": "string", # multiple_choice, short_answer, long_answer, etc.
+        "type": "string", # multiple_choice, multiple_reponse, free_response
         "question": "string",
         "options": ["string"]
       }
@@ -171,6 +174,9 @@ These endpoints are used to create, read, update, and delete surveys, which are 
   - `500` - Internal Server Error
 
 ### 4. Delete Survey
+
+> [!IMPORTANT]
+> A JWT is required.
 
 - **Endpoint:** `/api/v1/surveys/{survey_id}`
 - **Method:** `DELETE`
@@ -193,11 +199,11 @@ These endpoints are used to create, read, update, and delete surveys, which are 
   - `500` - Internal Server Error
 
 ## Survey Responses
-> [!WARNING] **Survey Responses (Response objects) are not to be confused with API Responses!**
-> Survey responses/reponse objects are collections of data from survey and chat and are json objects. API Responses are outputs from a server!
 
-These endpoints are used to submit, read, update, and delete responses response objects, which are the combined data collected from the survey and chat completed by a single respondent.
+> [!NOTE]
+> Survey responses (reponse objects) are json objects, representing a respondents answers to a survey as well as their chatlog. HTTP responses are also json objects, but they are the entire response from the API. The two are different and should not be confused.
 
+These endpoints are used to submit, read, and update (send message) responses response objects, which are the combined data collected from the survey and chat completed by a single respondent.
 
 ### 1. Submit Survey Response
 
@@ -214,7 +220,7 @@ These endpoints are used to submit, read, update, and delete responses response 
     "answers": [
       {
         "question_id": "integer",
-        "type": "string", # multiple_choice, short_answer, long_answer, etc.
+        "type": "string", # multiple_choice, multiple_reponse, free_response
         "question": "string",
         "options": ["string"],
         "answer": ["string"],
@@ -223,7 +229,7 @@ These endpoints are used to submit, read, update, and delete responses response 
   }
   ```
 
-- **Response:**
+- **HTTP Response:**
 
   ```json
   {
@@ -240,12 +246,14 @@ These endpoints are used to submit, read, update, and delete responses response 
 
 ### 2. Get Survey Responses
 
+> [!IMPORTANT]
+> A JWT is required.
+
 - **Endpoint:** `/api/v1/responses?survey={survey_id}`
 - **Method:** `GET`
 - **Description:** Get all response objects for a survey. An admin JWT that corresponds to the survey creator is required.
 
-- **Response:**
-> [!NOTE] **API Response!**
+- **HTTP Response:**
 
   ```json
   {
@@ -268,10 +276,13 @@ These endpoints are used to submit, read, update, and delete responses response 
 
 ### 3. Get Survey Response
 
-- **Endpoint:** `/api/v1/ responses?survey={survey_id}`
+> [!IMPORTANT]
+> A JWT is required.
+
+- **Endpoint:** `/api/v1/responses?survey={survey_id}`
 - **Method:** `GET`
 - **Description:** Get a response object by ID. An admin JWT that corresponds to the survey creator is required.
-- **Response:**
+- **HTTP Response:**
 
   ```json
   {
@@ -283,7 +294,7 @@ These endpoints are used to submit, read, update, and delete responses response 
     "answers": [
       {
         "question_id": "integer",
-        "type": "string", # multiple_choice, short_answer, long_answer, etc.
+        "type": "string", # multiple_choice, multiple_reponse, free_response
         "question": "string",
         "options": ["string"],
         "answer": ["string"],
@@ -313,7 +324,7 @@ These endpoints are used to submit, read, update, and delete responses response 
   }
   ```
 
-- **Response:**
+- **HTTP Response:**
 
   ```json
   {
