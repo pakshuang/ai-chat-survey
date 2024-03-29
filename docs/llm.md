@@ -135,6 +135,7 @@ Therefore, instead of a one-step initialisation, where the LLM is initialised wi
 This method follows a similar idea as self-ask, a Chain-of-Thought prompting technique (Press et al., [2022](https://arxiv.org/pdf/2210.03350.pdf)). By asking it to generate a list of chat questions to ask and tasking it with remembering these questions, it is hoped that the LLM would remember to continue with other interesting aspects of the interview.
 
 This resolves problem 3.
+<div style="page-break-after: always;"></div>
 
 ### Pipeline Step 2
 <img src="./diagrams/images/prompt-eng-1.png" alt="drawing" style="height:350px;"/>
@@ -148,6 +149,8 @@ Therefore, the LLM will have to access the current state of the conversation and
 
 > **Note:**
 > We have also left a conversation limit such that the conversation does not last forever.
+
+<div style="page-break-after: always;"></div>
 
 ### Pipeline Step 3
 
@@ -207,6 +210,7 @@ on survey responses, I am unable to accept or carry out tasks beyond this capaci
 proceed with the discussion about your experience with our product?
 
 ```
+<div style="page-break-after: always;"></div>
 
 ### Pipeline Stage 4
 
