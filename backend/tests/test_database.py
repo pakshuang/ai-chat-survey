@@ -49,9 +49,6 @@ def test_create_survey():
     # Sample survey data
     survey_data = {
         "metadata": {
-            "id": 1,
-            "name": "Test Survey",
-            "description": "This is a test survey",
             "created_by": "test_admin",
             "created_at": "2024-03-22 15:24:10",
         },
@@ -59,19 +56,19 @@ def test_create_survey():
         "subtitle": "Test Subtitle",
         "questions": [
             {
-                "id": 1,
+                "question_id": 1,
                 "type": "multiple_choice",
                 "question": "Which performance did you enjoy the most?",
                 "options": ["Clowns", "Acrobats", "Jugglers", "Magicians", "Choon"],
             },
             {
-                "id": 2,
+                "question_id": 2,
                 "type": "short_answer",
                 "question": "What did you like about the performance?",
                 "options": [],  # Empty list for open-ended question
             },
             {
-                "id": 3,
+                "question_id": 3,
                 "type": "long_answer",
                 "question": "Do you have any feedback about the venue?",
                 "options": [],  # Empty list for open-ended question
@@ -90,10 +87,11 @@ def test_create_survey():
     # Assertions
     # assert create_survey_response.status_code == 201, "Survey creation failed"
     # assert "survey_id" in create_survey_response.json(), "Survey ID not returned"
-    print(
-        "Survey created successfully. Survey ID:",
-        create_survey_response.json()["survey_id"],
-    )
+    print(create_survey_response.json())
+    # print(
+    #     "Survey created successfully. Survey ID:",
+    #     create_survey_response.json()["survey_id"],
+    # )
 
 
 def test_get_surveys():
@@ -261,3 +259,14 @@ def test_delete_survey():
 
     # Check if the survey is deleted from the database
     # You can perform additional checks here to ensure associated questions and responses are deleted as well
+
+
+if __name__ == "__main__":
+    test_create_admin()
+    test_create_survey()
+    # test_get_surveys()
+    # test_get_survey()
+    # test_submit_response()
+    # test_get_responses()
+    # test_get_response()
+    # test_send_chat_message()
