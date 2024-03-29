@@ -56,6 +56,12 @@ If you have already built the images, you can use the following command to start
 docker-compose up
 ```
 
+During development, you may want to run the application on a clean slate. To do this, you can use the following command:
+
+```shell
+docker-compose up --build --force-recreate --renew-anon-volumes
+```
+
 ## Backend Development
 
 ### Setting up the backend development environment
