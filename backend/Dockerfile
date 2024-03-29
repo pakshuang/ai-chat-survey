@@ -8,8 +8,8 @@ WORKDIR /backend
 COPY . /backend
 
 # Install the dependencies
-RUN pip install pipenv
-RUN pipenv install --deploy
+RUN pip install --no-cache-dir pipenv==2023.12.1 \
+&& pipenv install --deploy
 
 # Expose the port on which the application will run
 EXPOSE ${BACKEND_CONTAINER_PORT}
