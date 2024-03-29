@@ -1,4 +1,5 @@
 from openai import OpenAI
+import pytest
 from unittest import TestCase
 from unittest.mock import patch
 from ..src.llm_classes import  GPT, ChatLog, construct_chatlog, EmptyException
@@ -59,6 +60,11 @@ Answer: Keep up the good work!
 
 
     """
+    def test_empty_chatlog_creation_fails(self):
+        with pytest.raises(Exception) as e_info:
+            ChatLog([])
+            self.assertTrue(isinstance(e_info.value.__cause__, EmptyException))
+
     def test_chatlog_length(self):
         chat_log = construct_chatlog(TestChatLogAndGPT.FORMATTED, llm=GPT(model="gpt-3.5-turbo"))
         self.assertEqual(len(chat_log), 3)
