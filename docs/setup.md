@@ -6,7 +6,7 @@ This document describes how to set up the project. It is intended to be read by 
 
 - [Docker](https://www.docker.com/)
 - [Python](https://www.python.org/)
-- [Node.js](https://nodejs.org/en/download/):
+- [Node.js](https://nodejs.org/):
 
 ## Quick Installation For Windows
 
