@@ -131,9 +131,9 @@ Therefore, instead of a one-step initialisation, where the LLM is initialised wi
 
 1. Firstly, the LLM is initialised with a system prompt with the survey context and response as usual. However, instead of one question, the LLM will be tasked with generating a list of questions to ask the user.
 2. The LLM will generate a list of questions for the user, based on the survey response.
-3. A new system message will be added. This system message will task the LLM to greet the user and choose 1 question to ask the user. It will also be tasked with remembering the list of questions it had generated.
+3. A new system message will be added. This system message will task the LLM with remembering the list of questions it had generated. It will then be instructed to ask the user a question.
 
-This method follows a similar idea as self-ask, a Chain-of-Thought prompting technique (Press et al., [2022](https://arxiv.org/pdf/2210.03350.pdf)). By asking it to generate a list of chat questions to ask and tasking it with remembering these questions, it is hoped that the LLM would remember to continue with other interesting aspects of the interview.
+This method follows a similar idea as self-ask, a Chain-of-Thought prompting technique (Press et al., [2022](https://arxiv.org/pdf/2210.03350.pdf)). By asking it to generate a list of chat questions to ask and tasking it with remembering these questions, it is hoped that the LLM would remember to continue with other interesting aspects of the interview. The results seem promising and will be shown in the final section of this document.
 
 This resolves problem 3.
 <div style="page-break-after: always;"></div>
