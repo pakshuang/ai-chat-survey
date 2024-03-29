@@ -40,6 +40,8 @@ This document describes how to set up the project. It is intended to be read by 
    cp sample.env .env
    ```
 
+4. Fill in the `.env` file with the necessary environment variables. Some of the variables are already filled in with default values.
+
 ## Running the Application
 
 To run the application, use the following command:
