@@ -144,7 +144,7 @@ This resolves problem 3.
 
 ### Step 3
 
-In our current implementation of the app, the LLM has to decide when to end the chat/interview. This is to prevent the user from exiting the interview stage prematurely without any consideration to the questions. The user may still request the LLM via the chat to end the interview, just as one would in real life. However, this will take more explicit effort, and hopefully, by interacting with the chat interface, the user may be less inclined to exit the interview stage without any consideration for the questions.
+In our current implementation of the app, the LLM has to decide when to end the chat/interview. This is to prevent the user from exiting the interview stage prematurely without any consideration to the questions. The user may still request the LLM via the chat to end the interview, just as one would in real life. This makes the interview more natural and removes the need for having a conveniently-placed "end interview" button, which could possibly discourage the user from exiting the interview prematurely.
 
 Therefore, the LLM will have to access the current state of the conversation and decide if there are further responses/questions left.
 
