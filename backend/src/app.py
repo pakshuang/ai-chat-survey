@@ -83,7 +83,7 @@ def create_admin():
     data = request.get_json()
 
     # Basic validation
-    if not data or not data["username"] or not data["password"]:
+    if not data or not data.get("username") or not data.get("password"):
         return jsonify({"message": "Missing data"}), 400
 
     username = data["username"]
@@ -118,7 +118,7 @@ def login_admin():
     data = request.get_json()
 
     # Basic validation
-    if not data or not data["username"] or not data["password"]:
+    if not data or not data.get("username") or not data.get("password"):
         return jsonify({"message": "Missing data"}), 400
 
     # Retrieve hashed password from database
