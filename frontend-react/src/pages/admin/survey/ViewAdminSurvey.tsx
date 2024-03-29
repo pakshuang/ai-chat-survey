@@ -14,16 +14,42 @@ import {
 } from "@chakra-ui/react"
 import { useQuery } from "react-query"
 
-import { useParams } from "react-router-dom"
-import { getSurveyById } from "../../hooks/useApi"
+import { useNavigate, useParams } from "react-router-dom"
+import {
+  getSurveyById,
+  getSurveys,
+  logout,
+  shouldLogout,
+} from "../../hooks/useApi"
 import { needOptions, QuestionType } from "./constants"
+import { useEffect } from "react"
 
 function ViewAdminSurvey() {
   const { id } = useParams()
 
+  const { data: surveys } = useQuery("surveys", getSurveys)
+
   const { data: survey, isLoading } = useQuery(`survey-${id}`, () =>
     getSurveyById(id ?? "0")
   )
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const ids = surveys?.map((s) => s.metadata.id)
+    if (ids && !ids.includes(parseInt(id ?? "0"))) navigate("/admin/404")
+  }, [surveys])
+
+  useEffect(() => {
+    if (shouldLogout()) {
+      logout()
+      navigate("/admin/login")
+    }
+  }, [
+    localStorage.getItem("username"),
+    localStorage.getItem("jwt"),
+    localStorage.getItem("jwtExp"),
+  ])
 
   if (isLoading || !survey)
     return (
