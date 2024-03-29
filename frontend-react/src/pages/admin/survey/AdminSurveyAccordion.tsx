@@ -81,6 +81,7 @@ function AdminSurveyAccordion({
           <Select
             defaultValue={QuestionType.MCQ}
             {...register(`questions.${index}.type`)}
+            _hover={{ cursor: "pointer" }}
           >
             <option value={QuestionType.MCQ}>Multiple Choice Question</option>
             <option value={QuestionType.MRQ}>Multiple Response Question</option>

@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from "axios"
 import { LoginResponse, LoginSignupData } from "../admin/login/constants"
 import { GetSurvey, Survey } from "../admin/survey/constants"
+import dayjs from "dayjs"
 
 const baseUrl: string = import.meta.env.VITE_BASE_URL
 
@@ -23,6 +24,25 @@ export const login = (data: LoginSignupData) =>
     localStorage.setItem("jwt", res.data.jwt)
     localStorage.setItem("jwtExp", res.data.jwt_exp)
   })
+
+export const logout = () => {
+  localStorage.removeItem("username")
+  localStorage.removeItem("jwt")
+  localStorage.removeItem("jwtExp")
+}
+
+export const isJwtExpired = () => {
+  if (!localStorage.getItem("jwtExp")) return true
+  return dayjs(localStorage.getItem("jwtExp")).isBefore(dayjs())
+}
+
+export const shouldLogout = () => {
+  return (
+    !localStorage.getItem("username") ||
+    !localStorage.getItem("jwt") ||
+    isJwtExpired()
+  )
+}
 
 export const submitSurvey = (data: Survey) =>
   AdminApiService(localStorage.getItem("jwt") ?? "").post("/surveys", data)

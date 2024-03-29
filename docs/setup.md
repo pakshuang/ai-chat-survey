@@ -40,6 +40,8 @@ This document describes how to set up the project. It is intended to be read by 
    cp sample.env .env
    ```
 
+4. Fill in the `.env` file with the necessary environment variables. Some of the variables are already filled in with default values.
+
 ## Running the Application
 
 To run the application, use the following command:
@@ -52,6 +54,12 @@ If you have already built the images, you can use the following command to start
 
 ```shell
 docker-compose up
+```
+
+During development, you may want to run the application on a clean slate. To do this, you can use the following command:
+
+```shell
+docker-compose up --build --force-recreate --renew-anon-volumes
 ```
 
 ## Backend Development

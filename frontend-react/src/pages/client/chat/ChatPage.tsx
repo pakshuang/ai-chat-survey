@@ -5,7 +5,6 @@ import ChatWindow from "./ChatWindow";
 import ChatInput from "./ChatInput";
 import { getUserSurvey,sendMessageApi,submitBaseSurvey,init_message } from '../../hooks/useApi';
 import { useParams } from "react-router-dom";
-import NotFoundPage from "./NotFound";
 interface Question {
   id: number;
   question_id:number;
@@ -118,7 +117,7 @@ function ChatPage() {
   const displayMessages = surveyState.submitted ? messages:messages.slice(0,surveyState.displayIndex+1)
 
   if (surveyID===undefined){
-    return <NotFoundPage></NotFoundPage>
+    return "Survey id undefined, use /survey/:id"
   }
   return (
     <Flex flexDirection="column" bg="gray.100" h="100vh" p="1">
