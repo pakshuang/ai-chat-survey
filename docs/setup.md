@@ -140,7 +140,7 @@ The recommended way to run is to use docker compose instead, see [Running the Ap
 1. [Run the Application](#running-the-application)
 
    > [!IMPORTANT]
-   > The tests assume that the application is running with a clean database. You should run the tests on a clean slate. For this reason, do not insert any dummy data upon launch
+   > The tests assume that the application is running with a clean database. You should run the tests on a clean slate. For this reason, make sure that any dummy data added to the database upon launch does not interfere with the tests.
 
 2. Run the tests
 
