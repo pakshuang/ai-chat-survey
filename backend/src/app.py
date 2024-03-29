@@ -351,13 +351,17 @@ def delete_survey(survey_id, **kwargs):
 @app.route("/api/v1/responses", methods=["POST"])
 def submit_response():
     data = request.get_json()
-    # Verify that there is survey_id provided in the metadata
-    survey_id = data.get("metadata", {}).get("survey_id")
-    if not survey_id:
-        return jsonify({"message": "Missing survey ID in metadata"}), 400
+    if not data:
+        return jsonify({"message": "No data was attached"}), 400
+
+    # Validate survey object format
+    is_valid, message = database_operations.validate_response_object(data)
+    if not is_valid:
+        return jsonify({"message": message}), 400
 
     # Validate response object against survey object
     # Retrieve survey object from the database
+    survey_id = data["metadata"]["survey_id"]
     survey_object_response = get_survey(survey_id)
 
     # If GET request is not successful, return 500

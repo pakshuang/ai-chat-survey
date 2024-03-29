@@ -95,6 +95,7 @@ def summarise(chat_context: str) -> str:
     else:
         return chat_context
 
+
 def validate_survey_object(data):
     if not isinstance(data, dict):
         return False, "Survey data must be a dictionary"
@@ -245,6 +246,51 @@ def save_response_to_database(connection, data, survey_id):
         return new_response_id
     except Exception as e:
         return e
+
+
+def validate_response_object(response_data):
+    if not isinstance(response_data, dict):
+        return False, "Response data must be a dictionary"
+
+    if "metadata" not in response_data or "answers" not in response_data:
+        return False, "Response data must contain 'metadata' and 'answers' keys"
+
+    if not isinstance(response_data["metadata"], dict):
+        return False, "'metadata' must be a dictionary"
+
+    if "survey_id" not in response_data["metadata"]:
+        return False, "'metadata' must contain 'survey_id' key"
+
+    if not isinstance(response_data["answers"], list):
+        return False, "'answers' must be a list"
+
+    for answer in response_data["answers"]:
+        if not isinstance(answer, dict):
+            return False, "Each answer must be a dictionary"
+
+        keys = ["question_id", "type", "question", "options", "answer"]
+        for key in keys:
+            if key not in answer:
+                return False, f"Each answer must contain '{key}' key"
+
+        if not isinstance(answer["question_id"], int):
+            return False, "'question_id' must be an integer"
+
+        if not isinstance(answer["type"], str):
+            return False, "'type' must be a string"
+
+        if not isinstance(answer["question"], str):
+            return False, "'question' must be a string"
+
+        if not isinstance(answer["options"], list):
+            return False, "'options' must be a list"
+
+        if not isinstance(answer["answer"], list):
+            return False, "'answer' must be a list"
+        elif not answer["answer"]:
+            return False, "'answer' is empty"
+
+    return True, "Response object format is valid"
 
 
 # submit_response()
