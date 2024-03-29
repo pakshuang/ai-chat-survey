@@ -1,8 +1,5 @@
+from src.llm_classes.functions import check_exit, construct_chatlog
 from src.llm_classes.llm_level import GPT
-from src.llm_classes.functions import (
-    check_exit,
-    construct_chatlog,
-)
 
 
 class TestGPTFunctions:

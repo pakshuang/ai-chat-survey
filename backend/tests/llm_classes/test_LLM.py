@@ -3,9 +3,8 @@ from unittest import TestCase
 from unittest.mock import patch
 
 from openai import OpenAI
-
-from src.llm_classes.llm_level import GPT
 from src.llm_classes.functions import construct_chatlog
+from src.llm_classes.llm_level import GPT
 
 
 class TestChatLogAndGPT(TestCase):

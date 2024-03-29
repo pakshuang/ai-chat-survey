@@ -1,7 +1,8 @@
-from .llm_level import LLM, GPT
-from .chatlog import ChatLog
-import re
 import random
+import re
+
+from .chatlog import ChatLog
+from .llm_level import GPT, LLM
 
 def construct_chatlog(survey_initial_responses: str, llm: LLM = GPT(), seed=random.randint(1, 9999)) -> ChatLog:
     '''
