@@ -764,6 +764,5 @@ def get_response_no_auth(response_id, **kwargs):
         close_connection(connection)
 
 
-
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=BACKEND_CONTAINER_PORT)

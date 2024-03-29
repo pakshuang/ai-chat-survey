@@ -13,6 +13,7 @@ requests = "*"
 cryptography = "*"
 flask-cors = "*"
 pytest-cov = "*"
+black = "*"
 
 [dev-packages]
 pytest = "*"

@@ -1,43 +1,49 @@
-from ..src.llm_classes import  GPT, construct_chatlog, check_exit, format_responses_for_gpt, format_multiple_choices
+from ..src.llm_classes import (
+    GPT,
+    construct_chatlog,
+    check_exit,
+    format_responses_for_gpt,
+    format_multiple_choices,
+)
 from unittest import TestCase
+
 
 class TestGPTFunctions(TestCase):
 
     RESPONSE_LONG = {
-            "metadata": {
+        "metadata": {
             "survey_id": "integer",
             "response_id": "integer",
-            "submitted_at": "string" 
-            },
-            "answers": [
-                {
-                "question_id": "1", 
+            "submitted_at": "string",
+        },
+        "answers": [
+            {
+                "question_id": "1",
                 "type": "long",
                 "question": "question?",
                 "options": [""],
-                "answer": ["string1 blah blah blah."] 
-                }
-            ]
-        }
-    
-    
+                "answer": ["string1 blah blah blah."],
+            }
+        ],
+    }
+
     RESPONSE_MCQ = {
-            "metadata": {
+        "metadata": {
             "survey_id": "integer",
             "response_id": "integer",
-            "submitted_at": "string" 
-            },
-            "answers": [
-                {
-                "question_id": "1", 
+            "submitted_at": "string",
+        },
+        "answers": [
+            {
+                "question_id": "1",
                 "type": "mrq",
                 "question": "question?",
                 "options": ["option1", "option2", "option3"],
-                "answer": ["string1", "string2"] 
-                }
-            ]
-        }
-    
+                "answer": ["string1", "string2"],
+            }
+        ],
+    }
+
     FORMATTED = """
 This survey is for Macdonald's, the fast food chain.
 We are conducting a survey for the new seaweed shaker fries.
@@ -88,14 +94,18 @@ Answer: Word of mouth
 Answer: Keep up the good work!
 
     """
+
     def test_check_exit_true(self):
         chatlog = construct_chatlog(TestGPTFunctions.FORMATTED, seed=120)
         chatlog.insert_and_update(
-            "I wish to end the interview now. I do not want to cooperate. Please end it now.", chatlog.current_index
-            )
+            "I wish to end the interview now. I do not want to cooperate. Please end it now.",
+            chatlog.current_index,
+        )
         chatlog.insert_and_update(
-            "Okay, understood. Thank you for your time, and goodbye!", chatlog.current_index, is_llm=True
-            )
+            "Okay, understood. Thank you for your time, and goodbye!",
+            chatlog.current_index,
+            is_llm=True,
+        )
         seeds = [120, 240]
         for seed in seeds:
             is_last = check_exit(chatlog.message_list, llm=GPT(), seed=seed)
@@ -104,11 +114,14 @@ Answer: Keep up the good work!
     def test_check_exit_false(self):
         chatlog = construct_chatlog(TestGPTFunctions.FORMATTED, seed=120)
         chatlog.insert_and_update(
-            "Hi, pleased to meet you! I have lots to share, but I would like to take another question. Is that okay?", chatlog.current_index
-            )
+            "Hi, pleased to meet you! I have lots to share, but I would like to take another question. Is that okay?",
+            chatlog.current_index,
+        )
         chatlog.insert_and_update(
-            "Of course! Here is another question. What do you think about the Big Mac?", chatlog.current_index, is_llm=True
-            )
+            "Of course! Here is another question. What do you think about the Big Mac?",
+            chatlog.current_index,
+            is_llm=True,
+        )
         seeds = [120, 240]
         for seed in seeds:
             is_last = check_exit(chatlog.message_list, llm=GPT(), seed=seed)
@@ -118,20 +131,28 @@ Answer: Keep up the good work!
         options = TestGPTFunctions.RESPONSE_MCQ["answers"][0]["options"]
         answer = TestGPTFunctions.RESPONSE_MCQ["answers"][0]["answer"]
         self.assertIn("Options:\n", format_multiple_choices(options, "Option"))
-        self.assertEqual("Options:\noption1, option2, option3", format_multiple_choices(options, "Option"))
+        self.assertEqual(
+            "Options:\noption1, option2, option3",
+            format_multiple_choices(options, "Option"),
+        )
         self.assertIn("Answers:\n", format_multiple_choices(answer, "Answer"))
-        self.assertEqual("Dog:\noption1.option2.option3", format_multiple_choices(options, "Dog", add_plural=False, sep="."))
+        self.assertEqual(
+            "Dog:\noption1.option2.option3",
+            format_multiple_choices(options, "Dog", add_plural=False, sep="."),
+        )
 
     def test_check_format_long_ans(self):
         options = TestGPTFunctions.RESPONSE_LONG["answers"][0]["options"]
         answer = TestGPTFunctions.RESPONSE_LONG["answers"][0]["answer"]
 
         self.assertTrue(not format_multiple_choices(options, "Option"))
-        self.assertEqual("Answer:\nstring1 blah blah blah.", format_multiple_choices(answer, "Answer"))
-        
+        self.assertEqual(
+            "Answer:\nstring1 blah blah blah.",
+            format_multiple_choices(answer, "Answer"),
+        )
+
     def test_check_format_responses(self):
         comparer = """1. question?\nOptions:\noption1, option2, option3\nAnswers:\nstring1, string2"""
-        self.assertEqual(format_responses_for_gpt(TestGPTFunctions.RESPONSE_MCQ), comparer)
-
-
-
+        self.assertEqual(
+            format_responses_for_gpt(TestGPTFunctions.RESPONSE_MCQ), comparer
+        )
