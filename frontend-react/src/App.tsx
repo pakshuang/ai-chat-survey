@@ -11,9 +11,10 @@ import { ChakraProvider } from "@chakra-ui/react"
 import { theme } from "./components/theme"
 import { QueryClient, QueryClientProvider } from "react-query"
 import ViewAdminSurvey from "./pages/admin/survey/ViewAdminSurvey"
+import NotFoundPage from "./pages/client/survey/NotFoundPage"
 
 const router = createBrowserRouter([
-  { path: "/", element: <Home /> },
+  { path: "/admin", element: <LoginPage /> },
   { path: "/admin/signup", element: <SignupPage /> },
   { path: "/admin/login", element: <LoginPage /> },
   { path: "/admin/survey", element: <AdminHomePage /> },
@@ -21,6 +22,7 @@ const router = createBrowserRouter([
   { path: "/admin/survey/create", element: <AdminSurveyPage /> },
   { path: "/survey/:survey_id", element: <SurveyPage /> },
   { path: "/chat", element: <ChatPage /> },
+  { path: "*", element: <NotFoundPage /> },
 ])
 
 function App() {
