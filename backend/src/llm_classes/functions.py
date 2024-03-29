@@ -1,5 +1,5 @@
-from llm_classes.llm_level import LLM, GPT
-from llm_classes.chatlog import ChatLog
+from .llm_level import LLM, GPT
+from .chatlog import ChatLog
 import re
 import random
 
