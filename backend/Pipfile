@@ -13,10 +13,11 @@ requests = "*"
 cryptography = "*"
 flask-cors = "*"
 pytest-cov = "*"
-black = "*"
+pytest = "*"
 
 [dev-packages]
-pytest = "*"
+black = "*"
+isort = "*"
 
 [requires]
 python_version = "3.11"
