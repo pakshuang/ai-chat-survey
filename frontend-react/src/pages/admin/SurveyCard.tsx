@@ -10,8 +10,11 @@ import {
 } from "@chakra-ui/react"
 import { GetSurvey } from "./survey/constants"
 import dayjs from "dayjs"
+import { useNavigate } from "react-router-dom"
 
 function SurveyCard({ survey }: { survey: GetSurvey }) {
+  const navigate = useNavigate()
+
   return (
     <Card
       bg="white"
@@ -20,6 +23,7 @@ function SurveyCard({ survey }: { survey: GetSurvey }) {
       borderWidth="1px"
       borderColor="white"
       _hover={{ borderColor: "black" }}
+      onClick={() => navigate(`/admin/survey/${survey.metadata.id}`)}
     >
       <CardHeader>
         <Heading size="md" noOfLines={2}>
