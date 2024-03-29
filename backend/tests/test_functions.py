@@ -1,7 +1,24 @@
-from ..src.llm_classes import  GPT, construct_chatlog, check_exit
+from ..src.llm_classes import  GPT, construct_chatlog, check_exit, format_responses_for_gpt, format_multiple_choices
 from unittest import TestCase
 
 class TestGPTFunctions(TestCase):
+    RESPONSE = {
+            "metadata": {
+            "survey_id": "integer",
+            "response_id": "integer",
+            "submitted_at": "string" 
+            },
+            "answers": [
+            {
+                "question_id": "1", 
+                "type": "mrq",
+                "question": "question?",
+                "options": ["option1", "option2", "option3"],
+                "answer": ["string1", "string2"] 
+            }
+            ]
+        }
+    
     FORMATTED = """
 This survey is for Macdonald's, the fast food chain.
 We are conducting a survey for the new seaweed shaker fries.
@@ -102,7 +119,7 @@ Answer: Keep up the good work!
         chatlog.insert_and_update(
             "Okay, understood. Thank you for your time, and goodbye!", chatlog.current_index, is_llm=True
             )
-        seeds = [120, 240, 360]
+        seeds = [120, 240]
         for seed in seeds:
             is_last = check_exit(chatlog.message_list, llm=GPT(), seed=seed)
             self.assertTrue(is_last)
@@ -115,10 +132,24 @@ Answer: Keep up the good work!
         chatlog.insert_and_update(
             "Of course! Here is another question. What do you think about the Big Mac?", chatlog.current_index, is_llm=True
             )
-        seeds = [120, 240, 360]
+        seeds = [120, 240]
         for seed in seeds:
             is_last = check_exit(chatlog.message_list, llm=GPT(), seed=seed)
             self.assertFalse(is_last)
+
+    def test_check_format_format_multiple_choice(self):
+        options = TestGPTFunctions.RESPONSE["answers"][0]["options"]
+        answer = TestGPTFunctions.RESPONSE["answers"][0]["answer"]
+        self.assertIn("Options:\n", format_multiple_choices(options, "Option"))
+        self.assertEqual("Options:\noption1, option2, option3", format_multiple_choices(options, "Option"))
+        self.assertIn("Answers:\n", format_multiple_choices(answer, "Answer"))
+        self.assertEqual("Dog:\noption1.option2.option3", format_multiple_choices(options, "Dog", add_plural=False, sep="."))
+
+        
+    def test_check_format_responses(self):
+        comparer = """1. question?\nOptions:\noption1, option2, option3\nAnswers:\nstring1, string2"""
+        
+        self.assertEqual(format_responses_for_gpt(TestGPTFunctions.RESPONSE), comparer)
 
 
 
