@@ -1,8 +1,9 @@
 import os
+import random
 from abc import ABC, abstractmethod
+
 from dotenv import load_dotenv
 from openai import OpenAI
-import random
 
 
 class LLM(ABC):

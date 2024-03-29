@@ -1,9 +1,11 @@
-from openai import OpenAI
-import pytest
+import re
 from unittest import TestCase
 from unittest.mock import patch
-from ..src.llm_classes import GPT, ChatLog, construct_chatlog, EmptyException
-import re
+
+import pytest
+from openai import OpenAI
+
+from ..src.llm_classes import GPT, ChatLog, EmptyException, construct_chatlog
 
 
 class TestChatLogAndGPT(TestCase):

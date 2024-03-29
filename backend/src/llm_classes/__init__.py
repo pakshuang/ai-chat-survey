@@ -1,2 +1,2 @@
-from .functions import *
 from .exceptions import *
+from .functions import *

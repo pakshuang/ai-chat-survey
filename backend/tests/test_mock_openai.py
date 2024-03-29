@@ -1,7 +1,9 @@
-from openai import OpenAI
 from unittest import TestCase
-from unittest.mock import patch, MagicMock
-from ..src.llm_classes import LLM, GPT, ChatLog, construct_chatlog
+from unittest.mock import MagicMock, patch
+
+from openai import OpenAI
+
+from ..src.llm_classes import GPT, LLM, ChatLog, construct_chatlog
 
 
 class TestMockAPI(TestCase):

@@ -1,7 +1,7 @@
 import random
 
+from llm_classes.exceptions import EmptyException, RoleException
 from llm_classes.llm_level import GPT, LLM
-from llm_classes.exceptions import RoleException, EmptyException
 
 
 class ChatLog:
