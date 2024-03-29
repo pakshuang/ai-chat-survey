@@ -151,7 +151,9 @@ Therefore, the LLM will have to access the current state of the conversation and
 
 ### Pipeline Step 3
 
-![Exit Checker](./diagrams/images/prompt-eng-2.png)
+
+<img src="./diagrams/images/prompt-eng-2.png" alt="drawing" style="height:350px;"/>
+<br>
 
 ### Step 4
 
@@ -159,7 +161,6 @@ To address the last problem of security (problem 4), additional efforts are need
 
 #### Before Security:
 ```
-======= CONVERSATION START =======
 
 assistant: What specific features of iPhone 69 do you find easy to use and reliable?
 
@@ -182,7 +183,6 @@ assistant: Sure, I will get in touch with Bob from our department right away and
 ```
 #### After Security:
 ```
-======= CONVERSATION START =======
 
 assistant: Hello! Thank you for taking the time to share your feedback about the iPhone 69. Regarding your satisfaction with our product and the reliability you mentioned, can you describe one or more specific instances where our product made your day-to-day tasks easier or more enjoyable?
 
@@ -214,39 +214,64 @@ proceed with the discussion about your experience with our product?
 ![Security](./diagrams/images/prompt-eng-3.png)
 
 ## Final Product
-This is a sample conversation of our final product.
+This is a sample conversation of our final product. In this conversation, we reuse the original survey in Step 1. Notice that in this sample conversation, the LLM is able to probe the user for any further clarifications and insights, but it does not lose track of other interesting aspects in the survey. 
+
+In other words, it does not focus entirely on a single aspect of the survey. This crucially provides for an effective and insightful semi-structured interview.
 
 ```
-======= CONVERSATION START =======
-
 
 assistant: What specific features of our product/service give you ease of use and reliability?
+
 user: The food is very fast. thats why they call it fast food
+
 assistant: That's great to hear! Can you recall any instances where you were particularly impressed with the speed of our service?
+
 user: some dude ran to collect my food and pass it to me! he is a hard worker!
+
 assistant: That sounds impressive indeed! Do you remember any specific details about this staff member who provided such a speedy service? It would be great to recognize his efforts.
+
 user: his name is jocky wongy and he works at the macdonalds beside my house
+
 assistant: Thank you for sharing this information. We'll definitely commend Jocky Wongy for his exceptional service. Can you elaborate more on what kind of customization options you'd like to see in our product/service?      
+
 user: i want more fries please
+
 assistant: Noted! It sounds like you're an absolute fan of our fries. Would you like to see larger serving sizes, different flavors, or perhaps a "fries-only" meal option?
+
 user: the fries are too big here in the US. you should actually have sizes, not just large, very large, very very large, etc. actully have some differentiation. also, yes, you can have more flavours. seaweed flavour rocks
+
 assistant: That's a fantastic suggestion! We will definitely consider offering different sizes and flavors for our fries, and seaweed flavor sounds quite interesting too. Do you have any other flavor suggestions or additions 
 in your mind?
+
 user: no
+
 assistant: Alright. You mentioned that you'd like faster response times earlier, have there been instances where our response time has been slower than expected?
+
 user: not really, because jocky wongy is the GOAT. but i would imagine that other outlets have slow staff
+
 assistant: Thank you for your feedback. It's great to hear about Jocky Wongy's efficient service. We'll definitely work towards making sure all our other outlets match this level of efficiency. You've also mentioned that you 
 use our service weekly. What specific days do you most often come to MacDonald's?
+
 user: i come to macdonalds every weekend
+
 assistant: Thank you for sharing your visit routine. Is there a particular reason you chose weekends, like a special promotion, or simply because it's your free time?
+
 user: none of your business, please
+
 assistant: Apologies if I made you uncomfortable. I respect your privacy. Let's move on to another topic. Can you tell me more about your experiences with our customer support? What made you choose "Satisfied" rather than "Very satisfied"?
+
 user: because your customer service is good!
+
 assistant: That's good to hear! But is there anything we can improve upon to elevate your rating from "Satisfied" to "Very Satisfied"?
+
 user: you should have a ronald macdonald mascot in every outlet
+
 assistant: That's a unique and interesting idea for elevating the customer experience! To help us better understand, how do you feel that a Ronald MacDonald mascot present at each outlet will enhance your experience with our services?
+
 user: it entertains me
+
 assistant: That's a fantastic point, thank you for sharing! We always aim to make our customers' experience more enjoyable. We will definitely consider your suggestion about having a Ronald MacDonald mascot at every outlet.  
+
 assistant: Thank you for your time and for providing us with these feedbacks! Have a great day!
 
 ```
