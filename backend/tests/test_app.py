@@ -14,7 +14,6 @@ class TestFlaskApp:
         # on the specified path
         response = self.app.get("/api/v1/health")
 
-
         # assert the status code of the response
         assert response.status_code == 200
 
@@ -105,7 +104,6 @@ class TestFlaskApp:
         response = self.app.post(
             "/api/v1/admins/login", json={"username": "admin1", "password": "password1"}
         )
-
 
         # assert the status code of the response
         assert response.status_code == 200
