@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios, { AxiosResponse } from "axios"
 import { LoginResponse, LoginSignupData } from "../admin/login/constants"
 import { GetSurvey, Survey } from "../admin/survey/constants"
 import dayjs from "dayjs"
@@ -54,6 +54,13 @@ export const getSurveys = (): Promise<GetSurvey[]> => {
     .then((res) => res.data)
 }
 
+export const getUserSurvey = (survey_id: number): Promise<AxiosResponse> => {
+  return ApiService.get(`/surveys/${survey_id}`);
+};
+
+export const submitBaseSurvey = (body:object): Promise<AxiosResponse> => {
+  return ApiService.post(`/responses`,body);
+};
 export const getSurveyById = (id: string): Promise<GetSurvey> => {
   return AdminApiService(localStorage.getItem("jwt") ?? "")
     .get(`/surveys/${id}`)

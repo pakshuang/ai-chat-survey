@@ -17,7 +17,7 @@ const Question = ({ questionData, handleQuestionResponse }: QuestionProps) => {
     switch (type) {
       case 'rating':
         return (
-          <FormControl >
+          <FormControl isRequired>
           <FormLabel>{question}</FormLabel>
           <Flex>
             {[1, 2, 3, 4, 5].map((rating) => (
@@ -34,9 +34,9 @@ const Question = ({ questionData, handleQuestionResponse }: QuestionProps) => {
           </Flex>
         </FormControl>
         );
-      case 'multiple_choice':
+      case 'Multiple Choice':
         return (
-          <FormControl >
+          <FormControl isRequired>
             <FormLabel>{question}</FormLabel>
             <RadioGroup value={answer} onChange={(e) => {
               handleQuestionResponse(id, e)
@@ -53,14 +53,14 @@ const Question = ({ questionData, handleQuestionResponse }: QuestionProps) => {
         );
       case 'short_answer':
         return (
-          <FormControl >
+          <FormControl isRequired>
             <FormLabel>{question}</FormLabel>
             <Input type="text" value={answer}  onChange={(e) => handleQuestionResponse(id, e.target.value)} />
           </FormControl>
         );
-      case 'long_answer':
+      case 'Open-ended':
         return (
-          <FormControl >
+          <FormControl isRequired>
             <FormLabel>{question}</FormLabel>
             <Textarea  value={answer} onChange={(e) => handleQuestionResponse(id, e.target.value)} />
           </FormControl>
@@ -71,9 +71,7 @@ const Question = ({ questionData, handleQuestionResponse }: QuestionProps) => {
   };
 
   return (
-    <Box>
-      {renderQuestionType()}
-    </Box>
+      renderQuestionType()
   );
 };
 
