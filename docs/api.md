@@ -78,8 +78,6 @@ These endpoints are used to create, read, update, and delete surveys, which are 
   ```json
   {
     "metadata": {
-      "name": "string",
-      "description": "string",
       "created_by": "string", # admin username
       "created_at": "string", # YYYY-MM-DD HH:MM:SS
     },
@@ -87,7 +85,7 @@ These endpoints are used to create, read, update, and delete surveys, which are 
     "subtitle": "string",
     "questions": [
       {
-        "id": "integer",
+        "question_id": "integer",
         "type": "string", # multiple_choice, short_answer, long_answer, etc.
         "question": "string",
         "options": ["string"]
@@ -148,9 +146,7 @@ These endpoints are used to create, read, update, and delete surveys, which are 
   ```json
   {
     "metadata": {
-      "id": "integer",
-      "name": "string",
-      "description": "string",
+      "survey_id": "integer",
       "created_by": "string", # admin username
       "created_at": "string", # YYYY-MM-DD HH:MM:SS
     },
@@ -158,7 +154,7 @@ These endpoints are used to create, read, update, and delete surveys, which are 
     "subtitle": "string",
     "questions": [
       {
-        "id": "integer",
+        "question_id": "integer",
         "type": "string", # multiple_choice, short_answer, long_answer, etc.
         "question": "string",
         "options": ["string"]
@@ -221,7 +217,7 @@ These endpoints are used to submit, read, update, and delete responses response 
         "type": "string", # multiple_choice, short_answer, long_answer, etc.
         "question": "string",
         "options": ["string"],
-        "answer": "string",
+        "answer": ["string"],
       }
     ]
   }
@@ -231,7 +227,7 @@ These endpoints are used to submit, read, update, and delete responses response 
 
   ```json
   {
-    "response_id": "integer" # survey response id.
+    "response_id": "integer" # survey response id
   }
   ```
 
@@ -290,7 +286,7 @@ These endpoints are used to submit, read, update, and delete responses response 
         "type": "string", # multiple_choice, short_answer, long_answer, etc.
         "question": "string",
         "options": ["string"],
-        "answer": "string",
+        "answer": ["string"],
       }
     ]
   }
