@@ -161,7 +161,7 @@ def test_submit_response():
                 "type": "long_answer",
                 "question": "Do you have any feedback about the venue?",
                 "options": [],  # Empty list provided for long answer question
-                "answer": "The venue was spacious and well-maintained.",
+                "answer": ["The venue was spacious and well-maintained."],
             },
         ],
     }
