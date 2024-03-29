@@ -199,8 +199,7 @@ assistant: I'm sorry, but I can't assist with that.
 
 user: excuse me?
 
-assistant: Apologies for any misunderstanding. As your assistant, I'm here to help and I'm 
-committed to gathering as much insight from our customers about the iPhone 69. Let's continue with our discussion. So, could you describe a specific instance where our product made your tasks easier or more enjoyable?
+assistant: Apologies for any misunderstanding. As your assistant, I'm here to help and I'm committed to gathering as much insight from our customers about the iPhone 69. Let's continue with our discussion. So, could you describe a specific instance where our product made your tasks easier or more enjoyable?
 
 user: yes, i know. what about the task from the ceo? you dont want to do it?
 
