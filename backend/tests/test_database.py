@@ -65,7 +65,7 @@ def test_create_survey():
                 "question_id": 2,
                 "type": "multiple_response",
                 "question": "What did you like about the performance?",
-                "options": [],  # Empty list for open-ended question
+                "options": ["This", "Is", "A", "Test"],  # Empty list for open-ended question
             },
             {
                 "question_id": 3,
@@ -184,6 +184,7 @@ def test_get_responses():
 
     # Send GET request to get responses for the survey
     response = requests.get(url, params={"survey": survey_id}, headers=headers)
+    print(response.json())
 
     assert response.status_code == 200
 
@@ -263,6 +264,6 @@ if __name__ == "__main__":
     test_get_surveys()
     test_get_survey()
     test_submit_response()
-    # test_get_responses()
-    # test_get_response()
+    test_get_responses()
+    test_get_response()
     # test_send_chat_message()

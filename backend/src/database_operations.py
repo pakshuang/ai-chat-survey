@@ -206,7 +206,7 @@ def save_response_to_database(connection, data, survey_id):
         for answer in data["answers"]:
             survey_id = data["metadata"]["survey_id"]
             question_id = answer["question_id"]
-            answer_text = answer["answer"]
+            answer_text = (json.dumps(answer["answer"]) if "options" in answer else None)
 
             # Insert the survey response into the database with the new_response_id
             query = """
@@ -241,7 +241,7 @@ def validate_response(response_data, survey_object):
             (
                 question
                 for question in survey_questions
-                if question["id"] == response_question["question_id"]
+                if question["question_id"] == response_question["question_id"]
             ),
             None,
         )
@@ -296,7 +296,7 @@ def append_answer_to_response(response_objects, response_id, response_data):
         "options": (
             json.loads(response_data["options"]) if response_data["options"] else []
         ),
-        "answer": response_data["answer"],
+        "answer": json.loads(response_data["answer"]) if response_data["answer"] else [],
     }
     response_objects[response_id]["answers"].append(answer)
 
