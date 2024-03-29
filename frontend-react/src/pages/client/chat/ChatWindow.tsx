@@ -1,25 +1,15 @@
-import { Box, SkeletonCircle ,Button, Text, Flex} from "@chakra-ui/react";
+import { Box, SkeletonCircle ,Button, Flex} from "@chakra-ui/react";
 import { useRef, useEffect, useState } from "react";
 import ChatMessage from "./ChatMessage";
 import TypingEffect from "./TypingEffect";
 import QuestionInput from "./QuestionInput";
-interface ChatWindowProps {
-  messages: { sender: "user" | "bot"; message: string }[];
-  isBotThinking: boolean;
-  surveyState: any;
-  handleQuestionResponse: (id: number, val: string  | number) => void;
-  handleSubmit: ()=>void
-}
+import { ChatWindowProps } from "./constants";
 
 function ChatWindow({ messages, isBotThinking ,handleQuestionResponse,surveyState,handleSubmit}: ChatWindowProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [botResponded, setBotResponded] = useState(false);
-  const [showConfirm,setShowConfirm]= useState(false)
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    if (messages[surveyState.displayIndex]){
-      setShowConfirm(true)
-    }
   };
 
 
@@ -87,7 +77,7 @@ function ChatWindow({ messages, isBotThinking ,handleQuestionResponse,surveyStat
           )
         } else {
           return <ChatMessage sender={item.sender}>{item.message}
-              {item.question &&<QuestionInput questionData={item.question} handleQuestionResponse={handleQuestionResponse} submitted={surveyState.submitted}></QuestionInput>}
+              <QuestionInput questionData={item.question} handleQuestionResponse={handleQuestionResponse} submitted={surveyState.submitted}></QuestionInput>
             </ChatMessage>
 
         }

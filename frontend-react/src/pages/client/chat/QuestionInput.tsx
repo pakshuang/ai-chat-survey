@@ -1,19 +1,25 @@
-import { CheckboxGroup ,Checkbox, Textarea, Radio, RadioGroup, Stack, Input } from '@chakra-ui/react';
-interface Question {
-  id:number,
-  question:string,
-  type:string,
-  options:[],
-  answer:string | number,
-}
-interface QuestionProps {
-  questionData: Question;
-  handleQuestionResponse: (id: number, val: string  | number) => void;
-  submitted:boolean,
-}
-
+import { CheckboxGroup ,Checkbox, Textarea, Radio, RadioGroup, Stack, Input ,Text} from '@chakra-ui/react';
+import { useState } from 'react';
+import { QuestionProps } from './constants';
 const QuestionInput = ({ questionData, handleQuestionResponse ,submitted}: QuestionProps) => {
+  if (questionData==undefined){
+    return null
+  }
   const { id, type, options,answer } = questionData;
+  const [tempAnswer,setTempAnswer] = useState(answer)
+  const handleInputChange = (e) => {
+    setTempAnswer(e.target.value);
+  };
+  
+  const handleInputBlur = () => {
+    handleQuestionResponse(id, tempAnswer);
+  };
+  
+  const handleInputKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleQuestionResponse(id, tempAnswer);
+    }
+  };
   const renderQuestionType = () => {
     switch (type) {
       case 'multiple_choice':
@@ -34,6 +40,10 @@ const QuestionInput = ({ questionData, handleQuestionResponse ,submitted}: Quest
         );
       case 'multiple_response':
         return (
+          <>
+          <Text fontSize='small'>
+            (Pick 1 or more options)
+          </Text>
           <CheckboxGroup 
           isDisabled={submitted}
           value={answer} 
@@ -55,6 +65,7 @@ const QuestionInput = ({ questionData, handleQuestionResponse ,submitted}: Quest
             ))}
           </Stack>
         </CheckboxGroup>
+        </>
         );
       case 'short_answer':
           return (
@@ -66,10 +77,12 @@ const QuestionInput = ({ questionData, handleQuestionResponse ,submitted}: Quest
               borderColor: "gray.500",
               boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
             }}
-            onChange={(e) => handleQuestionResponse(id, e.target.value)}
-            value={answer}
+            onChange={handleInputChange}
+            onBlur={handleInputBlur}
+            onKeyPress={handleInputKeyPress}
+            value={tempAnswer}
             isDisabled={submitted}
-            />
+          />
           );
       case 'long_answer':
         return (
@@ -81,8 +94,10 @@ const QuestionInput = ({ questionData, handleQuestionResponse ,submitted}: Quest
             borderColor: "gray.500",
             boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
           }}
-          onChange={(e) => handleQuestionResponse(id, e.target.value)}
-          value={answer}
+          onChange={handleInputChange}
+          onBlur={handleInputBlur}
+          onKeyPress={handleInputKeyPress}
+          value={tempAnswer}
           isDisabled={submitted}
           />
         );

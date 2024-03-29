@@ -1,23 +1,10 @@
 import { useEffect, useState } from "react";
 import { Flex ,Text} from "@chakra-ui/react";
-
 import ChatWindow from "./ChatWindow";
 import ChatInput from "./ChatInput";
-import { getUserSurvey,sendMessageApi,submitBaseSurvey,init_message } from '../../hooks/useApi';
+import { getUserSurvey,sendMessageApi,submitBaseSurvey} from '../../hooks/useApi';
 import { useParams } from "react-router-dom";
-interface Question {
-  id: number;
-  question_id:number;
-  question: string;
-  type: string;
-  options?: string[];
-  answer?:string,
-}
-interface Messages {
-  sender: "user" | "bot";
-  message: string;
-  question?:Question
-}
+import { Messages } from "./constants";
 
 function ChatPage() {
   const {surveyID} = useParams();
@@ -25,7 +12,7 @@ function ChatPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [surveyState,setSurveyState] =useState({displayIndex:0,submitted:false,subtitle:"",title:""})
   const [token, setToken] = useState("test");
-  const [responseID, setResponseId] = useState(0);
+  const [responseID, setResponseId] = useState(1);
   function sendMessage(message: string) {
     if (surveyState.submitted){
       setIsLoading(true);
@@ -37,9 +24,14 @@ function ChatPage() {
             ...prevMessages,
             { sender: "bot", message: data["content"] },
           ]);
-          setIsLoading(false);
-        });
-  
+          setIsLoading(false)
+        }).catch((error)=>{
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            { sender: "bot", message: "Error generating response" },
+          ]);
+          setIsLoading(false)
+        })
     } else {  
       handleQuestionResponse(surveyState.displayIndex+1,message);
     }
@@ -101,18 +93,30 @@ function ChatPage() {
         return ele.question
       })
     }
-    await submitBaseSurvey(body)
+    try{
+      const rep=await submitBaseSurvey(body)
+      setSurveyState({...surveyState,submitted:true})
+      setResponseId(rep.data.response_id)
+      sendMessageApi(rep.data.response_id,surveyID,"")
+        .then((res) => {
+          const data = res.data
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            { sender: "bot", message: data["content"] },
+          ])
+          setIsLoading(false)
+        }
+        ).catch((error)=>{
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            { sender: "bot", message: "Error generating response" },
+          ]);
+          setIsLoading(false)
+        })
+    }catch (error){
+      console.log(error)
+    }
 
-    setSurveyState({...surveyState,submitted:true})
-    let tmp_token = ""
-    let tmp_sid = 3;
-    let tmp_rid = 1;
-    init_message(surveyID,tmp_rid,tmp_token).then(
-      (rep)=>{
-        const responseData = rep.data
-        setMessages([...messages,{ sender: "bot", message: responseData["content"] }])
-      }
-    )
   };
   const displayMessages = surveyState.submitted ? messages:messages.slice(0,surveyState.displayIndex+1)
 

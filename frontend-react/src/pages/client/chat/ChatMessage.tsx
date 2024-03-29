@@ -1,10 +1,5 @@
 import { Flex, Box, Avatar, Text, Divider } from "@chakra-ui/react";
-import React from "react";
-
-interface ChatMessageProps {
-  children: React.ReactNode;
-  sender: "user" | "bot";
-}
+import { ChatMessageProps } from "./constants";
 
 function ChatMessage({ children, sender }: ChatMessageProps) {
   const isUser=sender === "user"
