@@ -1,6 +1,6 @@
 # Model Performance and Evaluation
 
-This document describes the backend logic for the project and evaluates the performance of the AI assistant. It is intended to be read by AI engineers and other technical stakeholders.
+This document describes the backend logic for the project and evaluates the performance of the AI assistant. It is intended to be read by AI engineers and technically-minded stakeholders.
 
 ## Introduction and Motivation
 
@@ -19,8 +19,8 @@ However, it will become apparent that the barebones pipeline as described above 
 2. Where to supply The AI assistant with contextual information for the survey, which includes:
     - Basic information about the product/service/brand.
     - Initial survey responses by the user to base the interview questions on
-3. How do we ensure that the interview is carried out smoothly as a semi-structured interview?
-4. How do we improve the robustness of security and mitigate jailbreaking efforts as much as possible?
+3. How do we ensure that the interview is carried out as smoothly as a semi-structured interview in real life?
+4. How do we improve the robustness of security and mitigate efforts to sabotage LLM responses as much as possible?
 
 ## Solution
 
@@ -32,7 +32,97 @@ To ensure that the AI assistant understands the survey and the context behind it
 
 This immediately resolves problems 1 and 2.
 
-However, the large language model will have a tendency to ask further questions which are only based on what the user has said, without moving on to other interesting aspects of the survey response. This decreases the quality of the interview drastically, and problem 3. remains.
+However, the large language model will have a tendency to ask further questions which are only based on what the user has said, without moving on to other interesting aspects of the survey response. This decreases the quality of the interview drastically, and problem 3 remains.
+
+Please consider the following example, where we feed the following survey responses into the LLM.
+
+```
+This survey is for Macdonald's, the fast food chain.
+We are conducting a survey for the new seaweed shaker fries.
+
+
+1. How satisfied are you with our product/service?
+Options:
+Very satisfied, Satisfied, Neutral, Dissatisfied, Very dissatisfied
+Answer: Satisfied
+2. How likely are you to recommend our product/service to others?
+Very likely, Likely, Neutral, Unlikely, Very unlikely
+Answer: Very likely
+3. On a scale of 1 to 10, how would you rate the quality of our product/service?
+Answer: 8
+4. What do you like most about our product/service?
+Answer: The ease of use and reliability.
+5. What improvements would you suggest for our product/service?
+Answer: More customization options and faster response times.
+6. How often do you use our product/service?
+Daily, Weekly, Monthly, Rarely
+Answer: Weekly
+7. How satisfied are you with the customer support provided?
+Options:
+Very Satisfied, Satisfied, Neutral, Unsatisfied, Very unsatisfied
+Answer: Satisfied
+8. What made you choose our product/service over competitors?
+Answer: Positive reviews and reputation.
+9. How would you rate the value for money of our product/service?
+Answer: 7
+10. How easy was it to purchase/use our product/service?
+Options:
+Very easy, Easy, Neutral, Difficult, Very difficult
+Answer: Easy
+11. Would you consider purchasing from us again in the future?
+Options:
+Yes, No, Maybe
+Answer: Yes
+12. Overall, how satisfied are you with your experience with our company?
+Options:
+Very Satisfied, Satisfied, Neutral, Unsatisfied, Very unsatisfied
+Answer: Very satisfied
+13. What improvements would you like to see in our company as a whole?
+Answer: More frequent updates and better communication with customers.
+14. How did you first hear about our company?
+Options:
+Word of mouth, Online advertisement, Social media, Other (please specify)
+Answer: Word of mouth
+15. Additional Comments:
+Answer: Keep up the good work!
+```
+
+Here is a sample interview by a LLM:
+```
+assistant: That's wonderful to hear you're satisfied overall with our McDonald's seaweed shaker fries. To assess your feedback in depth, could you please elaborate on what specific customization options you would like us to introduce?
+
+user: i want more burgers!
+
+assistant: That's great to hear! Would you like to see more variety in our existing burger range or are you suggesting a completely new style or type of burger?
+
+user: a completely new style! give me more burgers
+
+assistant: Thank you for your suggestion! Can you please describe in a bit more detail what kind of new style or type of burger you would like us to introduce?
+
+user: seafood burger
+
+assistant: That sounds like an interesting idea! Could you elaborate on what types of seafood or specific flavors you'd like to have in this proposed seafood burger?
+
+user: it would be nice if you added salmon to your burgers to enhance its taste. salmon is a premium fish after all
+
+assistant: That's a great suggestion! A salmon burger could indeed be a premium addition to our menu. Do you have a preference for how the salmon should be prepared, such as grilled, smoked, or perhaps in a patty form?
+user: it should be grilled, smoked, bbqed or you could even have sashimi
+assistant: Great! Your suggestion to have versatile options for the salmon preparation in the burger is noted. Would you like to see any specific sauces or garnishes accompanying the salmon in the burger?
+
+user: teriyaki sauce for grilled salmon, no sauce for smoked salmon, bbq sauce for bbq salmon and wasabi for sashimi
+
+assistant: Fantastic! Your detailed suggestions for sauces to pair with different salmon preparation methods provide insightful direction. One last question, would you like the salmon burger to be a permanent fixture or part of a seasonal promotion?
+
+user: permanent please, it is amazing
+
+assistant: That's great to know! We sincerely appreciate your creative suggestions and enthusiasm. Thank you for your valuable feedback! We will certainly consider these ideas for our future menu developments. Is there anything else you'd like to share with us about our products or services?
+
+user: nope
+
+assistant: Thank you for your time and valuable feedback. We truly appreciate it. Have a great day!
+```
+
+In this conversation, notice that the LLM focuses only on the user's desire for a new type of burger. This conversation immediately presents a problem: There is a tendency for the LLM to focus on a specific answer in the survey, and not other responses, which may prove very interesting.
 
 ### Step 2
 
