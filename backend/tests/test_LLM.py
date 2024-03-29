@@ -1,7 +1,7 @@
 from openai import OpenAI
 from unittest import TestCase
 from unittest.mock import patch
-from ..src.llm_classes import  GPT, construct_chatlog
+from ..src.llm_classes import  GPT, ChatLog, construct_chatlog, EmptyException
 import re
 
 class TestChatLogAndGPT(TestCase):
@@ -13,27 +13,19 @@ We are conducting a survey for the new seaweed shaker fries.
 
 
 1. How satisfied are you with our product/service?
-
 Options:
 Very satisfied, Satisfied, Neutral, Dissatisfied, Very dissatisfied
 Answer: Satisfied
-
 2. How likely are you to recommend our product/service to others?
-
 Very likely, Likely, Neutral, Unlikely, Very unlikely
-
 Answer: Very likely
 3. On a scale of 1 to 10, how would you rate the quality of our product/service?
-
 Answer: 8
 4. What do you like most about our product/service?
-
 Answer: The ease of use and reliability.
 5. What improvements would you suggest for our product/service?
-
 Answer: More customization options and faster response times.
 6. How often do you use our product/service?
-
 Daily, Weekly, Monthly, Rarely
 Answer: Weekly
 7. How satisfied are you with the customer support provided?
@@ -126,4 +118,4 @@ Answer: Keep up the good work!
             }
         ]
         output_final = llm.run(msg, seed=seed)
-        self.assertTrue(bool(re.search(r"[yY]es|[tT]rue",  output_final)) )
+        self.assertTrue(bool(re.search(r"[yY]es|[tT]rue",  output_final)))
