@@ -224,7 +224,7 @@ proceed with the discussion about your experience with our product?
 
 ### Pipeline Stage 4
 
-<img src="./diagrams/images/prompt-eng-2.png" alt="drawing" style="height:400px;"/>
+<img src="./diagrams/images/prompt-eng-3.png" alt="drawing" style="height:400px;"/>
 <br>
 
 ## Final Product
