@@ -231,10 +231,7 @@ def get_surveys():
         if survey_data is None:
             return jsonify({"message": "Error fetching surveys"}), 500
         elif not survey_data:
-            if username:
-                return jsonify([]), 200
-            else:
-                return jsonify({"message": "No surveys found"}), 404
+            return jsonify([]), 200
 
         # Group survey data by survey ID and collect questions
         survey_objects = {}
@@ -284,7 +281,7 @@ def get_survey(survey_id):
         if survey_data is None:
             return jsonify({"message": "Error fetching survey"}), 500
         elif not survey_data:
-            return jsonify({"message": "No survey found"}), 404
+            return jsonify({"message": "Survey not found"}), 404
 
         # Group survey data by survey ID and collect questions
         survey_object = {}
@@ -307,9 +304,6 @@ def get_survey(survey_id):
 @app.route("/api/v1/surveys/<survey_id>", methods=["DELETE"])
 @admin_token_required
 def delete_survey(survey_id, **kwargs):
-    if not survey_id:
-        return jsonify({"message": "Missing survey ID"}), 400
-
     # Check if survey exists, return 404 if not
     # Connect to the database
     connection = database_operations.connect_to_mysql()
@@ -337,7 +331,7 @@ def delete_survey(survey_id, **kwargs):
 
         return jsonify({"message": "Survey deleted successfully"}), 200
 
-    except Exception as e:
+    except:
         return jsonify({"message": "Failed to delete survey"}), 500
 
     finally:

@@ -122,7 +122,7 @@ These endpoints are used to create, read, and delete surveys, which are the firs
 
   ```json
   {
-    "surveys": [
+    [
       "survey object", # See the response for /api/v1/surveys/{survey_id} for the structure of a survey object
       "survey object",
       "survey object"
@@ -136,7 +136,6 @@ These endpoints are used to create, read, and delete surveys, which are the firs
   - `400` - Bad Request
   - `401` - Unauthorized
   - `403` - Forbidden
-  - `404` - Not Found
   - `500` - Internal Server Error
 
 ### 3. Get Survey
