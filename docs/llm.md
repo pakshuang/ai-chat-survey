@@ -35,7 +35,7 @@ This immediately resolves problems 1 and 2.
 ### Pipeline Step 1
 
 
-<img src="./diagrams/images/no-prompt-eng.png" alt="drawing" style="height:350px;"/>
+<img src="./diagrams/images/prompt-eng-0.png" alt="drawing" style="height:350px;"/>
 <br>
 
 #### Remaining Problems
