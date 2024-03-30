@@ -93,8 +93,6 @@ function ChatPage() {
       }
     });
 
-    console.log(body);
-
     try {
       const rep = await submitBaseSurvey(body);
       setSurveyState({ ...surveyState, submitted: true });
