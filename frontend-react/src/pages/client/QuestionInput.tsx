@@ -19,22 +19,22 @@ const QuestionInput = ({
   if (questionData == undefined) {
     return null;
   }
-  const { id, type, options, answer } = questionData;
+  const { question_id, type, options, answer } = questionData;
   const [tempAnswer, setTempAnswer] = useState(answer);
   const handleInputChange = (e) => {
     setTempAnswer(e.target.value);
   };
 
   const handleInputBlur = () => {
-    handleQuestionResponse(id, tempAnswer);
+    handleQuestionResponse(question_id, tempAnswer);
   };
 
   const handleInputKeyPress = (e) => {
     if (e.key === "Enter") {
-      handleQuestionResponse(id, tempAnswer);
+      handleQuestionResponse(question_id, tempAnswer);
     }
   };
-  
+
   const renderQuestionType = () => {
     switch (type) {
       case "multiple_choice":
@@ -43,7 +43,7 @@ const QuestionInput = ({
             isDisabled={submitted}
             value={answer}
             onChange={(e) => {
-              handleQuestionResponse(id, e);
+              handleQuestionResponse(question_id, e);
             }}
           >
             <Stack direction="column">
@@ -69,7 +69,7 @@ const QuestionInput = ({
               isDisabled={submitted}
               value={answer}
               onChange={(values) => {
-                handleQuestionResponse(id, values);
+                handleQuestionResponse(question_id, values);
               }}
             >
               <Stack direction="column">
