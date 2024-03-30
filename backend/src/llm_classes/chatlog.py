@@ -1,6 +1,6 @@
 import random
 
-from llm_classes.llm_level import GPT, LLM, RoleException
+from .llm_level import GPT, LLM, RoleException
 
 
 class ChatLog:

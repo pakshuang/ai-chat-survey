@@ -2,7 +2,7 @@ import json
 import os
 
 import pymysql
-from llm_classes import GPT
+from src.llm_classes.llm_level import GPT
 
 
 def connect_to_mysql():

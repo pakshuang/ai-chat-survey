@@ -38,6 +38,9 @@ class TestFlaskApp:
     def test_create_admin_second_success(self):
         # sends HTTP POST request to the application
         # on the specified path with valid data
+        self.app.post(
+            "/api/v1/admins", json={"username": "admin1", "password": "password1"}
+        )
         response = self.app.post(
             "/api/v1/admins", json={"username": "admin2", "password": "password2"}
         )
@@ -47,6 +50,22 @@ class TestFlaskApp:
 
         # assert the response data
         assert b"Admin admin2 created successfully" in response.data
+
+    def test_create_admin_existing_admin(self):
+        self.app.post(
+            "/api/v1/admins", json={"username": "admin1", "password": "password1"}
+        )
+        # sends HTTP POST request to the application
+        # on the specified path with existing admin data
+        response = self.app.post(
+            "/api/v1/admins", json={"username": "admin1", "password": "password2"}
+        )
+
+        # assert the status code of the response
+        assert response.status_code == 400
+
+        # assert the response data
+        assert b"Admin already exists" in response.data
 
     def test_create_admin_missing_data(self):
         # sends HTTP POST request to the application
@@ -80,19 +99,6 @@ class TestFlaskApp:
 
         # assert the response data
         assert b"Invalid data" in response.data
-
-    def test_create_admin_existing_admin(self):
-        # sends HTTP POST request to the application
-        # on the specified path with existing admin data
-        response = self.app.post(
-            "/api/v1/admins", json={"username": "admin1", "password": "password2"}
-        )
-
-        # assert the status code of the response
-        assert response.status_code == 400
-
-        # assert the response data
-        assert b"Admin already exists" in response.data
 
     # Test cases for admin login
 
