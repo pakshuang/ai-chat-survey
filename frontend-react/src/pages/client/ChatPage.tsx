@@ -82,11 +82,19 @@ function ChatPage() {
       metadata: {
         survey_id: id,
       },
-      answers: messages.slice(0, messages.length - 1).map((ele) => {
-        ele.question.question_id = ele.question.id;
-        return ele.question;
-      }),
+      answers: messages
+        .slice(0, messages.length - 1)
+        .map((ele) => ele["question"]),
     };
+
+    body["answers"].forEach((ele: any) => {
+      if (!Array.isArray(ele.answer)) {
+        ele.answer = [ele.answer];
+      }
+    });
+
+    console.log(body);
+
     try {
       const rep = await submitBaseSurvey(body);
       setSurveyState({ ...surveyState, submitted: true });
