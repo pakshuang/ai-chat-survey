@@ -2,7 +2,6 @@ import os
 
 import requests
 
-
 BACKEND_URL = "http://" + "backend" + ":" + os.getenv("BACKEND_CONTAINER_PORT")
 
 
