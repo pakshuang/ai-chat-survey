@@ -6,7 +6,7 @@ import {
   getUserSurvey,
   sendMessageApi,
   submitBaseSurvey,
-} from "../../hooks/useApi";
+} from "../hooks/useApi";
 import { useParams } from "react-router-dom";
 import { Messages } from "./constants";
 
