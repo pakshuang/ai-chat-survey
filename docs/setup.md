@@ -62,6 +62,18 @@ During development, you may want to run the application on a clean slate. To do 
 docker-compose up --build --force-recreate --renew-anon-volumes
 ```
 
+To stop the application, use the following command:
+
+```shell
+docker-compose down
+```
+
+During development, you may want to stop the application and remove all images and volumes. To do this, you can use the following command:
+
+```shell
+docker-compose down --rmi all --volumes
+```
+
 ## Backend Development
 
 ### Setting up the backend development environment
@@ -125,18 +137,16 @@ The recommended way to run is to use docker compose instead, see [Running the Ap
 
 ## Testing (Backend)
 
-Ensure that docker container is running for tests
+1. [Run the Application](#running-the-application)
 
-1. Change into the backend directory
+   > [!IMPORTANT]
+   > The tests assume that the application is running with a clean database. You should run the tests on a clean slate. For this reason, make sure that any dummy data added to the database upon launch does not interfere with the tests.
 
-   ```shell
-   cd backend
-   ```
-
-2. Running the tests
+2. Run the tests
 
    ```shell
-   python -m pytest
+   docker compose exec backend pipenv install --dev
+   docker compose exec backend pipenv run pytest --cov=src
    ```
 
 ## Frontend Development

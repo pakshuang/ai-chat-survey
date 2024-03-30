@@ -1,0 +1,16 @@
+@startuml prompt-eng-0
+
+skinparam shadowing false
+skinparam BackgroundColor transparent
+
+start
+#LightSalmon:System prompt (Survey Information);
+#LightPink:LLM output (Question);
+while ()
+    #LightCyan:User input;
+    #LightPink:LLM output;  
+    endwhile
+    -[hidden]->
+    detach
+
+@enduml
