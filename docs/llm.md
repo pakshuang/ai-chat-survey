@@ -32,6 +32,14 @@ To ensure that the AI assistant understands the survey and the context behind it
 
 This immediately resolves problems 1 and 2.
 
+### Pipeline Step 1
+
+
+<img src="./diagrams/images/no-prompt-eng.png" alt="drawing" style="height:350px;"/>
+<br>
+
+#### Remaining Problems
+
 However, the large language model will have a tendency to ask further questions which are only based on what the user has said, without moving on to other interesting aspects of the survey response. This decreases the quality of the interview drastically, and problem 3 remains.
 
 Please consider the following example, where we feed the following survey responses into the LLM.
