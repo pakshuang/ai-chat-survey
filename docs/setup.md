@@ -163,12 +163,12 @@ The recommended way to run is to use docker compose instead, see [Running the Ap
 
 ### Integration Tests
 
+> [!IMPORTANT]
+> The tests assume that the application is running with a clean database. You should run the tests on a clean slate. For this reason, make sure that any dummy data added to the database upon launch does not interfere with the tests.
+
 1. First navigate to the ai-chat-survey directory the command will vary depending on which directory you are currently in
 2. Run the following command:
 
    ```shell
    docker compose -f compose.yaml -f compose.tests.yaml up integration-tests --build --force-recreate --renew-anon-volumes
    ```
-
-   > [!IMPORTANT]
-   > The tests assume that the application is running with a clean database. You should run the tests on a clean slate. For this reason, make sure that any dummy data added to the database upon launch does not interfere with the tests.
