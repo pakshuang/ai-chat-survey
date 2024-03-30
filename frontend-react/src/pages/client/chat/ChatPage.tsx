@@ -5,13 +5,14 @@ import ChatInput from "./ChatInput";
 import { getUserSurvey,sendMessageApi,submitBaseSurvey} from '../../hooks/useApi';
 import { useParams } from "react-router-dom";
 import { Messages } from "./constants";
+import ChatMessage from "./ChatMessage";
 
 function ChatPage() {
   const {surveyID} = useParams();
   const [messages, setMessages] = useState<Messages[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [surveyState,setSurveyState] =useState({displayIndex:0,submitted:false,subtitle:"",title:""})
-  const [token, setToken] = useState("test");
+  const [isLast,setIslast]=useState(false)
   const [responseID, setResponseId] = useState(1);
   function sendMessage(message: string) {
     if (surveyState.submitted){
@@ -20,6 +21,9 @@ function ChatPage() {
       sendMessageApi(responseID,surveyID,message)
         .then((res) => res.data)
         .then((data) => {
+          if (data.is_last){
+            setIslast(true)
+          }
           setMessages((prevMessages) => [
             ...prevMessages,
             { sender: "bot", message: data["content"] },
@@ -38,30 +42,6 @@ function ChatPage() {
   }
 
   useEffect(() => {
-    let tmp_token = "";
-    // dummy signup and login to test api
-    const signup = async () => {
-      await fetch("http://localhost:5000/api/v1/admins", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: "admin", password: "admin" }),
-      });
-    };
-
-    const login = async () => {
-      const response = await fetch(
-        "http://localhost:5000/api/v1/admins/login",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username: "admin", password: "admin" }),
-        }
-      );
-      const responseData = await response.json();
-      console.log(responseData);
-      setToken(responseData["jwt"]);
-      tmp_token = responseData["jwt"];
-    };
     getUserSurvey(surveyID).then((rep)=>{
         const answeredQuestions = rep.data.questions.map((question, index) => {
           return {
@@ -131,7 +111,10 @@ function ChatPage() {
         </Text>
       </Flex>
        <ChatWindow handleSubmit={handleSubmit} messages={displayMessages} isBotThinking={isLoading} handleQuestionResponse={handleQuestionResponse} surveyState={surveyState}/>
-      { surveyState.submitted  &&<ChatInput onSubmitMessage={sendMessage} isSubmitting={isLoading} />}
+      { surveyState.submitted  && !isLast &&<ChatInput onSubmitMessage={sendMessage} isSubmitting={isLoading} />}
+      {isLast && <ChatMessage sender="bot">
+          The survey is over. Thank you for your responses. You can close the page.
+        </ChatMessage>}
     </Flex>
   );
 }
