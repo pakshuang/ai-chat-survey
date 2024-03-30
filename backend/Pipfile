@@ -12,10 +12,12 @@ pyjwt = "*"
 requests = "*"
 cryptography = "*"
 flask-cors = "*"
-pytest = "*"
-pytest-cov = "*"
 
 [dev-packages]
+black = "*"
+isort = "*"
+pytest = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "3.11"

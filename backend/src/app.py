@@ -82,7 +82,7 @@ def create_admin():
     data = request.get_json()
 
     # Basic validation
-    if not data or not data["username"] or not data["password"]:
+    if not data or not data.get("username") or not data.get("password"):
         return jsonify({"message": "Missing data"}), 400
 
     username = data["username"]
@@ -117,7 +117,7 @@ def login_admin():
     data = request.get_json()
 
     # Basic validation
-    if not data or not data["username"] or not data["password"]:
+    if not data or not data.get("username") or not data.get("password"):
         return jsonify({"message": "Missing data"}), 400
 
     # Retrieve hashed password from database
@@ -170,9 +170,13 @@ def login_admin():
 def create_survey(**kwargs):
     data = request.get_json()
 
-    # Validation
+    # If there is no data attached in request body
     if not data:
         return jsonify({"message": "Invalid data"}), 400
+    # Validate survey object format
+    is_valid, message = database_operations.validate_survey_object(data)
+    if not is_valid:
+        return jsonify({"message": message}), 400
 
     # Connect to the database
     connection = database_operations.connect_to_mysql()
@@ -252,7 +256,7 @@ def get_surveys():
     except Exception as e:
         return jsonify({"message": "Error fetching surveys"}), 500
     finally:
-        database_operations.database_operations.close_connection(connection)
+        database_operations.close_connection(connection)
 
 
 @app.route("/api/v1/surveys/<survey_id>", methods=["GET"])
@@ -346,13 +350,17 @@ def delete_survey(survey_id, **kwargs):
 @app.route("/api/v1/responses", methods=["POST"])
 def submit_response():
     data = request.get_json()
-    # Verify that there is survey_id provided in the metadata
-    survey_id = data.get("metadata", {}).get("survey_id")
-    if not survey_id:
-        return jsonify({"message": "Missing survey ID in metadata"}), 400
+    if not data:
+        return jsonify({"message": "No data was attached"}), 400
+
+    # Validate survey object format
+    is_valid, message = database_operations.validate_response_object(data)
+    if not is_valid:
+        return jsonify({"message": message}), 400
 
     # Validate response object against survey object
     # Retrieve survey object from the database
+    survey_id = data["metadata"]["survey_id"]
     survey_object_response = get_survey(survey_id)
 
     # If GET request is not successful, return 500
@@ -755,98 +763,6 @@ def get_response_no_auth(response_id, **kwargs):
     finally:
         # Close database connection
         database_operations.close_connection(connection)
-
-
-# TODO: Remove after testing
-import random
-
-
-def generate_random_text(words=20):
-    vocabulary = [
-        "apple",
-        "banana",
-        "orange",
-        "grape",
-        "strawberry",
-        "kiwi",
-        "melon",
-        "peach",
-        "pear",
-        "plum",
-        "carrot",
-        "broccoli",
-        "spinach",
-        "potato",
-        "tomato",
-        "cucumber",
-        "lettuce",
-        "onion",
-        "pepper",
-        "garlic",
-        "dog",
-        "cat",
-        "rabbit",
-        "hamster",
-        "goldfish",
-        "turtle",
-        "parrot",
-        "snake",
-        "frog",
-        "lizard",
-        "chair",
-        "table",
-        "couch",
-        "bed",
-        "wardrobe",
-        "desk",
-        "lamp",
-        "mirror",
-        "rug",
-        "bookshelf",
-        "bicycle",
-        "car",
-        "motorcycle",
-        "bus",
-        "train",
-        "airplane",
-        "boat",
-        "truck",
-        "helicopter",
-        "rocket",
-        "house",
-        "apartment",
-        "bungalow",
-        "cabin",
-        "mansion",
-        "castle",
-        "cottage",
-        "igloo",
-        "tent",
-        "treehouse",
-        "computer",
-        "phone",
-        "tablet",
-        "television",
-        "camera",
-        "watch",
-        "headphones",
-        "speaker",
-        "keyboard",
-        "mouse",
-        "pizza",
-        "hamburger",
-        "sandwich",
-        "pasta",
-        "sushi",
-        "taco",
-        "burrito",
-        "salad",
-        "soup",
-        "steak",
-    ]
-
-    random_text = " ".join(random.choices(vocabulary, k=words))
-    return random_text
 
 
 if __name__ == "__main__":

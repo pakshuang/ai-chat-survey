@@ -96,16 +96,38 @@ def summarise(chat_context: str) -> str:
         return chat_context
 
 
+def validate_survey_object(data):
+    if not isinstance(data, dict):
+        return False, "Survey data must be a dictionary"
+
+    required_keys = ["metadata", "title", "subtitle", "questions", "chat_context"]
+    for key in required_keys:
+        if key not in data or not data[key]:
+            return False, f"Missing or empty '{key}' field"
+
+    if not isinstance(data["questions"], list):
+        return False, "Questions field must be a list"
+
+    for question in data["questions"]:
+        required_question_keys = ["question_id", "type", "question", "options"]
+        for key in required_question_keys:
+            if key not in question:
+                return False, f"Missing or empty '{key}' field in a question"
+
+        if not isinstance(question["options"], list):
+            return False, "Options field in a question must be a list"
+
+    return True, "Survey object format is valid"
+
+
 def create_survey(connection, data):
     try:
         # Insert survey data into Surveys table
         insert_survey_query = """
-            INSERT INTO Surveys (name, description, title, subtitle, admin_username, created_at, chat_context)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO Surveys (title, subtitle, admin_username, created_at, chat_context)
+            VALUES (%s, %s, %s, %s, %s)
         """
         survey_data = (
-            data["metadata"]["name"],
-            data["metadata"]["description"],
             data["title"],
             data["subtitle"],
             data["metadata"]["created_by"],
@@ -125,7 +147,7 @@ def create_survey(connection, data):
                 VALUES (%s, %s, %s, %s, %s)
             """
             question_data = (
-                question["id"],
+                question["question_id"],
                 survey_id,
                 question["question"],
                 question["type"],
@@ -153,9 +175,7 @@ def create_survey(connection, data):
 def create_survey_object(row):
     survey_object = {
         "metadata": {
-            "id": row["survey_id"],
-            "name": row["name"],
-            "description": row["description"],
+            "survey_id": row["survey_id"],
             "created_by": row["admin_username"],
             "created_at": row["created_at"].strftime(
                 "%Y-%m-%d %H:%M:%S"
@@ -175,7 +195,7 @@ def append_question_to_survey(survey_objects, survey_id, question_data):
     # If the question does not exist, append it to the list
     survey_objects[survey_id]["questions"].append(
         {
-            "id": question_data["question_id"],
+            "question_id": question_data["question_id"],
             "type": question_data["question_type"],
             "question": question_data["question"],
             "options": (
@@ -210,7 +230,7 @@ def save_response_to_database(connection, data, survey_id):
         for answer in data["answers"]:
             survey_id = data["metadata"]["survey_id"]
             question_id = answer["question_id"]
-            answer_text = answer["answer"]
+            answer_text = json.dumps(answer["answer"]) if "options" in answer else None
 
             # Insert the survey response into the database with the new_response_id
             query = """
@@ -226,6 +246,51 @@ def save_response_to_database(connection, data, survey_id):
         return new_response_id
     except Exception as e:
         return e
+
+
+def validate_response_object(response_data):
+    if not isinstance(response_data, dict):
+        return False, "Response data must be a dictionary"
+
+    if "metadata" not in response_data or "answers" not in response_data:
+        return False, "Response data must contain 'metadata' and 'answers' keys"
+
+    if not isinstance(response_data["metadata"], dict):
+        return False, "'metadata' must be a dictionary"
+
+    if "survey_id" not in response_data["metadata"]:
+        return False, "'metadata' must contain 'survey_id' key"
+
+    if not isinstance(response_data["answers"], list):
+        return False, "'answers' must be a list"
+
+    for answer in response_data["answers"]:
+        if not isinstance(answer, dict):
+            return False, "Each answer must be a dictionary"
+
+        keys = ["question_id", "type", "question", "options", "answer"]
+        for key in keys:
+            if key not in answer:
+                return False, f"Each answer must contain '{key}' key"
+
+        if not isinstance(answer["question_id"], int):
+            return False, "'question_id' must be an integer"
+
+        if not isinstance(answer["type"], str):
+            return False, "'type' must be a string"
+
+        if not isinstance(answer["question"], str):
+            return False, "'question' must be a string"
+
+        if not isinstance(answer["options"], list):
+            return False, "'options' must be a list"
+
+        if not isinstance(answer["answer"], list):
+            return False, "'answer' must be a list"
+        elif not answer["answer"]:
+            return False, "'answer' is empty"
+
+    return True, "Response object format is valid"
 
 
 # submit_response()
@@ -245,7 +310,7 @@ def validate_response(response_data, survey_object):
             (
                 question
                 for question in survey_questions
-                if question["id"] == response_question["question_id"]
+                if question["question_id"] == response_question["question_id"]
             ),
             None,
         )
@@ -300,7 +365,9 @@ def append_answer_to_response(response_objects, response_id, response_data):
         "options": (
             json.loads(response_data["options"]) if response_data["options"] else []
         ),
-        "answer": response_data["answer"],
+        "answer": (
+            json.loads(response_data["answer"]) if response_data["answer"] else []
+        ),
     }
     response_objects[response_id]["answers"].append(answer)
 

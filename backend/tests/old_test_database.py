@@ -1,36 +1,6 @@
 import requests
 
 
-def test_create_admin():
-    url = "http://localhost:{}/api/v1/admins".format(
-        "5000"
-    )  # Assuming BACKEND_CONTAINER_PORT is defined
-    data = {"username": "test_admin", "password": "test_password"}
-    response = requests.post(url, json=data)
-    print(response)
-    # Print the response content
-    print("Response content:", response.json())
-    # assert response.status_code == 201
-    assert (
-        response.json()["message"] == "Admin test_admin created successfully"
-        or response.json()["message"] == "Admin already exists"
-    )
-
-
-def test_login_admin():
-    url = "http://localhost:{}/api/v1/admins/login".format(
-        "5000"
-    )  # Assuming BACKEND_CONTAINER_PORT is defined
-    data = {"username": "test_admin", "password": "test_password"}
-    response = requests.post(url, json=data)
-    print(response)
-
-    # Print the response content
-    print("Response content:", response.json())
-    assert response.status_code == 200
-    # assert "jwt" in response.json()  # Check if JWT token is returned in the response
-
-
 def test_create_survey():
     create_survey_url = "http://localhost:{}/api/v1/surveys".format(
         "5000"
@@ -49,9 +19,6 @@ def test_create_survey():
     # Sample survey data
     survey_data = {
         "metadata": {
-            "id": 1,
-            "name": "Test Survey",
-            "description": "This is a test survey",
             "created_by": "test_admin",
             "created_at": "2024-03-22 15:24:10",
         },
@@ -59,19 +26,24 @@ def test_create_survey():
         "subtitle": "Test Subtitle",
         "questions": [
             {
-                "id": 1,
+                "question_id": 1,
                 "type": "multiple_choice",
                 "question": "Which performance did you enjoy the most?",
                 "options": ["Clowns", "Acrobats", "Jugglers", "Magicians", "Choon"],
             },
             {
-                "id": 2,
-                "type": "short_answer",
+                "question_id": 2,
+                "type": "multiple_response",
                 "question": "What did you like about the performance?",
-                "options": [],  # Empty list for open-ended question
+                "options": [
+                    "This",
+                    "Is",
+                    "A",
+                    "Test",
+                ],  # Empty list for open-ended question
             },
             {
-                "id": 3,
+                "question_id": 3,
                 "type": "long_answer",
                 "question": "Do you have any feedback about the venue?",
                 "options": [],  # Empty list for open-ended question
@@ -87,13 +59,10 @@ def test_create_survey():
         create_survey_url, json=survey_data, headers=headers
     )
 
+    print(create_survey_response.json())
     # Assertions
-    # assert create_survey_response.status_code == 201, "Survey creation failed"
-    # assert "survey_id" in create_survey_response.json(), "Survey ID not returned"
-    print(
-        "Survey created successfully. Survey ID:",
-        create_survey_response.json()["survey_id"],
-    )
+    assert create_survey_response.status_code == 201, "Survey creation failed"
+    assert "survey_id" in create_survey_response.json(), "Survey ID not returned"
 
 
 def test_get_surveys():
@@ -143,21 +112,26 @@ def test_submit_response():
                 "type": "multiple_choice",
                 "question": "Which performance did you enjoy the most?",
                 "options": ["Clowns", "Acrobats", "Jugglers", "Magicians", "Choon"],
-                "answer": "Clowns",
+                "answer": ["Clowns"],
             },
             {
                 "question_id": 2,
-                "type": "short_answer",
+                "type": "multiple_response",
                 "question": "What did you like about the performance?",
-                "options": [],  # Empty list provided for short answer question
-                "answer": "I enjoyed the acrobatic stunts.",
+                "options": [
+                    "This",
+                    "Is",
+                    "A",
+                    "Test",
+                ],  # Empty list provided for short answer question
+                "answer": ["A", "Test"],
             },
             {
                 "question_id": 3,
                 "type": "long_answer",
                 "question": "Do you have any feedback about the venue?",
                 "options": [],  # Empty list provided for long answer question
-                "answer": "The venue was spacious and well-maintained.",
+                "answer": ["The venue was spacious and well-maintained."],
             },
         ],
     }
@@ -190,6 +164,7 @@ def test_get_responses():
 
     # Send GET request to get responses for the survey
     response = requests.get(url, params={"survey": survey_id}, headers=headers)
+    print(response.json())
 
     assert response.status_code == 200
 

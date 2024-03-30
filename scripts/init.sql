@@ -14,8 +14,6 @@ CREATE TABLE IF NOT EXISTS Admins (
 -- Create the Surveys table
 CREATE TABLE IF NOT EXISTS Surveys (
     survey_id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255),
-    description TEXT,
     title VARCHAR(255),
     subtitle TEXT,
     admin_username VARCHAR(255),
@@ -40,7 +38,7 @@ CREATE TABLE IF NOT EXISTS Survey_Responses (
     response_id INT,
     survey_id INT,
     question_id INT,
-    answer TEXT,
+    answer JSON,
     submitted_at TIMESTAMP,
     PRIMARY KEY (response_id, question_id, survey_id),
     FOREIGN KEY (survey_id, question_id) REFERENCES Questions(survey_id, question_id) ON DELETE CASCADE

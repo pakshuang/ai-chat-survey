@@ -1,6 +1,7 @@
 import random
 
-from .llm_level import GPT, LLM, RoleException
+from .exceptions import EmptyException, RoleException
+from .llm_level import GPT, LLM
 
 
 class ChatLog:
@@ -44,6 +45,8 @@ class ChatLog:
         self.message_list = message_list.copy()
         self.current_index = len(message_list)
         self.llm = llm
+        if not self.message_list:
+            raise EmptyException
         if self.current_index == 1 and from_start:
             # insert ai response
             output = self.llm.run(self.message_list, seed=seed)
