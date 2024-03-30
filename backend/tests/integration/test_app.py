@@ -8,130 +8,129 @@ class TestFlaskApp:
     BACKEND_URL = "http://" + "backend" + ":" + os.getenv("BACKEND_CONTAINER_PORT")
 
     def test_health_check(self):
-        # sends HTTP GET request to the application
-        # on the specified path
         response = requests.get(TestFlaskApp.BACKEND_URL + "/api/v1/health")
 
-        # assert the status code of the response
+        print(response.json())
         assert response.status_code == 200
 
-    # # Test cases for creating admins
+    ADMINS_ENDPOINT = BACKEND_URL + "/api/v1/admins"
 
-    # def test_create_admin_success(self):
-    #     # sends HTTP POST request to the application
-    #     # on the specified path with valid data
-    #     response = self.app.post(
-    #         "/api/v1/admins", json={"username": "admin1", "password": "password1"}
-    #     )
+    # Test cases for create_admin
 
-    #     # assert the status code of the response
-    #     assert response.status_code == 201
+    def test_create_admin_success(self):
+        response = requests.post(
+            TestFlaskApp.ADMINS_ENDPOINT,
+            json={"username": "admin1", "password": "password1"},
+        )
 
-    # def test_create_admin_second_success(self):
-    #     # sends HTTP POST request to the application
-    #     # on the specified path with valid data
-    #     response = self.app.post(
-    #         "/api/v1/admins", json={"username": "admin2", "password": "password2"}
-    #     )
+        print(response.json())
+        assert response.status_code == 201
 
-    #     # assert the status code of the response
-    #     assert response.status_code == 201
+    def test_create_admin_second_success(self):
+        response = requests.post(
+            TestFlaskApp.ADMINS_ENDPOINT,
+            json={"username": "admin2", "password": "password2"},
+        )
 
-    # def test_create_admin_existing_admin(self):
-    #     # sends HTTP POST request to the application
-    #     # on the specified path with existing admin data
-    #     response = self.app.post(
-    #         "/api/v1/admins", json={"username": "admin1", "password": "password2"}
-    #     )
+        print(response.json())
+        assert response.status_code == 201
 
-    #     # assert the status code of the response
-    #     assert response.status_code == 400
+    def test_create_admin_existing_admin(self):
+        response = requests.post(
+            TestFlaskApp.ADMINS_ENDPOINT,
+            json={"username": "admin1", "password": "password2"},
+        )
 
-    # def test_create_admin_missing_data(self):
-    #     # sends HTTP POST request to the application
-    #     # on the specified path with missing data
-    #     response = self.app.post("/api/v1/admins", json={})
+        print(response.json())
+        assert response.status_code == 400
+        assert response.json().get("message") == "Admin already exists"
 
-    #     # assert the status code of the response
-    #     assert response.status_code == 400
+    def test_create_admin_missing_data(self):
+        response = requests.post(TestFlaskApp.ADMINS_ENDPOINT, json={})
 
-    # def test_create_admin_missing_username(self):
-    #     # sends HTTP POST request to the application
-    #     # on the specified path with invalid data
-    #     response = self.app.post("/api/v1/admins", json={"password": "password1"})
+        print(response.json())
+        assert response.status_code == 400
+        assert response.json().get("message") == "Missing data"
 
-    #     # assert the status code of the response
-    #     assert response.status_code == 400
+    def test_create_admin_missing_username(self):
+        response = requests.post(
+            TestFlaskApp.ADMINS_ENDPOINT, json={"password": "password1"}
+        )
 
-    # def test_create_admin_missing_password(self):
-    #     # sends HTTP POST request to the application
-    #     # on the specified path with invalid data
-    #     response = self.app.post("/api/v1/admins", json={"username": "admin1"})
+        print(response.json())
+        assert response.status_code == 400
+        assert response.json().get("message") == "Missing data"
 
-    #     # assert the status code of the response
-    #     assert response.status_code == 400
+    def test_create_admin_missing_password(self):
+        response = requests.post(
+            TestFlaskApp.ADMINS_ENDPOINT, json={"username": "admin1"}
+        )
 
-    # # Test cases for admin login
+        print(response.json())
+        assert response.status_code == 400
+        assert response.json().get("message") == "Missing data"
 
-    # valid_jwt = ""
+    # Test cases for login_admin
 
-    # def test_admin_login_success(self):
-    #     # sends HTTP POST request to the application
-    #     # on the specified path with valid data
-    #     response = self.app.post(
-    #         "/api/v1/admins/login", json={"username": "admin1", "password": "password1"}
-    #     )
+    def test_admin_login_success(self):
+        response = requests.post(
+            TestFlaskApp.ADMINS_ENDPOINT + "/login",
+            json={"username": "admin1", "password": "password1"},
+        )
 
-    #     # assert the status code of the response
-    #     assert response.status_code == 200
+        print(response.json())
+        assert response.status_code == 200
+        assert "jwt" in response.json()
+        assert "jwt_exp" in response.json()
 
-    #     # assert the response data
-    #     assert b"jwt" in response.data
-    #     assert b"jwt_exp" in response.data
+        # set the valid jwt token
+        self.valid_jwt = response.json().get("jwt")
 
-    #     # set the valid jwt token
-    #     self.valid_jwt = response.json["jwt"]
+    def test_admin_login_missing_data(self):
+        response = requests.post(TestFlaskApp.ADMINS_ENDPOINT + "/login", json={})
 
-    # def test_admin_login_missing_data(self):
-    #     # sends HTTP POST request to the application
-    #     # on the specified path with missing data
-    #     response = self.app.post("/api/v1/admins/login", json={})
+        print(response.json())
+        assert response.status_code == 400
+        assert response.json().get("message") == "Missing data"
 
-    #     # assert the status code of the response
-    #     assert response.status_code == 400
+    def test_admin_login_missing_username(self):
+        response = requests.post(
+            TestFlaskApp.ADMINS_ENDPOINT + "/login",
+            json={"password": "password1"},
+        )
 
-    # def test_admin_login_missing_username(self):
-    #     # sends HTTP POST request to the application
-    #     # on the specified path with invalid data
-    #     response = self.app.post("/api/v1/admins/login", json={"password": "password1"})
+        print(response.json())
+        assert response.status_code == 400
+        assert response.json().get("message") == "Missing data"
 
-    #     # assert the status code of the response
-    #     assert response.status_code == 400
+    def test_admin_login_missing_password(self):
 
-    # def test_admin_login_missing_password(self):
-    #     # sends HTTP POST request to the application
-    #     # on the specified path with invalid data
-    #     response = self.app.post("/api/v1/admins/login", json={"username": "admin1"})
+        response = requests.post(
+            TestFlaskApp.ADMINS_ENDPOINT + "/login",
+            json={"username": "admin1"},
+        )
 
-    #     # assert the status code of the response
-    #     assert response.status_code == 400
+        print(response.json())
+        assert response.status_code == 400
+        assert response.json().get("message") == "Missing data"
 
-    # def test_admin_login_invalid_username(self):
-    #     # sends HTTP POST request to the application
-    #     # on the specified path with invalid data
-    #     response = self.app.post(
-    #         "/api/v1/admins/login", json={"username": "admin3", "password": "password1"}
-    #     )
+    def test_admin_login_invalid_username(self):
 
-    #     # assert the status code of the response
-    #     assert response.status_code == 401
+        response = requests.post(
+            TestFlaskApp.ADMINS_ENDPOINT + "/login",
+            json={"username": "admin3", "password": "password1"},
+        )
 
-    # def test_admin_login_invalid_password(self):
-    #     # sends HTTP POST request to the application
-    #     # on the specified path with invalid data
-    #     response = self.app.post(
-    #         "/api/v1/admins/login", json={"username": "admin1", "password": "password2"}
-    #     )
+        print(response.json())
+        assert response.status_code == 401
+        assert response.json().get("message") == "Invalid credentials"
 
-    #     # assert the status code of the response
-    #     assert response.status_code == 401
+    def test_admin_login_wrong_password(self):
+        response = requests.post(
+            TestFlaskApp.ADMINS_ENDPOINT + "/login",
+            json={"username": "admin1", "password": "password2"},
+        )
+
+        print(response.json())
+        assert response.status_code == 401
+        assert response.json().get("message") == "Invalid credentials"
