@@ -20,13 +20,13 @@ function ChatPage() {
     subtitle: "",
     title: "",
   });
-  const [token, setToken] = useState("test");
-  const [responseID, setResponseId] = useState(1);
+  const [responseId, setResponseId] = useState(1);
+
   function sendMessage(message: string) {
     if (surveyState.submitted) {
       setIsLoading(true);
       setMessages([...messages, { sender: "user", message: message }]);
-      sendMessageApi(responseID, id, message)
+      sendMessageApi(responseId, id, message)
         .then((res) => res.data)
         .then((data) => {
           setMessages((prevMessages) => [
@@ -48,30 +48,6 @@ function ChatPage() {
   }
 
   useEffect(() => {
-    let tmp_token = "";
-    // dummy signup and login to test api
-    const signup = async () => {
-      await fetch("http://localhost:5000/api/v1/admins", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: "admin", password: "admin" }),
-      });
-    };
-
-    const login = async () => {
-      const response = await fetch(
-        "http://localhost:5000/api/v1/admins/login",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username: "admin", password: "admin" }),
-        }
-      );
-      const responseData = await response.json();
-      console.log(responseData);
-      setToken(responseData["jwt"]);
-      tmp_token = responseData["jwt"];
-    };
     getUserSurvey(id).then((rep) => {
       const answeredQuestions = rep.data.questions.map((question, index) => {
         return {
@@ -92,6 +68,7 @@ function ChatPage() {
       ]);
     });
   }, []);
+
   const handleQuestionResponse = (id: number, val: string | number) => {
     const updatedQuestions = [...messages];
     updatedQuestions[id - 1].question.answer = val;
@@ -99,6 +76,7 @@ function ChatPage() {
     setSurveyState({ ...surveyState, displayIndex: updId });
     setMessages(updatedQuestions);
   };
+
   const handleSubmit = async () => {
     const body = {
       metadata: {
@@ -133,13 +111,11 @@ function ChatPage() {
       console.log(error);
     }
   };
+
   const displayMessages = surveyState.submitted
     ? messages
     : messages.slice(0, surveyState.displayIndex + 1);
 
-  if (id === undefined) {
-    return "Survey id undefined, use /survey/:id";
-  }
   return (
     <Flex flexDirection="column" bg="gray.100" h="100vh" p="1">
       <Flex justifyContent="center">
