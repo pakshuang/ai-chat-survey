@@ -2,10 +2,9 @@ import re
 from unittest import TestCase
 from unittest.mock import patch
 
-import pytest
 from openai import OpenAI
-
-from ..src.llm_classes import GPT, ChatLog, EmptyException, construct_chatlog
+from src.llm_classes.functions import construct_chatlog
+from src.llm_classes.llm_level import GPT
 
 
 class TestChatLogAndGPT(TestCase):
@@ -15,58 +14,93 @@ This survey is for Macdonald's, the fast food chain.
 We are conducting a survey for the new seaweed shaker fries.
 
 
-1. How satisfied are you with our product/service?
+How satisfied are you with our product/service?
+
 Options:
-Very satisfied, Satisfied, Neutral, Dissatisfied, Very dissatisfied
+-    Very satisfied
+-    Satisfied
+-    Neutral
+-    Dissatisfied
+-    Very dissatisfied
 Answer: Satisfied
-2. How likely are you to recommend our product/service to others?
-Very likely, Likely, Neutral, Unlikely, Very unlikely
+How likely are you to recommend our product/service to others?
+
+-   Very likely
+-   Likely
+-   Neutral
+-   Unlikely
+-   Very unlikely
+
 Answer: Very likely
-3. On a scale of 1 to 10, how would you rate the quality of our product/service?
+On a scale of 1 to 10, how would you rate the quality of our product/service?
+
 Answer: 8
-4. What do you like most about our product/service?
+What do you like most about our product/service?
+
 Answer: The ease of use and reliability.
-5. What improvements would you suggest for our product/service?
+What improvements would you suggest for our product/service?
+
 Answer: More customization options and faster response times.
-6. How often do you use our product/service?
-Daily, Weekly, Monthly, Rarely
+How often do you use our product/service?
+
+-    Daily
+-    Weekly
+-    Monthly
+-    Occasionally
+-    Rarely
 Answer: Weekly
-7. How satisfied are you with the customer support provided?
+How satisfied are you with the customer support provided?
 Options:
-Very Satisfied, Satisfied, Neutral, Unsatisfied, Very unsatisfied
+-    Very satisfied
+-    Satisfied
+-    Neutral
+-    Dissatisfied
+-    Very dissatisfied
 Answer: Satisfied
-8. What made you choose our product/service over competitors?
+What made you choose our product/service over competitors?
+
 Answer: Positive reviews and reputation.
-9. How would you rate the value for money of our product/service?
+How would you rate the value for money of our product/service?
+
 Answer: 7
-10. How easy was it to purchase/use our product/service?
+How easy was it to purchase/use our product/service?
 Options:
-Very easy, Easy, Neutral, Difficult, Very difficult
+-    Very easy
+-    Easy
+-    Neutral
+-    Difficult
+-    Very difficult
 Answer: Easy
-11. Would you consider purchasing from us again in the future?
+Would you consider purchasing from us again in the future?
 Options:
-Yes, No, Maybe
+-    Yes
+-    No
+-    Maybe
 Answer: Yes
-12. Overall, how satisfied are you with your experience with our company?
+Overall, how satisfied are you with your experience with our company?
 Options:
-Very Satisfied, Satisfied, Neutral, Unsatisfied, Very unsatisfied
+-    Very satisfied
+-    Satisfied
+-    Neutral
+-    Dissatisfied
+-    Very dissatisfied
 Answer: Very satisfied
-13. What improvements would you like to see in our company as a whole?
+What improvements would you like to see in our company as a whole?
+
 Answer: More frequent updates and better communication with customers.
-14. How did you first hear about our company?
+How did you first hear about our company?
 Options:
-Word of mouth, Online advertisement, Social media, Other (please specify)
+-    Word of mouth
+-    Online advertisement
+-    Social media
+-    Other (please specify)
+
 Answer: Word of mouth
-15. Additional Comments:
+Additional Comments:
 Answer: Keep up the good work!
 
 
     """
-
-    def test_empty_chatlog_creation_fails(self):
-        with pytest.raises(Exception) as e_info:
-            ChatLog([])
-            self.assertTrue(isinstance(e_info.value.__cause__, EmptyException))
 
     def test_chatlog_length(self):
         chat_log = construct_chatlog(

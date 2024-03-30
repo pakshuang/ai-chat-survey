@@ -1,13 +1,6 @@
+from src.llm_classes.functions import check_exit, construct_chatlog
+from src.llm_classes.llm_level import GPT
 from unittest import TestCase
-
-from ..src.llm_classes import (
-    GPT,
-    check_exit,
-    construct_chatlog,
-    format_multiple_choices,
-    format_responses_for_gpt,
-)
-
 
 class TestGPTFunctions(TestCase):
 
@@ -102,6 +95,9 @@ Answer: Keep up the good work!
             "I wish to end the interview now. I do not want to cooperate. Please end it now.",
             chatlog.current_index,
         )
+            "I wish to end the interview now. I do not want to cooperate. Please end it now.",
+            chatlog.current_index,
+        )
         chatlog.insert_and_update(
             "Okay, understood. Thank you for your time, and goodbye!",
             chatlog.current_index,
@@ -110,11 +106,14 @@ Answer: Keep up the good work!
         seeds = [120, 240]
         for seed in seeds:
             is_last = check_exit(chatlog.message_list, llm=GPT(), seed=seed)
-            self.assertTrue(is_last)
+            assert is_last
 
     def test_check_exit_false(self):
         chatlog = construct_chatlog(TestGPTFunctions.FORMATTED, seed=120)
         chatlog.insert_and_update(
+            "Hi, pleased to meet you! I have lots to share, but I would like to take another question. Is that okay?",
+            chatlog.current_index,
+        )
             "Hi, pleased to meet you! I have lots to share, but I would like to take another question. Is that okay?",
             chatlog.current_index,
         )

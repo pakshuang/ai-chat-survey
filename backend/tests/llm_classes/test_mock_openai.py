@@ -2,12 +2,13 @@ from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
 from openai import OpenAI
-
-from ..src.llm_classes import GPT, LLM, ChatLog, construct_chatlog
+from src.llm_classes.chatlog import ChatLog
+from src.llm_classes.functions import construct_chatlog
+from src.llm_classes.llm_level import GPT, LLM
 
 
 class TestMockAPI(TestCase):
-    @patch("llm_classes.llm_level.OpenAI")
+    @patch("src.llm_classes.llm_level.OpenAI")
     def test_gpt_exception_handling(self, mock_openai):
         mock_client = MagicMock()
         mock_openai.return_value = mock_client
@@ -20,7 +21,7 @@ class TestMockAPI(TestCase):
             gpt.run([{"role": "system", "content": "Some prompt"}])
         self.assertTrue("API limit reached or network error" in str(context.exception))
 
-    @patch("llm_classes.llm_level.OpenAI")
+    @patch("src.llm_classes.llm_level.OpenAI")
     def test_gpt_run(self, mock_openai):
         # Mock the OpenAI client's behavior
         mock_client = MagicMock()

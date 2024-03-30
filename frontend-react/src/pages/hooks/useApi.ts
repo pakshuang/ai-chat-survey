@@ -66,3 +66,15 @@ export const getSurveyById = (id: string): Promise<GetSurvey> => {
     .get(`/surveys/${id}`)
     .then((res) => res.data)
 }
+
+export const sendMessageApi = (responseID :number, surveyID:number, message : string): Promise<AxiosResponse>   =>{
+  return ApiService.post(
+  `/responses/${responseID}/chat?survey=${surveyID}`,
+  { content: message },
+  {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }
+  )
+}

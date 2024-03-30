@@ -3,18 +3,17 @@ import json
 import os
 from functools import wraps
 
-import database_operations
 import jwt
-from database_operations import close_connection, get_chat_log, update_chat_log
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from llm_classes import (
-    GPT,
-    ChatLog,
+from src import database_operations
+from src.llm_classes.chatlog import ChatLog
+from src.llm_classes.functions import (
     check_exit,
     construct_chatlog,
     format_responses_for_gpt,
 )
+from src.llm_classes.llm_level import GPT
 from werkzeug.security import check_password_hash, generate_password_hash
 
 BACKEND_CONTAINER_PORT = os.getenv("BACKEND_CONTAINER_PORT", "5000")
@@ -94,7 +93,7 @@ def create_admin():
 
         # If admin exists
         if existing_admins:
-            close_connection(connection)
+            database_operations.close_connection(connection)
             return jsonify({"message": "Admin already exists"}), 400
 
         # Hash password for storage
@@ -107,7 +106,7 @@ def create_admin():
         params = (username, hashed_password)
         database_operations.execute(connection, query, params)
 
-        close_connection(connection)
+        database_operations.close_connection(connection)
         return jsonify({"message": f"Admin {username} created successfully"}), 201
     else:
         return jsonify({"message": "Failed to connect to the database"}), 500
@@ -144,7 +143,7 @@ def login_admin():
                 )  # Encoded with HMAC SHA-256 algorithm
 
                 # Close the connection
-                close_connection(connection)
+                database_operations.close_connection(connection)
                 return (
                     jsonify(
                         {
@@ -157,7 +156,7 @@ def login_admin():
                     200,
                 )
         # Close the connection
-        close_connection(connection)
+        database_operations.close_connection(connection)
         return jsonify({"message": "Invalid credentials"}), 401
     else:
         return jsonify({"message": "Failed to connect to the database"}), 500
@@ -195,7 +194,7 @@ def create_survey(**kwargs):
     except Exception as e:
         return jsonify({"message": "Error creating survey"}), 400
     finally:
-        close_connection(connection)
+        database_operations.close_connection(connection)
 
 
 @app.route("/api/v1/surveys", methods=["GET"])
@@ -257,7 +256,7 @@ def get_surveys():
     except Exception as e:
         return jsonify({"message": "Error fetching surveys"}), 500
     finally:
-        database_operations.close_connection(connection)
+        database_operations.database_operations.close_connection(connection)
 
 
 @app.route("/api/v1/surveys/<survey_id>", methods=["GET"])
@@ -302,7 +301,7 @@ def get_survey(survey_id):
     except Exception as e:
         return jsonify({"message": "Error fetching surveys"}), 500
     finally:
-        close_connection(connection)
+        database_operations.close_connection(connection)
 
 
 @app.route("/api/v1/surveys/<survey_id>", methods=["DELETE"])
@@ -342,7 +341,7 @@ def delete_survey(survey_id, **kwargs):
         return jsonify({"message": "Failed to delete survey"}), 500
 
     finally:
-        close_connection(connection)
+        database_operations.close_connection(connection)
 
 
 # Response routes
@@ -396,7 +395,7 @@ def submit_response():
         return jsonify(response_body), 201
     finally:
         # Close database connection
-        close_connection(connection)
+        database_operations.close_connection(connection)
 
 
 @app.route("/api/v1/responses", methods=["GET"])
@@ -463,7 +462,7 @@ def get_responses(**kwargs):
         return jsonify(response_objects_list), 200
     finally:
         # Close database connection
-        close_connection(connection)
+        database_operations.close_connection(connection)
 
 
 @app.route("/api/v1/responses/<response_id>", methods=["GET"])
@@ -533,7 +532,7 @@ def get_response(response_id, **kwargs):
         return jsonify(response_objects), 200
     finally:
         # Close database connection
-        close_connection(connection)
+        database_operations.close_connection(connection)
 
 
 def helper_send_message(
@@ -582,7 +581,9 @@ def helper_send_message(
         # Update the ChatLog table
         try:
             # Update the database
-            update_chat_log(connection, survey_id, response_id, updated_chat_log_json)
+            database_operations.update_chat_log(
+                connection, survey_id, response_id, updated_chat_log_json
+            )
         except Exception as e:
             return (
                 jsonify({"message": "An error occurred while updating the chat log"}),
@@ -594,7 +595,7 @@ def helper_send_message(
             check_exit(updated_message_list, llm)
             or len(updated_message_list) > ChatLog.MAX_LEN
         )
-        close_connection(connection)
+        database_operations.close_connection(connection)
         return (
             jsonify(
                 {
@@ -649,7 +650,7 @@ def send_chat_message(response_id):
 
     # Step 2: Insert message to DB
     try:
-        chat_log = get_chat_log(connection, survey_id, response_id)
+        chat_log = database_operations.get_chat_log(connection, survey_id, response_id)
         chat_log_dict = json.loads(chat_log)
 
         if data["content"]:
@@ -660,7 +661,7 @@ def send_chat_message(response_id):
 
             # Convert the updated chat log dictionary back to a JSON string
             updated_chat_log = json.dumps(chat_log_dict)
-            database_operations.update_chat_log(
+            database_operations.database_operations.update_chat_log(
                 connection, survey_id, response_id, updated_chat_log
             )
     except Exception as e:
@@ -684,7 +685,7 @@ def send_chat_message(response_id):
 
     # Step 4: Retrieve chatLog object
     try:
-        chat_log = get_chat_log(connection, survey_id, response_id)
+        chat_log = database_operations.get_chat_log(connection, survey_id, response_id)
     except Exception as e:
         return jsonify({"message": "An error occurred while fetching chat log"}), 500
 
@@ -761,7 +762,7 @@ def get_response_no_auth(response_id, **kwargs):
         return jsonify(response_objects), 200
     finally:
         # Close database connection
-        close_connection(connection)
+        database_operations.close_connection(connection)
 
 
 if __name__ == "__main__":

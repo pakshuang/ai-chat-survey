@@ -1,8 +1,8 @@
 import random
 import re
 
-from llm_classes.chatlog import ChatLog
-from llm_classes.llm_level import GPT, LLM
+from .chatlog import ChatLog
+from .llm_level import GPT, LLM
 
 
 def construct_chatlog(
