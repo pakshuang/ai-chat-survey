@@ -145,5 +145,6 @@ The recommended way to run is to use docker compose instead, see [Running the Ap
 2. Run the tests
 
    ```shell
+   docker compose exec backend pipenv install --dev
    docker compose exec backend pipenv run pytest --cov=src
    ```

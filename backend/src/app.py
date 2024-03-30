@@ -256,7 +256,7 @@ def get_surveys():
     except Exception as e:
         return jsonify({"message": "Error fetching surveys"}), 500
     finally:
-        database_operations.database_operations.close_connection(connection)
+        database_operations.close_connection(connection)
 
 
 @app.route("/api/v1/surveys/<survey_id>", methods=["GET"])
