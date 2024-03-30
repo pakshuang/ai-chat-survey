@@ -49,7 +49,7 @@ def admin_token_required(f):
 
         # If no token found, return error
         if not token:
-            return jsonify({"message": "Token is missing!"}), 401
+            return jsonify({"message": "Token is missing!"}), 400
 
         try:
             # Decode the token
@@ -172,7 +172,7 @@ def create_survey(**kwargs):
 
     # If there is no data attached in request body
     if not data:
-        return jsonify({"message": "Invalid data"}), 400
+        return jsonify({"message": "Missing data"}), 400
     # Validate survey object format
     is_valid, message = database_operations.validate_survey_object(data)
     if not is_valid:

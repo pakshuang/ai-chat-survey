@@ -89,7 +89,7 @@ These endpoints are used to create, read, and delete surveys, which are the firs
     "questions": [
       {
         "question_id": "integer",
-        "type": "string", # multiple_choice, multiple_reponse, free_response
+        "type": "string", # multiple_choice, multiple_response, free_response
         "question": "string",
         "options": ["string"]
       }
@@ -158,7 +158,7 @@ These endpoints are used to create, read, and delete surveys, which are the firs
     "questions": [
       {
         "question_id": "integer",
-        "type": "string", # multiple_choice, multiple_reponse, free_response
+        "type": "string", # multiple_choice, multiple_response, free_response
         "question": "string",
         "options": ["string"]
       }
@@ -220,7 +220,7 @@ These endpoints are used to submit, read, and update (send message) responses re
     "answers": [
       {
         "question_id": "integer",
-        "type": "string", # multiple_choice, multiple_reponse, free_response
+        "type": "string", # multiple_choice, multiple_response, free_response
         "question": "string",
         "options": ["string"],
         "answer": ["string"],
@@ -294,7 +294,7 @@ These endpoints are used to submit, read, and update (send message) responses re
     "answers": [
       {
         "question_id": "integer",
-        "type": "string", # multiple_choice, multiple_reponse, free_response
+        "type": "string", # multiple_choice, multiple_response, free_response
         "question": "string",
         "options": ["string"],
         "answer": ["string"],
