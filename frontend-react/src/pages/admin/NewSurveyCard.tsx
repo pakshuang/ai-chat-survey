@@ -12,7 +12,7 @@ function NewSurveyCard() {
       w="full"
       borderWidth="1px"
       borderColor="white"
-      _hover={{ borderColor: "black" }}
+      _hover={{ borderColor: "black", cursor: "pointer" }}
       onClick={() => navigate("/admin/survey/create")}
     >
       <Center h="full" w="full">

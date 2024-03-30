@@ -2,24 +2,20 @@
 FROM python:3.11.8
 
 # Set the working directory in the container
-WORKDIR /src
+WORKDIR /backend
 
-# Create the requirements file from the Pipfile.lock
-RUN pip install pipenv
-COPY Pipfile Pipfile.lock ./
+# Copy the application code to the working directory
+COPY . /backend
 
 # Install the dependencies
-RUN pipenv install --deploy
-
-# Copy the rest of the application code to the working directory
-COPY /src /src
+RUN pip install --no-cache-dir pipenv==2023.12.1 \
+&& pipenv install --deploy
 
 # Expose the port on which the application will run
 EXPOSE ${BACKEND_CONTAINER_PORT}
 
 # Define the command to run the application
-ENTRYPOINT ["pipenv", "run", "python"]
-CMD ["app.py"]
+CMD ["pipenv", "run", "python", "-m", "src.app"]
 
 # Healthcheck
 HEALTHCHECK --interval=30s --timeout=30s --start-period=10s --retries=3 \
