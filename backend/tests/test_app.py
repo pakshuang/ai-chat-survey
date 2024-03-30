@@ -32,9 +32,6 @@ class TestFlaskApp:
     def test_create_admin_second_success(self):
         # sends HTTP POST request to the application
         # on the specified path with valid data
-        self.app.post(
-            "/api/v1/admins", json={"username": "admin1", "password": "password1"}
-        )
         response = self.app.post(
             "/api/v1/admins", json={"username": "admin2", "password": "password2"}
         )
@@ -43,9 +40,6 @@ class TestFlaskApp:
         assert response.status_code == 201
 
     def test_create_admin_existing_admin(self):
-        self.app.post(
-            "/api/v1/admins", json={"username": "admin1", "password": "password1"}
-        )
         # sends HTTP POST request to the application
         # on the specified path with existing admin data
         response = self.app.post(
@@ -98,7 +92,7 @@ class TestFlaskApp:
         assert b"jwt_exp" in response.data
 
         # set the valid jwt token
-        TestFlaskApp.valid_jwt = response.json["jwt"]
+        self.valid_jwt = response.json["jwt"]
 
     def test_admin_login_missing_data(self):
         # sends HTTP POST request to the application

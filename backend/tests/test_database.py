@@ -1,36 +1,6 @@
 import requests
 
 
-def test_create_admin():
-    url = "http://localhost:{}/api/v1/admins".format(
-        "5000"
-    )  # Assuming BACKEND_CONTAINER_PORT is defined
-    data = {"username": "test_admin", "password": "test_password"}
-    response = requests.post(url, json=data)
-    print(response)
-    # Print the response content
-    print("Response content:", response.json())
-    # assert response.status_code == 201
-    assert (
-        response.json()["message"] == "Admin test_admin created successfully"
-        or response.json()["message"] == "Admin already exists"
-    )
-
-
-def test_login_admin():
-    url = "http://localhost:{}/api/v1/admins/login".format(
-        "5000"
-    )  # Assuming BACKEND_CONTAINER_PORT is defined
-    data = {"username": "test_admin", "password": "test_password"}
-    response = requests.post(url, json=data)
-    print(response)
-
-    # Print the response content
-    print("Response content:", response.json())
-    assert response.status_code == 200
-    # assert "jwt" in response.json()  # Check if JWT token is returned in the response
-
-
 def test_create_survey():
     create_survey_url = "http://localhost:{}/api/v1/surveys".format(
         "5000"
