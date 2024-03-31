@@ -1,8 +1,7 @@
 export enum QuestionType {
   MCQ = "multiple_choice",
   MRQ = "multiple_response",
-  ShortAnswer = "short_answer",
-  LongAnswer = "long_answer",
+  FreeResponse = "free_response",
 }
 
 export const needOptions = (type: QuestionType): boolean => {
