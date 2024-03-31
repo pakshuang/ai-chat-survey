@@ -1,6 +1,36 @@
 import requests
 
 
+def test_create_admin():
+    url = "http://localhost:{}/api/v1/admins".format(
+        "5000"
+    )  # Assuming BACKEND_CONTAINER_PORT is defined
+    data = {"username": "test_admin", "password": "test_password"}
+    response = requests.post(url, json=data)
+    print(response)
+    # Print the response content
+    print("Response content:", response.json())
+    # assert response.status_code == 201
+    assert (
+        response.json()["message"] == "Admin test_admin created successfully"
+        or response.json()["message"] == "Admin already exists"
+    )
+
+
+def test_login_admin():
+    url = "http://localhost:{}/api/v1/admins/login".format(
+        "5000"
+    )  # Assuming BACKEND_CONTAINER_PORT is defined
+    data = {"username": "test_admin", "password": "test_password"}
+    response = requests.post(url, json=data)
+    print(response)
+
+    # Print the response content
+    print("Response content:", response.json())
+    assert response.status_code == 200
+    # assert "jwt" in response.json()  # Check if JWT token is returned in the response
+
+
 def test_create_survey():
     create_survey_url = "http://localhost:{}/api/v1/surveys".format(
         "5000"
@@ -195,7 +225,7 @@ def test_send_chat_message():
     url = "http://localhost:{}/api/v1/responses/{}/chat?survey={}".format("5000", 1, 3)
 
     # Prepare response data
-    response_data = {"content": ""}
+    response_data = {"content": "I am testing if you work"}
 
     # Send POST request to send chat message
     response = requests.post(url, json=response_data)
@@ -236,3 +266,14 @@ def test_delete_survey():
 
     # Check if the survey is deleted from the database
     # You can perform additional checks here to ensure associated questions and responses are deleted as well
+
+
+# if __name__ == '__main__':
+#     # test_create_admin()
+#     # test_create_survey()
+#     # test_get_surveys()
+#     # test_get_survey()
+#     # test_submit_response()
+#     # test_get_responses()
+#     # test_get_response()
+#     test_send_chat_message()
