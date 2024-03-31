@@ -105,7 +105,7 @@ const QuestionInput = ({
             isDisabled={submitted}
           />
         );
-      case "long_answer":
+      case "free_response":
         return (
           <Textarea
             background="white"

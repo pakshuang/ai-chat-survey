@@ -12,7 +12,7 @@ function ChatInput({ onSubmitMessage, isSubmitting }: ChatInputProps) {
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    onSubmitMessage(message);
+    onSubmitMessage(message)
     setMessage("");
   }
 
