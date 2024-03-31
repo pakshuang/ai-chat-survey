@@ -11,6 +11,31 @@ from src.llm_classes.llm_level import GPT
 
 class TestGPTFunctions(TestCase):
 
+    RESPONSE_FULL = {
+        "metadata": {
+            "survey_id": "integer",
+            "response_id": "integer",
+            "submitted_at": "string",
+        },
+        "answers": [
+            {
+                "question_id": "1",
+                "type": "long",
+                "question": "question?",
+                "options": [""],
+                "answer": ["string1 blah blah blah."],
+            },
+            {
+                "question_id": "2",
+                "type": "mrq",
+                "question": "questionmrq?",
+                "options": ["option 1", "option 2", "option 3"],
+                "answer": ["option 1, option 2"],
+            }
+
+        ],
+    }
+
     RESPONSE_LONG = {
         "metadata": {
             "survey_id": "integer",
@@ -112,6 +137,39 @@ Answer: Keep up the good work!
             is_last = check_exit(chatlog.message_list, llm=GPT(), seed=seed)
             assert is_last
 
+    def test_check_exit_many(self):
+
+        seed = 120
+        chatlog = construct_chatlog(TestGPTFunctions.FORMATTED, seed=seed)
+        chatlog.insert_and_update(
+            "Hi, pleased to meet you! I have lots to share, but I would like to take another question. Is that okay?",
+            chatlog.current_index,
+        )
+        self.assertTrue(len(chatlog), 4)
+        for i in range(13):
+            chatlog.insert_and_update(
+                "Of course! Here is another question. Why are you satisfied but not very satisfied with our products?",
+                chatlog.current_index,
+                is_llm=True,
+            )
+            chatlog.insert_and_update(
+                "It doesnt really taste very good. I want to continue the interview, next question please.",
+                chatlog.current_index,
+            )
+        self.assertEqual(len(chatlog), 30)
+        boolean = check_exit(chatlog.message_list, llm=chatlog.llm, seed=seed)
+        self.assertFalse(boolean)
+
+        chatlog.insert_and_update(
+            "Of course! Here is another question. Why are you satisfied but not very satisfied with our products?",
+            chatlog.current_index,
+            is_llm=True,
+        )
+        
+        boolean = check_exit(chatlog.message_list, llm=chatlog.llm, seed=seed)
+        self.assertTrue(boolean)
+        self.assertTrue(len(chatlog) > 30)
+
     def test_check_exit_false(self):
         chatlog = construct_chatlog(TestGPTFunctions.FORMATTED, seed=120)
         chatlog.insert_and_update(
@@ -152,8 +210,13 @@ Answer: Keep up the good work!
             format_multiple_choices(answer, "Answer"),
         )
 
-    def test_check_format_responses(self):
+    def test_check_format_responses_for_gpt(self):
         comparer = """1. question?\nOptions:\noption1, option2, option3\nAnswers:\nstring1, string2"""
         self.assertEqual(
             format_responses_for_gpt(TestGPTFunctions.RESPONSE_MCQ), comparer
         )
+        comparer_long = """1. question?\n\nAnswer:\nstring1 blah blah blah."""
+        self.assertEqual(
+            format_responses_for_gpt(TestGPTFunctions.RESPONSE_LONG), comparer_long
+        )
+        comparer_full = """1. question?\n\nAnswer:\nstring1 blah blah blah.\n2. questionmrq?\nOptions:\noption1, option2, option3\nAnswers:\noption1, option2"""
