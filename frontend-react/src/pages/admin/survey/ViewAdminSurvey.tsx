@@ -1,6 +1,7 @@
 import {
   Accordion,
   AccordionButton,
+  Button,
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
@@ -14,52 +15,55 @@ import {
   Spinner,
   Text,
   VStack,
-} from "@chakra-ui/react"
-import { useQuery } from "react-query"
-import { InfoIcon } from "@chakra-ui/icons"
-import { useNavigate, useParams } from "react-router-dom"
+  useToast,
+} from "@chakra-ui/react";
+import { useQuery } from "react-query";
+import { InfoIcon, WarningIcon } from "@chakra-ui/icons";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   getSurveyById,
   getSurveys,
   logout,
   shouldLogout,
-} from "../../hooks/useApi"
-import { needOptions, QuestionType } from "./constants"
-import { useEffect } from "react"
+  deleteSurvey,
+} from "../../hooks/useApi";
+import { needOptions, QuestionType } from "./constants";
+import { useEffect } from "react";
 
 function ViewAdminSurvey() {
-  const { id } = useParams()
+  const { id } = useParams();
 
-  const { data: surveys } = useQuery("surveys", getSurveys)
+  const { data: surveys } = useQuery("surveys", getSurveys);
 
   const { data: survey, isLoading } = useQuery(`survey-${id}`, () =>
     getSurveyById(id ?? "0")
-  )
+  );
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const toast = useToast();
 
   useEffect(() => {
-    const ids = surveys?.map((s) => s.metadata.survey_id)
-    if (ids && !ids.includes(parseInt(id ?? "0"))) navigate("/admin/404")
-  }, [surveys])
+    const ids = surveys?.map((s) => s.metadata.survey_id);
+    if (ids && !ids.includes(parseInt(id ?? "0"))) navigate("/admin/404");
+  }, [surveys]);
 
   useEffect(() => {
     if (shouldLogout()) {
-      logout()
-      navigate("/admin/login")
+      logout();
+      navigate("/admin/login");
     }
   }, [
     localStorage.getItem("username"),
     localStorage.getItem("jwt"),
     localStorage.getItem("jwtExp"),
-  ])
+  ]);
 
   if (isLoading || !survey)
     return (
       <Center mt="3rem">
         <Spinner />
       </Center>
-    )
+    );
 
   return (
     <Flex minH="100vh" w="100%" bg="gray.100" minW="80rem">
@@ -166,9 +170,26 @@ function ViewAdminSurvey() {
             </AccordionItem>
           ))}
         </Accordion>
+        <Button
+          leftIcon={<WarningIcon />}
+          mt="1rem"
+          colorScheme="red"
+          onClick={async () => {
+            await deleteSurvey(id ?? "0").then((res) => {
+              toast({
+                title: "Survey deleted",
+                status: "success",
+                isClosable: true,
+              });
+            });
+            navigate("/admin/survey");
+          }}
+        >
+          Delete survey
+        </Button>
       </VStack>
     </Flex>
-  )
+  );
 }
 
-export default ViewAdminSurvey
+export default ViewAdminSurvey;

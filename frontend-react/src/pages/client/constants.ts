@@ -30,3 +30,6 @@ export type QuestionProps = {
   handleQuestionResponse: (id: number, val: string | number) => void;
   submitted: boolean;
 };
+
+export const surveyMessage =
+  "You've submitted the first part of our survey! Hang on tight while we process your responses...";

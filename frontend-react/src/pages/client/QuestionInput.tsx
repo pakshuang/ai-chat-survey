@@ -64,7 +64,6 @@ const QuestionInput = ({
       case "multiple_response":
         return (
           <>
-            <Text fontSize="small">(Pick 1 or more options)</Text>
             <CheckboxGroup
               isDisabled={submitted}
               value={answer}

@@ -1,24 +1,24 @@
-import { Button, Input, Flex } from "@chakra-ui/react"
-import { FormEvent, useState, useRef, useEffect } from "react"
+import { Button, Input, Flex } from "@chakra-ui/react";
+import { FormEvent, useState, useRef, useEffect } from "react";
 
 interface ChatInputProps {
-  onSubmitMessage: (message: string) => void
-  isSubmitting: boolean
+  onSubmitMessage: (message: string) => void;
+  isSubmitting: boolean;
 }
 
 function ChatInput({ onSubmitMessage, isSubmitting }: ChatInputProps) {
-  const [message, setMessage] = useState("")
-  const inputRef = useRef<HTMLInputElement>(null)
+  const [message, setMessage] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
 
   function handleSubmit(e: FormEvent) {
-    e.preventDefault()
-    onSubmitMessage(message)
-    setMessage("")
+    e.preventDefault();
+    onSubmitMessage(message);
+    setMessage("");
   }
 
   useEffect(() => {
-    inputRef.current?.focus()
-  }, [message])
+    inputRef.current?.focus();
+  }, [message]);
 
   return (
     <form onSubmit={(e) => handleSubmit(e)}>
@@ -29,9 +29,8 @@ function ChatInput({ onSubmitMessage, isSubmitting }: ChatInputProps) {
           placeholder="Enter message ..."
           background="white"
           borderColor="gray.500"
-          _hover={{ borderColor: "gray.500" }}
+          borderRightRadius="0"
           _focus={{
-            borderColor: "gray.500",
             boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
           }}
           onChange={(e) => setMessage(e.target.value)}
@@ -42,17 +41,16 @@ function ChatInput({ onSubmitMessage, isSubmitting }: ChatInputProps) {
         <Button
           size="lg"
           type="submit"
-          colorScheme="gray"
-          variant="outline"
+          colorScheme="blue"
           borderColor="gray.500"
-          _hover={{ bg: "gray.300" }}
+          borderLeftRadius="0"
           isLoading={isSubmitting}
         >
           Send
         </Button>
       </Flex>
     </form>
-  )
+  );
 }
 
-export default ChatInput
+export default ChatInput;
