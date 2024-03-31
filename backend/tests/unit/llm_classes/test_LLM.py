@@ -1,10 +1,11 @@
 import re
 from unittest import TestCase
 from unittest.mock import patch
-
+import pytest
 from openai import OpenAI
 from src.llm_classes.functions import construct_chatlog
 from src.llm_classes.llm_level import GPT
+from src.llm_classes.exceptions import RoleException
 
 
 class TestChatLogAndGPT(TestCase):
@@ -180,3 +181,15 @@ Answer: Keep up the good work!
         ]
         output_final = llm.run(msg, seed=seed)
         self.assertTrue(bool(re.search(r"[yY]es|[tT]rue", output_final)))
+
+    def multiple_role_exception(self):
+        chat_log = construct_chatlog(
+            TestChatLogAndGPT.FORMATTED, llm=GPT(model="gpt-3.5-turbo")
+        )
+        self.assertEqual(len(chat_log), 3)
+        with pytest.raises(Exception) as ex:
+            updated_list = chat_log.insert_and_update(
+                "User response", chat_log.current_index, is_llm=True, is_sys=True
+            )
+        assert isinstance(ex.value.__cause__, RoleException)
+
