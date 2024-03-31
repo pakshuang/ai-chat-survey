@@ -1,6 +1,7 @@
 from unittest import TestCase
 from src.app import database_operations
 
+
 class TestValidateResponse(TestCase):
     def test_valid_response_object(self):
         response_data = {
@@ -72,7 +73,15 @@ class TestValidateResponse(TestCase):
     def test_invalid_answer_type(self):
         response_data = {
             "metadata": {"survey_id": 3},
-            "answers": [{"question_id": 1, "type": "multiple_choice", "question": "Question 1", "options": [], "answer": "not_a_list"}]
+            "answers": [
+                {
+                    "question_id": 1,
+                    "type": "multiple_choice",
+                    "question": "Question 1",
+                    "options": [],
+                    "answer": "not_a_list",
+                }
+            ],
         }
         result, message = database_operations.validate_response_object(response_data)
         self.assertFalse(result)
@@ -81,7 +90,15 @@ class TestValidateResponse(TestCase):
     def test_empty_answer(self):
         response_data = {
             "metadata": {"survey_id": 3},
-            "answers": [{"question_id": 1, "type": "multiple_choice", "question": "Question 1", "options": [], "answer": []}]
+            "answers": [
+                {
+                    "question_id": 1,
+                    "type": "multiple_choice",
+                    "question": "Question 1",
+                    "options": [],
+                    "answer": [],
+                }
+            ],
         }
         result, message = database_operations.validate_response_object(response_data)
         self.assertFalse(result)
@@ -90,7 +107,15 @@ class TestValidateResponse(TestCase):
     def test_invalid_question_type(self):
         response_data = {
             "metadata": {"survey_id": 3},
-            "answers": [{"question_id": 1, "type": "invalid_type", "question": "Question 1", "options": [], "answer": []}]
+            "answers": [
+                {
+                    "question_id": 1,
+                    "type": "invalid_type",
+                    "question": "Question 1",
+                    "options": [],
+                    "answer": [],
+                }
+            ],
         }
         result, message = database_operations.validate_response_object(response_data)
         self.assertFalse(result)
@@ -99,7 +124,7 @@ class TestValidateResponse(TestCase):
     def test_missing_answer_keys(self):
         response_data = {
             "metadata": {"survey_id": 3},
-            "answers": [{"missing_key": "value"}]
+            "answers": [{"missing_key": "value"}],
         }
         result, message = database_operations.validate_response_object(response_data)
         self.assertFalse(result)
@@ -108,7 +133,15 @@ class TestValidateResponse(TestCase):
     def test_invalid_options_type(self):
         response_data = {
             "metadata": {"survey_id": 3},
-            "answers": [{"question_id": 1, "type": "multiple_choice", "question": "Question 1", "options": "not_a_list", "answer": []}]
+            "answers": [
+                {
+                    "question_id": 1,
+                    "type": "multiple_choice",
+                    "question": "Question 1",
+                    "options": "not_a_list",
+                    "answer": [],
+                }
+            ],
         }
         result, message = database_operations.validate_response_object(response_data)
         self.assertFalse(result)
@@ -117,7 +150,15 @@ class TestValidateResponse(TestCase):
     def test_invalid_answer_type(self):
         response_data = {
             "metadata": {"survey_id": 3},
-            "answers": [{"question_id": 1, "type": "multiple_choice", "question": "Question 1", "options": [], "answer": "not_a_list"}]
+            "answers": [
+                {
+                    "question_id": 1,
+                    "type": "multiple_choice",
+                    "question": "Question 1",
+                    "options": [],
+                    "answer": "not_a_list",
+                }
+            ],
         }
         result, message = database_operations.validate_response_object(response_data)
         self.assertFalse(result)
@@ -126,7 +167,15 @@ class TestValidateResponse(TestCase):
     def test_empty_answer(self):
         response_data = {
             "metadata": {"survey_id": 3},
-            "answers": [{"question_id": 1, "type": "multiple_choice", "question": "Question 1", "options": [], "answer": []}]
+            "answers": [
+                {
+                    "question_id": 1,
+                    "type": "multiple_choice",
+                    "question": "Question 1",
+                    "options": [],
+                    "answer": [],
+                }
+            ],
         }
         result, message = database_operations.validate_response_object(response_data)
         self.assertFalse(result)

@@ -1,7 +1,8 @@
 from unittest import TestCase
 from src.app import database_operations
 
-class TestValidateSurveyObject(TestCase):
+
+class TestValidateSurvey(TestCase):
     def setUp(self):
         self.valid_data = {
             "metadata": {
@@ -199,3 +200,48 @@ class TestValidateSurveyObject(TestCase):
         result, message = database_operations.validate_survey_object(data)
         self.assertFalse(result)
         self.assertEqual(message, "Options field in a question must be a list")
+
+    def test_append_question_to_survey(self):
+        # Sample survey objects dictionary
+        survey_objects = {
+            1: {"metadata": {"survey_id": 1}, "questions": []},
+            2: {"metadata": {"survey_id": 2}, "questions": []},
+        }
+
+        # Sample question data
+        question_data = {
+            "question_id": 1,
+            "question_type": "multiple_choice",
+            "question": "What is your favorite color?",
+            "options": '["Red", "Blue", "Green"]',
+        }
+
+        # Append question to survey 1
+        database_operations.append_question_to_survey(survey_objects, 1, question_data)
+
+        # Check if the question is correctly appended to survey 1
+        self.assertEqual(len(survey_objects[1]["questions"]), 1)
+        self.assertEqual(survey_objects[1]["questions"][0]["question_id"], 1)
+        self.assertEqual(survey_objects[1]["questions"][0]["type"], "multiple_choice")
+        self.assertEqual(
+            survey_objects[1]["questions"][0]["question"],
+            "What is your favorite color?",
+        )
+        self.assertEqual(
+            survey_objects[1]["questions"][0]["options"], ["Red", "Blue", "Green"]
+        )
+
+        # Append question to survey 2
+        database_operations.append_question_to_survey(survey_objects, 2, question_data)
+
+        # Check if the question is correctly appended to survey 2
+        self.assertEqual(len(survey_objects[2]["questions"]), 1)
+        self.assertEqual(survey_objects[2]["questions"][0]["question_id"], 1)
+        self.assertEqual(survey_objects[2]["questions"][0]["type"], "multiple_choice")
+        self.assertEqual(
+            survey_objects[2]["questions"][0]["question"],
+            "What is your favorite color?",
+        )
+        self.assertEqual(
+            survey_objects[2]["questions"][0]["options"], ["Red", "Blue", "Green"]
+        )
