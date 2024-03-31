@@ -54,6 +54,11 @@ function ChatWindow({
       {messages.map((item, index) => {
         if (index === messages.length - 1 && botResponded) {
           if (item.message === "You submitted the pre-survey") {
+            if (surveyState.submitted){
+              return   <ChatMessage sender={item.sender}>
+              {item.message}
+            </ChatMessage>
+            }
             return (
               <ChatMessage sender={"bot"}>
                 <Flex flexDirection="column">
