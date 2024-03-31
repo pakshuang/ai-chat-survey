@@ -44,6 +44,7 @@ function ChatInput({ onSubmitMessage, isSubmitting }: ChatInputProps) {
           variant="outline"
           borderColor="gray.500"
           _hover={{ bg: "gray.300" }}
+          isDisabled={message.length===0}
           isLoading={isSubmitting}
         >
           Send

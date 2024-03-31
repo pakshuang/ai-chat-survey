@@ -6,7 +6,6 @@ import {
   RadioGroup,
   Stack,
   Input,
-  Text,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { QuestionProps } from "./constants";
@@ -16,9 +15,6 @@ const QuestionInput = ({
   handleQuestionResponse,
   submitted,
 }: QuestionProps) => {
-  if (questionData == undefined) {
-    return null;
-  }
   const { question_id, type, options, answer } = questionData;
   const [tempAnswer, setTempAnswer] = useState(answer);
   const handleInputChange = (e) => {
@@ -63,8 +59,6 @@ const QuestionInput = ({
         );
       case "multiple_response":
         return (
-          <>
-            <Text fontSize="small">(Pick 1 or more options)</Text>
             <CheckboxGroup
               isDisabled={submitted}
               value={answer}
@@ -86,24 +80,6 @@ const QuestionInput = ({
                 ))}
               </Stack>
             </CheckboxGroup>
-          </>
-        );
-      case "short_answer":
-        return (
-          <Input
-            background="white"
-            borderColor="gray.500"
-            _hover={{ borderColor: "gray.500" }}
-            _focus={{
-              borderColor: "gray.500",
-              boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-            }}
-            onChange={handleInputChange}
-            onBlur={handleInputBlur}
-            onKeyPress={handleInputKeyPress}
-            value={tempAnswer}
-            isDisabled={submitted}
-          />
         );
       case "free_response":
         return (

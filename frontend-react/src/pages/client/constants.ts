@@ -11,9 +11,9 @@ export type Messages = {
 };
 
 export type ChatWindowProps = {
-  messages: { sender: "user" | "bot"; message: string; question: Question }[];
+  messages: Messages[];
   isBotThinking: boolean;
-  surveyState: any;
+  surveyState:SurveyState;
   handleQuestionResponse: (id: number, val: string | number) => void;
   handleSubmit: () => void;
 };
@@ -30,3 +30,11 @@ export type QuestionProps = {
   handleQuestionResponse: (id: number, val: string | number) => void;
   submitted: boolean;
 };
+
+export type SurveyState ={
+  displayIndex: number,
+  submitted: boolean
+  subtitle: string,
+  title: string,
+  messages:Messages[],
+}

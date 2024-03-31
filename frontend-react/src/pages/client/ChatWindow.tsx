@@ -81,22 +81,22 @@ function ChatWindow({
                 text={messages.slice(-1)[0].message}
                 scrollToBottom={scrollToBottom}
               />
-              <QuestionInput
+              {item.question !==undefined &&<QuestionInput
                 questionData={item.question}
                 handleQuestionResponse={handleQuestionResponse}
                 submitted={surveyState.submitted}
-              ></QuestionInput>
+              ></QuestionInput>}
             </ChatMessage>
           );
         } else {
           return (
             <ChatMessage sender={item.sender}>
               {item.message}
-              <QuestionInput
+              {item.question !==undefined &&<QuestionInput
                 questionData={item.question}
                 handleQuestionResponse={handleQuestionResponse}
                 submitted={surveyState.submitted}
-              ></QuestionInput>
+              ></QuestionInput> }
             </ChatMessage>
           );
         }
