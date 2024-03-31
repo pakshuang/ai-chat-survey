@@ -27,6 +27,7 @@ function ChatWindow({
     }
     scrollToBottom();
   }, [messages]);
+  const disabled=messages.filter((ele) => ele.question!==undefined).some((ele) => ele.question.answer.length === 0 || ele.question.answer==="");
   return (
     <Box
       overflowY="auto"
@@ -67,9 +68,20 @@ function ChatWindow({
                     scrollToBottom={scrollToBottom}
                   ></TypingEffect>
                   <Box>
-                    <Button onClick={handleSubmit} colorScheme="green">
+                    <Button onClick={handleSubmit} colorScheme="green" isDisabled={disabled}>
                       Confirm
                     </Button>
+                    {disabled &&  `Please complete question(s) ` +messages
+                        .filter((ele) => ele.question !== undefined) // Filter out messages without questions
+                        .map((ele, index) => {
+                          if (ele.question.answer === undefined || ele.question.answer.length === 0 || ele.question.answer === "") {
+                            return `${index + 1}`;
+                          }
+                          return null; // Filter out messages where the question is answered
+                        })
+                        .filter(Boolean) // Filter out null values
+                        .join(", ") +` before submitting.`}
+
                   </Box>
                 </Flex>
               </ChatMessage>

@@ -75,12 +75,13 @@ function ChatPage() {
   }, []);
 
   const handleQuestionResponse = (id: number, val: string | number) => {
+    const updatedQuestions = [...surveyState.messages];
+    updatedQuestions[id - 1].question.answer = val;
+    let updId=surveyState.displayIndex;
     if (val){
-      const updatedQuestions = [...surveyState.messages];
-      updatedQuestions[id - 1].question.answer = val;
-      const updId = Math.max(id, surveyState.displayIndex);
-      setSurveyState({ ...surveyState, displayIndex: updId });;
+      updId = Math.max(id, surveyState.displayIndex);
     }
+    setSurveyState({ ...surveyState, displayIndex: updId });;
   };
 
   const handleSubmit = async () => {
@@ -106,10 +107,8 @@ function ChatPage() {
       setResponseId(rep.data.response_id);
       const res = await sendMessageApi(rep.data.response_id, id, "")
       const data = res.data;
-      console.log(data)
       setSurveyState({...surveyState,messages:[...surveyState.messages, { sender: "bot", message: data["content"] }]})
     } catch (error) {
-      console.log(error)
       setSurveyState({...surveyState,messages:[...surveyState.messages, { sender: "bot", message: "Error generating response" }]})
     }
     setSurveyState({ ...surveyState, submitted: true })
@@ -119,12 +118,11 @@ function ChatPage() {
     Cookies.remove(`surveyState_${id}`);
   };
   const displayedMessages = surveyState.submitted ? surveyState.messages : surveyState.messages.slice(0,surveyState.displayIndex+1)
-  console.log(surveyState)
   return (
     <Flex flexDirection="column" bg="gray.100" h="100vh" p="1">
       <Flex justifyContent="center">
         <Text fontSize="xl">{surveyState.title}</Text>
-        <Button onClick={clearCookies} >Clear Cookies</Button>
+        {false && <Button onClick={clearCookies} >Clear Cookies</Button>}
       </Flex>
       <ChatWindow
         handleSubmit={handleSubmit}
