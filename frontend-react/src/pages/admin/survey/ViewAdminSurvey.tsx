@@ -1,6 +1,7 @@
 import {
   Accordion,
   AccordionButton,
+  Box,
   Button,
   AccordionIcon,
   AccordionItem,
@@ -19,7 +20,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useQuery } from "react-query";
-import { InfoIcon, WarningIcon } from "@chakra-ui/icons";
+import { ArrowBackIcon, InfoIcon, WarningIcon } from "@chakra-ui/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   getSurveyById,
@@ -179,23 +180,33 @@ function ViewAdminSurvey() {
             </AccordionItem>
           ))}
         </Accordion>
-        <Button
-          leftIcon={<WarningIcon />}
-          mt="1rem"
-          colorScheme="red"
-          onClick={async () => {
-            await deleteSurvey(id ?? "0").then((res) => {
-              toast({
-                title: "Survey deleted",
-                status: "success",
-                isClosable: true,
+        <Box mt="2rem" display="flex" gap="0.5rem">
+          <Button
+            leftIcon={<ArrowBackIcon />}
+            colorScheme="blue"
+            onClick={() => {
+              navigate("/admin/survey");
+            }}
+          >
+            Back to home
+          </Button>
+          <Button
+            leftIcon={<WarningIcon />}
+            colorScheme="red"
+            onClick={async () => {
+              await deleteSurvey(id ?? "0").then((res) => {
+                toast({
+                  title: "Survey deleted",
+                  status: "success",
+                  isClosable: true,
+                });
               });
-            });
-            navigate("/admin/survey");
-          }}
-        >
-          Delete survey
-        </Button>
+              navigate("/admin/survey");
+            }}
+          >
+            Delete survey
+          </Button>
+        </Box>
       </VStack>
     </Flex>
   );
