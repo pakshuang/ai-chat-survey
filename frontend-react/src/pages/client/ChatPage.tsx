@@ -23,7 +23,7 @@ function ChatPage() {
   });
   const [responseId, setResponseId] = useState(1);
   const [isLast,setIslast]=useState(false)
-  console.log(messages)
+  
   async function sendMessage(message: string) {
       setIsLoading(true);
       setMessages([...messages, { sender: "user", message: message }]);
