@@ -20,6 +20,8 @@ services:
       - database
     env_file:
       - .env
+    volumes:
+      - ./backend/logs:/backend/logs
     ports:
       - ${BACKEND_HOST_PORT}:${BACKEND_CONTAINER_PORT}
 

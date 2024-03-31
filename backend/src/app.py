@@ -1,5 +1,6 @@
 import datetime
 import json
+import logging
 import os
 from functools import wraps
 
@@ -17,6 +18,9 @@ from src.llm_classes.llm_level import GPT
 from werkzeug.security import check_password_hash, generate_password_hash
 
 BACKEND_CONTAINER_PORT = os.getenv("BACKEND_CONTAINER_PORT", "5000")
+
+logging.basicConfig(filename='./logs/app.log', level=logging.INFO, 
+                    format='%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]')
 
 app = Flask(__name__)
 CORS(app)
@@ -49,13 +53,16 @@ def admin_token_required(f):
 
         # If no token found, return error
         if not token:
+            app.logger.info("Token is missing!")
             return jsonify({"message": "Token is missing!"}), 401
 
         try:
             # Decode the token
             payload = jwt.decode(token, app.config["SECRET_KEY"], algorithms=["HS256"])
+            app.logger.info("Token is valid")
 
         except jwt.InvalidTokenError:
+            app.logger.info("Token is invalid! Token: " + str(token))
             return jsonify({"message": "Token is invalid!"}), 401
 
         # Pass some payload information to the route function

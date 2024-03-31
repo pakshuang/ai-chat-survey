@@ -5,7 +5,9 @@ FROM python:3.11.8
 WORKDIR /backend
 
 # Copy the application code to the working directory
-COPY . /backend
+COPY src/ ./src
+COPY tests/ ./tests
+COPY Pipfile Pipfile.lock ./
 
 # Install the dependencies
 RUN pip install --no-cache-dir pipenv==2023.12.1 \
