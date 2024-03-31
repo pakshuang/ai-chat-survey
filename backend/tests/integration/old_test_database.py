@@ -1,5 +1,6 @@
 import requests
 
+
 def test_create_admin():
     url = "http://localhost:{}/api/v1/admins".format(
         "5000"
@@ -11,8 +12,8 @@ def test_create_admin():
     print("Response content:", response.json())
     # assert response.status_code == 201
     assert (
-            response.json()["message"] == "Admin test_admin created successfully"
-            or response.json()["message"] == "Admin already exists"
+        response.json()["message"] == "Admin test_admin created successfully"
+        or response.json()["message"] == "Admin already exists"
     )
 
 
