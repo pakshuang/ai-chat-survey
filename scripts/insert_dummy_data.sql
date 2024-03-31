@@ -3,8 +3,8 @@ USE ai_chat_survey_db;
 -- Insert data into the Admins table
 INSERT INTO Admins (admin_username, password, created_at)
 VALUES (
-        'dummy_admin',
-        'dummy_password',
+        'dummyadmin',
+        'pbkdf2:sha256:600000$rSe9X07X$0581d66b5ad787c778448827342b249ca15d6ad36320cf890c4234e597fa46d0', -- Password: dummypassword
         NOW()
     );
     -- Insert data into the Surveys table
@@ -18,7 +18,7 @@ INSERT INTO Surveys (
 VALUES (
         'P&G Environmentally Friendly Laundry Detergents',
         'This product is designed to cater to environmentally conscious consumers who are looking for effective cleaning solutions that are also gentle on the planet. The detergent is formulated using biodegradable ingredients and comes in a fully recyclable packaging. The goal of this market research is to gather feedback on consumer preferences and concerns regarding environmentally friendly laundry products, which will help in fine-tuning the product and marketing strategies.',
-        'dummy_admin',
+        'dummyadmin',
         NOW(),
         'At Procter & Gamble, we are excited to introduce our latest innovation in household cleaning products: an environmentally friendly laundry detergent. Understanding the growing concern for sustainable and effective cleaning solutions, this new product combines the efficiency and reliability of P&G''s detergents with a strong commitment to environmental stewardship. Formulated with biodegradable ingredients, the detergent ensures a powerful clean while being gentle on the earth. The packaging, made from fully recyclable materials, reflects our dedication to reducing plastic waste. This market research is aimed at understanding consumer preferences in eco-friendly laundry products, their expectations in terms of efficacy, scent, and price, and their overall perception of sustainable products. The insights gained will be invaluable in ensuring that our new detergent not only meets but exceeds the needs and expectations of environmentally conscious consumers.'
     );
@@ -84,49 +84,49 @@ VALUES (
         1,
         1,
         1,
-        'Slightly Important',
+        '["Slightly Important"]',
         NOW()
     ),   
     (
         1,
         1,
         2,
-        '["Affordability", "Effectiveness", "Brand Reputation"]',
+        '["Affordability", "Effectiveness", "Brand reputation"]',
         NOW()
     ),
     (
         1,
         1,
         3,
-        'Yes',
+        '["Yes"]',
         NOW()
     ),
     (
         1,
         1,
         4,
-        '< $3 per 5 litres',
+        '["< $3 per 5 litres"]',
+        NOW()
+    ),
+    (
+        1,
+        1,
+        5,
+        '["No microplastics, biodegradable ingredients, recyclable packaging"]',
         NOW()
     ),
     (
         1,
         1,
         6,
-        'No microplastics, biodegradable ingredients, recyclable packaging',
-        NOW()
-    ),
-    (
-        1,
-        1,
-        7,
-        'Very much committed',
+        '["Very much committed"]',
         NOW()
     ),
     (
         2,
         1,
         1,
-        'Very Important',
+        '["Very Important"]',
         NOW()
     ),
     (
@@ -140,28 +140,28 @@ VALUES (
         2,
         1,
         3,
-        'Yes',
+        '["Yes"]',
         NOW()
     ),
     (
         2,
         1,
         4,
-        'Around $10 for a bag of 20 pods',
+        '["Around $10 for a bag of 20 pods"]',
+        NOW()
+    ),
+    (
+        2,
+        1,
+        5,
+        '["Phosphate-free, high-efficiency formula, cruelty-free"]',
         NOW()
     ),
     (
         2,
         1,
         6,
-        'Phosphate-free, high-efficiency formula, cruelty-free',
-        NOW()
-    ),
-    (
-        2,
-        1,
-        7,
-        'Slightly committed',
+        '["Slightly committed"]',
         NOW()
     );
 -- Insert data into the ChatLog table
