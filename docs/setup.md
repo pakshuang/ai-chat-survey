@@ -136,11 +136,14 @@ The recommended way to run is to use docker compose instead, see [Running the Ap
 
 ## Testing (Backend)
 
-> [!IMPORTANT]
-> The tests assume that the application is running with a clean database. You should run the tests on a clean slate. For this reason, make sure that any dummy data added to the database upon launch does not interfere with the tests.
+1. [Run the Application](#running-the-application)
 
-```shell
-docker-compose up --build --force-recreate --renew-anon-volumes
-docker compose exec backend pipenv install --dev
-docker compose exec backend pipenv run pytest --cov=src
-```
+   > [!IMPORTANT]
+   > The tests assume that the application is running with a clean database. You should run the tests on a clean slate. For this reason, make sure that any dummy data added to the database upon launch does not interfere with the tests.
+
+2. Run the tests
+
+   ```shell
+   docker compose exec backend pipenv install --dev
+   docker compose exec backend pipenv run pytest --cov=src
+   ```
