@@ -6,15 +6,13 @@ from functools import wraps
 import jwt
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+from werkzeug.security import check_password_hash, generate_password_hash
+
 from src import database_operations
 from src.llm_classes.chatlog import ChatLog
-from src.llm_classes.functions import (
-    check_exit,
-    construct_chatlog,
-    format_responses_for_gpt,
-)
+from src.llm_classes.functions import (check_exit, construct_chatlog,
+                                       format_responses_for_gpt)
 from src.llm_classes.llm_level import GPT
-from werkzeug.security import check_password_hash, generate_password_hash
 
 BACKEND_CONTAINER_PORT = os.getenv("BACKEND_CONTAINER_PORT", "5000")
 

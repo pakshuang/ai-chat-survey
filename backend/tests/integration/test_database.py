@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import MagicMock, patch
 
 import pymysql
+
 from src.app import database_operations
 
 
