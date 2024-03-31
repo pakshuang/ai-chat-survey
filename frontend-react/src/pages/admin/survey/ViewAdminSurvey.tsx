@@ -18,9 +18,17 @@ import {
   Text,
   VStack,
   useToast,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
 } from "@chakra-ui/react"
 import { useQuery } from "react-query"
-import { ArrowBackIcon, InfoIcon, WarningIcon } from "@chakra-ui/icons"
+import { ArrowBackIcon, InfoIcon, DeleteIcon } from "@chakra-ui/icons"
 import { useNavigate, useParams } from "react-router-dom"
 import {
   getSurveyById,
@@ -43,6 +51,8 @@ function ViewAdminSurvey() {
 
   const navigate = useNavigate()
   const toast = useToast()
+
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   useEffect(() => {
     const ids = surveys?.map((s) => s.metadata.survey_id)
@@ -184,23 +194,44 @@ function ViewAdminSurvey() {
           >
             Back to home
           </Button>
-          <Button
-            leftIcon={<WarningIcon />}
-            colorScheme="red"
-            onClick={async () => {
-              await deleteSurvey(id ?? "0").then(() => {
-                toast({
-                  title: "Survey deleted",
-                  status: "success",
-                  isClosable: true,
-                })
-              })
-              navigate("/admin/survey")
-            }}
-          >
+          <Button leftIcon={<DeleteIcon />} colorScheme="red" onClick={onOpen}>
             Delete survey
           </Button>
         </Box>
+        <Modal
+          isCentered
+          onClose={onClose}
+          isOpen={isOpen}
+          motionPreset="slideInBottom"
+          closeOnOverlayClick={false}
+        >
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Delete this survey?</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>This action cannot be undone.</ModalBody>
+            <ModalFooter>
+              <Button variant="ghost" mr={3} onClick={onClose}>
+                Close
+              </Button>
+              <Button
+                colorScheme="red"
+                onClick={async () => {
+                  await deleteSurvey(id ?? "0").then(() => {
+                    toast({
+                      title: "Survey deleted",
+                      status: "success",
+                      isClosable: true,
+                    })
+                  })
+                  navigate("/admin/survey")
+                }}
+              >
+                Confirm
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       </VStack>
     </Flex>
   )
