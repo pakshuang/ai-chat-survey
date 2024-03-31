@@ -5,7 +5,6 @@ import pymysql
 from src.app import database_operations
 
 
-
 class TestDatabase(unittest.TestCase):
     @patch("src.app.database_operations.os.environ")
     @patch("src.app.database_operations.pymysql.connect")
