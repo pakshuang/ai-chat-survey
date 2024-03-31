@@ -67,6 +67,11 @@ export const getSurveyById = (id: string): Promise<GetSurvey> => {
     .then((res) => res.data);
 };
 
+export const deleteSurvey = (id: string) =>
+  AdminApiService(localStorage.getItem("jwt") ?? "")
+    .delete(`/surveys/${id}`)
+    .then((res) => res.data);
+
 export const sendMessageApi = (
   responseID: number,
   surveyID: number,
