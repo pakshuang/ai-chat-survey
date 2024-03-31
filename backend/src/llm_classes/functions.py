@@ -59,4 +59,4 @@ def check_exit(
     exit.append(ChatLog.END_QUERY)
     result = llm.run(exit, seed=seed)
     is_last = bool(re.search(r"[yY]es", result))
-    return is_last
+    return is_last or (len(updated_message_list) > ChatLog.MAX_LEN)
