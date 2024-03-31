@@ -6,6 +6,7 @@ This document describes how to set up the project. It is intended to be read by 
 
 - [Docker](https://www.docker.com/)
 - [Python](https://www.python.org/)
+- [Node.js](https://nodejs.org/):
 
 ## Quick Installation For Windows
 
@@ -172,3 +173,52 @@ The recommended way to run is to use docker compose instead, see [Running the Ap
    ```shell
    docker compose -f compose.yaml -f compose.tests.yaml up integration-tests --build --force-recreate --renew-anon-volumes
    ```
+
+## Frontend Development
+
+### Setting up the frontend development environment
+
+1. Navigate to the `frontend-react` directory:
+
+   ```shell
+   cd frontend-react
+   ```
+
+2. Install dependencies:
+
+   ```shell
+   npm install
+   ```
+
+3. Adding dependencies:
+
+   If you need to add a new dependency, use the following command:
+
+   ```shell
+   npm install <package-name>
+   ```
+
+   - You can specify if the package is a development dependency by adding the `--save-dev` flag.
+   - Remember to commit the `package.json` and `package-lock.json` after adding a new dependency.
+
+4. Running the frontend:
+
+   ```shell
+   npm run dev
+   ```
+
+### Running the frontend using Docker
+
+1. Building the image
+
+   ```shell
+   docker build -t frontend-react .
+   ```
+
+2. Running the image
+
+   ```shell
+   docker run --name frontend-react -p 5173:5173 frontend-react
+   ```
+
+The recommended way to run is to use docker compose instead, see [Running the Application](#running-the-application).
