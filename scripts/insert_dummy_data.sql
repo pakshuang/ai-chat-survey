@@ -6,7 +6,7 @@ VALUES (
         'dummy_admin',
         'dummy_password',
         NOW()
-    ),
+    );
     -- Insert data into the Surveys table
 INSERT INTO Surveys (
         title,
@@ -35,7 +35,7 @@ VALUES (
         1,
         'How important is environmental sustainability to you when purchasing laundry detergent?',
         'multiple_choice',
-        '["Not at all important", "Slightly Important", "Important", "Fairly Important", "Very Important""]'
+        '["Not at all important", "Slightly Important", "Important", "Fairly Important", "Very Important"]'
     ),
     (
         2,
@@ -86,7 +86,7 @@ VALUES (
         1,
         'Slightly Important',
         NOW()
-    ),
+    ),   
     (
         1,
         1,
