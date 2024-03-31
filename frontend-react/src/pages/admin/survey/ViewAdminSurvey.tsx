@@ -1,6 +1,7 @@
 import {
   Accordion,
   AccordionButton,
+  Box,
   Button,
   AccordionIcon,
   AccordionItem,
@@ -10,6 +11,7 @@ import {
   Flex,
   HStack,
   Input,
+  Textarea,
   Link,
   Select,
   Spinner,
@@ -26,7 +28,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import { useQuery } from "react-query"
-import { InfoIcon, WarningIcon } from "@chakra-ui/icons"
+import { ArrowBackIcon, InfoIcon, DeleteIcon } from "@chakra-ui/icons"
 import { useNavigate, useParams } from "react-router-dom"
 import {
   getSurveyById,
@@ -93,25 +95,27 @@ function ViewAdminSurvey() {
           <Input
             value={survey.title}
             variant="flushed"
-            size="lg"
-            fontSize="4xl"
+            size="md"
+            fontSize="3xl"
             fontWeight="bold"
             isReadOnly
           />
-          <Input
+          <Textarea
             value={survey.subtitle}
-            variant="flushed"
             size="md"
-            fontSize="xl"
+            fontSize="lg"
             mt="1rem"
+            rows={2}
+            resize="vertical"
             isReadOnly
           />
-          <Input
+          <Textarea
             value={survey.chat_context}
-            variant="flushed"
             size="md"
-            fontSize="xl"
+            fontSize="md"
             mt="1rem"
+            rows={3}
+            resize="vertical"
             isReadOnly
           />
         </Card>
@@ -180,14 +184,20 @@ function ViewAdminSurvey() {
             </AccordionItem>
           ))}
         </Accordion>
-        <Button
-          leftIcon={<WarningIcon />}
-          mt="1rem"
-          colorScheme="red"
-          onClick={onOpen}
-        >
-          Delete survey
-        </Button>
+        <Box mt="2rem" display="flex" gap="0.5rem">
+          <Button
+            leftIcon={<ArrowBackIcon />}
+            colorScheme="blue"
+            onClick={() => {
+              navigate("/admin/survey")
+            }}
+          >
+            Back to home
+          </Button>
+          <Button leftIcon={<DeleteIcon />} colorScheme="red" onClick={onOpen}>
+            Delete survey
+          </Button>
+        </Box>
         <Modal
           isCentered
           onClose={onClose}
