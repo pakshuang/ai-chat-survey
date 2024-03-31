@@ -22,29 +22,23 @@ function ChatPage() {
   });
   const [responseId, setResponseId] = useState(1);
 
-  function sendMessage(message: string) {
-    if (surveyState.submitted) {
+  async function sendMessage(message: string) {
       setIsLoading(true);
       setMessages([...messages, { sender: "user", message: message }]);
-      sendMessageApi(responseId, id, message)
-        .then((res) => res.data)
-        .then((data) => {
-          setMessages((prevMessages) => [
-            ...prevMessages,
-            { sender: "bot", message: data["content"] },
-          ]);
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          setMessages((prevMessages) => [
-            ...prevMessages,
-            { sender: "bot", message: "Error generating response" },
-          ]);
-          setIsLoading(false);
-        });
-    } else {
-      handleQuestionResponse(surveyState.displayIndex + 1, message);
-    }
+      try{
+        const res = await sendMessageApi(responseId, id, message)
+        const data = res.data
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { sender: "bot", message: data["content"] },
+        ]);
+      } catch( error){
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { sender: "bot", message: "Error generating response" },
+        ]);
+      }
+      setIsLoading(false);
   }
 
   useEffect(() => {
@@ -97,25 +91,20 @@ function ChatPage() {
       const rep = await submitBaseSurvey(body);
       setSurveyState({ ...surveyState, submitted: true });
       setResponseId(rep.data.response_id);
-      sendMessageApi(rep.data.response_id, id, "")
-        .then((res) => {
-          const data = res.data;
-          setMessages((prevMessages) => [
-            ...prevMessages,
-            { sender: "bot", message: data["content"] },
-          ]);
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          setMessages((prevMessages) => [
-            ...prevMessages,
-            { sender: "bot", message: "Error generating response" },
-          ]);
-          setIsLoading(false);
-        });
+      const res = sendMessageApi(rep.data.response_id, id, "")
+      const data = res.data;
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { sender: "bot", message: data["content"] },
+      ]);
     } catch (error) {
       console.log(error);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { sender: "bot", message: "Error generating response" },
+      ]);
     }
+    setIsLoading(false)
   };
 
   const displayMessages = surveyState.submitted
