@@ -62,7 +62,7 @@ function AdminSurveyPage() {
 
   const onSubmit = (data: Survey) => {
     data.questions.forEach((q, i) => {
-      q.id = i + 1
+      q.question_id = i + 1
       // @ts-ignore
       const options: string[] = q.options?.map((o) => o.value) ?? []
       q.options = options

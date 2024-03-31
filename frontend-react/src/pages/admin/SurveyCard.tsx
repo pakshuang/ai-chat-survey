@@ -23,7 +23,7 @@ function SurveyCard({ survey }: { survey: GetSurvey }) {
       borderWidth="1px"
       borderColor="white"
       _hover={{ borderColor: "black", cursor: "pointer" }}
-      onClick={() => navigate(`/admin/survey/${survey.metadata.id}`)}
+      onClick={() => navigate(`/admin/survey/${survey.metadata.survey_id}`)}
     >
       <CardHeader>
         <Heading size="md" noOfLines={2}>
