@@ -7,20 +7,21 @@ import { LoginSignupForm } from "./LoginSignupForm";
 import { useToast } from "@chakra-ui/react";
 
 function LoginPage() {
-
   const [searchParams] = useSearchParams();
+  const [redirectToasted, setRedirectToasted] = useState(false);
   const [isUnauthorised, setIsUnauthorised] = useState(false);
   const navigate = useNavigate();
+  const toast = useToast();
 
-  if (searchParams.get("redirect")) {
-    const toast = useToast();
+  if (searchParams.get("redirect") && !redirectToasted) {
     toast({
-      title: 'Your account has been created.',
+      title: "Your account has been created.",
       description: "Go ahead and log in.",
-      status: 'success',
+      status: "success",
       duration: 9000,
       isClosable: true,
-    })
+    });
+    setRedirectToasted(true);
   }
 
   const onSubmit: SubmitHandler<LoginSignupData> = async (values) => {
