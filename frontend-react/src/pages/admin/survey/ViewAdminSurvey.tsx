@@ -16,7 +16,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { useQuery } from "react-query"
-import { InfoIcon } from "@chakra-ui/icons";
+import { InfoIcon } from "@chakra-ui/icons"
 import { useNavigate, useParams } from "react-router-dom"
 import {
   getSurveyById,
@@ -28,18 +28,18 @@ import { needOptions, QuestionType } from "./constants"
 import { useEffect } from "react"
 
 function ViewAdminSurvey() {
-  const { id } = useParams();
+  const { id } = useParams()
 
   const { data: surveys } = useQuery("surveys", getSurveys)
 
   const { data: survey, isLoading } = useQuery(`survey-${id}`, () =>
     getSurveyById(id ?? "0")
-  );
+  )
 
   const navigate = useNavigate()
 
   useEffect(() => {
-    const ids = surveys?.map((s) => s.metadata.id)
+    const ids = surveys?.map((s) => s.metadata.survey_id)
     if (ids && !ids.includes(parseInt(id ?? "0"))) navigate("/admin/404")
   }, [surveys])
 
@@ -59,20 +59,20 @@ function ViewAdminSurvey() {
       <Center mt="3rem">
         <Spinner />
       </Center>
-    );
+    )
 
   return (
     <Flex minH="100vh" w="100%" bg="gray.100" minW="80rem">
       <VStack mx="auto" my="5rem" spacing="0" w="48rem">
         <Card w="48rem" bg="gray.50" p="1.5rem">
           <HStack>
-          <InfoIcon />
-          <Text>
-            Want to view the survey interface instead? Click{" "}
-            <Link fontWeight="700" href={`/survey/${id}`}>
-              here.
-            </Link>
-          </Text>
+            <InfoIcon />
+            <Text>
+              Want to view the survey interface instead? Click{" "}
+              <Link fontWeight="700" href={`/chat/${id}`}>
+                here.
+              </Link>
+            </Text>
           </HStack>
         </Card>
         <Card w="48rem" bg="white" p="1.5rem" mt="1rem">
@@ -112,7 +112,7 @@ function ViewAdminSurvey() {
               borderTop={0}
               borderRadius={5}
               mt="1rem"
-              key={question.id}
+              key={question.question_id}
             >
               <AccordionButton
                 h="5rem"
@@ -146,10 +146,9 @@ function ViewAdminSurvey() {
                     <option value={QuestionType.MRQ}>
                       Multiple Response Question
                     </option>
-                    <option value={QuestionType.ShortAnswer}>
-                      Short Answer
+                    <option value={QuestionType.FreeResponse}>
+                      Free Response
                     </option>
-                    <option value={QuestionType.LongAnswer}>Long Answer</option>
                   </Select>
                   {needOptions(question.type) &&
                     question.options?.map((o, i) => (
@@ -169,7 +168,7 @@ function ViewAdminSurvey() {
         </Accordion>
       </VStack>
     </Flex>
-  );
+  )
 }
 
-export default ViewAdminSurvey;
+export default ViewAdminSurvey

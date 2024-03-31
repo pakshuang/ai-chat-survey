@@ -47,20 +47,22 @@ This document describes how to set up the project. It is intended to be read by 
 To run the application, use the following command:
 
 ```shell
-docker-compose up --build
+docker-compose up -d --build
 ```
 
 If you have already built the images, you can use the following command to start the application:
 
 ```shell
-docker-compose up
+docker-compose up -d
 ```
 
 During development, you may want to run the application on a clean slate. To do this, you can use the following command:
 
 ```shell
-docker-compose up --build --force-recreate --renew-anon-volumes
+docker-compose up -d --build --force-recreate --renew-anon-volumes
 ```
+
+## Stopping the Application
 
 To stop the application, use the following command:
 
@@ -137,16 +139,39 @@ The recommended way to run is to use docker compose instead, see [Running the Ap
 
 ## Testing (Backend)
 
-1. [Run the Application](#running-the-application)
+### Unit Tests
 
-   > [!IMPORTANT]
-   > The tests assume that the application is running with a clean database. You should run the tests on a clean slate. For this reason, make sure that any dummy data added to the database upon launch does not interfere with the tests.
-
-2. Run the tests
+1. First navigate to the `backend` directory:
 
    ```shell
-   docker compose exec backend pipenv install --dev
-   docker compose exec backend pipenv run pytest --cov=src
+   cd backend
+   ```
+
+   - To run all of the unit tests:
+
+      ```shell
+      cd backend
+      pipenv run python -m pytest --cov=src tests/unit
+      ```
+
+   - To run a specific unit test file or a set of unit test files, you should specify a test file or a directory containing test files. For example, to run a specific test file or a set of test files:
+
+      ```shell
+      cd backend
+      pipenv run python -m pytest --cov=src tests/unit/<test_file.py> # specific unit test file
+      pipenv run python -m pytest --cov=src tests/unit/llm_classes # all unit test files in the llm_classes directory
+      ```
+
+### Integration Tests
+
+> [!IMPORTANT]
+> The tests assume that the application is running with a clean database. You should run the tests on a clean slate. For this reason, make sure that any dummy data added to the database upon launch does not interfere with the tests.
+
+1. First navigate to the ai-chat-survey directory the command will vary depending on which directory you are currently in
+2. Run the following command:
+
+   ```shell
+   docker compose -f compose.yaml -f compose.tests.yaml up integration-tests --build --force-recreate --renew-anon-volumes
    ```
 
 ## Frontend Development

@@ -1,8 +1,7 @@
 export enum QuestionType {
   MCQ = "multiple_choice",
   MRQ = "multiple_response",
-  ShortAnswer = "short_answer",
-  LongAnswer = "long_answer",
+  FreeResponse = "free_response",
 }
 
 export const needOptions = (type: QuestionType): boolean => {
@@ -10,7 +9,7 @@ export const needOptions = (type: QuestionType): boolean => {
 }
 
 export type Question = {
-  id: number
+  question_id: number
   question: string
   type: QuestionType
   options?: (string | { value: string })[]
@@ -33,7 +32,7 @@ export type SurveyMetadata = {
 
 export const createNewQuestion = (): Question => {
   return {
-    id: 0,
+    question_id: 0,
     question: "",
     type: QuestionType.MCQ,
     options: [{ value: "" }],
@@ -45,7 +44,7 @@ export const validate = (str: string) => {
 }
 
 export type GetSurveyMetadata = SurveyMetadata & {
-  id: number
+  survey_id: number
 }
 
 export type GetSurvey = {

@@ -66,7 +66,7 @@ function AdminHomePage() {
             <NewSurveyCard />
           </GridItem>
           {surveys?.map((survey) => (
-            <GridItem w="100%" h="20rem" key={survey.metadata.id}>
+            <GridItem w="100%" h="20rem" key={survey.metadata.survey_id}>
               <SurveyCard survey={survey} />
             </GridItem>
           ))}
