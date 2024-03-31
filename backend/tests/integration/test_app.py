@@ -2,7 +2,7 @@ import os
 
 import requests
 
-BACKEND_URL = "http://" + "backend" + ":" + os.getenv("BACKEND_CONTAINER_PORT")
+BACKEND_URL = "http://backend:" + os.getenv("BACKEND_CONTAINER_PORT")
 
 
 def test_health_check():
