@@ -23,7 +23,7 @@ function ChatPage() {
   });
   const [responseId, setResponseId] = useState(1);
   const [isLast,setIslast]=useState(false)
-
+  console.log(messages)
   async function sendMessage(message: string) {
       setIsLoading(true);
       setMessages([...messages, { sender: "user", message: message }]);
@@ -81,7 +81,7 @@ function ChatPage() {
       metadata: {
         survey_id: id,
       },
-      answers: messages
+      answers: [...messages]
         .slice(0, messages.length - 1)
         .map((ele) => ele["question"]),
     };
