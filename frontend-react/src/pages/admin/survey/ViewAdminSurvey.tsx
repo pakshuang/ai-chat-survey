@@ -39,7 +39,7 @@ function ViewAdminSurvey() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    const ids = surveys?.map((s) => s.metadata.id)
+    const ids = surveys?.map((s) => s.metadata.survey_id)
     if (ids && !ids.includes(parseInt(id ?? "0"))) navigate("/admin/404")
   }, [surveys])
 
@@ -69,7 +69,7 @@ function ViewAdminSurvey() {
           <InfoIcon />
           <Text>
             Want to view the survey interface instead? Click{" "}
-            <Link fontWeight="700" href={`/survey/${id}`}>
+            <Link fontWeight="700" href={`/chat/${id}`}>
               here.
             </Link>
           </Text>
@@ -112,7 +112,7 @@ function ViewAdminSurvey() {
               borderTop={0}
               borderRadius={5}
               mt="1rem"
-              key={question.id}
+              key={question.question_id}
             >
               <AccordionButton
                 h="5rem"

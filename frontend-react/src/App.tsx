@@ -5,13 +5,12 @@ import AdminHomePage from "./pages/admin/AdminHomePage";
 import AdminSurveyPage from "./pages/admin/survey/AdminSurveyPage";
 import SignupPage from "./pages/admin/login/SignupPage";
 import LoginPage from "./pages/admin/login/LoginPage";
-import SurveyPage from "./pages/client/survey/SurveyPage";
-import ChatPage from "./pages/client/chat/ChatPage";
+import ChatPage from "./pages/client/ChatPage";
 import { ChakraProvider } from "@chakra-ui/react";
 import { theme } from "./components/theme";
 import { QueryClient, QueryClientProvider } from "react-query";
 import ViewAdminSurvey from "./pages/admin/survey/ViewAdminSurvey";
-import NotFoundPage from "./pages/client/survey/NotFoundPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 const router = createBrowserRouter([
   { path: "/", element: <Home /> },
@@ -21,8 +20,9 @@ const router = createBrowserRouter([
   { path: "/admin/survey", element: <AdminHomePage /> },
   { path: "/admin/survey/:id", element: <ViewAdminSurvey /> },
   { path: "/admin/survey/create", element: <AdminSurveyPage /> },
-  { path: "/chat/:surveyID", element: <ChatPage /> },
-])
+  { path: "/chat/:id", element: <ChatPage /> },
+  { path: "*", element: <NotFoundPage /> },
+]);
 
 function App() {
   const queryClient = new QueryClient();
