@@ -9,6 +9,7 @@ import {
 } from "../hooks/useApi";
 import { useParams } from "react-router-dom";
 import { Messages } from "./constants";
+import ChatMessage from "./ChatMessage";
 
 function ChatPage() {
   const { id } = useParams();
@@ -21,30 +22,28 @@ function ChatPage() {
     title: "",
   });
   const [responseId, setResponseId] = useState(1);
+  const [isLast,setIslast]=useState(false)
 
-  function sendMessage(message: string) {
-    if (surveyState.submitted) {
+  async function sendMessage(message: string) {
       setIsLoading(true);
       setMessages([...messages, { sender: "user", message: message }]);
-      sendMessageApi(responseId, id, message)
-        .then((res) => res.data)
-        .then((data) => {
-          setMessages((prevMessages) => [
-            ...prevMessages,
-            { sender: "bot", message: data["content"] },
-          ]);
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          setMessages((prevMessages) => [
-            ...prevMessages,
-            { sender: "bot", message: "Error generating response" },
-          ]);
-          setIsLoading(false);
-        });
-    } else {
-      handleQuestionResponse(surveyState.displayIndex + 1, message);
-    }
+      try{
+        const res = await sendMessageApi(responseId, id, message)
+        const data = res.data
+        if (data.is_last){
+          setIslast(true)
+        }
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { sender: "bot", message: data["content"] },
+        ]);
+      } catch( error){
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { sender: "bot", message: "Error generating response" },
+        ]);
+      }
+      setIsLoading(false);
   }
 
   useEffect(() => {
@@ -94,28 +93,24 @@ function ChatPage() {
     });
 
     try {
+      setSurveyState({ ...surveyState, submitted: true })
+      setIsLoading(true)
       const rep = await submitBaseSurvey(body);
-      setSurveyState({ ...surveyState, submitted: true });
       setResponseId(rep.data.response_id);
-      sendMessageApi(rep.data.response_id, id, "")
-        .then((res) => {
-          const data = res.data;
-          setMessages((prevMessages) => [
-            ...prevMessages,
-            { sender: "bot", message: data["content"] },
-          ]);
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          setMessages((prevMessages) => [
-            ...prevMessages,
-            { sender: "bot", message: "Error generating response" },
-          ]);
-          setIsLoading(false);
-        });
+      const res = await sendMessageApi(rep.data.response_id, id, "")
+      const data = res.data;
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { sender: "bot", message: data["content"] },
+      ]);
     } catch (error) {
       console.log(error);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { sender: "bot", message: "Error generating response" },
+      ]);
     }
+    setIsLoading(false)
   };
 
   const displayMessages = surveyState.submitted
@@ -134,9 +129,10 @@ function ChatPage() {
         handleQuestionResponse={handleQuestionResponse}
         surveyState={surveyState}
       />
-      {surveyState.submitted && (
-        <ChatInput onSubmitMessage={sendMessage} isSubmitting={isLoading} />
-      )}
+      { surveyState.submitted  && !isLast &&<ChatInput onSubmitMessage={sendMessage} isSubmitting={isLoading} />}
+      {isLast && <ChatMessage sender="bot">
+          The survey is over. Thank you for your responses. You can close the page.
+        </ChatMessage>}
     </Flex>
   );
 }
