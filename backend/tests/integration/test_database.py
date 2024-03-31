@@ -1,7 +1,9 @@
 import unittest
 from unittest.mock import MagicMock, patch
-from src.app import database_operations
+
 import pymysql
+from src.app import database_operations
+
 
 
 class TestDatabase(unittest.TestCase):
