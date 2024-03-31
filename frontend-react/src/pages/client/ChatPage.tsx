@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Flex, Heading, Box, Text } from "@chakra-ui/react";
+import { Flex, Heading, Box } from "@chakra-ui/react";
 import ChatWindow from "./ChatWindow";
 import ChatInput from "./ChatInput";
 import {
