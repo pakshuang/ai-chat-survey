@@ -96,7 +96,7 @@ function ChatPage() {
       const rep = await submitBaseSurvey(body);
       setSurveyState({ ...surveyState, submitted: true });
       setResponseId(rep.data.response_id);
-      const res = sendMessageApi(rep.data.response_id, id, "")
+      const res = await sendMessageApi(rep.data.response_id, id, "")
       const data = res.data;
       setMessages((prevMessages) => [
         ...prevMessages,
