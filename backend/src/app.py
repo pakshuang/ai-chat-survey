@@ -655,7 +655,7 @@ def send_chat_message(response_id):
 
             # Convert the updated chat log dictionary back to a JSON string
             updated_chat_log = json.dumps(chat_log_dict)
-            database_operations.database_operations.update_chat_log(
+            database_operations.update_chat_log(
                 connection, survey_id, response_id, updated_chat_log
             )
     except Exception as e:
