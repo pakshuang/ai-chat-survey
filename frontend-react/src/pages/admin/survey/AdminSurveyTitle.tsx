@@ -10,8 +10,8 @@ function AdminSurveyTitle() {
       <Input
         placeholder="Untitled"
         variant="flushed"
-        size="lg"
-        fontSize="4xl"
+        size="md"
+        fontSize="3xl"
         fontWeight="bold"
         autoFocus
         autoComplete="off"
