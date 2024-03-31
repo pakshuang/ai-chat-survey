@@ -51,7 +51,7 @@ def check_exit(
     updated_message_list: list[dict[str, str]],
     llm: LLM,
     seed: int = random.randint(1, 9999),
-    delim: str = "--"
+    delim: str = "--",
 ) -> bool:
     """
     Checks if the interactive survey has come to a conclusion. Returns a boolean.
