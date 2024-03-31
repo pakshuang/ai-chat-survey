@@ -18,54 +18,54 @@ import {
   Text,
   VStack,
   useToast,
-} from "@chakra-ui/react";
-import { useQuery } from "react-query";
-import { ArrowBackIcon, InfoIcon, WarningIcon } from "@chakra-ui/icons";
-import { useNavigate, useParams } from "react-router-dom";
+} from "@chakra-ui/react"
+import { useQuery } from "react-query"
+import { ArrowBackIcon, InfoIcon, WarningIcon } from "@chakra-ui/icons"
+import { useNavigate, useParams } from "react-router-dom"
 import {
   getSurveyById,
   getSurveys,
   logout,
   shouldLogout,
   deleteSurvey,
-} from "../../hooks/useApi";
-import { needOptions, QuestionType } from "./constants";
-import { useEffect } from "react";
+} from "../../hooks/useApi"
+import { needOptions, QuestionType } from "./constants"
+import { useEffect } from "react"
 
 function ViewAdminSurvey() {
-  const { id } = useParams();
+  const { id } = useParams()
 
-  const { data: surveys } = useQuery("surveys", getSurveys);
+  const { data: surveys } = useQuery("surveys", getSurveys)
 
   const { data: survey, isLoading } = useQuery(`survey-${id}`, () =>
     getSurveyById(id ?? "0")
-  );
+  )
 
-  const navigate = useNavigate();
-  const toast = useToast();
+  const navigate = useNavigate()
+  const toast = useToast()
 
   useEffect(() => {
-    const ids = surveys?.map((s) => s.metadata.survey_id);
-    if (ids && !ids.includes(parseInt(id ?? "0"))) navigate("/admin/404");
-  }, [surveys]);
+    const ids = surveys?.map((s) => s.metadata.survey_id)
+    if (ids && !ids.includes(parseInt(id ?? "0"))) navigate("/admin/404")
+  }, [surveys])
 
   useEffect(() => {
     if (shouldLogout()) {
-      logout();
-      navigate("/admin/login");
+      logout()
+      navigate("/admin/login")
     }
   }, [
     localStorage.getItem("username"),
     localStorage.getItem("jwt"),
     localStorage.getItem("jwtExp"),
-  ]);
+  ])
 
   if (isLoading || !survey)
     return (
       <Center mt="3rem">
         <Spinner />
       </Center>
-    );
+    )
 
   return (
     <Flex minH="100vh" w="100%" bg="gray.100" minW="80rem">
@@ -82,34 +82,30 @@ function ViewAdminSurvey() {
           </HStack>
         </Card>
         <Card w="48rem" bg="white" p="1.5rem" mt="1rem">
-          <Textarea
+          <Input
             value={survey.title}
             variant="flushed"
-            size="lg"
-            fontSize="4xl"
+            size="md"
+            fontSize="3xl"
             fontWeight="bold"
-            rows={1}
-            resize="none"
             isReadOnly
           />
           <Textarea
             value={survey.subtitle}
-            variant="flushed"
             size="md"
-            fontSize="xl"
+            fontSize="lg"
             mt="1rem"
-            rows={1}
-            resize="none"
+            rows={2}
+            resize="vertical"
             isReadOnly
           />
           <Textarea
             value={survey.chat_context}
-            variant="flushed"
             size="md"
-            fontSize="xl"
+            fontSize="md"
             mt="1rem"
-            rows={1}
-            resize="none"
+            rows={3}
+            resize="vertical"
             isReadOnly
           />
         </Card>
@@ -137,15 +133,13 @@ function ViewAdminSurvey() {
                   w="full"
                   p="0.5rem"
                 >
-                  <Textarea
+                  <Input
                     value={question.question}
                     variant="unstyled"
                     size="lg"
                     fontSize="2xl"
                     fontWeight="bold"
                     w="42rem"
-                    rows={1}
-                    resize="none"
                     isReadOnly
                   />
                   <AccordionIcon />
@@ -185,7 +179,7 @@ function ViewAdminSurvey() {
             leftIcon={<ArrowBackIcon />}
             colorScheme="blue"
             onClick={() => {
-              navigate("/admin/survey");
+              navigate("/admin/survey")
             }}
           >
             Back to home
@@ -194,14 +188,14 @@ function ViewAdminSurvey() {
             leftIcon={<WarningIcon />}
             colorScheme="red"
             onClick={async () => {
-              await deleteSurvey(id ?? "0").then((res) => {
+              await deleteSurvey(id ?? "0").then(() => {
                 toast({
                   title: "Survey deleted",
                   status: "success",
                   isClosable: true,
-                });
-              });
-              navigate("/admin/survey");
+                })
+              })
+              navigate("/admin/survey")
             }}
           >
             Delete survey
@@ -209,7 +203,7 @@ function ViewAdminSurvey() {
         </Box>
       </VStack>
     </Flex>
-  );
+  )
 }
 
-export default ViewAdminSurvey;
+export default ViewAdminSurvey
