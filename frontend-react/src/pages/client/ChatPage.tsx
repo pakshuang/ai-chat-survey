@@ -9,6 +9,7 @@ import {
 } from "../hooks/useApi";
 import { useParams } from "react-router-dom";
 import { Messages } from "./constants";
+import ChatMessage from "./ChatMessage";
 
 function ChatPage() {
   const { id } = useParams();
@@ -21,6 +22,7 @@ function ChatPage() {
     title: "",
   });
   const [responseId, setResponseId] = useState(1);
+  const [isLast,setIslast]=useState(false)
 
   async function sendMessage(message: string) {
       setIsLoading(true);
@@ -28,6 +30,9 @@ function ChatPage() {
       try{
         const res = await sendMessageApi(responseId, id, message)
         const data = res.data
+        if (data.is_last){
+          setIslast(true)
+        }
         setMessages((prevMessages) => [
           ...prevMessages,
           { sender: "bot", message: data["content"] },
@@ -123,9 +128,10 @@ function ChatPage() {
         handleQuestionResponse={handleQuestionResponse}
         surveyState={surveyState}
       />
-      {surveyState.submitted && (
-        <ChatInput onSubmitMessage={sendMessage} isSubmitting={isLoading} />
-      )}
+      { surveyState.submitted  && !isLast &&<ChatInput onSubmitMessage={sendMessage} isSubmitting={isLoading} />}
+      {isLast && <ChatMessage sender="bot">
+          The survey is over. Thank you for your responses. You can close the page.
+        </ChatMessage>}
     </Flex>
   );
 }
