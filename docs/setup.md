@@ -34,9 +34,13 @@ This document describes how to set up the project. It is intended to be read by 
    ```
 
 3. Initialise `.env` file:
-
+   Windows CMD:
    ```shell
    copy sample.env .env
+   ```
+   Unix:
+   ```shell
+   cp sample.env .env
    ```
 
 4. Fill in the `.env` file with the necessary environment variables. Some of the variables are already filled in with default values.
@@ -111,6 +115,13 @@ docker-compose down --rmi all --volumes
 
 5. Running the backend:
 
+   Windows CMD:
+   ```shell
+   copy ../.env .env
+   pipenv run python src/app.py
+   ```
+
+   Unix:
    ```shell
    cp ../.env .env
    pipenv run python src/app.py
