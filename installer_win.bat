@@ -7,7 +7,7 @@ git pull origin main
 
 rem sample.env has to be updated. This will override openai api keys stored previously.
 echo Setting up variables...
-cp sample.env .env
+copy sample.env .env
 :ask
 set /p "response=Do you wish to set an OpenAI API key (Strongly recommended)? (Y/N): "
 if /i "%response%" == "N" goto docker

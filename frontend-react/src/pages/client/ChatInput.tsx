@@ -22,29 +22,28 @@ function ChatInput({ onSubmitMessage, isSubmitting }: ChatInputProps) {
 
   return (
     <form onSubmit={(e) => handleSubmit(e)}>
-      <Flex flexDirection="row" p="4">
+      <Flex flexDirection="row" p="4" pb="1rem" w="60rem" mx="auto">
         <Input
+          size="lg"
           type="text"
           placeholder="Enter message ..."
           background="white"
           borderColor="gray.500"
-          _hover={{ borderColor: "gray.500" }}
+          borderRightRadius="0"
           _focus={{
-            borderColor: "gray.500",
             boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
           }}
           onChange={(e) => setMessage(e.target.value)}
           value={message}
-          isDisabled={isSubmitting}
           ref={inputRef}
+          autoFocus
         />
         <Button
+          size="lg"
           type="submit"
-          colorScheme="gray"
-          variant="outline"
+          colorScheme="blue"
           borderColor="gray.500"
-          _hover={{ bg: "gray.300" }}
-          isDisabled={message.length===0}
+          borderLeftRadius="0"
           isLoading={isSubmitting}
         >
           Send

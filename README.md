@@ -21,18 +21,21 @@ ai-chat-survey/
 │   ├── Pipfile                # Backend dependencies
 │   ├── Pipfile.lock           # Backend dependencies
 │   ├── src/                   # Backend source files
+│   ├── tests/                 # Backend test files
 │   ├── ...
 │   └── README.md              # Backend specific documentation
 │
 ├── scripts/                   # Scripts for deployment, setup, etc.
 │
 ├── docs/                      # Documentation files
-│   ├── api-docs/              # API documentation
+│   ├── api.md                 # API documentation
 │   ├── setup.md               # Setup instructions
+│   ├── diagrams/              # UML diagrams
 │   ├── ...
 │   └── README.md              # Project-wide documentation
 │
-├── sample.env                # Sample environment variables
+├── installer_win.bat          # Quick setup script for Windows
+├── sample.env                 # Sample environment variables
 ├── .gitignore                 # Specifies intentionally untracked files to ignore
 └── README.md                  # Main project README with general information
 ```

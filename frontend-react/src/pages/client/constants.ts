@@ -38,3 +38,5 @@ export type SurveyState ={
   title: string,
   messages:Messages[],
 }
+export const surveyMessage =
+  "You've submitted the first part of our survey! Hang on tight while we process your responses...";

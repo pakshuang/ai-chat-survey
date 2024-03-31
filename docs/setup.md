@@ -6,6 +6,7 @@ This document describes how to set up the project. It is intended to be read by 
 
 - [Docker](https://www.docker.com/)
 - [Python](https://www.python.org/)
+- [Node.js](https://nodejs.org/):
 
 ## Quick Installation For Windows
 
@@ -34,7 +35,11 @@ This document describes how to set up the project. It is intended to be read by 
    ```
 
 3. Initialise `.env` file:
-
+   Windows CMD:
+   ```shell
+   copy sample.env .env
+   ```
+   Unix:
    ```shell
    cp sample.env .env
    ```
@@ -111,6 +116,13 @@ docker-compose down --rmi all --volumes
 
 5. Running the backend:
 
+   Windows CMD:
+   ```shell
+   copy ../.env .env
+   pipenv run python src/app.py
+   ```
+
+   Unix:
    ```shell
    cp ../.env .env
    pipenv run python src/app.py
@@ -166,9 +178,65 @@ The recommended way to run is to use docker compose instead, see [Running the Ap
 > [!IMPORTANT]
 > The tests assume that the application is running with a clean database. You should run the tests on a clean slate. For this reason, make sure that any dummy data added to the database upon launch does not interfere with the tests.
 
-1. First navigate to the ai-chat-survey directory the command will vary depending on which directory you are currently in
-2. Run the following command:
+1. Navigate to the `ai-chat-survey` directory, the command will vary depending on which directory you are currently in
+2. Run the integration tests:
 
    ```shell
    docker compose -f compose.yaml -f compose.tests.yaml up integration-tests --build --force-recreate --renew-anon-volumes
    ```
+
+
+3. Shutdown the containers and remove the volumes after running the tests:
+
+   ```shell
+   docker compose -f compose.yaml -f compose.tests.yaml down -v
+   ```
+
+## Frontend Development
+
+### Setting up the frontend development environment
+
+1. Navigate to the `frontend-react` directory:
+
+   ```shell
+   cd frontend-react
+   ```
+
+2. Install dependencies:
+
+   ```shell
+   npm install
+   ```
+
+3. Adding dependencies:
+
+   If you need to add a new dependency, use the following command:
+
+   ```shell
+   npm install <package-name>
+   ```
+
+   - You can specify if the package is a development dependency by adding the `--save-dev` flag.
+   - Remember to commit the `package.json` and `package-lock.json` after adding a new dependency.
+
+4. Running the frontend:
+
+   ```shell
+   npm run dev
+   ```
+
+### Running the frontend using Docker
+
+1. Building the image
+
+   ```shell
+   docker build -t frontend-react .
+   ```
+
+2. Running the image
+
+   ```shell
+   docker run --name frontend-react -p 5173:5173 frontend-react
+   ```
+
+The recommended way to run is to use docker compose instead, see [Running the Application](#running-the-application).

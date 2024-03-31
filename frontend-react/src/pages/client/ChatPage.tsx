@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Flex, Text } from "@chakra-ui/react";
+import { Button,Flex, Heading, Text } from "@chakra-ui/react";
 import ChatWindow from "./ChatWindow";
 import ChatInput from "./ChatInput";
 import {
@@ -8,7 +8,7 @@ import {
   submitBaseSurvey,
 } from "../hooks/useApi";
 import { useParams } from "react-router-dom";
-import { SurveyState,Question} from "./constants";
+import { SurveyState,Question, surveyMessage "} from "./constants";
 import ChatMessage from "./ChatMessage";
 import Cookies from 'js-cookie';
 
@@ -119,10 +119,15 @@ function ChatPage() {
   };
   const displayedMessages = surveyState.submitted ? surveyState.messages : surveyState.messages.slice(0,surveyState.displayIndex+1)
   return (
-    <Flex flexDirection="column" bg="gray.100" h="100vh" p="1">
+    <Flex
+      flexDirection="column"
+      bg="gray.100"
+      h="100vh"
+      w="100%"
+      minW="65rem"
+    >
       <Flex justifyContent="center">
-        <Text fontSize="xl">{surveyState.title}</Text>
-        {false && <Button onClick={clearCookies} >Clear Cookies</Button>}
+        <Heading fontSize="xl" p="1rem">{surveyState.title}</Heading>
       </Flex>
       <ChatWindow
         handleSubmit={handleSubmit}
@@ -131,10 +136,15 @@ function ChatPage() {
         handleQuestionResponse={handleQuestionResponse}
         surveyState={surveyState}
       />
-      { surveyState.submitted  && !isLast &&<ChatInput onSubmitMessage={sendMessage} isSubmitting={isLoading} />}
-      {isLast && <ChatMessage sender="bot">
-          The survey is over. Thank you for your responses. You can close the page.
-        </ChatMessage>}
+      {surveyState.submitted && !isLast && (
+        <ChatInput onSubmitMessage={sendMessage} isSubmitting={isLoading} />
+      )}
+      {isLast && (
+        <ChatMessage sender="bot">
+          The survey is over. Thank you for your responses. You can close the
+          page.
+        </ChatMessage>
+      )}
     </Flex>
   );
 }

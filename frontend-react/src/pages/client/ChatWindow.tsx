@@ -3,7 +3,7 @@ import { useRef, useEffect, useState } from "react";
 import ChatMessage from "./ChatMessage";
 import TypingEffect from "./TypingEffect";
 import QuestionInput from "./QuestionInput";
-import { ChatWindowProps } from "./constants";
+import { ChatWindowProps, surveyMessage } from "./constants";
 
 function ChatWindow({
   messages,
@@ -32,7 +32,8 @@ function ChatWindow({
     <Box
       overflowY="auto"
       flex="1"
-      p="3"
+      w="60rem"
+      mx="auto"
       css={{
         "::-webkit-scrollbar": {
           width: "5px",
@@ -54,21 +55,21 @@ function ChatWindow({
       <ChatMessage sender="bot">{surveyState.subtitle}</ChatMessage>
       {messages.map((item, index) => {
         if (index === messages.length - 1 && botResponded) {
-          if (item.message === "You submitted the pre-survey") {
-            if (surveyState.submitted){
-              return   <ChatMessage sender={item.sender}>
-              {item.message}
-            </ChatMessage>
+          if (item.message === surveyMessage) {
+            if (surveyState.submitted) {
+              return (
+                <ChatMessage sender={item.sender}>{item.message}</ChatMessage>
+              );
             }
             return (
               <ChatMessage sender={"bot"}>
                 <Flex flexDirection="column">
                   <TypingEffect
-                    text="Thank you for your responses. Please confirm your answers now, as they can't be changed later. Once confirmed, we'll continue with our discussion"
+                    text="Thank you for your responses. Please confirm your answers now, as they can't be changed later. Once confirmed, we'll continue with our discussion."
                     scrollToBottom={scrollToBottom}
                   ></TypingEffect>
                   <Box>
-                    <Button onClick={handleSubmit} colorScheme="green" isDisabled={disabled}>
+                    <Button onClick={handleSubmit} colorScheme="green" mt="0.5rem"isDisabled={disabled}>
                       Confirm
                     </Button>
                     {disabled &&  `Please complete question(s) ` +messages
