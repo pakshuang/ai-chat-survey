@@ -4,7 +4,7 @@ USE ai_chat_survey_db;
 INSERT INTO Admins (admin_username, password, created_at)
 VALUES (
         'dummyadmin',
-        'dummypassword',
+        'pbkdf2:sha256:600000$rSe9X07X$0581d66b5ad787c778448827342b249ca15d6ad36320cf890c4234e597fa46d0', -- Password: dummypassword
         NOW()
     );
     -- Insert data into the Surveys table
