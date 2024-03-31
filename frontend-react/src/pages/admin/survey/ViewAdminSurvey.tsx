@@ -24,7 +24,6 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
-  Textarea,
 } from "@chakra-ui/react"
 import { useQuery } from "react-query"
 import { InfoIcon, WarningIcon } from "@chakra-ui/icons"
@@ -99,24 +98,20 @@ function ViewAdminSurvey() {
             fontWeight="bold"
             isReadOnly
           />
-          <Text mt="1rem" fontSize="lg" as="b">
-            Subtitle
-          </Text>
-          <Textarea
+          <Input
             value={survey.subtitle}
-            fontSize="lg"
-            mt="0.5rem"
-            resize="vertical"
+            variant="flushed"
+            size="md"
+            fontSize="xl"
+            mt="1rem"
             isReadOnly
           />
-          <Text mt="1rem" fontSize="lg" as="b">
-            Chatbot context
-          </Text>
-          <Textarea
+          <Input
             value={survey.chat_context}
-            fontSize="lg"
-            mt="0.5rem"
-            resize="vertical"
+            variant="flushed"
+            size="md"
+            fontSize="xl"
+            mt="1rem"
             isReadOnly
           />
         </Card>
