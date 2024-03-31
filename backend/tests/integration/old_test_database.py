@@ -158,7 +158,7 @@ def test_submit_response():
             },
             {
                 "question_id": 3,
-                "type": "long_answer",
+                "type": "free_response",
                 "question": "Do you have any feedback about the venue?",
                 "options": [],  # Empty list provided for long answer question
                 "answer": ["The venue was spacious and well-maintained."],

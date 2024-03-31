@@ -169,7 +169,6 @@ def create_survey(connection, data):
         return survey_id
     except Exception as e:
         connection.rollback()
-        print(e)
         raise e
 
 
