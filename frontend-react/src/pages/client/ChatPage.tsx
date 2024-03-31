@@ -8,7 +8,7 @@ import {
   submitBaseSurvey,
 } from "../hooks/useApi";
 import { useParams } from "react-router-dom";
-import { SurveyState,Question, surveyMessage "} from "./constants";
+import { SurveyState,Question, surveyMessage } from "./constants";
 import ChatMessage from "./ChatMessage";
 import Cookies from 'js-cookie';
 
@@ -65,7 +65,7 @@ function ChatPage() {
           title: rep.data.title,
           messages:[
             ...answeredQuestions,
-            { sender: "bot", message: "You submitted the pre-survey" },
+            { sender: "bot", message: surveyMessage },
           ]
         });
       });
@@ -128,6 +128,7 @@ function ChatPage() {
     >
       <Flex justifyContent="center">
         <Heading fontSize="xl" p="1rem">{surveyState.title}</Heading>
+        {false &&<Button onClick={clearCookies}> s</Button>}
       </Flex>
       <ChatWindow
         handleSubmit={handleSubmit}

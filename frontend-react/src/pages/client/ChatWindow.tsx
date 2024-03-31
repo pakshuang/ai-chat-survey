@@ -25,9 +25,8 @@ function ChatWindow({
     if (messages.slice(-1)[0]?.sender === "user") {
       setBotResponded(false);
     }
-    scrollToBottom();
   }, [messages]);
-  const disabled=messages.filter((ele) => ele.question!==undefined).some((ele) => ele.question.answer.length === 0 || ele.question.answer==="");
+  const disabled=messages.filter((ele) => ele.question!==undefined).some((ele) => ele.question.answer==undefined || ele.question.answer.length === 0 || ele.question.answer==="");
   return (
     <Box
       overflowY="auto"
@@ -69,7 +68,7 @@ function ChatWindow({
                     scrollToBottom={scrollToBottom}
                   ></TypingEffect>
                   <Box>
-                    <Button onClick={handleSubmit} colorScheme="green" mt="0.5rem"isDisabled={disabled}>
+                    <Button onClick={handleSubmit} colorScheme="green" mt="0.5rem" isDisabled={disabled}>
                       Confirm
                     </Button>
                     {disabled &&  `Please complete question(s) ` +messages

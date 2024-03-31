@@ -22,9 +22,8 @@ function TypingEffect({
         currentText += text[currentText.length];
         setDisplayText(currentText);
       }
-      scrollToBottom();
+      scrollToBottom()
     }, typingSpeed);
-
     return () => clearInterval(typingInterval);
   }, [text, typingSpeed]);
 
