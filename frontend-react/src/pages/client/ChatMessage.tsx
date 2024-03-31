@@ -1,10 +1,10 @@
-import { Flex, Box, Avatar, Text, Divider } from "@chakra-ui/react";
-import { ChatMessageProps } from "./constants";
+import { Flex, Box, Avatar, Text } from "@chakra-ui/react"
+import { ChatMessageProps } from "./constants"
 
 function ChatMessage({ children, sender }: ChatMessageProps) {
-  const isUser = sender === "user";
+  const isUser = sender === "user"
   return (
-    <Box bg={isUser ? "gray.400" : "gray.200"}>
+    <Box bg={isUser ? "gray.400" : "gray.200"} px="0.5rem" py="1rem">
       <Flex>
         {isUser ? (
           <Avatar name="User" size="md" ml="1" mt="2" />
@@ -16,13 +16,12 @@ function ChatMessage({ children, sender }: ChatMessageProps) {
             mt="2"
           />
         )}
-        <Flex alignItems="center">
+        <Flex alignItems="center" ml="0.5rem">
           <Text fontSize="xl">{children}</Text>
         </Flex>
       </Flex>
-      <Divider borderColor="black" mt="4"></Divider>
     </Box>
-  );
+  )
 }
 
-export default ChatMessage;
+export default ChatMessage
