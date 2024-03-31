@@ -9,6 +9,7 @@ import {
   Select,
   Button,
   VStack,
+  Textarea,
 } from "@chakra-ui/react"
 import AdminSurveyOptions from "./AdminSurveyOptions"
 import { UseFieldArrayRemove, useFormContext, useWatch } from "react-hook-form"
@@ -62,13 +63,15 @@ function AdminSurveyAccordion({
           w="full"
           p="0.5rem"
         >
-          <Input
+          <Textarea
             placeholder="Question"
             variant="unstyled"
             size="lg"
             fontSize="2xl"
             fontWeight="bold"
             w="42rem"
+            rows={1}
+            resize="none"
             onClick={(e) => e.stopPropagation()}
             onKeyUp={(e) => e.preventDefault()}
             {...register(`questions.${index}.question`, { validate })}

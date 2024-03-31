@@ -10,6 +10,7 @@ import {
   Flex,
   HStack,
   Input,
+  Textarea,
   Link,
   Select,
   Spinner,
@@ -80,28 +81,34 @@ function ViewAdminSurvey() {
           </HStack>
         </Card>
         <Card w="48rem" bg="white" p="1.5rem" mt="1rem">
-          <Input
+          <Textarea
             value={survey.title}
             variant="flushed"
             size="lg"
             fontSize="4xl"
             fontWeight="bold"
+            rows={1}
+            resize="none"
             isReadOnly
           />
-          <Input
+          <Textarea
             value={survey.subtitle}
             variant="flushed"
             size="md"
             fontSize="xl"
             mt="1rem"
+            rows={1}
+            resize="none"
             isReadOnly
           />
-          <Input
+          <Textarea
             value={survey.chat_context}
             variant="flushed"
             size="md"
             fontSize="xl"
             mt="1rem"
+            rows={1}
+            resize="none"
             isReadOnly
           />
         </Card>
@@ -129,13 +136,15 @@ function ViewAdminSurvey() {
                   w="full"
                   p="0.5rem"
                 >
-                  <Input
+                  <Textarea
                     value={question.question}
                     variant="unstyled"
                     size="lg"
                     fontSize="2xl"
                     fontWeight="bold"
                     w="42rem"
+                    rows={1}
+                    resize="none"
                     isReadOnly
                   />
                   <AccordionIcon />
