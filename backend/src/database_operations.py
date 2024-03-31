@@ -114,7 +114,11 @@ def validate_survey_object(data):
             if key not in question:
                 return False, f"Missing or empty '{key}' field in a question"
             elif key == "type":
-                if question[key] not in ["multiple_choice", "multiple_response", "free_response"]:
+                if question[key] not in [
+                    "multiple_choice",
+                    "multiple_response",
+                    "free_response",
+                ]:
                     return False, f"Invalid question type"
 
         if not isinstance(question["options"], list):
@@ -275,7 +279,11 @@ def validate_response_object(response_data):
             if key not in answer:
                 return False, f"Each answer must contain '{key}' key"
             elif key == "type":
-                if answer[key] not in ["multiple_choice", "multiple_response", "free_response"]:
+                if answer[key] not in [
+                    "multiple_choice",
+                    "multiple_response",
+                    "free_response",
+                ]:
                     return False, f"Invalid question type"
 
         if not isinstance(answer["question_id"], int):
