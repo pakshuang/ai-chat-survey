@@ -28,10 +28,12 @@ class ChatLog:
         "role": "system",
         "content": """Would you like to end the interview here? 
         Remember that you should thank the user for their time before ending the interview, so your answer should be 'no' if you haven't.
-        Your reply should adhere STRICTLY to the format in the example below. Separate your reasoning and the answer (Yes/No) with the symbols --.
-        Example:
+        Your reply should adhere STRICTLY to the format provided below. Separate your reasoning and the answer (Yes/No) with the symbols --.
+        Here are two examples.
+        Example 1:
         I asked a question and I am waiting for a response therefore I do not wish to end this interview -- No.
-
+        Example 2:
+        The user seems uncooperative and I am unlikely to receive a response, but I have not thanked the user for their time and said goodbye -- No.
         """,
     }
 
