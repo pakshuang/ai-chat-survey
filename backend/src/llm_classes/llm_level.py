@@ -13,7 +13,7 @@ class LLM(ABC):
     """
 
     @abstractmethod
-    def run(self, messages: list) -> str:
+    def run(self, messages: list, seed: int = random.randint(1, 9999)) -> str:
         return
 
 
@@ -38,22 +38,40 @@ class GPT(LLM):
         )
         return output.choices[0].message.content
 
-
-class RoleException(Exception):
+class LocalLLMGPTQ(LLM):
+    # LOCAL-LLMS CAN BE DEFINED IN THIS CLASS SUCH THAT THE APP CAN SUPPORT LOCALLLMS
+    # REQUIRES:
+    # 1. THE TRANSFORMERS LIBRARY, WHICH IS NOT IMPORTED:
+    #       from transformers import AutoModelForCausalLM, AutoTokenizer
+    # 2. NVIDIA-GPU (With at least 8GB VRAM)
+    # 3. CUDA (At least 11.8)
+    # The following skeleton code will help:
+    # path = "C:\..." (Where you store your model)
+    # model = AutoModelForCausalLM.from_pretrained(path, device_map="cuda")
+    # tokenizer = AutoTokenizer.from_pretrained(path)
+    # 
     """
-    Raised when choosing multiple roles.
+    A class for GPTQ-quantised LLM
     """
+    def __init__(self, path):
+        pass
+        # model = AutoModelForCausalLM.from_pretrained(path, device_map="cuda")
+        # tokenizer = AutoTokenizer.from_pretrained(path)
+        # self.model, self.tokenizer = model, tokenizer
+    
+    def run(self, messages: list, seed: int = random.randint(1, 9999)):
+        pass
+        
+        # conversations = self.tokenizer.apply_chat_template(messages)
+        # input_ids = self.tokenizer(messages, return_tensors='pt').input_ids.cuda()
 
-    def __init__(self):
-        self.message = "Cannot be both assistant and llm!"
-        super().__init__(self.message)
-
-
-class EmptyException(Exception):
-    """
-    Raised when a ChatLog is instantiated with an empty list.
-    """
-
-    def __init__(self):
-        self.message = "Cannot have empty message list!"
-        super().__init__(self.message)
+        # return self.model.generate(
+        # inputs=input_ids,
+        # temperature=0.7, 
+        # do_sample=True, 
+        # top_p=0.95, 
+        # top_k=40, 
+        # repetition_penalty=1,
+        # max_new_tokens=2048,
+        # eos_token_id=bot.tok.eos_token_id,
+        # )
