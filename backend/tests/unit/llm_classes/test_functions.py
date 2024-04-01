@@ -28,8 +28,7 @@ class TestGPTFunctions(TestCase):
                 "question": "questionmrq?",
                 "options": ["option 1", "option 2", "option 3"],
                 "answer": ["option 1, option 2"],
-            }
-
+            },
         ],
     }
 
@@ -162,7 +161,7 @@ Answer: Keep up the good work!
             chatlog.current_index,
             is_llm=True,
         )
-        
+
         boolean = check_exit(chatlog.message_list, llm=chatlog.llm, seed=seed)
         self.assertTrue(boolean)
         self.assertTrue(len(chatlog) > 30)

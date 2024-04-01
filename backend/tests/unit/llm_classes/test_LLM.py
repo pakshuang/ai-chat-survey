@@ -4,7 +4,6 @@ from unittest.mock import patch
 
 import pytest
 from openai import OpenAI
-
 from src.llm_classes.exceptions import RoleException
 from src.llm_classes.functions import construct_chatlog
 from src.llm_classes.llm_level import GPT
@@ -194,4 +193,3 @@ Answer: Keep up the good work!
                 "User response", chat_log.current_index, is_llm=True, is_sys=True
             )
         assert isinstance(ex.value.__cause__, RoleException)
-
