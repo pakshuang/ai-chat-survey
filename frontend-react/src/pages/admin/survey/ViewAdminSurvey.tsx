@@ -1,6 +1,8 @@
 import {
   Accordion,
   AccordionButton,
+  Box,
+  Button,
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
@@ -9,20 +11,31 @@ import {
   Flex,
   HStack,
   Input,
+  Textarea,
   Link,
   Select,
   Spinner,
   Text,
   VStack,
+  useToast,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
 } from "@chakra-ui/react"
 import { useQuery } from "react-query"
-import { InfoIcon } from "@chakra-ui/icons"
+import { ArrowBackIcon, InfoIcon, DeleteIcon } from "@chakra-ui/icons"
 import { useNavigate, useParams } from "react-router-dom"
 import {
   getSurveyById,
   getSurveys,
   logout,
   shouldLogout,
+  deleteSurvey,
 } from "../../hooks/useApi"
 import { needOptions, QuestionType } from "./constants"
 import { useEffect } from "react"
@@ -37,6 +50,9 @@ function ViewAdminSurvey() {
   )
 
   const navigate = useNavigate()
+  const toast = useToast()
+
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   useEffect(() => {
     const ids = surveys?.map((s) => s.metadata.survey_id)
@@ -79,25 +95,27 @@ function ViewAdminSurvey() {
           <Input
             value={survey.title}
             variant="flushed"
-            size="lg"
-            fontSize="4xl"
+            size="md"
+            fontSize="3xl"
             fontWeight="bold"
             isReadOnly
           />
-          <Input
+          <Textarea
             value={survey.subtitle}
-            variant="flushed"
             size="md"
-            fontSize="xl"
+            fontSize="lg"
             mt="1rem"
+            rows={2}
+            resize="vertical"
             isReadOnly
           />
-          <Input
+          <Textarea
             value={survey.chat_context}
-            variant="flushed"
             size="md"
-            fontSize="xl"
+            fontSize="md"
             mt="1rem"
+            rows={3}
+            resize="vertical"
             isReadOnly
           />
         </Card>
@@ -166,6 +184,54 @@ function ViewAdminSurvey() {
             </AccordionItem>
           ))}
         </Accordion>
+        <Box mt="2rem" display="flex" gap="0.5rem">
+          <Button
+            leftIcon={<ArrowBackIcon />}
+            colorScheme="blue"
+            onClick={() => {
+              navigate("/admin/survey")
+            }}
+          >
+            Back to home
+          </Button>
+          <Button leftIcon={<DeleteIcon />} colorScheme="red" onClick={onOpen}>
+            Delete survey
+          </Button>
+        </Box>
+        <Modal
+          isCentered
+          onClose={onClose}
+          isOpen={isOpen}
+          motionPreset="slideInBottom"
+          closeOnOverlayClick={false}
+        >
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Delete this survey?</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>This action cannot be undone.</ModalBody>
+            <ModalFooter>
+              <Button variant="ghost" mr={3} onClick={onClose}>
+                Close
+              </Button>
+              <Button
+                colorScheme="red"
+                onClick={async () => {
+                  await deleteSurvey(id ?? "0").then(() => {
+                    toast({
+                      title: "Survey deleted",
+                      status: "success",
+                      isClosable: true,
+                    })
+                  })
+                  navigate("/admin/survey")
+                }}
+              >
+                Confirm
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       </VStack>
     </Flex>
   )

@@ -57,7 +57,7 @@ def admin_token_required(f):
         # If no token found, return error
         if not token:
             app.logger.info("Token is missing!")
-            return jsonify({"message": "Token is missing!"}), 401
+            return jsonify({"message": "Token is missing!"}), 400
 
         try:
             # Decode the token
@@ -190,7 +190,7 @@ def create_survey(**kwargs):
     # If there is no data attached in request body
     if not data:
         app.logger.info("No survey object was attached")
-        return jsonify({"message": "Invalid data"}), 400
+        return jsonify({"message": "Missing data"}), 400
     # Validate survey object format
     is_valid, message = database_operations.validate_survey_object(data)
     if not is_valid:
@@ -312,8 +312,8 @@ def get_survey(survey_id):
             app.logger.error("Error fetching survey: Database error")
             return jsonify({"message": "Error fetching survey"}), 500
         elif not survey_data:
-            app.logger.info("No survey found")
-            return jsonify({"message": "No survey found"}), 404
+            app.logger.info("Survey not found")
+            return jsonify({"message": "Survey not found"}), 404
 
         # Group survey data by survey ID and collect questions
         survey_object = {}
@@ -338,10 +338,6 @@ def get_survey(survey_id):
 @app.route("/api/v1/surveys/<survey_id>", methods=["DELETE"])
 @admin_token_required
 def delete_survey(survey_id, **kwargs):
-    if not survey_id:
-        app.logger.info("Missing survey ID")
-        return jsonify({"message": "Missing survey ID"}), 400
-
     # Check if survey exists, return 404 if not
     # Connect to the database
     connection = database_operations.connect_to_mysql()
