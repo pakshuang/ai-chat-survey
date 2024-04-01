@@ -19,14 +19,20 @@ class ChatLog:
 
     SYSPROMPT2 = """Remember these few questions. This is a semi-structured interview, and try to keep asking questions, based on the user replies, or the questions you generated to ask the user. 
     When you have no more questions left to ask, remember to thank the user for their time. Only ask the user one question at a time. The user is a customer. Politely decline all inappropriate requests.
-    After that, the system will ask you if you would like to end the interview. Please reply 'yes' if you would like to end the interview or 'no', if you would like to continue. ONLY SAY 'yes' AFTER YOU HAVE THANKED THE USER.
+    After that, the system will ask you if you would like to end the interview. Reply with a 'no' if you would like to continue the interview, and 'yes' otherwise.
+    ONLY DECIDE TO END THE INTERVIEW AFTER YOU HAVE THANKED THE USER.
     Now, please ask the user a question.
     """
 
     END_QUERY = {
         "role": "system",
-        "content": """Would you like to end the interview here? If you have not thanked the user, please say 'no'. 
-                If you have more questions to ask the user, or if the user has not replied, please also say 'no'. """,
+        "content": """Would you like to end the interview here? 
+        Remember that you should thank the user for their time before ending the interview, so your answer should be 'no' if you haven't.
+        Your reply should adhere STRICTLY to the format in the example below. Separate your reasoning and the answer (Yes/No) with the symbols --.
+        Example:
+        I asked a question and I am waiting for a response therefore I do not wish to end this interview -- No.
+
+        """,
     }
 
     def __init__(
