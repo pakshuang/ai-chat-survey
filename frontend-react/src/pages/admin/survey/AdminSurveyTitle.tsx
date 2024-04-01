@@ -1,4 +1,4 @@
-import { Card, Input } from "@chakra-ui/react"
+import { Card, Input, Textarea } from "@chakra-ui/react"
 import { useFormContext } from "react-hook-form"
 import { Survey, validate } from "./constants"
 
@@ -10,29 +10,31 @@ function AdminSurveyTitle() {
       <Input
         placeholder="Untitled"
         variant="flushed"
-        size="lg"
-        fontSize="4xl"
+        size="md"
+        fontSize="3xl"
         fontWeight="bold"
         autoFocus
         autoComplete="off"
         {...register("title", { validate })}
       />
-      <Input
+      <Textarea
         placeholder="Description"
-        variant="flushed"
         size="md"
-        fontSize="xl"
+        fontSize="lg"
         mt="1rem"
         autoComplete="off"
+        rows={2}
+        resize="vertical"
         {...register("subtitle", { validate })}
       />
-      <Input
+      <Textarea
         placeholder="Overall context for the chatbot"
-        variant="flushed"
         size="md"
-        fontSize="xl"
+        fontSize="md"
         mt="1rem"
         autoComplete="off"
+        rows={3}
+        resize="vertical"
         {...register("chat_context", { validate, maxLength: 1000 })}
       />
     </Card>
