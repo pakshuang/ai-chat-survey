@@ -7,7 +7,6 @@ from src.llm_classes.llm_level import GPT
 
 
 class TestGPTFunctions(TestCase):
-
     RESPONSE_FULL = {
         "metadata": {
             "survey_id": "integer",
@@ -134,7 +133,6 @@ Answer: Keep up the good work!
             assert is_last
 
     def test_check_exit_many(self):
-
         seed = 120
         chatlog = construct_chatlog(TestGPTFunctions.FORMATTED, seed=seed)
         chatlog.insert_and_update(
