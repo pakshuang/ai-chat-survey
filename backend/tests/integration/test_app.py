@@ -630,3 +630,9 @@ def test_get_response_wrong_admin():
     assert response.json() == {"message": "Accessing other admin's surveys is forbidden"}
 
 
+def test_get_response_not_found():
+    headers = {"Authorization": "Bearer " + VALID_JWT}
+    response = requests.get(RESPONSE_ENDPOINT + "/0?survey=1", headers=headers)
+
+    assert response.status_code == 404
+    assert response.json() == {"message": "Response not found"}
