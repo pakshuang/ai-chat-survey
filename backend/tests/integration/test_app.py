@@ -23,7 +23,7 @@ def test_create_admin_success():
         json={"username": "admin1", "password": "password1"},
     )
 
-    print(response.json())
+    assert response.json() == {"message": "Admin admin1 created successfully"}
     assert response.status_code == 201
 
 
