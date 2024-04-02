@@ -477,7 +477,7 @@ def test_submit_response_response_survey_incongruent():
 
 def test_get_responses_success():
     headers = {"Authorization": "Bearer " + VALID_JWT}
-    response = requests.get(RESPONSE_ENDPOINT, headers=headers)
+    response = requests.get(RESPONSE_ENDPOINT + "?survey=1", headers=headers)
 
     response_data = {
         "metadata": {"response_id": 1, "survey_id": 1},
@@ -508,6 +508,14 @@ def test_get_responses_success():
 
     assert response.status_code == 200
     assert response.json().get("answers") == [response_data]
+
+
+def test_get_responses_missing_survey():
+    headers = {"Authorization": "Bearer " + VALID_JWT}
+    response = requests.get(RESPONSE_ENDPOINT, headers=headers)
+
+    assert response.status_code == 400
+    assert response.json() == {"message": "Missing Survey ID"}
 
 
 def test_get_responses_unauthorized():
