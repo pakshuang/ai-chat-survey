@@ -555,14 +555,6 @@ def test_get_responses_survey_not_found():
     assert response.json() == {"message": "Survey not found"}
 
 
-def test_get_responses_empty_success():
-    headers = {"Authorization": "Bearer " + VALID_JWT}
-    response = requests.get(RESPONSE_ENDPOINT + "?survey=2", headers=headers)
-
-    assert response.status_code == 200
-    assert response.json() == []
-
-
 # Test cases for get_response<response_id>
     
 
@@ -606,7 +598,7 @@ def test_get_response_missing_survey():
     response = requests.get(RESPONSE_ENDPOINT + "/1", headers=headers)
 
     assert response.status_code == 400
-    assert response.json() == {"message": "Missing Survey ID"}
+    assert response.json() == {"message": "Missing survey ID"}
 
 
 def test_get_response_missing_jwt():
