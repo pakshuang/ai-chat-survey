@@ -515,7 +515,7 @@ def test_get_responses_missing_survey():
     response = requests.get(RESPONSE_ENDPOINT, headers=headers)
 
     assert response.status_code == 400
-    assert response.json() == {"message": "Missing Survey ID"}
+    assert response.json() == {"message": "Missing survey ID"}
 
 
 def test_get_responses_missing_jwt():
@@ -628,4 +628,5 @@ def test_get_response_wrong_admin():
 
     assert response.status_code == 403
     assert response.json() == {"message": "Accessing other admin's surveys is forbidden"}
+
 
