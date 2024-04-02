@@ -620,7 +620,7 @@ def helper_send_message(
         else:
             pipe = ChatLog(message_list, llm=llm)
             pipe.insert_and_update(data_content, pipe.current_index)  # user input
-            next_question = llm.run(pipe.message_list)    
+            next_question = llm.run(pipe.message_list)
             updated_message_list = pipe.insert_and_update(
                 next_question, pipe.current_index, is_llm=True
             )

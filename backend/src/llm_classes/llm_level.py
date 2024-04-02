@@ -8,7 +8,6 @@ import openai
 from openai import OpenAI
 
 
-
 class LLM(ABC):
     """
     A large language model class.
@@ -16,8 +15,11 @@ class LLM(ABC):
     """
 
     @abstractmethod
-    def run(self, messages: list, seed: int = random.randint(1, 9999), with_moderation=True) -> str:
+    def run(
+        self, messages: list, seed: int = random.randint(1, 9999), with_moderation=True
+    ) -> str:
         return
+
 
 class ContentModeration:
     """
@@ -26,9 +28,10 @@ class ContentModeration:
     Redefine this class if the application is scaled for a larger user-base.
     """
 
-    def __init__(self, client): 
+    def __init__(self, client):
         self.default = "Sorry, I cannot help with that. This is inappropriate and your queries are being logged."
         self.client = client
+
     def is_harmful(self, text: str) -> bool:
         """
         Checks if text is harmful and inappropriate. Returns a boolean.
@@ -37,7 +40,6 @@ class ContentModeration:
         response = self.client.moderations.create(input=text)
         return response.results[0].flagged
 
-       
 
 class GPT(LLM):
     """
@@ -52,7 +54,9 @@ class GPT(LLM):
         self.content_moderation = ContentModeration(self.client)
         super().__init__()
 
-    def run(self, messages: list, seed: int = random.randint(1, 9999), with_moderation=True) -> str:
+    def run(
+        self, messages: list, seed: int = random.randint(1, 9999), with_moderation=True
+    ) -> str:
         """
         Runs the llm given a current conversation and seed and outputs a string.
         """
@@ -64,7 +68,6 @@ class GPT(LLM):
             return self.content_moderation.default
         else:
             return output_text
-      
 
 
 class LocalLLMGPTQ(LLM):
