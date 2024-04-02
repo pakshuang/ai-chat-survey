@@ -442,7 +442,7 @@ def test_submit_response_invalid_response_format():
     response = requests.post(RESPONSE_ENDPOINT, json=response_data)
 
     assert response.status_code == 400
-    assert response.json() == {"message": "Invalid response object format: Response data must contain 'metadata' and 'answers' keys"}
+    assert response.json() == {"message": "Response data must contain 'metadata' and 'answers' keys"}
 
 
 def test_submit_response_response_survey_incongruent():
