@@ -643,4 +643,4 @@ def test_get_response_not_found():
     response = requests.get(RESPONSE_ENDPOINT + "/0?survey=1", headers=headers)
 
     assert response.status_code == 404
-    assert response.json() == {"message": "Response not found"}
+    assert response.json() == {"message": "No responses found for the survey"}
