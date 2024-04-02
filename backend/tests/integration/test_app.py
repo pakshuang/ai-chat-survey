@@ -132,9 +132,8 @@ def test_admin_login_wrong_password():
         json={"username": "admin1", "password": "password2"},
     )
 
-    print(response.json())
     assert response.status_code == 401
-    assert response.json().get("message") == "Invalid credentials"
+    assert response.json() == {"message": "Invalid credentials"}
 
 
 # Test cases for create_survey
