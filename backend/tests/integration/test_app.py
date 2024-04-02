@@ -470,3 +470,41 @@ def test_submit_response_response_survey_incongruent():
 
     assert response.status_code == 400
     assert response.json() == {"message": "Number of questions in response does not match survey"}
+
+
+# Test cases for get_responses
+    
+
+def test_get_responses_success():
+    headers = {"Authorization": "Bearer " + VALID_JWT}
+    response = requests.get(RESPONSE_ENDPOINT, headers=headers)
+
+    response_data = {
+        "metadata": {"response_id": 1, "survey_id": 1},
+        "answers": [
+            {
+                "question_id": 1,
+                "type": "multiple_choice",
+                "question": "Which performance did you enjoy the most?",
+                "options": ["Clowns", "Acrobats", "Jugglers", "Magicians"],
+                "answer": ["Clowns"],
+            },
+            {
+                "question_id": 2,
+                "type": "multiple_response",
+                "question": "What did you like about the venue?",
+                "options": ["Seating", "Lighting", "Sound"],
+                "answer": ["Seating", "Lighting"],
+            },
+            {
+                "question_id": 3,
+                "type": "free_response",
+                "question": "Do you have any feedback about the venue?",
+                "options": [],
+                "answer": ["The venue was spacious and well-maintained."],
+            },
+        ],
+    }
+
+    assert response.status_code == 200
+    assert response.json().get("answers") == [response_data]
