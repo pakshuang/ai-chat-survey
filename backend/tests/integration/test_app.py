@@ -347,7 +347,9 @@ def test_delete_survey_wrong_admin():
     response = requests.delete(SURVEYS_ENDPOINT + "/1", headers=headers)
 
     assert response.status_code == 403
-    assert response.json() == {"message": "Accessing other admin's surveys is forbidden"}
+    assert response.json() == {
+        "message": "Accessing other admin's surveys is forbidden"
+    }
 
 
 def test_delete_survey_not_found():
@@ -362,3 +364,43 @@ def test_delete_survey_not_found():
 
     assert response.status_code == 404
     assert response.json() == {"message": "Survey not found"}
+
+
+# Test cases for submit_response
+
+RESPONSE_ENDPOINT = BACKEND_URL + "/api/v1/responses"
+
+
+def test_submit_response_success():
+    response_data = {
+        "metadata": {"survey_id": 1},
+        "answers": [
+            {
+                "question_id": 1,
+                "type": "multiple_response",
+                "question": "Which cheeses do you like?",
+                "options": ["Cheddar", "Brie", "Gouda"],
+                "answer": ["Cheddar", "Brie"],
+            },
+            {
+                "question_id": 2,
+                "type": "multiple_choice",
+                "question": "Cheese or chocolate?",
+                "options": ["Cheese", "Chocolate"],
+                "answer": ["Cheese"],
+            },
+            {
+                "question_id": 3,
+                "type": "free_response",
+                "question": "Why?",
+                "options": [],
+                "answer": ["I like cheese."],
+            },
+        ],
+    }
+
+    response = requests.post(RESPONSE_ENDPOINT, json=response_data)
+
+    assert response.status_code == 201
+    assert response.json() == {"response_id": 1}
+
