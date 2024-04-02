@@ -1,13 +1,13 @@
+import inspect
 import json
 import logging
-import colorlog
-import inspect
-import sys
 import os
+import sys
 
+import colorlog
 from openai import OpenAI
-from src.llm_classes.llm_level import GPT
 from src.llm_classes.functions import construct_chatlog
+from src.llm_classes.llm_level import GPT
 
 
 class Evaluation:
