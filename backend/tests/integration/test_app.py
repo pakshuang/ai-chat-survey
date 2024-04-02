@@ -360,6 +360,5 @@ def test_delete_survey_not_found():
     headers = {"Authorization": "Bearer " + admin2_jwt}
     response = requests.delete(SURVEYS_ENDPOINT + "/0", headers=headers)
 
-    print(response.json())
     assert response.status_code == 404
-    assert response.json().get("message") == "Survey not found"
+    assert response.json() == {"message": "Survey not found"}
