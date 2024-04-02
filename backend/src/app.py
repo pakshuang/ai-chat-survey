@@ -1,5 +1,6 @@
 import datetime
 import json
+import logging
 import os
 from functools import wraps
 
@@ -17,6 +18,12 @@ from src.llm_classes.llm_level import GPT
 from werkzeug.security import check_password_hash, generate_password_hash
 
 BACKEND_CONTAINER_PORT = os.getenv("BACKEND_CONTAINER_PORT", "5000")
+
+logging.basicConfig(
+    filename="./logs/app.log",
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]",
+)
 
 app = Flask(__name__)
 CORS(app)
@@ -49,13 +56,16 @@ def admin_token_required(f):
 
         # If no token found, return error
         if not token:
+            app.logger.info("Token is missing!")
             return jsonify({"message": "Token is missing!"}), 400
 
         try:
             # Decode the token
             payload = jwt.decode(token, app.config["SECRET_KEY"], algorithms=["HS256"])
+            app.logger.info("Token is valid")
 
         except jwt.InvalidTokenError:
+            app.logger.info("Token is invalid! Token: " + str(token))
             return jsonify({"message": "Token is invalid!"}), 401
 
         # Pass some payload information to the route function
@@ -83,6 +93,7 @@ def create_admin():
 
     # Basic validation
     if not data or not data.get("username") or not data.get("password"):
+        app.logger.info("Missing data")
         return jsonify({"message": "Missing data"}), 400
 
     username = data["username"]
@@ -107,8 +118,10 @@ def create_admin():
         database_operations.execute(connection, query, params)
 
         database_operations.close_connection(connection)
+        app.logger.info(f"Admin {username} created successfully")
         return jsonify({"message": f"Admin {username} created successfully"}), 201
     else:
+        app.logger.error("Failed to connect to the database")
         return jsonify({"message": "Failed to connect to the database"}), 500
 
 
@@ -118,6 +131,7 @@ def login_admin():
 
     # Basic validation
     if not data or not data.get("username") or not data.get("password"):
+        app.logger.info("Missing data")
         return jsonify({"message": "Missing data"}), 400
 
     # Retrieve hashed password from database
@@ -144,6 +158,7 @@ def login_admin():
 
                 # Close the connection
                 database_operations.close_connection(connection)
+                app.logger.info(f"Admin {data['username']} logged in successfully")
                 return (
                     jsonify(
                         {
@@ -157,8 +172,10 @@ def login_admin():
                 )
         # Close the connection
         database_operations.close_connection(connection)
+        app.logger.info("Invalid credentials")
         return jsonify({"message": "Invalid credentials"}), 401
     else:
+        app.logger.error("Failed to connect to the database")
         return jsonify({"message": "Failed to connect to the database"}), 500
 
 
@@ -172,15 +189,18 @@ def create_survey(**kwargs):
 
     # If there is no data attached in request body
     if not data:
+        app.logger.info("No survey object was attached")
         return jsonify({"message": "Missing data"}), 400
     # Validate survey object format
     is_valid, message = database_operations.validate_survey_object(data)
     if not is_valid:
+        app.logger.info(f"Invalid survey object format: {message}")
         return jsonify({"message": message}), 400
 
     # Connect to the database
     connection = database_operations.connect_to_mysql()
     if not connection:
+        app.logger.error("Failed to connect to the database")
         return jsonify({"message": "Error connecting to database"}), 500
 
     try:
@@ -188,10 +208,13 @@ def create_survey(**kwargs):
         survey_id = database_operations.create_survey(connection, data)
 
         if survey_id:
+            app.logger.info(f"Survey {survey_id} created successfully")
             return jsonify({"survey_id": survey_id}), 201
         else:
+            app.logger.error("Error creating survey")
             return jsonify({"message": "Error creating survey"}), 400
     except Exception as e:
+        app.logger.error(f"Error creating survey: {str(e)}")
         return jsonify({"message": "Error creating survey"}), 400
     finally:
         database_operations.close_connection(connection)
@@ -202,6 +225,7 @@ def get_surveys():
     # Connect to the database
     connection = database_operations.connect_to_mysql()
     if not connection:
+        app.logger.error("Failed to connect to the database")
         return jsonify({"message": "Failed to connect to database"}), 500
 
     try:
@@ -229,8 +253,10 @@ def get_surveys():
         survey_data = database_operations.fetch(connection, query, params)
 
         if survey_data is None:
+            app.logger.error("Error fetching surveys: Database error")
             return jsonify({"message": "Error fetching surveys"}), 500
         elif not survey_data:
+            app.logger.info("No surveys found")
             return jsonify([]), 200
 
         # Group survey data by survey ID and collect questions
@@ -249,8 +275,10 @@ def get_surveys():
         # Convert dictionary to list of survey objects
         survey_objects_list = list(survey_objects.values())
 
+        app.logger.info("Surveys fetched successfully")
         return jsonify(survey_objects_list), 200
     except Exception as e:
+        app.logger.error("Error fetching surveys: Database error")
         return jsonify({"message": "Error fetching surveys"}), 500
     finally:
         database_operations.close_connection(connection)
@@ -259,12 +287,14 @@ def get_surveys():
 @app.route("/api/v1/surveys/<survey_id>", methods=["GET"])
 def get_survey(survey_id):
     if not survey_id:
+        app.logger.info("Missing survey ID")
         return jsonify({"message": "Missing survey ID"}), 400
 
     # Get survey from database
     # Connect to the database
     connection = database_operations.connect_to_mysql()
     if not connection:
+        app.logger.error("Failed to connect to the database")
         return jsonify({"message": "Failed to connect to database"}), 500
 
     try:
@@ -279,8 +309,10 @@ def get_survey(survey_id):
 
         survey_data = database_operations.fetch(connection, query, params)
         if survey_data is None:
+            app.logger.error("Error fetching survey: Database error")
             return jsonify({"message": "Error fetching survey"}), 500
         elif not survey_data:
+            app.logger.info("Survey not found")
             return jsonify({"message": "Survey not found"}), 404
 
         # Group survey data by survey ID and collect questions
@@ -294,8 +326,10 @@ def get_survey(survey_id):
                     survey_object, survey_id, row
                 )
         survey_object = survey_object[int(survey_id)]
+        app.logger.info("Survey fetched successfully")
         return jsonify(survey_object), 200
     except Exception as e:
+        app.logger.error(f"Error fetching survey: {str(e)}")
         return jsonify({"message": "Error fetching surveys"}), 500
     finally:
         database_operations.close_connection(connection)
@@ -308,6 +342,7 @@ def delete_survey(survey_id, **kwargs):
     # Connect to the database
     connection = database_operations.connect_to_mysql()
     if not connection:
+        app.logger.error("Failed to connect to the database")
         return jsonify({"message": "Failed to connect to the database"}), 500
 
     try:
@@ -315,6 +350,7 @@ def delete_survey(survey_id, **kwargs):
         survey_query = "SELECT * FROM Surveys WHERE survey_id = %s"
         survey = database_operations.fetch(connection, survey_query, (survey_id,))
         if not survey:
+            app.logger.info("Survey not found")
             return jsonify({"message": "Survey not found"}), 404
 
         # Check if the user has permission to delete the survey
@@ -329,9 +365,11 @@ def delete_survey(survey_id, **kwargs):
         database_operations.execute(connection, delete_survey_query, (survey_id,))
         database_operations.commit(connection)
 
+        app.logger.info("Survey deleted successfully")
         return jsonify({"message": "Survey deleted successfully"}), 200
 
-    except:
+    except Exception as e:
+        app.logger.error(f"Failed to delete survey: {str(e)}")
         return jsonify({"message": "Failed to delete survey"}), 500
 
     finally:
@@ -345,11 +383,13 @@ def delete_survey(survey_id, **kwargs):
 def submit_response():
     data = request.get_json()
     if not data:
+        app.logger.info("No data was attached")
         return jsonify({"message": "No data was attached"}), 400
 
     # Validate survey object format
     is_valid, message = database_operations.validate_response_object(data)
     if not is_valid:
+        app.logger.info(f"Invalid response object format: {message}")
         return jsonify({"message": message}), 400
 
     # Validate response object against survey object
@@ -359,6 +399,7 @@ def submit_response():
 
     # If GET request is not successful, return 500
     if survey_object_response[1] != 200:
+        app.logger.error("Failed to retrieve survey object")
         return jsonify({"message": "Failed to retrieve survey object"}), 500
 
     # GET request is successful
@@ -367,11 +408,13 @@ def submit_response():
     # Validate response object against survey object
     validation_error = database_operations.validate_response(data, survey_object)
     if validation_error:
+        app.logger.info(f"Validation error: {validation_error}")
         return jsonify({"message": validation_error}), 400
 
     # Connect to the database
     connection = database_operations.connect_to_mysql()
     if connection is None:
+        app.logger.error("Failed to connect to the database")
         return jsonify({"message": "Failed to connect to the database"}), 500
 
     # Insert data into database
@@ -382,10 +425,12 @@ def submit_response():
         )
 
         if response_id is None:
+            app.logger.error("Failed to save response to the database")
             return jsonify({"message": "Failed to save response to the database"}), 500
 
         response_body = {"response_id": response_id}
 
+        app.logger.info("Response submitted successfully")
         return jsonify(response_body), 201
     finally:
         # Close database connection
@@ -398,11 +443,13 @@ def get_responses(**kwargs):
     # Check if survey ID is provided, return 400 if not
     survey_id = request.args.get("survey")
     if not survey_id:
+        app.logger.info("Missing survey ID")
         return jsonify({"message": "Missing survey ID"}), 400
 
     # Connect to MySQL database
     connection = database_operations.connect_to_mysql()
     if not connection:
+        app.logger.error("Failed to connect to the database")
         return jsonify({"message": "Failed to connect to the database"}), 500
     try:
         # Fetch survey from the database
@@ -413,6 +460,7 @@ def get_responses(**kwargs):
 
         # Check if survey exists
         if not survey:
+            app.logger.info("Survey not found")
             return jsonify({"message": "Survey not found"}), 404
 
         # Check if admin has access to survey, return 403 if not
@@ -434,6 +482,7 @@ def get_responses(**kwargs):
 
         # Check if responses exist
         if not responses_data:
+            app.logger.info("No responses found for the survey")
             return jsonify({"message": "No responses found for the survey"}), 404
 
         # Create response objects dictionary
@@ -453,6 +502,7 @@ def get_responses(**kwargs):
         # Convert dictionary to list of response objects
         response_objects_list = list(response_objects.values())
 
+        app.logger.info("Responses fetched successfully")
         return jsonify(response_objects_list), 200
     finally:
         # Close database connection
@@ -463,16 +513,19 @@ def get_responses(**kwargs):
 @admin_token_required
 def get_response(response_id, **kwargs):
     if not response_id:
+        app.logger.info("Missing response ID")
         return jsonify({"message": "Missing response ID"}), 400
 
     # Check if survey ID is provided, return 400 if not
     survey_id = request.args.get("survey")
     if not survey_id:
+        app.logger.info("Missing survey ID")
         return jsonify({"message": "Missing survey ID"}), 400
 
     # Connect to MySQL database
     connection = database_operations.connect_to_mysql()
     if not connection:
+        app.logger.error("Failed to connect to the database")
         return jsonify({"message": "Failed to connect to the database"}), 500
 
     try:
@@ -484,10 +537,12 @@ def get_response(response_id, **kwargs):
 
         # Check if survey exists
         if not survey:
+            app.logger.info("Survey not found")
             return jsonify({"message": "Survey not found"}), 404
 
         # Check if admin has access to survey
         if survey[0]["admin_username"] != kwargs["jwt_sub"]:
+            app.logger.info("Accessing other admin's surveys is forbidden")
             return (
                 jsonify({"message": "Accessing other admin's surveys is forbidden"}),
                 403,
@@ -507,6 +562,7 @@ def get_response(response_id, **kwargs):
 
         # Check if responses exist
         if not responses_data:
+            app.logger.info("No responses found for the survey")
             return jsonify({"message": "No responses found for the survey"}), 404
 
         # Create response objects dictionary
@@ -523,6 +579,7 @@ def get_response(response_id, **kwargs):
                 response_objects, response_id, response_data
             )
         response_objects = response_objects[int(response_id)]
+        app.logger.info("Response fetched successfully")
         return jsonify(response_objects), 200
     finally:
         # Close database connection
@@ -617,14 +674,17 @@ def send_chat_message(response_id):
     # Check that there is "content" in request body
     data = request.get_json()
     if "content" not in data:
+        app.logger.info("Missing content")
         return jsonify({"message": "Missing content"}), 400
 
     if not response_id:
+        app.logger.info("Missing response ID")
         return jsonify({"message": "Missing response ID"}), 400
 
     # Check if survey ID is provided, return 400 if not
     survey_id = request.args.get("survey")
     if not survey_id:
+        app.logger.info("Missing survey ID")
         return jsonify({"message": "Missing survey ID"}), 400
 
     # Step 1: Retrieve Response Object
@@ -632,6 +692,7 @@ def send_chat_message(response_id):
 
     # If GET request is not successful, return 500
     if response_object[1] != 200:
+        app.logger.error("Failed to retrieve survey object")
         return jsonify({"message": "Failed to retrieve survey object"}), 500
 
     # GET request is successful
@@ -640,6 +701,7 @@ def send_chat_message(response_id):
     # Connect to MySQL database
     connection = database_operations.connect_to_mysql()
     if not connection:
+        app.logger.error("Failed to connect to the database")
         return jsonify({"message": "Failed to connect to the database"}), 500
 
     # Step 2: Insert message to DB
@@ -659,6 +721,9 @@ def send_chat_message(response_id):
                 connection, survey_id, response_id, updated_chat_log
             )
     except Exception as e:
+        app.logger.error(
+            "An error occurred while updating chat log with user message: " + str(e)
+        )
         return (
             jsonify(
                 {
@@ -672,6 +737,7 @@ def send_chat_message(response_id):
     try:
         chat_context = database_operations.fetch_chat_context(connection, survey_id)
     except Exception as e:
+        app.logger.error("An error occurred while fetching chat context: " + str(e))
         return (
             jsonify({"message": "An error occurred while fetching chat context"}),
             500,
@@ -681,6 +747,7 @@ def send_chat_message(response_id):
     try:
         chat_log = database_operations.get_chat_log(connection, survey_id, response_id)
     except Exception as e:
+        app.logger.error("An error occurred while fetching chat log: " + str(e))
         return jsonify({"message": "An error occurred while fetching chat log"}), 500
 
     # Create the object to parse into ChatGPT

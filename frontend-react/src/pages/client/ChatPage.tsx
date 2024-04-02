@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Flex, Heading } from "@chakra-ui/react";
+import { Flex, Heading, Box } from "@chakra-ui/react";
 import ChatWindow from "./ChatWindow";
 import ChatInput from "./ChatInput";
 import {
@@ -129,18 +129,11 @@ function ChatPage() {
 
   const displayedMessages = surveyState.submitted ? messages : messages.slice(0,surveyState.displayIndex+1)
   return (
-    <Flex
-      flexDirection="column"
-      bg="gray.100"
-      h="100vh"
-      w="100%"
-      minW="65rem"
-    >
+    <Flex flexDirection="column" bg="gray.100" h="100vh" w="100%" minW="65rem">
       <Flex justifyContent="center">
-        <Heading fontSize="xl" p="1rem">{surveyState.title}</Heading>
-        <Button onClick={clearCookies}>
-          asas
-        </Button> 
+        <Heading fontSize="xl" p="1rem">
+          {surveyState.title}
+        </Heading>
       </Flex>
       <ChatWindow
         handleSubmit={handleSubmit}
@@ -153,10 +146,12 @@ function ChatPage() {
         <ChatInput onSubmitMessage={sendMessage} isSubmitting={isLoading} />
       )}
       {isLast && (
-        <ChatMessage sender="bot">
-          The survey is over. Thank you for your responses. You can close the
-          page.
-        </ChatMessage>
+        <Box w="60rem" mx="auto" pr="5px">
+          <ChatMessage sender="bot">
+            The survey is over. Thank you for your responses. You can close the
+            page.
+          </ChatMessage>
+        </Box>
       )}
     </Flex>
   );
