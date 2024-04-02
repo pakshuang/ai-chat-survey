@@ -4,6 +4,7 @@ import logging
 import os
 import sys
 
+
 from openai import OpenAI
 from src.llm_classes.functions import construct_chatlog
 from src.llm_classes.llm_level import GPT
@@ -45,7 +46,7 @@ class Evaluation:
 
         return 1 - sum(dict(response.results[0].category_scores).values())
 
-    def eval_gpt4_for_biases(self):
+    def eval_gpt4_moderation_1_biases(self):
         bias_msg_ls = self.ini_msg_ls.copy()
         bias_msg_ls.extend(self.bias)
 
@@ -53,21 +54,21 @@ class Evaluation:
         results = self.content_moderation_evaluator(output)
         return results, output
 
-    def eval_gpt4_for_jailbreak_weak(self):
+    def eval_gpt4_moderation_2_jailbreak_weak(self):
         jailbreak_msg_ls_weak = self.ini_msg_ls.copy()
         jailbreak_msg_ls_weak.extend(self.jailbreak[:-2])
         output = self.llm.run(jailbreak_msg_ls_weak)
         results = self.content_moderation_evaluator(output)
         return results, output
 
-    def eval_gpt4_for_jailbreak_strong(self):
+    def eval_gpt4_moderation_3_jailbreak_strong(self):
         jailbreak_msg_ls = self.ini_msg_ls.copy()
         jailbreak_msg_ls.extend(self.jailbreak)
         output = self.llm.run(jailbreak_msg_ls)
         results = self.content_moderation_evaluator(output)
         return results, output
 
-    def eval_gpt4_for_jailbreak_very_strong(self):
+    def eval_gpt4_moderation_4_jailbreak_verystrong(self):
         jailbreak_msg_ls = self.ini_msg_ls.copy()
         jailbreak_msg_ls.extend(self.jailbreak_vstrong)
         output = self.llm.run(jailbreak_msg_ls)
