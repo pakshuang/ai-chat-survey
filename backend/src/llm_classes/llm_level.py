@@ -23,7 +23,7 @@ class LLM(ABC):
 class ContentModeration:
     """
     A wrapper class around a content filter, for added security measures.
-    Currently uses a model from Openai API
+    Currently uses a model from Openai API.
     Redefine this class if the application is scaled for a larger user-base.
     """
 
