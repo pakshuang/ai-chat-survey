@@ -139,7 +139,6 @@ def test_admin_login_wrong_password():
 # Test cases for create_survey
 
 SURVEYS_ENDPOINT = BACKEND_URL + "/api/v1/surveys"
-SURVEY_ID = 0
 SURVEY_DATA = {
     "metadata": {
         "created_by": "admin1",
@@ -194,9 +193,8 @@ def test_create_survey_missing_metadata():
     headers = {"Authorization": "Bearer " + VALID_JWT}
     response = requests.post(SURVEYS_ENDPOINT, json=survey_data, headers=headers)
 
-    print(response.json())
     assert response.status_code == 400
-    assert response.json().get("message") == "Missing or empty 'metadata' field"
+    assert response.json() == {"message": "Missing or empty 'metadata' field"}
 
 
 def test_create_survey_unauthorized():
@@ -223,7 +221,7 @@ def test_get_surveys_success():
     response = requests.get(SURVEYS_ENDPOINT)
 
     global SURVEY_DATA
-    SURVEY_DATA["metadata"]["survey_id"] = SURVEY_ID
+    SURVEY_DATA["metadata"]["survey_id"] = 1
 
     print(response.json())
     assert response.status_code == 200
@@ -291,7 +289,7 @@ def test_get_surveys_empty_success():
 
 
 def test_get_survey_success():
-    response = requests.get(SURVEYS_ENDPOINT + "/" + str(SURVEY_ID))
+    response = requests.get(SURVEYS_ENDPOINT + "/" + str(1))
 
     print(response.json())
     assert response.status_code == 200
