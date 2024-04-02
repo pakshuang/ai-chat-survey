@@ -518,9 +518,31 @@ def test_get_responses_missing_survey():
     assert response.json() == {"message": "Missing Survey ID"}
 
 
+def test_get_responses_missing_jwt():
+    response = requests.get(RESPONSE_ENDPOINT + "?survey=1")
+
+    assert response.status_code == 400
+    assert response.json() == {"message": "Token is missing!"}
+
+
 def test_get_responses_unauthorized():
     headers = {"Authorization": "Bearer " + "INVALID_JWT"}
     response = requests.get(RESPONSE_ENDPOINT, headers=headers)
 
     assert response.status_code == 401
     assert response.json() == {"message": "Token is invalid!"}
+
+
+def test_get_responses_wrong_admin():
+    response = requests.post(
+        ADMINS_ENDPOINT + "/login",
+        json={"username": "admin2", "password": "password2"},
+    )
+    admin2_jwt = response.json().get("jwt")
+
+    headers = {"Authorization": "Bearer " + admin2_jwt}
+    response = requests.get(RESPONSE_ENDPOINT + "?survey=1", headers=headers)
+
+    assert response.status_code == 403
+    assert response.json() == {"message": "Accessing other admin's surveys is forbidden"}
+
