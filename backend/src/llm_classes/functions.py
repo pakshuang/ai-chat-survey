@@ -1,10 +1,9 @@
+import logging
 import random
 import re
-import logging
 
 from .chatlog import ChatLog
 from .llm_level import GPT, LLM
-
 
 logging.basicConfig(
     filename="./logs/exit_chat.log",

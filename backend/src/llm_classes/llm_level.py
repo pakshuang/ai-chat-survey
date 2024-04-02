@@ -1,10 +1,9 @@
 import os
 import random
-
 from abc import ABC, abstractmethod
 
-from dotenv import load_dotenv
 import openai
+from dotenv import load_dotenv
 from openai import OpenAI
 
 

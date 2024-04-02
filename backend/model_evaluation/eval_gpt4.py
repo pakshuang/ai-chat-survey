@@ -1,3 +1,3 @@
-from src.llm_classes.llm_level import LLM, GPT
-
 import logging
+
+from src.llm_classes.llm_level import GPT, LLM
