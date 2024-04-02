@@ -3,10 +3,10 @@ version: '3'
 services:
   evaluation:
     image: backend
+    build: ./backend
     container_name: evaluation
-    tty: true
-    command: >
-       /bin/bash -c "pipenv shell && python model_evaluation/eval_gpt4.py"
+    command: "pipenv run python -m model_evaluation.eval_gpt4"
     env_file:
       - .env
-
+    volumes:
+      - ./backend/logs:/backend/logs
