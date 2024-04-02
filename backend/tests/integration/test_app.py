@@ -346,11 +346,8 @@ def test_delete_survey_wrong_admin():
     headers = {"Authorization": "Bearer " + admin2_jwt}
     response = requests.delete(SURVEYS_ENDPOINT + "/1", headers=headers)
 
-    print(response.json())
     assert response.status_code == 403
-    assert (
-        response.json().get("message") == "Accessing other admin's surveys is forbidden"
-    )
+    assert response.json() == {"message": "Accessing other admin's surveys is forbidden"}
 
 
 def test_delete_survey_not_found():
