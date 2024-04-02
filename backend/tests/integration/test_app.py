@@ -262,7 +262,7 @@ def test_get_surveys_success():
     survey_data["metadata"]["survey_id"] = 2
 
     assert response.status_code == 200
-    assert response.json() == [SURVEY_DATA, survey_data]
+    assert response.json() == [survey_data, SURVEY_DATA]
 
 
 def test_get_surveys_filtered_success():
