@@ -324,9 +324,8 @@ def test_delete_survey_success():
 def test_delete_survey_missing_jwt():
     response = requests.delete(SURVEYS_ENDPOINT + "/1")
 
-    print(response.json())
     assert response.status_code == 400
-    assert response.json().get("message") == "Token is missing!"
+    assert response.json() == {"message": "Token is missing!"}
 
 
 def test_delete_survey_unauthorized():
