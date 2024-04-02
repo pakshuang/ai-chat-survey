@@ -512,10 +512,6 @@ def get_responses(**kwargs):
 @app.route("/api/v1/responses/<response_id>", methods=["GET"])
 @admin_token_required
 def get_response(response_id, **kwargs):
-    if not response_id:
-        app.logger.info("Missing response ID")
-        return jsonify({"message": "Missing response ID"}), 400
-
     # Check if survey ID is provided, return 400 if not
     survey_id = request.args.get("survey")
     if not survey_id:
