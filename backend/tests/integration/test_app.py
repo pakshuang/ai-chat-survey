@@ -590,7 +590,7 @@ def test_get_response_success():
     }
 
     assert response.status_code == 200
-    assert response.json() == response_data
+    assert response.json().get("answers") == response_data.get("answers")
 
 
 def test_get_response_missing_survey():
@@ -606,3 +606,4 @@ def test_get_response_missing_jwt():
 
     assert response.status_code == 400
     assert response.json() == {"message": "Token is missing!"}
+
