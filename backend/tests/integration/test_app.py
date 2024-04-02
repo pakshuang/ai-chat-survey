@@ -208,9 +208,8 @@ def test_create_survey_unauthorized():
 def test_create_survey_missing_jwt():
     response = requests.post(SURVEYS_ENDPOINT, json=SURVEY_DATA)
 
-    print(response.json())
     assert response.status_code == 400
-    assert response.json().get("message") == "Token is missing!"
+    assert response.json() == {"message": "Token is missing!"}
 
 
 # Test cases for get_surveys
