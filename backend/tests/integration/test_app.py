@@ -183,9 +183,8 @@ def test_create_survey_missing_data():
     headers = {"Authorization": "Bearer " + VALID_JWT}
     response = requests.post(SURVEYS_ENDPOINT, json={}, headers=headers)
 
-    print(response.json())
     assert response.status_code == 400
-    assert response.json().get("message") == "Missing data"
+    assert response.json() == {"message": "Missing data"}
 
 
 def test_create_survey_missing_metadata():
