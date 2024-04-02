@@ -332,9 +332,8 @@ def test_delete_survey_unauthorized():
     headers = {"Authorization": "Bearer " + "INVALID_JWT"}
     response = requests.delete(SURVEYS_ENDPOINT + "/1", headers=headers)
 
-    print(response.json())
     assert response.status_code == 401
-    assert response.json().get("message") == "Token is invalid!"
+    assert response.json() == {"message": "Token is invalid!"}
 
 
 def test_delete_survey_wrong_admin():
