@@ -411,3 +411,62 @@ def test_submit_response_missing_data():
     assert response.status_code == 400
     assert response.json() == {"message": "No data was attached"}
 
+
+def test_submit_response_invalid_response_format():
+    response_data = {
+        "answers": [
+            {
+                "question_id": 1,
+                "type": "multiple_choice",
+                "question": "Which performance did you enjoy the most?",
+                "options": ["Clowns", "Acrobats", "Jugglers", "Magicians"],
+                "answer": ["Clowns"],
+            },
+            {
+                "question_id": 2,
+                "type": "multiple_response",
+                "question": "What did you like about the venue?",
+                "options": ["Seating", "Lighting", "Sound"],
+                "answer": ["Seating", "Lighting"],
+            },
+            {
+                "question_id": 3,
+                "type": "free_response",
+                "question": "Do you have any feedback about the venue?",
+                "options": [],
+                "answer": [],
+            },
+        ],
+    }
+
+    response = requests.post(RESPONSE_ENDPOINT, json=response_data)
+
+    assert response.status_code == 400
+    assert response.json() == {"message": "Invalid response object format: Response data must contain 'metadata' and 'answers' keys"}
+
+
+def test_submit_response_response_survey_incongruent():
+    response_data = {
+        "metadata": {"survey_id": 1},
+        "answers": [
+            {
+                "question_id": 1,
+                "type": "multiple_choice",
+                "question": "Which performance did you enjoy the most?",
+                "options": ["Clowns", "Acrobats", "Jugglers", "Magicians"],
+                "answer": ["Clowns"],
+            },
+            {
+                "question_id": 2,
+                "type": "multiple_response",
+                "question": "What did you like about the venue?",
+                "options": ["Seating", "Lighting", "Sound"],
+                "answer": ["Seating", "Lighting"],
+            },
+        ],
+    }
+
+    response = requests.post(RESPONSE_ENDPOINT, json=response_data)
+
+    assert response.status_code == 400
+    assert response.json() == {"message": "Number of questions in response does not match survey"}
