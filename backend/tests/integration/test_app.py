@@ -102,9 +102,8 @@ def test_admin_login_missing_username():
         json={"password": "password1"},
     )
 
-    print(response.json())
     assert response.status_code == 400
-    assert response.json().get("message") == "Missing data"
+    assert response.json() == {"message": "Missing data"}
 
 
 def test_admin_login_missing_password():
