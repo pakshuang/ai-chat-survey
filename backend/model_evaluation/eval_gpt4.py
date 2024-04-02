@@ -4,7 +4,6 @@ import colorlog
 import requests
 import inspect
 import sys
-sys.path.append("../src/llm_classes")
 
 from src.llm_classes.llm_level import GPT
 from src.llm_classes.chatlog import ChatLog
