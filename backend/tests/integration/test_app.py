@@ -442,7 +442,9 @@ def test_submit_response_invalid_response_format():
     response = requests.post(RESPONSE_ENDPOINT, json=response_data)
 
     assert response.status_code == 400
-    assert response.json() == {"message": "Response data must contain 'metadata' and 'answers' keys"}
+    assert response.json() == {
+        "message": "Response data must contain 'metadata' and 'answers' keys"
+    }
 
 
 def test_submit_response_response_survey_incongruent():
@@ -469,11 +471,13 @@ def test_submit_response_response_survey_incongruent():
     response = requests.post(RESPONSE_ENDPOINT, json=response_data)
 
     assert response.status_code == 400
-    assert response.json() == {"message": "Number of questions in response does not match survey"}
+    assert response.json() == {
+        "message": "Number of questions in response does not match survey"
+    }
 
 
 # Test cases for get_responses
-    
+
 
 def test_get_responses_success():
     headers = {"Authorization": "Bearer " + VALID_JWT}
@@ -544,7 +548,9 @@ def test_get_responses_wrong_admin():
     response = requests.get(RESPONSE_ENDPOINT + "?survey=1", headers=headers)
 
     assert response.status_code == 403
-    assert response.json() == {"message": "Accessing other admin's surveys is forbidden"}
+    assert response.json() == {
+        "message": "Accessing other admin's surveys is forbidden"
+    }
 
 
 def test_get_responses_survey_not_found():
@@ -556,7 +562,7 @@ def test_get_responses_survey_not_found():
 
 
 # Test cases for get_response<response_id>
-    
+
 
 def test_get_response_success():
     headers = {"Authorization": "Bearer " + VALID_JWT}
@@ -627,7 +633,9 @@ def test_get_response_wrong_admin():
     response = requests.get(RESPONSE_ENDPOINT + "/1?survey=1", headers=headers)
 
     assert response.status_code == 403
-    assert response.json() == {"message": "Accessing other admin's surveys is forbidden"}
+    assert response.json() == {
+        "message": "Accessing other admin's surveys is forbidden"
+    }
 
 
 def test_get_response_not_found():
