@@ -314,12 +314,11 @@ def test_delete_survey_success():
         SURVEYS_ENDPOINT + "/" + str(admin2_survey_id), headers=headers
     )
 
-    print(response.json())
     assert response.status_code == 200
-    assert response.json().get("message") == "Survey deleted successfully"
+    assert response.json() == {"message": "Survey deleted successfully"}
 
     response = requests.get(SURVEYS_ENDPOINT + "?admin=admin2")
-    assert len(response.json()) == 0
+    assert response.json() == []
 
 
 def test_delete_survey_missing_jwt():
