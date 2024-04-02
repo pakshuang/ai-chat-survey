@@ -465,6 +465,7 @@ def get_responses(**kwargs):
 
         # Check if admin has access to survey, return 403 if not
         if survey[0]["admin_username"] != kwargs["jwt_sub"]:
+            app.logger.info("Accessing other admin's surveys is forbidden")
             return (
                 jsonify({"message": "Accessing other admin's surveys is forbidden"}),
                 403,
