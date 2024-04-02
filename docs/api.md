@@ -305,6 +305,7 @@ These endpoints are used to submit, read, and update (send message) responses re
 - **Status Codes:**
 
   - `200` - OK
+  - `400` - Bad Request
   - `401` - Unauthorized
   - `403` - Forbidden
   - `404` - Not Found

@@ -562,3 +562,47 @@ def test_get_responses_empty_success():
     assert response.status_code == 200
     assert response.json() == []
 
+
+# Test cases for get_response<response_id>
+    
+
+def test_get_response_success():
+    headers = {"Authorization": "Bearer " + VALID_JWT}
+    response = requests.get(RESPONSE_ENDPOINT + "/1?survey=1", headers=headers)
+
+    response_data = {
+        "metadata": {"response_id": 1, "survey_id": 1},
+        "answers": [
+            {
+                "question_id": 1,
+                "type": "multiple_choice",
+                "question": "Which performance did you enjoy the most?",
+                "options": ["Clowns", "Acrobats", "Jugglers", "Magicians"],
+                "answer": ["Clowns"],
+            },
+            {
+                "question_id": 2,
+                "type": "multiple_response",
+                "question": "What did you like about the venue?",
+                "options": ["Seating", "Lighting", "Sound"],
+                "answer": ["Seating", "Lighting"],
+            },
+            {
+                "question_id": 3,
+                "type": "free_response",
+                "question": "Do you have any feedback about the venue?",
+                "options": [],
+                "answer": ["The venue was spacious and well-maintained."],
+            },
+        ],
+    }
+
+    assert response.status_code == 200
+    assert response.json() == response_data
+
+
+def test_get_response_missing_jwt():
+    response = requests.get(RESPONSE_ENDPOINT + "/1?survey=1")
+
+    assert response.status_code == 400
+    assert response.json() == {"message": "Token is missing!"}
