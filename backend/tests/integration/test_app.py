@@ -507,7 +507,7 @@ def test_get_responses_success():
     }
 
     assert response.status_code == 200
-    assert response.json().get("answers") == [response_data]
+    assert response.json()[0].get("answers") == response_data.get("answers")
 
 
 def test_get_responses_missing_survey():
