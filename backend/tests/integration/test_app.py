@@ -284,7 +284,6 @@ def test_get_surveys_empty_success():
 def test_get_survey_success():
     response = requests.get(SURVEYS_ENDPOINT + "/" + str(1))
 
-    print(response.json())
     assert response.status_code == 200
     assert response.json() == SURVEY_DATA
 
@@ -292,9 +291,8 @@ def test_get_survey_success():
 def test_get_survey_not_found():
     response = requests.get(SURVEYS_ENDPOINT + "/0")
 
-    print(response.json())
     assert response.status_code == 404
-    assert response.json().get("message") == "Survey not found"
+    assert response.json() == {"message": "Survey not found"}
 
 
 # Test cases for delete_survey<survey_id>
