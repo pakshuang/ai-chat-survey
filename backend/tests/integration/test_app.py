@@ -615,3 +615,17 @@ def test_get_response_unauthorized():
     assert response.status_code == 401
     assert response.json() == {"message": "Token is invalid!"}
 
+
+def test_get_response_wrong_admin():
+    response = requests.post(
+        ADMINS_ENDPOINT + "/login",
+        json={"username": "admin2", "password": "password2"},
+    )
+    admin2_jwt = response.json().get("jwt")
+
+    headers = {"Authorization": "Bearer " + admin2_jwt}
+    response = requests.get(RESPONSE_ENDPOINT + "/1?survey=1", headers=headers)
+
+    assert response.status_code == 403
+    assert response.json() == {"message": "Accessing other admin's surveys is forbidden"}
+
