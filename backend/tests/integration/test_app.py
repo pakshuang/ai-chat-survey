@@ -259,6 +259,7 @@ def test_get_surveys_success():
     response = requests.get(SURVEYS_ENDPOINT)
 
     SURVEY_DATA["metadata"]["survey_id"] = 1
+    survey_data["metadata"]["survey_id"] = 2
 
     assert response.status_code == 200
     assert response.json() == [SURVEY_DATA, survey_data]
