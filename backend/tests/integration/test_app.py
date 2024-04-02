@@ -85,7 +85,7 @@ def test_admin_login_success():
                     "exp": datetime.datetime.now(datetime.UTC)
                     + datetime.timedelta(hours=24),
                     "iat": datetime.datetime.now(datetime.UTC),
-                    "sub": data["username"],  # Admin's username
+                    "sub": "admin1",  # Admin's username
                 }
     token = jwt.encode(
                     token_payload, FLASK_SECRET_KEY, algorithm="HS256"
