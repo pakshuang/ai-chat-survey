@@ -5,7 +5,8 @@ import {
   Radio,
   RadioGroup,
   Stack,
-  Input,
+  Text,
+  Box,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { QuestionProps } from "./constants";
@@ -59,7 +60,8 @@ const QuestionInput = ({
         );
       case "multiple_response":
         return (
-           <Text fontSize="sm">(You may pick more than one option.)</Text>
+          <>
+           <Text >(You may pick more than one option.)</Text>
             <CheckboxGroup
               isDisabled={submitted}
               value={tempAnswer}
@@ -81,6 +83,7 @@ const QuestionInput = ({
                 ))}
               </Stack>
             </CheckboxGroup>
+          </>
         );
       case "free_response":
         return (
