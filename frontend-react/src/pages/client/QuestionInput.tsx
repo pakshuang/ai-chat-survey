@@ -41,7 +41,7 @@ const QuestionInput = ({
         return (
           <RadioGroup
             isDisabled={submitted}
-            value={answer}
+            value={tempAnswer}
             onChange={(e) => {
               handleQuestionResponse(question_id, e);
             }}
@@ -67,7 +67,7 @@ const QuestionInput = ({
             <Text fontSize="sm">(You may pick more than one option.)</Text>
             <CheckboxGroup
               isDisabled={submitted}
-              value={answer}
+              value={tempAnswer}
               onChange={(values) => {
                 handleQuestionResponse(question_id, values);
               }}
