@@ -64,9 +64,8 @@ def test_create_admin_missing_username():
 def test_create_admin_missing_password():
     response = requests.post(ADMINS_ENDPOINT, json={"username": "admin1"})
 
-    print(response.json())
     assert response.status_code == 400
-    assert response.json().get("message") == "Missing data"
+    assert response.json() == {"message": "Missing data"}
 
 
 # Test cases for login_admin
