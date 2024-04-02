@@ -31,6 +31,8 @@ function ChatWindow({
     <Box
       overflowY="auto"
       flex="1"
+      display="flex"
+      flexDirection="column-reverse"
       w="60rem"
       mx="auto"
       css={{
@@ -51,63 +53,69 @@ function ChatWindow({
         },
       }}
     >
-      <ChatMessage sender="bot">{surveyState.subtitle}</ChatMessage>
-      {messages.map((item, index) => {
-        if (index === messages.length - 1 && botResponded) {
-          if (item.message === surveyMessage) {
-            if (surveyState.submitted) {
+      <Box>
+        <ChatMessage sender="bot">{surveyState.subtitle}</ChatMessage>
+        {messages.map((item, index) => {
+          if (index === messages.length - 1 && botResponded) {
+            if (item.message === surveyMessage) {
+              if (surveyState.submitted) {
+                return (
+                  <ChatMessage sender={item.sender}>{item.message}</ChatMessage>
+                );
+              }
               return (
-                <ChatMessage sender={item.sender}>{item.message}</ChatMessage>
+                <ChatMessage sender={"bot"}>
+                  <Flex flexDirection="column">
+                    <TypingEffect
+                      text="Thank you for your responses. Please confirm your answers now, as they can't be changed later. Once confirmed, we'll continue with our discussion."
+                      scrollToBottom={scrollToBottom}
+                    ></TypingEffect>
+                    <Box>
+                      <Button
+                        onClick={handleSubmit}
+                        colorScheme="green"
+                        mt="0.5rem"
+                      >
+                        Confirm
+                      </Button>
+                    </Box>
+                  </Flex>
+                </ChatMessage>
               );
             }
             return (
-              <ChatMessage sender={"bot"}>
-                <Flex flexDirection="column">
-                  <TypingEffect
-                    text="Thank you for your responses. Please confirm your answers now, as they can't be changed later. Once confirmed, we'll continue with our discussion."
-                    scrollToBottom={scrollToBottom}
-                  ></TypingEffect>
-                  <Box>
-                    <Button onClick={handleSubmit} colorScheme="green" mt="0.5rem">
-                      Confirm
-                    </Button>
-                  </Box>
-                </Flex>
+              <ChatMessage sender="bot">
+                <TypingEffect
+                  text={messages.slice(-1)[0].message}
+                  scrollToBottom={scrollToBottom}
+                />
+                <QuestionInput
+                  questionData={item.question}
+                  handleQuestionResponse={handleQuestionResponse}
+                  submitted={surveyState.submitted}
+                ></QuestionInput>
+              </ChatMessage>
+            );
+          } else {
+            return (
+              <ChatMessage sender={item.sender}>
+                {item.message}
+                <QuestionInput
+                  questionData={item.question}
+                  handleQuestionResponse={handleQuestionResponse}
+                  submitted={surveyState.submitted}
+                ></QuestionInput>
               </ChatMessage>
             );
           }
-          return (
-            <ChatMessage sender="bot">
-              <TypingEffect
-                text={messages.slice(-1)[0].message}
-                scrollToBottom={scrollToBottom}
-              />
-              <QuestionInput
-                questionData={item.question}
-                handleQuestionResponse={handleQuestionResponse}
-                submitted={surveyState.submitted}
-              ></QuestionInput>
-            </ChatMessage>
-          );
-        } else {
-          return (
-            <ChatMessage sender={item.sender}>
-              {item.message}
-              <QuestionInput
-                questionData={item.question}
-                handleQuestionResponse={handleQuestionResponse}
-                submitted={surveyState.submitted}
-              ></QuestionInput>
-            </ChatMessage>
-          );
-        }
-      })}
-      {isBotThinking && (
-        <ChatMessage sender="bot">
-          <SkeletonCircle size="6" />
-        </ChatMessage>
-      )}
-      <div ref={messagesEndRef} />
+        })}
+        {isBotThinking && (
+          <ChatMessage sender="bot">
+            <SkeletonCircle size="6" />
+          </ChatMessage>
+        )}
+        <div ref={messagesEndRef} />
+      </Box>
     </Box>
   );
 }
