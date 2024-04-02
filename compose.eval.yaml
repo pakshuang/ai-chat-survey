@@ -1,0 +1,12 @@
+---
+version: '3'
+services:
+  evaluation:
+    image: backend
+    container_name: evaluation
+    tty: true
+    command: >
+       /bin/bash -c "pipenv shell && python model_evaluation/eval_gpt4.py"
+    env_file:
+      - .env
+

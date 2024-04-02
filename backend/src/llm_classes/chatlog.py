@@ -18,7 +18,8 @@ class ChatLog:
         {survey_initial_responses}"""
 
     SYSPROMPT2 = """Remember these few questions. This is a semi-structured interview, and try to keep asking questions, based on the user replies, or the questions you generated to ask the user. 
-    When you have no more questions left to ask, remember to thank the user for their time. Only ask the user one question at a time. The user is a customer. Politely decline all inappropriate requests.
+    Only ask the user one question at a time. The user is a customer. Politely decline all inappropriate requests.
+    When you have no more questions left to ask, remember to thank the user for their time and tell the user you intend to end the interview.
     After that, the system will ask you if you would like to end the interview. Reply with a 'no' if you would like to continue the interview, and 'yes' otherwise.
     ONLY DECIDE TO END THE INTERVIEW AFTER YOU HAVE THANKED THE USER.
     Now, please ask the user a question.
@@ -27,7 +28,7 @@ class ChatLog:
     END_QUERY = {
         "role": "system",
         "content": """Would you like to end the interview here? 
-        Remember that you should thank the user for their time before ending the interview, so your answer should be 'no' if you haven't.
+        Before you answer the question, remember if you have thanked the user for their time and told them you would be ending the interview. Your answer should be 'no' if you haven't done either.
         Your reply should adhere STRICTLY to the format provided below. Separate your reasoning and the answer (Yes/No) with the symbols --.
         Here are three examples.
         Example 1:
