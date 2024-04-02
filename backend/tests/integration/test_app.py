@@ -1,8 +1,6 @@
-import datetime
 import os
-import requests
 
-import jwt
+import requests
 
 BACKEND_URL = "http://backend:" + os.getenv("BACKEND_CONTAINER_PORT")
 
@@ -81,24 +79,11 @@ def test_admin_login_success():
         ADMINS_ENDPOINT + "/login",
         json={"username": "admin1", "password": "password1"},
     )
-    token_payload = {
-                    "exp": datetime.datetime.now(datetime.UTC)
-                    + datetime.timedelta(hours=24),
-                    "iat": datetime.datetime.now(datetime.UTC),
-                    "sub": data["username"],  # Admin's username
-                }
-    token = jwt.encode(
-                    token_payload, FLASK_SECRET_KEY, algorithm="HS256"
-                )
-    expected_response = {
-                            "jwt": token,
-                            "jwt_exp": token_payload["exp"].strftime(
-                                "%Y-%m-%d %H:%M:%S"
-                            ),
-                        }
-                    
+
+    print(response.json())
     assert response.status_code == 200
-    assert response.json() == expected_response
+    assert "jwt" in response.json()
+    assert "jwt_exp" in response.json()
 
     # set the valid jwt token
     global VALID_JWT

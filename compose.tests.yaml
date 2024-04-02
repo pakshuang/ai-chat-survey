@@ -6,7 +6,7 @@ services:
     container_name: integration-tests
     command: >
       /bin/bash -c "
-      pipenv install pytest pyjwt &&
+      pipenv install pytest &&
       pipenv run python -m pytest tests/integration"
     env_file:
       - .env
