@@ -71,7 +71,7 @@ def test_create_admin_missing_password():
 # Test cases for login_admin
 
 VALID_JWT = ""
-os.environ.get("FLASK_SECRET_KEY", "default_key_for_development")
+FLASK_SECRET_KEY = os.environ.get("FLASK_SECRET_KEY", "default_key_for_development")
 
 
 def test_admin_login_success():
