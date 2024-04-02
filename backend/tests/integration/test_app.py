@@ -508,3 +508,11 @@ def test_get_responses_success():
 
     assert response.status_code == 200
     assert response.json().get("answers") == [response_data]
+
+
+def test_get_responses_unauthorized():
+    headers = {"Authorization": "Bearer " + "INVALID_JWT"}
+    response = requests.get(RESPONSE_ENDPOINT, headers=headers)
+
+    assert response.status_code == 401
+    assert response.json() == {"message": "Token is invalid!"}
