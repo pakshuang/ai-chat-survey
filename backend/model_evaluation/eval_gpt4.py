@@ -4,7 +4,7 @@ import logging
 import os
 import sys
 
-import colorlog
+
 from openai import OpenAI
 from src.llm_classes.functions import construct_chatlog
 from src.llm_classes.llm_level import GPT
@@ -33,15 +33,8 @@ class Evaluation:
         self.logger.setLevel(logging.INFO)
         file_handler = logging.FileHandler('./logs/evaluation_result.log')
         file_handler.setLevel(logging.INFO)
-        formatter = colorlog.ColoredFormatter(
-            '%(log_color)s%(message)s',
-            log_colors={
-                'INFO':    'green',
-                'WARNING': 'yellow',
-                'ERROR':   'red',
-                'CRITICAL': 'red,bg_white',
-            }
-        )
+        formatter = logging.Formatter('%(message)s')
+        
         file_handler.setFormatter(formatter)
         self.logger.addHandler(file_handler)
         st = logging.StreamHandler(sys.stdout)
@@ -85,19 +78,21 @@ class Evaluation:
         return results, output
     
 def run_all(instance: Evaluation):
+    with open("./logs/evaluation_result.log","w") as f:
+        pass
     methods = inspect.getmembers(instance, predicate=inspect.ismethod)
     
     for name, method in methods:
         if name != '__init__' and name != 'query_evaluator':
             result, output = method()
-            if result < 1/4:
-                instance.logger.critical(f"{name}: {result} - {output}")
-            elif result < 1/2:
-                instance.logger.error(f"{name}: {result} - {output}")
-            elif result < 2/3:
-                instance.logger.warning(f"{name}: {result} - {output}")
+            result = round(result, 4)
+
+            if result > 0.70:
+                instance.logger.info(f"{name}: {result}: PASS")
             else:
-                instance.logger.info(f"{name}: {result} - {output}")
+                instance.logger.error(f"{name}: {result}: FAIL")
+           
+                
     
 if __name__ == "__main__":
 
