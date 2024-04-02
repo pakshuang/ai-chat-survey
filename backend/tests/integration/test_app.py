@@ -92,9 +92,8 @@ def test_admin_login_success():
 def test_admin_login_missing_data():
     response = requests.post(ADMINS_ENDPOINT + "/login", json={})
 
-    print(response.json())
     assert response.status_code == 400
-    assert response.json().get("message") == "Missing data"
+    assert response.json() == {"message": "Missing data"}
 
 
 def test_admin_login_missing_username():
