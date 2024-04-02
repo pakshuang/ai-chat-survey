@@ -11,6 +11,8 @@ start
 while ()
     #LightCyan:User Input;
     #LightPink:LLM output; 
+    #MediumPurple: Content Moderation Module;
+    #LightPink: Filtered LLM output; 
     if () then
         #LightSalmon:LLM decides conversation is over; 
         stop

@@ -171,6 +171,8 @@ Therefore, the LLM will have to access the current state of the conversation and
 
 To address the last problem of security (problem 4), additional efforts are needed to finetune the system prompt. The results are promising. Here are transcripts of conversations before and after the security feature was implemented.
 
+A final content moderation module, which is a model for content moderation, is used as another layer of protection against harmful output.
+
 #### Before Security:
 ```
 
