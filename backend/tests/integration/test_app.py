@@ -601,6 +601,14 @@ def test_get_response_success():
     assert response.json() == response_data
 
 
+def test_get_response_missing_survey():
+    headers = {"Authorization": "Bearer " + VALID_JWT}
+    response = requests.get(RESPONSE_ENDPOINT + "/1", headers=headers)
+
+    assert response.status_code == 400
+    assert response.json() == {"message": "Missing Survey ID"}
+
+
 def test_get_response_missing_jwt():
     response = requests.get(RESPONSE_ENDPOINT + "/1?survey=1")
 
