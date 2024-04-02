@@ -386,13 +386,12 @@ def submit_response():
         app.logger.info("No data was attached")
         return jsonify({"message": "No data was attached"}), 400
 
-    # Validate survey object format
+    # Validate response object format
     is_valid, message = database_operations.validate_response_object(data)
     if not is_valid:
         app.logger.info(f"Invalid response object format: {message}")
         return jsonify({"message": message}), 400
 
-    # Validate response object against survey object
     # Retrieve survey object from the database
     survey_id = data["metadata"]["survey_id"]
     survey_object_response = get_survey(survey_id)
