@@ -218,13 +218,9 @@ def test_create_survey_missing_jwt():
 def test_get_surveys_success():
     response = requests.get(SURVEYS_ENDPOINT)
 
-    global SURVEY_DATA
-    SURVEY_DATA["metadata"]["survey_id"] = 1
-
-    print(response.json())
     assert response.status_code == 200
-    assert len(response.json()) > 0
-    assert SURVEY_DATA in response.json()
+    assert len(response.json()) == 1
+    assert response.json()[0] == SURVEY_DATA
 
 
 def test_get_surveys_filtered_success():
