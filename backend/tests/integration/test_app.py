@@ -261,7 +261,6 @@ def test_get_surveys_success():
     SURVEY_DATA["metadata"]["survey_id"] = 1
 
     assert response.status_code == 200
-    assert len(response.json()) == 2
     assert response.json() == [SURVEY_DATA, survey_data]
 
 
@@ -269,15 +268,14 @@ def test_get_surveys_filtered_success():
     response = requests.get(SURVEYS_ENDPOINT + "?admin=admin1")
 
     assert response.status_code == 200
-    assert len(response.json()) == 1
     assert response.json() == [SURVEY_DATA]
 
 
 def test_get_surveys_empty_success():
     response = requests.get(SURVEYS_ENDPOINT + "?admin=admin3")
 
-    print(response.json())
     assert response.status_code == 200
+    assert response.json() == []
 
 
 # Test cases for get_survey<survey_id>
