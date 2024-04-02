@@ -607,3 +607,11 @@ def test_get_response_missing_jwt():
     assert response.status_code == 400
     assert response.json() == {"message": "Token is missing!"}
 
+
+def test_get_response_unauthorized():
+    headers = {"Authorization": "Bearer " + "INVALID_JWT"}
+    response = requests.get(RESPONSE_ENDPOINT + "/1?survey=1", headers=headers)
+
+    assert response.status_code == 401
+    assert response.json() == {"message": "Token is invalid!"}
+
