@@ -175,11 +175,8 @@ def test_create_survey_success():
     headers = {"Authorization": "Bearer " + VALID_JWT}
     response = requests.post(SURVEYS_ENDPOINT, json=SURVEY_DATA, headers=headers)
 
-    print(response.json())
     assert response.status_code == 201
-    assert "survey_id" in response.json()
-    global SURVEY_ID
-    SURVEY_ID = response.json().get("survey_id")
+    assert response.json() == {"survey_id": 1}
 
 
 def test_create_survey_missing_data():
