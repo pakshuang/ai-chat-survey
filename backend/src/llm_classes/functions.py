@@ -6,11 +6,13 @@ from .chatlog import ChatLog
 from .llm_level import GPT, LLM
 
 # Custom logger
-logger = logging.getLogger('exit_logger')
+logger = logging.getLogger("exit_logger")
 logger.setLevel(logging.WARNING)
-file_handler = logging.FileHandler('./logs/exit_chat.log')
+file_handler = logging.FileHandler("./logs/exit_chat.log")
 file_handler.setLevel(logging.WARNING)
-formatter = logging.Formatter("%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]")
+formatter = logging.Formatter(
+    "%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]"
+)
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
