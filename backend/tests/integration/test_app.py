@@ -377,24 +377,24 @@ def test_submit_response_success():
         "answers": [
             {
                 "question_id": 1,
-                "type": "multiple_response",
-                "question": "Which cheeses do you like?",
-                "options": ["Cheddar", "Brie", "Gouda"],
-                "answer": ["Cheddar", "Brie"],
+                "type": "multiple_choice",
+                "question": "Which performance did you enjoy the most?",
+                "options": ["Clowns", "Acrobats", "Jugglers", "Magicians"],
+                "answer": ["Clowns"],
             },
             {
                 "question_id": 2,
-                "type": "multiple_choice",
-                "question": "Cheese or chocolate?",
-                "options": ["Cheese", "Chocolate"],
-                "answer": ["Cheese"],
+                "type": "multiple_response",
+                "question": "What did you like about the venue?",
+                "options": ["Seating", "Lighting", "Sound"],
+                "answer": ["Seating", "Lighting"],
             },
             {
                 "question_id": 3,
                 "type": "free_response",
-                "question": "Why?",
+                "question": "Do you have any feedback about the venue?",
                 "options": [],
-                "answer": ["I like cheese."],
+                "answer": ["The venue was spacious and well-maintained."],
             },
         ],
     }
@@ -403,4 +403,11 @@ def test_submit_response_success():
 
     assert response.status_code == 201
     assert response.json() == {"response_id": 1}
+
+
+def test_submit_response_missing_data():
+    response = requests.post(RESPONSE_ENDPOINT, json={})
+
+    assert response.status_code == 400
+    assert response.json() == {"message": "No data was attached"}
 
