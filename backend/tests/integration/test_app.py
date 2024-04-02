@@ -43,9 +43,8 @@ def test_create_admin_existing_admin():
         json={"username": "admin1", "password": "password2"},
     )
 
-    print(response.json())
+    assert response.json() == {"message": "Admin already exists"}
     assert response.status_code == 400
-    assert response.json().get("message") == "Admin already exists"
 
 
 def test_create_admin_missing_data():
