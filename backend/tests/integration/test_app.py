@@ -33,7 +33,7 @@ def test_create_admin_second_success():
         json={"username": "admin2", "password": "password2"},
     )
 
-    print(response.json())
+    assert response.json() == {"message": "Admin admin2 created successfully"}
     assert response.status_code == 201
 
 
