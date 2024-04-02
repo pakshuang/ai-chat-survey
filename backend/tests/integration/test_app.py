@@ -554,3 +554,11 @@ def test_get_responses_survey_not_found():
     assert response.status_code == 404
     assert response.json() == {"message": "Survey not found"}
 
+
+def test_get_responses_empty_success():
+    headers = {"Authorization": "Bearer " + VALID_JWT}
+    response = requests.get(RESPONSE_ENDPOINT + "?survey=2", headers=headers)
+
+    assert response.status_code == 200
+    assert response.json() == []
+
