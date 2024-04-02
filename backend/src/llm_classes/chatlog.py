@@ -9,7 +9,7 @@ class ChatLog:
     A simple wrapper around a list of messages that supports the deletion of future messages.
     """
 
-    MAX_LEN = 30
+    MAX_LEN = 50
 
     SYSPROMPT = """You are an assistant who is trying to gather user experiences about a product.
         You have collected some survey responses, and you would like to probe further about what the user thinks about the product.
@@ -29,11 +29,14 @@ class ChatLog:
         "content": """Would you like to end the interview here? 
         Remember that you should thank the user for their time before ending the interview, so your answer should be 'no' if you haven't.
         Your reply should adhere STRICTLY to the format provided below. Separate your reasoning and the answer (Yes/No) with the symbols --.
-        Here are two examples.
+        Here are three examples.
         Example 1:
         I asked a question and I am waiting for a response therefore I do not wish to end this interview -- No.
         Example 2:
-        The user seems uncooperative and I am unlikely to receive a response, but I have not thanked the user for their time and said goodbye -- No.
+        The user seems uncooperative and I am unlikely to receive a proper response but I have not thanked the user for their time and said goodbye, so I will inform them that I wish to end the interview first. -- No.
+        Example 3:
+        I believe I have obtained enough information about the user's preferences regarding the product. It's now a good time to conclude this interview. However, I have not thanked the user for their time and said goodbye. I will tell thank the user for their time and inform them that the interview is over first. -- No.
+        Now, please answer the question.
         """,
     }
 
@@ -57,7 +60,7 @@ class ChatLog:
             raise EmptyException
         if self.current_index == 1 and from_start:
             # insert ai response
-            output = self.llm.run(self.message_list, seed=seed)
+            output = self.llm.run(self.message_list, seed=seed, with_moderation=False)
 
             self.insert_and_update(output, self.current_index, is_llm=True)
             # system response

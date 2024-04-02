@@ -1,8 +1,15 @@
+import logging
 import random
 import re
 
 from .chatlog import ChatLog
 from .llm_level import GPT, LLM
+
+logging.basicConfig(
+    filename="./logs/exit_chat.log",
+    level=logging.WARNING,
+    format="%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]",
+)
 
 
 def construct_chatlog(
@@ -58,7 +65,8 @@ def check_exit(
     """
     exit = updated_message_list.copy()
     exit.append(ChatLog.END_QUERY)
-    result = llm.run(exit, seed=seed)
+    result = llm.run(exit, seed=seed, with_moderation=False)
 
     is_last = bool(re.search(r"[yY]es", result.split(delim)[-1]))
+    logging.warning(f"exit: {is_last}, Reasoning: {result}")
     return is_last or (len(updated_message_list) > ChatLog.MAX_LEN)
