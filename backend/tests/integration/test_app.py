@@ -201,9 +201,8 @@ def test_create_survey_unauthorized():
     headers = {"Authorization": "Bearer " + "INVALID_JWT"}
     response = requests.post(SURVEYS_ENDPOINT, json=SURVEY_DATA, headers=headers)
 
-    print(response.json())
     assert response.status_code == 401
-    assert response.json().get("message") == "Token is invalid!"
+    assert response.json() == {"message": "Token is invalid!"}
 
 
 def test_create_survey_missing_jwt():
