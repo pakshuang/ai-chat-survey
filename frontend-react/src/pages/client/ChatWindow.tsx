@@ -1,5 +1,5 @@
 import { Box, SkeletonCircle, Button, Flex } from "@chakra-ui/react";
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ChatMessage from "./ChatMessage";
 import TypingEffect from "./TypingEffect";
 import QuestionInput from "./QuestionInput";
@@ -12,11 +12,7 @@ function ChatWindow({
   surveyState,
   handleSubmit,
 }: ChatWindowProps) {
-  const messagesEndRef = useRef<HTMLDivElement>(null);
   const [botResponded, setBotResponded] = useState(false);
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
 
   useEffect(() => {
     if (messages.slice(-1)[0]?.sender === "bot") {
@@ -25,7 +21,6 @@ function ChatWindow({
     if (messages.slice(-1)[0]?.sender === "user") {
       setBotResponded(false);
     }
-    scrollToBottom();
   }, [messages]);
   return (
     <Box
@@ -33,6 +28,9 @@ function ChatWindow({
       flex="1"
       display="flex"
       flexDirection="column-reverse"
+      borderRadius="lg"
+      bg="gray.50"
+      p="1rem"
       w="60rem"
       mx="auto"
       css={{
@@ -53,7 +51,7 @@ function ChatWindow({
         },
       }}
     >
-      <Box>
+      <Box flexDirection="column" display="flex" gap="0.5rem">
         <ChatMessage sender="bot">{surveyState.subtitle}</ChatMessage>
         {messages.map((item, index) => {
           if (index === messages.length - 1 && botResponded) {
@@ -68,7 +66,6 @@ function ChatWindow({
                   <Flex flexDirection="column">
                     <TypingEffect
                       text="Thank you for your responses. Please confirm your answers now, as they can't be changed later. Once confirmed, we'll continue with our discussion."
-                      scrollToBottom={scrollToBottom}
                     ></TypingEffect>
                     <Box>
                       <Button
@@ -87,7 +84,6 @@ function ChatWindow({
               <ChatMessage sender="bot">
                 <TypingEffect
                   text={messages.slice(-1)[0].message}
-                  scrollToBottom={scrollToBottom}
                 />
                 <QuestionInput
                   questionData={item.question}
@@ -114,7 +110,6 @@ function ChatWindow({
             <SkeletonCircle size="6" />
           </ChatMessage>
         )}
-        <div ref={messagesEndRef} />
       </Box>
     </Box>
   );
