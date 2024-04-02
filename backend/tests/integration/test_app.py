@@ -216,14 +216,6 @@ def test_create_survey_missing_jwt():
 
 
 def test_get_surveys_success():
-    response = requests.get(SURVEYS_ENDPOINT)
-
-    assert response.status_code == 200
-    assert len(response.json()) == 1
-    assert response.json() == [SURVEY_DATA]
-
-
-def test_get_surveys_filtered_success():
     response = requests.post(
         ADMINS_ENDPOINT + "/login",
         json={"username": "admin2", "password": "password2"},
@@ -264,6 +256,16 @@ def test_get_surveys_filtered_success():
 
     requests.post(SURVEYS_ENDPOINT, json=survey_data, headers=headers)
 
+    response = requests.get(SURVEYS_ENDPOINT)
+
+    SURVEY_DATA["metadata"]["survey_id"] = 1
+
+    assert response.status_code == 200
+    assert len(response.json()) == 1
+    assert response.json() == [SURVEY_DATA,]
+
+
+def test_get_surveys_filtered_success():
     response = requests.get(SURVEYS_ENDPOINT + "?admin=admin1")
 
     assert response.status_code == 200
