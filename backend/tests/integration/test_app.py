@@ -220,7 +220,7 @@ def test_get_surveys_success():
 
     assert response.status_code == 200
     assert len(response.json()) == 1
-    assert response.json()[0] == SURVEY_DATA
+    assert response.json() == [SURVEY_DATA]
 
 
 def test_get_surveys_filtered_success():
@@ -266,7 +266,6 @@ def test_get_surveys_filtered_success():
 
     response = requests.get(SURVEYS_ENDPOINT + "?admin=admin1")
 
-    print(response.json())
     assert response.status_code == 200
     assert len(response.json()) == 1
     assert SURVEY_DATA in response.json()
