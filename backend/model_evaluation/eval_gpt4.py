@@ -18,7 +18,7 @@ class Evaluation:
         f.close()
         self.llm = GPT()
         self.survey = conv["survey"]
-        self.ini_msg_ls = construct_chatlog(self.survey, llm=self.llm)
+        self.ini_msg_ls = construct_chatlog(self.survey, llm=self.llm).message_list
 
         ### Evaluation cases###
         self.evaluator_api = "https://api-inference.huggingface.co/models/sentence-transformers/all-MiniLM-L6-v2"
