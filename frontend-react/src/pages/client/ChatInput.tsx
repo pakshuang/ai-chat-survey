@@ -36,6 +36,7 @@ function ChatInput({ onSubmitMessage, isSubmitting }: ChatInputProps) {
           onChange={(e) => setMessage(e.target.value)}
           value={message}
           ref={inputRef}
+          isDisabled={isSubmitting}
           autoFocus
         />
         <Button
@@ -45,6 +46,7 @@ function ChatInput({ onSubmitMessage, isSubmitting }: ChatInputProps) {
           borderColor="gray.500"
           borderLeftRadius="0"
           isLoading={isSubmitting}
+          isDisabled={message===""}
         >
           Send
         </Button>

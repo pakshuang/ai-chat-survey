@@ -51,7 +51,8 @@ function ChatWindow({
         },
       }}
     >
-      <ChatMessage sender="bot">{surveyState.subtitle}</ChatMessage>
+      
+    <ChatMessage sender="bot">{surveyState.subtitle}</ChatMessage>
       {messages.map((item, index) => {
         if (index === messages.length - 1 && botResponded) {
           if (item.message === surveyMessage) {
@@ -97,7 +98,7 @@ function ChatWindow({
                 questionData={item.question}
                 handleQuestionResponse={handleQuestionResponse}
                 submitted={surveyState.submitted}
-              ></QuestionInput>}
+              ></QuestionInput> }
             </ChatMessage>
           );
         } else {

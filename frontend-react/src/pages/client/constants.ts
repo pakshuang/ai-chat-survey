@@ -25,6 +25,7 @@ export type Question = {
   options?: string[];
   answer?: string | number | string[];
 };
+
 export type QuestionProps = {
   questionData: Question;
   handleQuestionResponse: (id: number, val: string | number) => void;
@@ -36,7 +37,7 @@ export type SurveyState ={
   submitted: boolean
   subtitle: string,
   title: string,
-  messages:Messages[],
 }
+
 export const surveyMessage =
   "You've submitted the first part of our survey! Hang on tight while we process your responses...";
