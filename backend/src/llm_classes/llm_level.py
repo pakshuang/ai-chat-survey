@@ -2,6 +2,7 @@ import os
 import random
 from abc import ABC, abstractmethod
 
+import openai
 from dotenv import load_dotenv
 from openai import OpenAI
 
@@ -13,8 +14,30 @@ class LLM(ABC):
     """
 
     @abstractmethod
-    def run(self, messages: list, seed: int = random.randint(1, 9999)) -> str:
+    def run(
+        self, messages: list, seed: int = random.randint(1, 9999), with_moderation=True
+    ) -> str:
         return
+
+
+class ContentModeration:
+    """
+    A wrapper class around a content filter, for added security measures.
+    Currently uses a model from Openai API
+    Redefine this class if the application is scaled for a larger user-base.
+    """
+
+    def __init__(self, client):
+        self.default = "Sorry, I cannot help with that. This is inappropriate and your queries are being logged."
+        self.client = client
+
+    def is_harmful(self, text: str) -> bool:
+        """
+        Checks if text is harmful and inappropriate. Returns a boolean.
+        client.moderations.create()
+        """
+        response = self.client.moderations.create(input=text)
+        return response.results[0].flagged
 
 
 class GPT(LLM):
@@ -22,21 +45,28 @@ class GPT(LLM):
     Wrapper class around the GPT models from OpenAI.
     """
 
-    def __init__(self, model="gpt-4"):
+    def __init__(self, model="gpt-4-turbo-preview"):
         load_dotenv()
         client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.client = client
         self.model = model
+        self.content_moderation = ContentModeration(self.client)
         super().__init__()
 
-    def run(self, messages: list, seed: int = random.randint(1, 9999)) -> str:
+    def run(
+        self, messages: list, seed: int = random.randint(1, 9999), with_moderation=True
+    ) -> str:
         """
         Runs the llm given a current conversation and seed and outputs a string.
         """
         output = self.client.chat.completions.create(
             model=self.model, messages=messages, stream=False, seed=seed
         )
-        return output.choices[0].message.content
+        output_text = output.choices[0].message.content
+        if with_moderation and self.content_moderation.is_harmful(output_text):
+            return self.content_moderation.default
+        else:
+            return output_text
 
 
 class LocalLLMGPTQ(LLM):
