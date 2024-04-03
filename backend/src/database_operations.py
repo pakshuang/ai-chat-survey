@@ -128,6 +128,15 @@ def close_cursor(cursor: Cursor) -> None:
 
 # create_survey
 def summarise(chat_context: str) -> str:
+    """
+    Summarize the provided chat context text.
+
+    Args:
+        chat_context (str): The text to be summarized.
+
+    Returns:
+        str: The summarized text, with a maximum length of 1500 characters.
+    """
     MAX_LEN = 1500
     if len(chat_context) > MAX_LEN:
         llm = GPT()
