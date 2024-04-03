@@ -4,7 +4,6 @@ import logging
 import os
 import sys
 
-
 from openai import OpenAI
 from src.llm_classes.functions import construct_chatlog
 from src.llm_classes.llm_level import GPT
