@@ -449,7 +449,17 @@ def validate_response_object(response_data: Dict[str, Any]) -> Tuple[bool, str]:
 
 # submit_response()
 # Helper function to validate response data structure
-def validate_response(response_data, survey_object):
+def validate_response(response_data: Dict[str, Any], survey_object: Dict[str, Any]) -> Optional[str]:
+    """
+    Validate a response object against a survey object.
+
+    Args:
+        response_data (Dict[str, Any]): The response object to validate.
+        survey_object (Dict[str, Any]): The survey object against which to validate the response.
+
+    Returns:
+        Optional[str]: A message indicating any validation errors, or None if the response is valid.
+    """
     response_questions = response_data.get("answers", [])
     survey_questions = survey_object.get("questions", [])
 
