@@ -582,7 +582,18 @@ def get_responses(**kwargs) -> tuple[Flask.Response, int]:
 
 @app.route("/api/v1/responses/<response_id>", methods=["GET"])
 @admin_token_required
-def get_response(response_id, **kwargs):
+def get_response(response_id: str, **kwargs) -> tuple[Flask.Response, int]:
+    """Get a response by response ID and survey ID
+
+    Args:
+        response_id (str): Response ID
+
+    Query Parameters:
+        survey (str): Survey ID
+
+    Returns:
+        tuple[Flask.Response, int]: Tuple containing the response and status code
+    """    
     if not response_id:
         app.logger.info("Missing response ID")
         return jsonify({"message": "Missing response ID"}), 400
