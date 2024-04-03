@@ -1,11 +1,11 @@
 import inspect
 import json
-import requests
 import logging
 import os
 import re
 import sys
 
+import requests
 from openai import OpenAI
 from src.llm_classes.chatlog import ChatLog
 from src.llm_classes.functions import construct_chatlog
@@ -49,19 +49,14 @@ class Evaluation:
         response = self.client.moderations.create(input=text)
 
         return 1 - sum(dict(response.results[0].category_scores).values())
-    
+
     def similarity_evaluator(self, text, *expected):
         """
         Evaluates text against multiple possible expected outputs.
         Returns the score of the closest match.
         """
-        inputs = {
-            "source_sentence": text,
-            "sentences" : list(expected)
-        }
-        payload = {
-            "inputs": inputs
-        }
+        inputs = {"source_sentence": text, "sentences": list(expected)}
+        payload = {"inputs": inputs}
         response = requests.post(self.hf_api_url, json=payload)
         max_score = max(response.json())
         try:
@@ -70,7 +65,7 @@ class Evaluation:
             self.logger.critical(f"ERROR: {max_score}")
             return -1
         return max_score
-    
+
     def eval_gpt4_cognition_1_exit_interview(self, delim=ChatLog.EXIT_DELIM):
         is_last_1_msg_ls = self.ini_msg_ls.copy()
         is_last_1_msg_ls.extend(self.is_last_1)
@@ -79,17 +74,22 @@ class Evaluation:
         if delim not in output:
             return 0, output
         else:
-            is_last_yes =  bool(re.search(r"[yY]es", output.split(delim)[-1]))
-            is_last_no =  bool(re.search(r"[nN]o", output.split(delim)[-1]))
+            is_last_yes = bool(re.search(r"[yY]es", output.split(delim)[-1]))
+            is_last_no = bool(re.search(r"[nN]o", output.split(delim)[-1]))
             if is_last_no == is_last_yes:
                 return 0, output
             else:
-                return float(is_last_no)/2 + 0.5 * self.similarity_evaluator(
-                    output.split(delim)[0], 
-                    "I asked a question and I am waiting for a response therefore I do not wish to end this interview",
-                    "I believe I have gathered valuable feedback and suggestions from the user that will significantly contribute to improving our product. However, I have not yet thanked the user for their time and informed them that the interview is coming to an end. I will do that first."
-                ), output
-            
+                return (
+                    float(is_last_no) / 2
+                    + 0.5
+                    * self.similarity_evaluator(
+                        output.split(delim)[0],
+                        "I asked a question and I am waiting for a response therefore I do not wish to end this interview",
+                        "I believe I have gathered valuable feedback and suggestions from the user that will significantly contribute to improving our product. However, I have not yet thanked the user for their time and informed them that the interview is coming to an end. I will do that first.",
+                    ),
+                    output,
+                )
+
     def eval_gpt4_cognition_2_exit_interview(self, delim=ChatLog.EXIT_DELIM):
         is_last_2_msg_ls = self.ini_msg_ls.copy()
         is_last_2_msg_ls.extend(self.is_last_2)
@@ -98,18 +98,23 @@ class Evaluation:
         if delim not in output:
             return 0, output
         else:
-            is_last_yes =  bool(re.search(r"[yY]es", output.split(delim)[-1]))
-            is_last_no =  bool(re.search(r"[nN]o", output.split(delim)[-1]))
+            is_last_yes = bool(re.search(r"[yY]es", output.split(delim)[-1]))
+            is_last_no = bool(re.search(r"[nN]o", output.split(delim)[-1]))
             if is_last_no == is_last_yes:
                 return 0, output
             else:
-                return float(is_last_yes)/2 + 0.5 * self.similarity_evaluator(
-                    output.split(delim)[0], 
-                    "I have thanked the user for their time and feedback, and indicated that we're concluding our conversation. There doesn't seem to be any more information to gather at this moment, making it a suitable point to end the interview",
-                    "I am not waiting for a response, and I have gathered sufficient information for this interview, therefore it is a good time to end. I have thanked the user for their time and feedback, and indicated that we're concluding our conversation.",
-                    "I did not ask a question and I am not waiting for a response, and I have gathered enough information. I have also thanked the user for their time, and informed them that we would be ending our interview."
-                ), output
-            
+                return (
+                    float(is_last_yes) / 2
+                    + 0.5
+                    * self.similarity_evaluator(
+                        output.split(delim)[0],
+                        "I have thanked the user for their time and feedback, and indicated that we're concluding our conversation. There doesn't seem to be any more information to gather at this moment, making it a suitable point to end the interview",
+                        "I am not waiting for a response, and I have gathered sufficient information for this interview, therefore it is a good time to end. I have thanked the user for their time and feedback, and indicated that we're concluding our conversation.",
+                        "I did not ask a question and I am not waiting for a response, and I have gathered enough information. I have also thanked the user for their time, and informed them that we would be ending our interview.",
+                    ),
+                    output,
+                )
+
     def eval_gpt4_cognition_3_exit_interview(self, delim=ChatLog.EXIT_DELIM):
         is_last_3_msg_ls = self.ini_msg_ls.copy()
         is_last_3_msg_ls.extend(self.is_last_2[:-6])
@@ -118,18 +123,23 @@ class Evaluation:
         if delim not in output:
             return 0, output
         else:
-            is_last_yes =  bool(re.search(r"[yY]es", output.split(delim)[-1]))
-            is_last_no =  bool(re.search(r"[nN]o", output.split(delim)[-1]))
+            is_last_yes = bool(re.search(r"[yY]es", output.split(delim)[-1]))
+            is_last_no = bool(re.search(r"[nN]o", output.split(delim)[-1]))
             if is_last_no == is_last_yes:
                 return 0, output
             else:
-                return float(is_last_no)/2 + 0.5 * self.similarity_evaluator(
-                    output.split(delim)[0], 
-                    "I have asked a question and I am waiting for a response. Although I have almost all the information I need and I do not intend to ask more questions, I have not yet thanked the user for their time and informed them about concluding the interview. I will do that first ",
-                    "I am not waiting for a response, and I have gathered sufficient information for this interview, therefore it is a good time to end. However I have not thanked the user for their time and feedback and indicated that we're concluding our conversation, so I will do that first.",
-                    "I asked a question and I am waiting for a response therefore I do not wish to end this interview."
-                ), output
-            
+                return (
+                    float(is_last_no) / 2
+                    + 0.5
+                    * self.similarity_evaluator(
+                        output.split(delim)[0],
+                        "I have asked a question and I am waiting for a response. Although I have almost all the information I need and I do not intend to ask more questions, I have not yet thanked the user for their time and informed them about concluding the interview. I will do that first ",
+                        "I am not waiting for a response, and I have gathered sufficient information for this interview, therefore it is a good time to end. However I have not thanked the user for their time and feedback and indicated that we're concluding our conversation, so I will do that first.",
+                        "I asked a question and I am waiting for a response therefore I do not wish to end this interview.",
+                    ),
+                    output,
+                )
+
     def eval_gpt4_cognition_4_exit_interview(self, delim=ChatLog.EXIT_DELIM):
         is_last_4_msg_ls = self.ini_msg_ls.copy()
         is_last_4_msg_ls.extend(self.is_last_2[:-2])
@@ -138,18 +148,23 @@ class Evaluation:
         if delim not in output:
             return 0, output
         else:
-            is_last_yes =  bool(re.search(r"[yY]es", output.split(delim)[-1]))
-            is_last_no =  bool(re.search(r"[nN]o", output.split(delim)[-1]))
+            is_last_yes = bool(re.search(r"[yY]es", output.split(delim)[-1]))
+            is_last_no = bool(re.search(r"[nN]o", output.split(delim)[-1]))
             if is_last_no == is_last_yes:
                 return 0, output
             else:
-                return float(is_last_no)/2 + 0.5 * self.similarity_evaluator(
-                    output.split(delim)[0], 
-                    "I have asked a question and I am waiting for a response. Although I have almost all the information I need and I do not intend to ask more questions, I have not yet thanked the user for their time and informed them about concluding the interview. I will do that first ",
-                    "I am not waiting for a response, and I have gathered sufficient information for this interview, therefore it is a good time to end. However I have not thanked the user for their time and feedback and indicated that we're concluding our conversation, so I will do that first.",
-                    "I asked a question and I am waiting for a response therefore I do not wish to end this interview."
-                ), output
-            
+                return (
+                    float(is_last_no) / 2
+                    + 0.5
+                    * self.similarity_evaluator(
+                        output.split(delim)[0],
+                        "I have asked a question and I am waiting for a response. Although I have almost all the information I need and I do not intend to ask more questions, I have not yet thanked the user for their time and informed them about concluding the interview. I will do that first ",
+                        "I am not waiting for a response, and I have gathered sufficient information for this interview, therefore it is a good time to end. However I have not thanked the user for their time and feedback and indicated that we're concluding our conversation, so I will do that first.",
+                        "I asked a question and I am waiting for a response therefore I do not wish to end this interview.",
+                    ),
+                    output,
+                )
+
     def eval_gpt4_cognition_5_exit_interview(self, delim=ChatLog.EXIT_DELIM):
         is_last_5_msg_ls = self.ini_msg_ls.copy()
         is_last_5_msg_ls.extend(self.is_last_2[:-4])
@@ -158,18 +173,22 @@ class Evaluation:
         if delim not in output:
             return 0, output
         else:
-            is_last_yes =  bool(re.search(r"[yY]es", output.split(delim)[-1]))
-            is_last_no =  bool(re.search(r"[nN]o", output.split(delim)[-1]))
+            is_last_yes = bool(re.search(r"[yY]es", output.split(delim)[-1]))
+            is_last_no = bool(re.search(r"[nN]o", output.split(delim)[-1]))
             if is_last_no == is_last_yes:
                 return 0, output
             else:
-                return float(is_last_no)/2 + 0.5 * self.similarity_evaluator(
-                    output.split(delim)[0], 
-                    "The user indicated they would get back to me in a second, implying there might be further feedback or questions they have. It would be premature to end the interview without allowing them the opportunity to share additional thoughts",
-                    "I am waiting for a response, as the user indicated they would get back to me in a second, implying there might be further feedback or questions they have.",
-                    "the user indicated they would get back to me in a second, so I am waiting for a response. Additionally, I have not thanked the user for their time or inform them that the interview is ending."
-                ), output
-            
+                return (
+                    float(is_last_no) / 2
+                    + 0.5
+                    * self.similarity_evaluator(
+                        output.split(delim)[0],
+                        "The user indicated they would get back to me in a second, implying there might be further feedback or questions they have. It would be premature to end the interview without allowing them the opportunity to share additional thoughts",
+                        "I am waiting for a response, as the user indicated they would get back to me in a second, implying there might be further feedback or questions they have.",
+                        "the user indicated they would get back to me in a second, so I am waiting for a response. Additionally, I have not thanked the user for their time or inform them that the interview is ending.",
+                    ),
+                    output,
+                )
 
     def eval_gpt4_moderation_1_biases(self):
         bias_msg_ls = self.ini_msg_ls.copy()

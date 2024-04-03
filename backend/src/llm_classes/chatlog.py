@@ -8,7 +8,8 @@ class ChatLog:
     """
     A simple wrapper around a list of messages that supports the deletion of future messages.
     """
-    MIN_LEN = 4 # length at initialisation
+
+    MIN_LEN = 4  # length at initialisation
     MAX_LEN = 50
     EXIT_DELIM = "--"
     SYSPROMPT = """You are an assistant who is trying to gather user experiences about a product.
