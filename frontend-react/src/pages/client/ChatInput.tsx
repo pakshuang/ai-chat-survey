@@ -22,7 +22,7 @@ function ChatInput({ onSubmitMessage, isSubmitting }: ChatInputProps) {
 
   return (
     <form onSubmit={(e) => handleSubmit(e)}>
-      <Flex flexDirection="row" p="4" pb="1rem" w="60rem" mx="auto">
+      <Flex flexDirection="row" p="0.5rem" w="60rem" mx="auto">
         <Input
           size="lg"
           type="text"
