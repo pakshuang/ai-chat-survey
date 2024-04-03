@@ -1,8 +1,11 @@
 from unittest import TestCase
 
-from src.llm_classes.functions import (check_exit, construct_chatlog,
-                                       format_multiple_choices,
-                                       format_responses_for_gpt)
+from src.llm_classes.functions import (
+    check_exit,
+    construct_chatlog,
+    format_multiple_choices,
+    format_responses_for_gpt,
+)
 from src.llm_classes.llm_level import GPT
 
 

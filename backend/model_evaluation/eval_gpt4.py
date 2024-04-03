@@ -71,7 +71,7 @@ class Evaluation:
             max_score = response
         else:
             max_score = max(response.json())
-            
+
         try:
             assert isinstance(max_score, float)
         except Exception as e:
@@ -249,7 +249,7 @@ class Evaluation:
 
 
 def run_all(instance: Evaluation):
-    
+
     instance.logger.info(f"EVALUATION WITH PASS THRESHOLD: {Evaluation.PASS_THRESHOLD}")
     with open("./logs/evaluation_result.log", "w") as f:
         pass
