@@ -12,7 +12,6 @@ pyjwt = "*"
 requests = "*"
 cryptography = "*"
 flask-cors = "*"
-colorlog = "*"
 
 [dev-packages]
 black = "*"
