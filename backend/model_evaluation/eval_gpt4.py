@@ -67,14 +67,13 @@ class Evaluation:
             headers = {"Authorization": f"Bearer {self.hf_api_token}"}
         else:
             headers = None
-        
+
         response = requests.post(self.hf_api_url, headers=headers, json=payload)
-        
-        while 'estimated_time' in response.json():
-            time.sleep(response.json()["estimated_time"])       
+
+        while "estimated_time" in response.json():
+            time.sleep(response.json()["estimated_time"])
             response = requests.post(self.hf_api_url, headers=headers, json=payload)
-        
-        
+
         max_score = max(response.json())
 
         try:
@@ -84,7 +83,9 @@ class Evaluation:
             return -1
         return max_score
 
-    def eval_gpt4_cognition_1_exit_interview(self, delim: str=ChatLog.EXIT_DELIM) -> tuple[float, str]:
+    def eval_gpt4_cognition_1_exit_interview(
+        self, delim: str = ChatLog.EXIT_DELIM
+    ) -> tuple[float, str]:
         is_last_1_msg_ls = self.ini_msg_ls.copy()
         is_last_1_msg_ls.extend(self.is_last_1)
         is_last_1_msg_ls.append(ChatLog.END_QUERY)
@@ -108,7 +109,9 @@ class Evaluation:
                     output,
                 )
 
-    def eval_gpt4_cognition_2_exit_interview(self, delim: str=ChatLog.EXIT_DELIM) -> tuple[float, str]:
+    def eval_gpt4_cognition_2_exit_interview(
+        self, delim: str = ChatLog.EXIT_DELIM
+    ) -> tuple[float, str]:
         is_last_2_msg_ls = self.ini_msg_ls.copy()
         is_last_2_msg_ls.extend(self.is_last_2)
         is_last_2_msg_ls.append(ChatLog.END_QUERY)
@@ -133,7 +136,9 @@ class Evaluation:
                     output,
                 )
 
-    def eval_gpt4_cognition_3_exit_interview(self, delim: str=ChatLog.EXIT_DELIM) -> tuple[float, str]:
+    def eval_gpt4_cognition_3_exit_interview(
+        self, delim: str = ChatLog.EXIT_DELIM
+    ) -> tuple[float, str]:
         is_last_3_msg_ls = self.ini_msg_ls.copy()
         is_last_3_msg_ls.extend(self.is_last_2[:-6])
         is_last_3_msg_ls.append(ChatLog.END_QUERY)
@@ -158,7 +163,9 @@ class Evaluation:
                     output,
                 )
 
-    def eval_gpt4_cognition_4_exit_interview(self, delim: str=ChatLog.EXIT_DELIM) -> tuple[float, str]:
+    def eval_gpt4_cognition_4_exit_interview(
+        self, delim: str = ChatLog.EXIT_DELIM
+    ) -> tuple[float, str]:
         is_last_4_msg_ls = self.ini_msg_ls.copy()
         is_last_4_msg_ls.extend(self.is_last_2[:-2])
         is_last_4_msg_ls.append(ChatLog.END_QUERY)
@@ -183,7 +190,9 @@ class Evaluation:
                     output,
                 )
 
-    def eval_gpt4_cognition_5_exit_interview(self, delim: str=ChatLog.EXIT_DELIM) -> tuple[float, str]:
+    def eval_gpt4_cognition_5_exit_interview(
+        self, delim: str = ChatLog.EXIT_DELIM
+    ) -> tuple[float, str]:
         is_last_5_msg_ls = self.ini_msg_ls.copy()
         is_last_5_msg_ls.extend(self.is_last_2[:-4])
         is_last_5_msg_ls.append(ChatLog.END_QUERY)
@@ -222,7 +231,7 @@ class Evaluation:
             ),
             output,
         )
-    
+
     def eval_gpt4_cognition_7_memory(self) -> tuple[float, str]:
         memory_msg_ls = self.ini_msg_ls.copy()
         memory_msg_ls.extend(self.memory[:-12])
@@ -237,7 +246,6 @@ class Evaluation:
             ),
             output,
         )
-
 
     def eval_gpt4_moderation_1_biases(self) -> tuple[float, str]:
         bias_msg_ls = self.ini_msg_ls.copy()
@@ -271,7 +279,9 @@ class Evaluation:
 
 def run_all(instance: Evaluation) -> None:
 
-    instance.logger.info(f"EVALUATION WITH PASS THRESHOLD: {Evaluation.PASS_THRESHOLD * 100}%")
+    instance.logger.info(
+        f"EVALUATION WITH PASS THRESHOLD: {Evaluation.PASS_THRESHOLD * 100}%"
+    )
     with open("./logs/evaluation_result.log", "w") as f:
         pass
     methods = inspect.getmembers(instance, predicate=inspect.ismethod)
@@ -285,9 +295,11 @@ def run_all(instance: Evaluation) -> None:
                 instance.logger.info(f"{name}: {round(result * 100, 2)} / 100 - PASS")
             else:
                 instance.logger.error(f"{name}: {round(result * 100, 2)} / 100 - FAIL")
-                failures+=1
+                failures += 1
 
-    instance.logger.info(f"AVERAGE PERFORMANCE: {round(sum(total) * 100/len(total), 2)}%\nFAILURES: {failures}")
+    instance.logger.info(
+        f"AVERAGE PERFORMANCE: {round(sum(total) * 100/len(total), 2)}%\nFAILURES: {failures}"
+    )
 
 
 if __name__ == "__main__":
