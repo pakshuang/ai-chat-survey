@@ -208,7 +208,12 @@ def login_admin() -> tuple[Flask.Response, int]:
 
 @app.route("/api/v1/surveys", methods=["POST"])
 @admin_token_required
-def create_survey(**kwargs):
+def create_survey(**kwargs) -> tuple[Flask.Response, int]:
+    """Create a survey
+
+    Returns:
+        tuple[Flask.Response, int]: Tuple containing the response and status code
+    """    
     data = request.get_json()
 
     # If there is no data attached in request body
