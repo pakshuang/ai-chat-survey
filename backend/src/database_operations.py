@@ -110,6 +110,17 @@ def execute(connection: Connection, query: str, params: Optional[tuple] = None) 
 
 
 def fetch(connection: Connection, query: str, params: Optional[tuple] = None) -> List[dict]:
+    """
+    Execute a SQL query using the provided connection and optional parameters, and fetch all results.
+
+    Args:
+        connection (pymysql.connections.Connection): The database connection to execute the query.
+        query (str): The SQL query to execute.
+        params (tuple, optional): Optional parameters to be used in the query (default is None).
+
+    Returns:
+        List[dict]: A list of dictionaries representing the fetched results.
+    """
     try:
         with connection.cursor() as cursor:
             cursor.execute(query, params)
@@ -119,6 +130,12 @@ def fetch(connection: Connection, query: str, params: Optional[tuple] = None) ->
 
 
 def close_cursor(cursor: Cursor) -> None:
+    """
+    Close the provided cursor if it's open.
+
+    Args:
+        cursor (pymysql.cursors.Cursor): The cursor to be closed.
+    """
     if cursor:
         cursor.close()
 
