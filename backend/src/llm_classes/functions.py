@@ -18,10 +18,17 @@ logger.addHandler(file_handler)
 
 
 def construct_chatlog(
-    survey_initial_responses: str, llm: LLM = GPT(), seed=random.randint(1, 9999)
+    survey_initial_responses: str, llm: LLM = GPT(), seed: int = random.randint(1, 9999)
 ) -> ChatLog:
-    """
-    Given a formatted survey response, constructs a ChatLog object.
+    """Given a formatted survey response, constructs a ChatLog object.
+
+    Args:
+        survey_initial_responses (str): Initial responses to the static survey.
+        llm (LLM, optional): A Large Language Model object.. Defaults to gpt-4-turbo-preview.
+        seed (int, optional): A random integer. Defaults to an integer from the range 1 to 9998.
+
+    Returns:
+        ChatLog: An instance of the ChatLog class.
     """
     start_dict = {
         "role": "system",
@@ -35,6 +42,17 @@ def construct_chatlog(
 def format_multiple_choices(
     choices: list[str], title: str, sep: str = ", ", add_plural: bool = True
 ) -> str:
+    """Formats multiple choice and multiple response options and answers in JSON format into strings.
+
+    Args:
+        choices (list[str]): Choices
+        title (str): Options or Questions
+        sep (str, optional): A separator between options/answers. Defaults to ", ".
+        add_plural (bool, optional): Defaults to True.
+
+    Returns:
+        str: A formatted string to be passed into a LLM.
+    """
 
     if choices and (choices[0] or len(choices) > 1):
         # there exists at least one choice that is not [""]
@@ -46,8 +64,13 @@ def format_multiple_choices(
 
 
 def format_responses_for_gpt(response: dict[str, object]) -> str:
-    """
-    Converts a response dictionary object into a string of questions and answers.
+    """Converts a response dictionary object into a string of questions and answers.
+
+    Args:
+        response (dict[str, object]): A response object converted into a dict.
+
+    Returns:
+        str: A formatted string to be passed into a LLM.
     """
     answers = response["answers"]
     formatted = list(
@@ -65,8 +88,18 @@ def check_exit(
     seed: int = random.randint(1, 9999),
     delim: str = ChatLog.EXIT_DELIM,
 ) -> bool:
-    """
-    Checks if the interactive survey has come to a conclusion. Returns a boolean.
+    """Checks if the interactive survey has come to a conclusion. Returns a boolean.
+
+    Args:
+        updated_message_list (list[dict[str, str]]): A message list tied to the ChatLog instance.
+        llm (LLM): A LLM object.
+        seed (int, optional): An random integer controlling pseudo-randomness. Defaults to a random integer from 1 to 9998
+        delim (str, optional): A delimiter to parse a formatted LLM output. Defaults to ChatLog.EXIT_DELIM, which defaults to "--".
+
+    Returns:
+        bool: _description_
+    """ """
+    
     """
     if len(updated_message_list) <= ChatLog.MIN_LEN:
         return False

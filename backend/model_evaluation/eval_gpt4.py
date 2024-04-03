@@ -86,6 +86,9 @@ class Evaluation:
     def eval_gpt4_cognition_1_exit_interview(
         self, delim: str = ChatLog.EXIT_DELIM
     ) -> tuple[float, str]:
+        self.logger.info(
+            "Test: LLM does not exit the interview after question is asked."
+        )
         is_last_1_msg_ls = self.ini_msg_ls.copy()
         is_last_1_msg_ls.extend(self.is_last_1)
         is_last_1_msg_ls.append(ChatLog.END_QUERY)
@@ -112,6 +115,9 @@ class Evaluation:
     def eval_gpt4_cognition_2_exit_interview(
         self, delim: str = ChatLog.EXIT_DELIM
     ) -> tuple[float, str]:
+        self.logger.info(
+            "Test: LLM exits the interview after determining it is time to end and thanking the user."
+        )
         is_last_2_msg_ls = self.ini_msg_ls.copy()
         is_last_2_msg_ls.extend(self.is_last_2)
         is_last_2_msg_ls.append(ChatLog.END_QUERY)
@@ -139,6 +145,9 @@ class Evaluation:
     def eval_gpt4_cognition_3_exit_interview(
         self, delim: str = ChatLog.EXIT_DELIM
     ) -> tuple[float, str]:
+        self.logger.info(
+            "Test: LLM does not exit the interview after question is asked 2."
+        )
         is_last_3_msg_ls = self.ini_msg_ls.copy()
         is_last_3_msg_ls.extend(self.is_last_2[:-6])
         is_last_3_msg_ls.append(ChatLog.END_QUERY)
@@ -157,7 +166,7 @@ class Evaluation:
                     * self.similarity_evaluator(
                         output.split(delim)[0],
                         "I have asked a question and I am waiting for a response. Although I have almost all the information I need and I do not intend to ask more questions, I have not yet thanked the user for their time and informed them about concluding the interview. I will do that first ",
-                        "I am not waiting for a response, and I have gathered sufficient information for this interview, therefore it is a good time to end. However I have not thanked the user for their time and feedback and indicated that we're concluding our conversation, so I will do that first.",
+                        "I have gathered sufficient information for this interview, therefore it is a good time to end. However I have not thanked the user for their time and feedback and indicated that we're concluding our conversation, so I will do that first. Also, I am waiting for a response.",
                         "I asked a question and I am waiting for a response therefore I do not wish to end this interview.",
                     ),
                     output,
@@ -166,6 +175,9 @@ class Evaluation:
     def eval_gpt4_cognition_4_exit_interview(
         self, delim: str = ChatLog.EXIT_DELIM
     ) -> tuple[float, str]:
+        self.logger.info(
+            "Test: LLM does not exit the interview after question is asked 2."
+        )
         is_last_4_msg_ls = self.ini_msg_ls.copy()
         is_last_4_msg_ls.extend(self.is_last_2[:-2])
         is_last_4_msg_ls.append(ChatLog.END_QUERY)
@@ -184,7 +196,7 @@ class Evaluation:
                     * self.similarity_evaluator(
                         output.split(delim)[0],
                         "I have asked a question and I am waiting for a response. Although I have almost all the information I need and I do not intend to ask more questions, I have not yet thanked the user for their time and informed them about concluding the interview. I will do that first ",
-                        "I am not waiting for a response, and I have gathered sufficient information for this interview, therefore it is a good time to end. However I have not thanked the user for their time and feedback and indicated that we're concluding our conversation, so I will do that first.",
+                        "I have gathered sufficient information for this interview, therefore it is a good time to end. However, I asked a question and am waiting for a response.",
                         "I asked a question and I am waiting for a response therefore I do not wish to end this interview.",
                     ),
                     output,
@@ -193,6 +205,9 @@ class Evaluation:
     def eval_gpt4_cognition_5_exit_interview(
         self, delim: str = ChatLog.EXIT_DELIM
     ) -> tuple[float, str]:
+        self.logger.info(
+            "Test: LLM does not exit the interview because it is expecting a response. (No question)"
+        )
         is_last_5_msg_ls = self.ini_msg_ls.copy()
         is_last_5_msg_ls.extend(self.is_last_2[:-4])
         is_last_5_msg_ls.append(ChatLog.END_QUERY)
@@ -218,6 +233,7 @@ class Evaluation:
                 )
 
     def eval_gpt4_cognition_6_memory(self) -> tuple[float, str]:
+        self.logger.info("Test: LLM picks on inconsistency between survey and chat")
         memory_msg_ls = self.ini_msg_ls.copy()
         memory_msg_ls.extend(self.memory[:-8])
         output = self.llm.run(memory_msg_ls)
@@ -233,6 +249,7 @@ class Evaluation:
         )
 
     def eval_gpt4_cognition_7_memory(self) -> tuple[float, str]:
+        self.logger.info("Test: LLM points out inconsistency when hinted")
         memory_msg_ls = self.ini_msg_ls.copy()
         memory_msg_ls.extend(self.memory[:-12])
         output = self.llm.run(memory_msg_ls)
@@ -248,6 +265,7 @@ class Evaluation:
         )
 
     def eval_gpt4_moderation_1_biases(self) -> tuple[float, str]:
+        self.logger.info("Test: LLM outputs appropriate content")
         bias_msg_ls = self.ini_msg_ls.copy()
         bias_msg_ls.extend(self.bias)
 
@@ -256,6 +274,7 @@ class Evaluation:
         return results, output
 
     def eval_gpt4_moderation_2_jailbreak_weak(self) -> tuple[float, str]:
+        self.logger.info("Test: LLM outputs appropriate content")
         jailbreak_msg_ls_weak = self.ini_msg_ls.copy()
         jailbreak_msg_ls_weak.extend(self.jailbreak[:-2])
         output = self.llm.run(jailbreak_msg_ls_weak)
@@ -263,6 +282,9 @@ class Evaluation:
         return results, output
 
     def eval_gpt4_moderation_3_jailbreak_strong(self) -> tuple[float, str]:
+        self.logger.info(
+            "Test: LLM outputs appropriate content despite harmful andfaked previous conversations"
+        )
         jailbreak_msg_ls = self.ini_msg_ls.copy()
         jailbreak_msg_ls.extend(self.jailbreak)
         output = self.llm.run(jailbreak_msg_ls)
@@ -270,6 +292,9 @@ class Evaluation:
         return results, output
 
     def eval_gpt4_moderation_4_jailbreak_verystrong(self) -> tuple[float, str]:
+        self.logger.info(
+            "Test: LLM outputs appropriate content despite harmful andfaked previous conversations"
+        )
         jailbreak_msg_ls = self.ini_msg_ls.copy()
         jailbreak_msg_ls.extend(self.jailbreak_vstrong)
         output = self.llm.run(jailbreak_msg_ls)

@@ -5,8 +5,14 @@ from .llm_level import GPT, LLM
 
 
 class ChatLog:
-    """
-    A simple wrapper around a list of messages that supports the deletion of future messages.
+    """A simple wrapper around a list of messages that supports the deletion/edits of messages.
+
+    Raises:
+        EmptyException: Thrown when ChatLog is instantiated with an empty message list.
+        RoleException: Thrown when a message is inserted into the message list with multiple roles entered.
+
+    Returns:
+        _type_: A ChatLog instance.
     """
 
     MIN_LEN = 4  # length at initialisation
@@ -49,10 +55,18 @@ class ChatLog:
         from_start: bool = False,
         seed: int = random.randint(1, 9999),
     ):
-        """
-        Initialises a ChatLog object with a system prompt.
+        """Initialises a ChatLog object with a system prompt.
         Utilises Chain-Of-Thought prompting to first obtain a list of questions to ask.
         These questions will be used by the llm in a style similar to a semi-structured interview.
+
+        Args:
+            message_list (list[dict[str, str]]): A list of messages, or a conversation.
+            llm (LLM, optional): A large language model. Defaults to gpt-4-turbo-preview.
+            from_start (bool, optional): Is initalising the chatlog with multi-stage system prompting. Defaults to False.
+            seed (int, optional): random seed. Defaults to a random integer from 1 to 9998.
+
+        Raises:
+            EmptyException: Thrown when the ChatLog class is instantiated with an empty message_list parameter.
         """
 
         self.message_list = message_list.copy()
@@ -70,7 +84,7 @@ class ChatLog:
 
     def __str__(self):
         """
-        Returns a stringified form of the chatlog. DOES NOT INCLUDE SYSPROMPT
+        Returns a stringified form of the chatlog.
         """
         start = "======= CONVERSATION START ======="
         conversation = "\n".join(
@@ -90,10 +104,22 @@ class ChatLog:
     def insert_and_update(
         self, message: str, index: int, is_llm: bool = False, is_sys: bool = False
     ) -> list:
-        """
-        Add a new reply to the conversation chain. If edits are made in the middle, future conversations are deleted.
+        """Add a new reply to the conversation chain. If edits are made in the middle, future conversations are deleted.
         Returns a message list.
-        """
+
+        Args:
+            message (str): Message to insert into the list of messages.
+            index (int): Index in list of messages to insert message.
+            is_llm (bool, optional): Role is LLM. Defaults to False.
+            is_sys (bool, optional): Role is System. Defaults to False.
+
+        Raises:
+            RoleException: Thrown when is_llm and is_sys are True.
+
+        Returns:
+            list: Updated list of messages.
+        """ """"""
+
         if is_llm and is_sys:
             raise RoleException()
         if is_llm:
