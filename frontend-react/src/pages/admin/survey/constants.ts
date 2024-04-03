@@ -54,3 +54,24 @@ export type GetSurvey = {
   questions: Question[]
   metadata: GetSurveyMetadata
 }
+
+export type Answer = {
+  question_id: number
+  type: string
+  question: string
+  options: string[]
+  answer: string
+}
+
+export type Response = {
+  metadata: {
+    survey_id: number
+    response_id: number
+    submitted_at: string
+  }
+  answers: Answer[]
+}
+
+export type Responses = {
+  responses: Response[]
+}
