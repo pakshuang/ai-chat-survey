@@ -211,6 +211,9 @@ def login_admin() -> tuple[Flask.Response, int]:
 def create_survey(**kwargs) -> tuple[Flask.Response, int]:
     """Create a survey
 
+    Args:
+        kwargs (dict): Dictionary containing the JWT token subject claim (jwt_sub: admin username)
+
     Returns:
         tuple[Flask.Response, int]: Tuple containing the response and status code
     """    
@@ -387,6 +390,7 @@ def delete_survey(survey_id: str, **kwargs) -> tuple[Flask.Response, int]:
 
     Args:
         survey_id (str): Survey ID
+        kwargs (dict): Dictionary containing the JWT token subject claim (jwt_sub: admin username)
 
     Returns:
         tuple[Flask.Response, int]: Tuple containing the response and status code
@@ -502,6 +506,7 @@ def get_responses(**kwargs) -> tuple[Flask.Response, int]:
 
     Query Parameters:
         survey (str): Survey ID
+        kwargs (dict): Dictionary containing the JWT token subject claim (jwt_sub: admin username)
 
     Returns:
         tuple[Flask.Response, int]: Tuple containing the response and status code
