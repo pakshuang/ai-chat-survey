@@ -66,8 +66,12 @@ class Evaluation:
             response = requests.post(self.hf_api_url, headers=headers, json=payload)
         else:
             response = requests.post(self.hf_api_url, json=payload)
+
+        if isinstance(response, dict):
+            max_score = response
+        else:
+            max_score = max(response.json())
             
-        max_score = max(response.json())
         try:
             assert isinstance(max_score, float)
         except Exception as e:
