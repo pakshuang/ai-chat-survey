@@ -66,7 +66,7 @@ function ChatWindow({
               return (
                 <ChatMessage key={index} sender={"bot"}>
                   <Flex flexDirection="column">
-                    <TypingEffect text="Thank you for your responses. Please confirm your answers now, as they can't be changed later. Once confirmed, we'll continue with our discussion."></TypingEffect>
+                    <TypingEffect text="Thank you for your responses. Please confirm your answers now, as they can't be changed later. Once confirmed, we'll continue with our discussion." />
                     <Box>
                       <Button
                         onClick={handleSubmit}

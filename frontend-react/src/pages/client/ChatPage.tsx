@@ -70,7 +70,9 @@ function ChatPage() {
 
   const handleQuestionResponse = (id: number, val: string | number) => {
     const updatedQuestions = [...messages];
-    updatedQuestions[id - 1].question.answer = val;
+    if (updatedQuestions[id - 1]?.question) {
+      updatedQuestions[id - 1].question!.answer = val;
+    }
     const updId = Math.max(id, surveyState.displayIndex);
     setSurveyState({ ...surveyState, displayIndex: updId });
     setMessages(updatedQuestions);
@@ -97,7 +99,7 @@ function ChatPage() {
       setIsLoading(true);
       const rep = await submitBaseSurvey(body);
       setResponseId(rep.data.response_id);
-      const res = await sendMessageApi(rep.data.response_id, id, "");
+      const res = await sendMessageApi(rep.data.response_id, Number(id), "");
       const data = res.data;
       setMessages((prevMessages) => [
         ...prevMessages,
