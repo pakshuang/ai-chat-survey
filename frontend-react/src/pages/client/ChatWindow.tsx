@@ -58,15 +58,15 @@ function ChatWindow({
             if (item.message === surveyMessage) {
               if (surveyState.submitted) {
                 return (
-                  <ChatMessage sender={item.sender}>{item.message}</ChatMessage>
+                  <ChatMessage key={index} sender={item.sender}>
+                    {item.message}
+                  </ChatMessage>
                 );
               }
               return (
-                <ChatMessage sender={"bot"}>
+                <ChatMessage key={index} sender={"bot"}>
                   <Flex flexDirection="column">
-                    <TypingEffect
-                      text="Thank you for your responses. Please confirm your answers now, as they can't be changed later. Once confirmed, we'll continue with our discussion."
-                    ></TypingEffect>
+                    <TypingEffect text="Thank you for your responses. Please confirm your answers now, as they can't be changed later. Once confirmed, we'll continue with our discussion." />
                     <Box>
                       <Button
                         onClick={handleSubmit}
@@ -81,10 +81,8 @@ function ChatWindow({
               );
             }
             return (
-              <ChatMessage sender="bot">
-                <TypingEffect
-                  text={messages.slice(-1)[0].message}
-                />
+              <ChatMessage key={index} sender="bot">
+                <TypingEffect text={messages.slice(-1)[0].message} />
                 <QuestionInput
                   questionData={item.question}
                   handleQuestionResponse={handleQuestionResponse}
@@ -94,7 +92,7 @@ function ChatWindow({
             );
           } else {
             return (
-              <ChatMessage sender={item.sender}>
+              <ChatMessage key={index} sender={item.sender}>
                 {item.message}
                 <QuestionInput
                   questionData={item.question}

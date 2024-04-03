@@ -5,11 +5,16 @@ import re
 from .chatlog import ChatLog
 from .llm_level import GPT, LLM
 
-logging.basicConfig(
-    filename="./logs/exit_chat.log",
-    level=logging.WARNING,
-    format="%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]",
+# Custom logger
+logger = logging.getLogger("exit_logger")
+logger.setLevel(logging.WARNING)
+file_handler = logging.FileHandler("./logs/exit_chat.log")
+file_handler.setLevel(logging.WARNING)
+formatter = logging.Formatter(
+    "%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]"
 )
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
 
 
 def construct_chatlog(
@@ -58,15 +63,17 @@ def check_exit(
     updated_message_list: list[dict[str, str]],
     llm: LLM,
     seed: int = random.randint(1, 9999),
-    delim: str = "--",
+    delim: str = ChatLog.EXIT_DELIM,
 ) -> bool:
     """
     Checks if the interactive survey has come to a conclusion. Returns a boolean.
     """
+    if len(updated_message_list) <= ChatLog.MIN_LEN:
+        return False
     exit = updated_message_list.copy()
     exit.append(ChatLog.END_QUERY)
     result = llm.run(exit, seed=seed, with_moderation=False)
 
     is_last = bool(re.search(r"[yY]es", result.split(delim)[-1]))
-    logging.warning(f"exit: {is_last}, Reasoning: {result}")
+    logger.warning(f"exit: {is_last}, Reasoning: {result}")
     return is_last or (len(updated_message_list) > ChatLog.MAX_LEN)
