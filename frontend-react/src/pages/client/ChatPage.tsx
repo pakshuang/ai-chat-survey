@@ -118,12 +118,18 @@ function ChatPage() {
     : messages.slice(0, surveyState.displayIndex + 1);
 
   return (
-    <Flex flexDirection="column" bg="gray.100" h="100vh" w="100%" minW="65rem">
-      <Flex justifyContent="center">
-        <Heading fontSize="xl" p="1rem">
-          {surveyState.title}
-        </Heading>
-      </Flex>
+    <Flex
+      flexDirection="column"
+      bg="gray.100"
+      h="100vh"
+      w="100%"
+      minW="65rem"
+      gap="1rem"
+      py="1rem"
+    >
+      <Heading fontSize="xl" p="0.5rem" textAlign="center">
+        {surveyState.title}
+      </Heading>
       <ChatWindow
         handleSubmit={handleSubmit}
         messages={displayMessages}
