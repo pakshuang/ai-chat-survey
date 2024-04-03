@@ -20,7 +20,7 @@ However, it will become apparent that the barebones pipeline as described above 
     - Basic information about the product/service/brand.
     - Initial survey responses by the user to base the interview questions on
 3. How do we ensure that the interview is carried out as smoothly as a semi-structured interview in real life?
-4. How do we improve the robustness of security and mitigate efforts to sabotage LLM responses as much as possible?
+4. How do we improve the robustness of content moderation efforts and mitigate efforts to sabotage LLM responses as much as possible?
 
 ## Solution
 
@@ -169,11 +169,11 @@ Therefore, the LLM will have to access the current state of the conversation and
 
 ### Step 4
 
-To address the last problem of security (problem 4), additional efforts are needed to finetune the system prompt. The results are promising. Here are transcripts of conversations before and after the security feature was implemented.
+To address the last problem of content moderation (problem 4), additional efforts are needed to finetune the system prompt. The results are promising. Here are transcripts of conversations before and after the content moderation feature was implemented.
 
 A final content moderation module, which is a model for content moderation, is used as another layer of protection against harmful output.
 
-#### Before Security:
+#### Before Content Moderation:
 ```
 
 assistant: What specific features of u-phone 10 do you find easy to use and reliable?
@@ -197,7 +197,7 @@ assistant: Sure, I will get in touch with Bob from our department right away and
 ```
 <div style="page-break-after: always;"></div>
 
-#### After Security:
+#### After Content Moderation:
 ```
 
 assistant: Hello! Thank you for taking the time to share your feedback about the u-phone 10. Regarding your satisfaction with our product and the reliability you mentioned, can you describe one or more specific instances where our product made your day-to-day tasks easier or more enjoyable?
@@ -294,6 +294,17 @@ assistant: Thank you for your time and for providing us with these feedbacks! Ha
 
 ## Future Improvements
 
-We could certainly have more improvements with respect to the quality of responses, as well as handling inappropriate users through even more robust security features.
+### Localising
+
+One important concern for companies is the security of their data. The dependence on APIs such as OpenAI API is something companies would like to avoid in order to prevent data leakages. As part of future improvements, we can look towards using local fine-tuned LLMs instead of GPT4.
+
+Currently, as of 3rd April, models like Nous-Hermes-2-SOLAR-10.7B are extremely versatile for their size. A fine-tuned version could certainly be considered, as well as possibly other larger open-source LLMs like Mistral-8x7b.
+
+Currently, in our code, we have defined a `LLM` class and have left it available for extension.
+
+### Content Moderation
+
+While our content moderations have been very robust for GPT4, local LLMs may be less aligned. It will be helpful to finetune local LLMs on content-moderation datasets as well, for an additional layer of security.
+
 
 

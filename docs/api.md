@@ -278,7 +278,7 @@ These endpoints are used to submit, read, and update (send message) responses re
 > [!IMPORTANT]
 > A JWT is required.
 
-- **Endpoint:** `/api/v1/responses?survey={survey_id}`
+- **Endpoint:** `/api/v1/responses/{response_id}?survey={survey_id}`
 - **Method:** `GET`
 - **Description:** Get a response object by ID. An admin JWT that corresponds to the survey creator is required.
 - **HTTP Response:**
@@ -305,6 +305,7 @@ These endpoints are used to submit, read, and update (send message) responses re
 - **Status Codes:**
 
   - `200` - OK
+  - `400` - Bad Request
   - `401` - Unauthorized
   - `403` - Forbidden
   - `404` - Not Found
