@@ -497,7 +497,15 @@ def submit_response() -> tuple[Flask.Response, int]:
 
 @app.route("/api/v1/responses", methods=["GET"])
 @admin_token_required
-def get_responses(**kwargs):
+def get_responses(**kwargs) -> tuple[Flask.Response, int]:
+    """Get all responses to a survey
+
+    Query Parameters:
+        survey (str): Survey ID
+
+    Returns:
+        tuple[Flask.Response, int]: Tuple containing the response and status code
+    """    
     # Check if survey ID is provided, return 400 if not
     survey_id = request.args.get("survey")
     if not survey_id:
