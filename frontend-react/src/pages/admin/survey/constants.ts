@@ -71,7 +71,3 @@ export type Response = {
   }
   answers: Answer[]
 }
-
-export type Responses = {
-  responses: Response[]
-}
