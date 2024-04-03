@@ -1,5 +1,5 @@
 import { Button, Textarea, Flex } from "@chakra-ui/react";
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 interface ChatInputProps {
   onSubmitMessage: (message: string) => void;
@@ -8,14 +8,14 @@ interface ChatInputProps {
 
 function ChatInput({ onSubmitMessage, isSubmitting }: ChatInputProps) {
   const [message, setMessage] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   function handleSubmit() {
     onSubmitMessage(message);
     setMessage("");
   }
 
-  const handleInputKeyPress = (e) => {
+  const handleInputKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSubmit();
@@ -31,7 +31,6 @@ function ChatInput({ onSubmitMessage, isSubmitting }: ChatInputProps) {
       <Flex flexDirection="row" p="0.5rem" w="60rem" mx="auto">
         <Textarea
           size="lg"
-          type="text"
           placeholder="Enter message..."
           background="white"
           borderColor="gray.500"
