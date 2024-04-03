@@ -4,6 +4,7 @@ export type ChatMessageProps = {
   children: React.ReactNode;
   sender: "user" | "bot";
 };
+
 export type Messages = {
   sender: "user" | "bot";
   message: string;
@@ -11,7 +12,7 @@ export type Messages = {
 };
 
 export type ChatWindowProps = {
-  messages: { sender: "user" | "bot"; message: string; question: Question }[];
+  messages: Messages[];
   isBotThinking: boolean;
   surveyState: any;
   handleQuestionResponse: (id: number, val: string | number) => void;
@@ -25,8 +26,9 @@ export type Question = {
   options?: string[];
   answer?: string | number | string[];
 };
+
 export type QuestionProps = {
-  questionData: Question;
+  questionData?: Question;
   handleQuestionResponse: (id: number, val: string | number) => void;
   submitted: boolean;
 };
