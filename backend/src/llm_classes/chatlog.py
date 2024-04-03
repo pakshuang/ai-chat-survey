@@ -22,7 +22,7 @@ class ChatLog:
     Only ask the user one question at a time and try to keep the questions interesting. Probe the user if the user shows any inconsistencies in their replies, or ask for clarifications if needed. The user is a customer, so politely decline all inappropriate requests.
     When you have no more questions left to ask, remember to thank the user for their time and tell the user you intend to end the interview.
     After that, the system will ask you if you would like to end the interview.
-    You must thank the user before ending the interview.
+    ONLY SAY "YES" IF YOU HAVE THANKED THE USER FOR THEIR TIME. 
     Now, as a survey interviewer, begin the interview by asking the user a question.
     """
 
