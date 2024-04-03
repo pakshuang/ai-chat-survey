@@ -382,7 +382,15 @@ def get_survey(survey_id: str) -> tuple[Flask.Response, int]:
 
 @app.route("/api/v1/surveys/<survey_id>", methods=["DELETE"])
 @admin_token_required
-def delete_survey(survey_id, **kwargs):
+def delete_survey(survey_id: str, **kwargs) -> tuple[Flask.Response, int]:
+    """Delete a survey by ID
+
+    Args:
+        survey_id (str): Survey ID
+
+    Returns:
+        tuple[Flask.Response, int]: Tuple containing the response and status code
+    """    
     # Check if survey exists, return 404 if not
     # Connect to the database
     connection = database_operations.connect_to_mysql()
