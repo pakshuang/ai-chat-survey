@@ -63,11 +63,13 @@ def check_exit(
     updated_message_list: list[dict[str, str]],
     llm: LLM,
     seed: int = random.randint(1, 9999),
-    delim: str = "--",
+    delim: str = ChatLog.EXIT_DELIM,
 ) -> bool:
     """
     Checks if the interactive survey has come to a conclusion. Returns a boolean.
     """
+    if len(updated_message_list) <= 4:
+        return False
     exit = updated_message_list.copy()
     exit.append(ChatLog.END_QUERY)
     result = llm.run(exit, seed=seed, with_moderation=False)
