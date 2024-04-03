@@ -322,7 +322,15 @@ def get_surveys() -> tuple[Flask.Response, int]:
 
 
 @app.route("/api/v1/surveys/<survey_id>", methods=["GET"])
-def get_survey(survey_id):
+def get_survey(survey_id: str) -> tuple[Flask.Response, int]:
+    """Get a survey by ID
+
+    Args:
+        survey_id (str): Survey ID
+
+    Returns:
+        tuple[Flask.Response, int]: Tuple containing the response and status code
+    """    
     if not survey_id:
         app.logger.info("Missing survey ID")
         return jsonify({"message": "Missing survey ID"}), 400
