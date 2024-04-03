@@ -68,7 +68,13 @@ def close_connection(connection: Connection) -> None:
         connection.close()
 
 
-def commit(connection):
+def commit(connection: Connection) -> None:
+    """
+    Commit the changes made to the database through the provided connection if it's open.
+
+    Args:
+        connection (pymysql.connections.Connection): The database connection used to commit changes.
+    """
     if connection:
         connection.commit()
 
