@@ -45,7 +45,15 @@ def handle_options(response):
 # JWT
 
 
-def admin_token_required(f):
+def admin_token_required(f: callable) -> callable:
+    """Decorator function to check if a valid JWT token is provided in the request headers
+
+    Args:
+        f (callable): Function to be decorated
+
+    Returns:
+        callable: Decorated function
+    """    
     @wraps(f)
     def decorated(*args, **kwargs):
         token = None
@@ -80,7 +88,12 @@ def admin_token_required(f):
 
 
 @app.route("/api/v1/health", methods=["GET"])
-def health_check():
+def health_check() -> tuple[Flask.Response, int]:
+    """Health check route
+
+    Returns:
+        tuple[Flask.Response, int]: Tuple containing the response and status code
+    """    
     return jsonify({"message": "Server is running!"}), 200
 
 
