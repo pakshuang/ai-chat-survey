@@ -8,7 +8,7 @@ import {
   submitBaseSurvey,
 } from "../hooks/useApi";
 import { useParams } from "react-router-dom";
-import { Messages, surveyMessage } from "./constants";
+import { Messages, Question, surveyMessage } from "./constants";
 import ChatMessage from "./ChatMessage";
 
 function ChatPage() {
@@ -28,7 +28,7 @@ function ChatPage() {
     setIsLoading(true);
     setMessages([...messages, { sender: "user", message: message }]);
     try {
-      const res = await sendMessageApi(responseId, id, message);
+      const res = await sendMessageApi(responseId, Number(id), message);
       const data = res.data;
       if (data.is_last) {
         setIslast(true);
@@ -47,8 +47,8 @@ function ChatPage() {
   }
 
   useEffect(() => {
-    getUserSurvey(id).then((rep) => {
-      const answeredQuestions = rep.data.questions.map((question, index) => {
+    getUserSurvey(Number(id)).then((rep) => {
+      const answeredQuestions = rep.data.questions.map((question: Question) => {
         return {
           sender: "bot",
           message: question.question,
