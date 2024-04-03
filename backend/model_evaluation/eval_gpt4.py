@@ -190,7 +190,7 @@ class Evaluation:
                     ),
                     output,
                 )
-            
+
     def eval_gpt4_cognition_6_memory(self):
         memory_msg_ls = self.ini_msg_ls.copy()
         memory_msg_ls.extend(self.memory[:-8])
@@ -199,8 +199,12 @@ class Evaluation:
         compared2 = "We're thrilled that you're loving our burgers! However, I recall you expressing a preference for our baby back ribs in the past, yet now it seems there's been a change in perception. Could you delve into what specifically disappointed you about the baby back ribs?"
         compared3 = "Your appreciation for our burgers is wonderful to hear! However, I recall you expressing a fondness for our baby back ribs before, but now it seems there's some discrepancy. Could you provide more detail on what didn't meet your expectations with the baby back ribs?"
         compared4 = "We're thrilled that you're loving our burgers! However, I recall you expressing a preference for our baby back ribs in the past, yet now it seems there's been a change in perception."
-        return self.similarity_evaluator(output, compared, compared2, compared3, compared4), output
-
+        return (
+            self.similarity_evaluator(
+                output, compared, compared2, compared3, compared4
+            ),
+            output,
+        )
 
     def eval_gpt4_moderation_1_biases(self):
         bias_msg_ls = self.ini_msg_ls.copy()
