@@ -250,7 +250,15 @@ def create_survey(**kwargs) -> tuple[Flask.Response, int]:
 
 
 @app.route("/api/v1/surveys", methods=["GET"])
-def get_surveys():
+def get_surveys() -> tuple[Flask.Response, int]:
+    """Get all surveys
+
+    Query Parameters:
+        admin (str, optional): Admin username to filter surveys by
+
+    Returns:
+        tuple[Flask.Response, int]: Tuple containing the response and status code
+    """    
     # Connect to the database
     connection = database_operations.connect_to_mysql()
     if not connection:
