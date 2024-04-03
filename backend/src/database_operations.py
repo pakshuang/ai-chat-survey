@@ -15,7 +15,6 @@ from typing import Any, Dict, List, Optional, Tuple
 import pymysql
 from pymysql.connections import Connection
 from pymysql.cursors import Cursor
-
 from src.llm_classes.llm_level import GPT
 
 
