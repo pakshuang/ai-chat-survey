@@ -41,4 +41,3 @@ jobs:
           TYPESCRIPT_DEFAULT_STYLE: ts-prettier
           VALIDATE_TSX: true
           VALIDATE_TYPESCRIPT_ES: true
-          VALIDATE_TYPESCRIPT_STANDARD: true
