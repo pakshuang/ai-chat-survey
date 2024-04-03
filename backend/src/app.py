@@ -608,7 +608,7 @@ def helper_send_message(
                 }""",
                 llm=llm,
             )
-            first_question = llm.run(pipe.message_list)
+            first_question = llm.run(pipe.message_list, with_moderation=False)
             updated_message_list = pipe.insert_and_update(
                 first_question, pipe.current_index, is_llm=True
             )
@@ -642,10 +642,8 @@ def helper_send_message(
             )
 
         content = updated_message_list[-1]["content"]
-        is_last = (
-            check_exit(updated_message_list, llm)
-            or len(updated_message_list) > ChatLog.MAX_LEN
-        )
+
+        is_last = check_exit(updated_message_list, llm)
         database_operations.close_connection(connection)
         app.logger.info("Reply generated successfully")
         return (
