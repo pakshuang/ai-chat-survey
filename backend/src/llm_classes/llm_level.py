@@ -23,12 +23,12 @@ class LLM(ABC):
 class ContentModeration:
     """
     A wrapper class around a content filter, for added security measures.
-    Currently uses a model from Openai API
+    Currently uses a model from Openai API.
     Redefine this class if the application is scaled for a larger user-base.
     """
 
     def __init__(self, client):
-        self.default = "Sorry, I cannot help with that. This is inappropriate and your queries are being logged."
+        self.default = "Sorry, I cannot assist you with that. Please note that your replies are being logged."
         self.client = client
 
     def is_harmful(self, text: str) -> bool:
