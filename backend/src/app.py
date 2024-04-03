@@ -663,9 +663,7 @@ def helper_send_message(
             201,
         )
     except Exception as e:
-        app.logger.error(
-            "An error was encountered while generating a reply: " + str(e)
-        )
+        app.logger.error("An error was encountered while generating a reply: " + str(e))
         return (
             jsonify(
                 {
