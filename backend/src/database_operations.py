@@ -306,7 +306,18 @@ def create_survey_object(row: Dict[str, Any]) -> Dict[str, Any]:
 
 # get_surveys()
 # Helper function to create survey object
-def append_question_to_survey(survey_objects, survey_id, question_data):
+def append_question_to_survey(survey_objects: Dict[int, dict], survey_id: int, question_data: dict) -> None:
+    """
+    Append a question to the survey object identified by the provided survey ID.
+
+    Args:
+        survey_objects (Dict[int, dict]): A dictionary containing survey objects indexed by survey ID.
+        survey_id (int): The ID of the survey to which the question will be appended.
+        question_data (dict): The data of the question to be appended to the survey.
+
+    Returns:
+        None
+    """
     # If the question does not exist, append it to the list
     survey_objects[survey_id]["questions"].append(
         {
