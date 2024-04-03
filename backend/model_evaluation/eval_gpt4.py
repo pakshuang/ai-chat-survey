@@ -32,6 +32,7 @@ class Evaluation:
         self.jailbreak_vstrong = conv["jailbreak_very_strong"]
         ############ Cognition ###########
         self.hf_api_url = "https://api-inference.huggingface.co/models/sentence-transformers/msmarco-distilbert-base-tas-b"
+        self.hf_api_token = os.getenv("HF_API_KEY")
         self.is_last_1 = conv["is_last_1"]
         self.is_last_2 = conv["is_last_2"]
         self.memory = conv["memory"]
@@ -60,7 +61,12 @@ class Evaluation:
         """
         inputs = {"source_sentence": text, "sentences": list(expected)}
         payload = {"inputs": inputs}
-        response = requests.post(self.hf_api_url, json=payload)
+        if self.hf_api_token is not None:
+            headers = {"Authorization": f"Bearer {self.hf_api_token}"}
+            response = requests.post(self.hf_api_url, headers=headers, json=payload)
+        else:
+            response = requests.post(self.hf_api_url, json=payload)
+            
         max_score = max(response.json())
         try:
             assert isinstance(max_score, float)
