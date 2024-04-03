@@ -590,7 +590,18 @@ def fetch_chat_context(connection: Connection, survey_id: int) -> str:
 
 # send_chat_message()
 # Helper function to get the chatLog or create a new chatLog
-def get_chat_log(connection, survey_id, response_id):
+def get_chat_log(connection: Connection, survey_id: int, response_id: int) -> str:
+    """
+    Get the chat log associated with a survey and response from the database.
+
+    Args:
+        connection (Connection): The database connection.
+        survey_id (int): The ID of the survey.
+        response_id (int): The ID of the response.
+
+    Returns:
+        str: The chat log associated with the survey and response.
+    """
     try:
         # Check if chat log exists for the survey
         chat_log_query = """
@@ -623,7 +634,19 @@ def get_chat_log(connection, survey_id, response_id):
 
 # send_chat_message()
 # Helper function update chat log
-def update_chat_log(connection, survey_id, response_id, updated_chat_log):
+def update_chat_log(connection: Connection, survey_id: int, response_id: int, updated_chat_log: str) -> bool:
+    """
+    Update the chat log associated with a survey and response in the database.
+
+    Args:
+        connection (Connection): The database connection.
+        survey_id (int): The ID of the survey.
+        response_id (int): The ID of the response.
+        updated_chat_log (str): The updated chat log to be stored in the database.
+
+    Returns:
+        bool: True if the chat log was successfully updated, False otherwise.
+    """
     try:
         # Update chat_log in the database
         update_chat_log_query = """
