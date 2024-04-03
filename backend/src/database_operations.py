@@ -385,7 +385,17 @@ def save_response_to_database(connection: Connection, data: Dict[str, Any], surv
         return e
 
 
-def validate_response_object(response_data):
+def validate_response_object(response_data: Dict[str, Any]) -> Tuple[bool, str]:
+    """
+    Validate a response object to ensure it follows a specific format.
+
+    Args:
+        response_data (Dict[str, Any]): The response object to validate.
+
+    Returns:
+        Tuple[bool, str]: A tuple containing a boolean indicating whether the response object is valid
+                         and a message describing the result.
+    """
     if not isinstance(response_data, dict):
         return False, "Response data must be a dictionary"
 
