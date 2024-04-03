@@ -13,7 +13,8 @@ import os
 from typing import Optional
 
 import pymysql
-
+from pymysql.connections import Connection
+from pymysql.cursors import Cursor
 from src.llm_classes.llm_level import GPT
 
 
@@ -38,13 +39,21 @@ def connect_to_mysql() -> Optional[pymysql.connections.Connection]:
             database=mysql_db,
             cursorclass=pymysql.cursors.DictCursor,
         )
-        print("Connected to MySQL database successfully!")
         return connection
     except pymysql.Error as e:
         raise e
 
 
-def get_cursor(connection):
+def get_cursor(connection: Connection) -> Cursor:
+    """
+    Returns a cursor object associated with the provided database connection.
+
+    Args:
+        connection: pymysql.connections.Connection object representing the database connection.
+
+    Returns:
+        pymysql.cursors.Cursor: Cursor object for executing SQL queries.
+    """
     return connection.cursor()
 
 
