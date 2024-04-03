@@ -670,9 +670,18 @@ def get_response(response_id: str, **kwargs) -> tuple[Flask.Response, int]:
 
 def helper_send_message(
     llm_input: dict[str, object], data_content: str, connection, survey_id, response_id
-):
-    """
-    Generates a response from a large language model.
+) -> tuple[Flask.Response, int]:
+    """Generates a response from a large language model.
+
+    Args:
+        llm_input (dict): Input to the large language model
+        data_content (str): User input
+        connection: MySQL connection object
+        survey_id (str): Survey ID
+        response_id (str): Response ID
+
+    Returns:
+        tuple[Flask.Response, int]: Tuple containing the response and status code
     """
 
     def has_no_chat_log(content: str, message_list: list[dict[str, object]]) -> bool:
@@ -752,7 +761,18 @@ def helper_send_message(
 
 
 @app.route("/api/v1/responses/<response_id>/chat", methods=["POST"])
-def send_chat_message(response_id):
+def send_chat_message(response_id: str) -> tuple[Flask.Response, int]:
+    """Send a chat message for a response
+
+    Args:
+        response_id (str): Response ID
+
+    Query Parameters:
+        survey (str): Survey ID
+
+    Returns:
+        tuple[Flask.Response, int]: Tuple containing the response and status code
+    """    
     # Check that there is "content" in request body
     data = request.get_json()
     if "content" not in data:
