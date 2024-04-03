@@ -119,8 +119,8 @@ function ViewAdminSurvey() {
                   <Input
                     value={question.question}
                     variant="unstyled"
-                    size="lg"
-                    fontSize="2xl"
+                    size="md"
+                    fontSize="xl"
                     fontWeight="bold"
                     w="42rem"
                     isReadOnly
