@@ -79,7 +79,13 @@ def commit(connection: Connection) -> None:
         connection.commit()
 
 
-def rollback(connection):
+def rollback(connection: Connection) -> None:
+    """
+    Roll back any uncommitted changes made to the database through the provided connection if it's open.
+
+    Args:
+        connection (pymysql.connections.Connection): The database connection used to rollback changes.
+    """
     if connection:
         connection.rollback()
 
