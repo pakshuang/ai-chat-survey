@@ -57,7 +57,13 @@ def get_cursor(connection: Connection) -> Cursor:
     return connection.cursor()
 
 
-def close_connection(connection):
+def close_connection(connection: Connection) -> None:
+    """
+    Close the provided database connection if it's open.
+
+    Args:
+        connection (pymysql.connections.Connection): The database connection to be closed.
+    """
     if connection:
         connection.close()
 
