@@ -1,3 +1,12 @@
+# -*- coding: utf-8 -*-
+"""
+    src.app
+    ~~~~~~~
+
+    This module implements the API for the backend server.
+"""
+
+
 import datetime
 import json
 import logging
@@ -5,7 +14,7 @@ import os
 from functools import wraps
 
 import jwt
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Response
 from flask_cors import CORS
 from src import database_operations
 from src.llm_classes.chatlog import ChatLog
@@ -45,7 +54,16 @@ def handle_options(response):
 # JWT
 
 
-def admin_token_required(f):
+def admin_token_required(f: callable) -> callable:
+    """Decorator function to check if a valid JWT token is provided in the request headers
+
+    Args:
+        f (callable): Function to be decorated
+
+    Returns:
+        callable: Decorated function
+    """
+
     @wraps(f)
     def decorated(*args, **kwargs):
         token = None
@@ -80,7 +98,12 @@ def admin_token_required(f):
 
 
 @app.route("/api/v1/health", methods=["GET"])
-def health_check():
+def health_check() -> tuple[Response, int]:
+    """Health check route
+
+    Returns:
+        tuple[Response, int]: Tuple containing the response and status code
+    """
     return jsonify({"message": "Server is running!"}), 200
 
 
@@ -88,7 +111,12 @@ def health_check():
 
 
 @app.route("/api/v1/admins", methods=["POST"])
-def create_admin():
+def create_admin() -> tuple[Response, int]:
+    """Create an admin account
+
+    Returns:
+        tuple[Response, int]: Tuple containing the response and status code
+    """
     data = request.get_json()
 
     # Basic validation
@@ -126,7 +154,12 @@ def create_admin():
 
 
 @app.route("/api/v1/admins/login", methods=["POST"])
-def login_admin():
+def login_admin() -> tuple[Response, int]:
+    """Login an admin
+
+    Returns:
+        tuple[Response, int]: Tuple containing the response and status code
+    """
     data = request.get_json()
 
     # Basic validation
@@ -184,7 +217,15 @@ def login_admin():
 
 @app.route("/api/v1/surveys", methods=["POST"])
 @admin_token_required
-def create_survey(**kwargs):
+def create_survey(**kwargs) -> tuple[Response, int]:
+    """Create a survey
+
+    Args:
+        kwargs (dict): Dictionary containing the JWT token subject claim (jwt_sub: admin username)
+
+    Returns:
+        tuple[Response, int]: Tuple containing the response and status code
+    """
     data = request.get_json()
 
     # If there is no data attached in request body
@@ -221,7 +262,15 @@ def create_survey(**kwargs):
 
 
 @app.route("/api/v1/surveys", methods=["GET"])
-def get_surveys():
+def get_surveys() -> tuple[Response, int]:
+    """Get all surveys
+
+    Query Parameters:
+        admin (str, optional): Admin username to filter surveys by
+
+    Returns:
+        tuple[Response, int]: Tuple containing the response and status code
+    """
     # Connect to the database
     connection = database_operations.connect_to_mysql()
     if not connection:
@@ -285,7 +334,15 @@ def get_surveys():
 
 
 @app.route("/api/v1/surveys/<survey_id>", methods=["GET"])
-def get_survey(survey_id):
+def get_survey(survey_id: str) -> tuple[Response, int]:
+    """Get a survey by ID
+
+    Args:
+        survey_id (str): Survey ID
+
+    Returns:
+        tuple[Response, int]: Tuple containing the response and status code
+    """
     if not survey_id:
         app.logger.info("Missing survey ID")
         return jsonify({"message": "Missing survey ID"}), 400
@@ -337,7 +394,16 @@ def get_survey(survey_id):
 
 @app.route("/api/v1/surveys/<survey_id>", methods=["DELETE"])
 @admin_token_required
-def delete_survey(survey_id, **kwargs):
+def delete_survey(survey_id: str, **kwargs) -> tuple[Response, int]:
+    """Delete a survey by ID
+
+    Args:
+        survey_id (str): Survey ID
+        kwargs (dict): Dictionary containing the JWT token subject claim (jwt_sub: admin username)
+
+    Returns:
+        tuple[Response, int]: Tuple containing the response and status code
+    """
     # Check if survey exists, return 404 if not
     # Connect to the database
     connection = database_operations.connect_to_mysql()
@@ -380,7 +446,12 @@ def delete_survey(survey_id, **kwargs):
 
 
 @app.route("/api/v1/responses", methods=["POST"])
-def submit_response():
+def submit_response() -> tuple[Response, int]:
+    """Submit a response to a survey
+
+    Returns:
+        tuple[Response, int]: Tuple containing the response and status code
+    """
     data = request.get_json()
     if not data:
         app.logger.info("No data was attached")
@@ -438,7 +509,16 @@ def submit_response():
 
 @app.route("/api/v1/responses", methods=["GET"])
 @admin_token_required
-def get_responses(**kwargs):
+def get_responses(**kwargs) -> tuple[Response, int]:
+    """Get all responses to a survey
+
+    Query Parameters:
+        survey (str): Survey ID
+        kwargs (dict): Dictionary containing the JWT token subject claim (jwt_sub: admin username)
+
+    Returns:
+        tuple[Response, int]: Tuple containing the response and status code
+    """
     # Check if survey ID is provided, return 400 if not
     survey_id = request.args.get("survey")
     if not survey_id:
@@ -511,7 +591,22 @@ def get_responses(**kwargs):
 
 @app.route("/api/v1/responses/<response_id>", methods=["GET"])
 @admin_token_required
-def get_response(response_id, **kwargs):
+def get_response(response_id: str, **kwargs) -> tuple[Response, int]:
+    """Get a response by response ID and survey ID
+
+    Args:
+        response_id (str): Response ID
+
+    Query Parameters:
+        survey (str): Survey ID
+
+    Returns:
+        tuple[Response, int]: Tuple containing the response and status code
+    """
+    if not response_id:
+        app.logger.info("Missing response ID")
+        return jsonify({"message": "Missing response ID"}), 400
+
     # Check if survey ID is provided, return 400 if not
     survey_id = request.args.get("survey")
     if not survey_id:
@@ -584,9 +679,18 @@ def get_response(response_id, **kwargs):
 
 def helper_send_message(
     llm_input: dict[str, object], data_content: str, connection, survey_id, response_id
-):
-    """
-    Generates a response from a large language model.
+) -> tuple[Response, int]:
+    """Generates a response from a large language model.
+
+    Args:
+        llm_input (dict): Input to the large language model
+        data_content (str): User input
+        connection: MySQL connection object
+        survey_id (str): Survey ID
+        response_id (str): Response ID
+
+    Returns:
+        tuple[Response, int]: Tuple containing the response and status code
     """
 
     def has_no_chat_log(content: str, message_list: list[dict[str, object]]) -> bool:
@@ -672,7 +776,18 @@ def helper_send_message(
 
 
 @app.route("/api/v1/responses/<response_id>/chat", methods=["POST"])
-def send_chat_message(response_id):
+def send_chat_message(response_id: str) -> tuple[Response, int]:
+    """Send a chat message for a response
+
+    Args:
+        response_id (str): Response ID
+
+    Query Parameters:
+        survey (str): Survey ID
+
+    Returns:
+        tuple[Response, int]: Tuple containing the response and status code
+    """
     # Check that there is "content" in request body
     data = request.get_json()
     if "content" not in data:
