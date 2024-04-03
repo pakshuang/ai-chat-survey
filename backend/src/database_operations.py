@@ -560,7 +560,17 @@ def append_answer_to_response(response_objects: Dict[int, Dict[str, Any]], respo
 
 # send_chat_message()
 # Helper function to fetch the chat_context from Surveys
-def fetch_chat_context(connection, survey_id):
+def fetch_chat_context(connection: Connection, survey_id: int) -> str:
+    """
+    Fetch the chat context associated with a survey from the database.
+
+    Args:
+        connection (Connection): The database connection.
+        survey_id (int): The ID of the survey for which to fetch the chat context.
+
+    Returns:
+        str: The chat context associated with the survey.
+    """
     try:
         # Fetch chat context from the database
         chat_context_query = """
