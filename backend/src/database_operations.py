@@ -90,12 +90,22 @@ def rollback(connection: Connection) -> None:
         connection.rollback()
 
 
-def execute(connection, query, params=None):
+def execute(connection: Connection, query: str, params: Optional[tuple] = None) -> None:
+    """
+    Execute a SQL query using the provided connection and optional parameters.
+
+    Args:
+        connection (pymysql.connections.Connection): The database connection to execute the query.
+        query (str): The SQL query to execute.
+        params (tuple, optional): Optional parameters to be used in the query (default is None).
+    """
     try:
         with connection.cursor() as cursor:
             cursor.execute(query, params)
             commit(connection)  # Commit changes after successful execution
     except Exception as e:
+        # Roll back changes if execution fails
+        rollback(connection)
         raise e
 
 
