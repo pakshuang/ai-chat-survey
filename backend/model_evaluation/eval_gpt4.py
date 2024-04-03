@@ -14,6 +14,8 @@ from src.llm_classes.llm_level import GPT
 
 class Evaluation:
 
+    PASS_THRESHOLD = 0.70
+
     def __init__(self):
         with open("./model_evaluation/response_data/fake_conversation.json", "rb") as f:
             conv = json.load(f)
@@ -237,6 +239,8 @@ class Evaluation:
 
 
 def run_all(instance: Evaluation):
+    
+    instance.logger.info(f"EVALUATION WITH PASS THRESHOLD: {Evaluation.PASS_THRESHOLD}")
     with open("./logs/evaluation_result.log", "w") as f:
         pass
     methods = inspect.getmembers(instance, predicate=inspect.ismethod)
@@ -245,8 +249,7 @@ def run_all(instance: Evaluation):
         if name != "__init__" and "evaluator" not in name:
             result, output = method()
             result = round(result, 4)
-
-            if result > 0.70:
+            if result > Evaluation.PASS_THRESHOLD:
                 instance.logger.info(f"{name}: {result}: PASS")
             else:
                 instance.logger.error(f"{name}: {result}: FAIL")
