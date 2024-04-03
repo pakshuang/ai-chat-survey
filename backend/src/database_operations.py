@@ -333,7 +333,18 @@ def append_question_to_survey(survey_objects: Dict[int, dict], survey_id: int, q
 
 # submit_response()
 # Helper function to insert response data into DB
-def save_response_to_database(connection, data, survey_id):
+def save_response_to_database(connection: Connection, data: Dict[str, Any], survey_id: int) -> int:
+    """
+    Save the survey response data to the database.
+
+    Args:
+        connection (Connection): The database connection.
+        data (Dict[str, Any]): The survey response data to be saved.
+        survey_id (int): The ID of the survey for which the response is being saved.
+
+    Returns:
+        int: The ID of the newly saved response.
+    """
     try:
         query = """
         SELECT MAX(response_id) FROM Survey_Responses WHERE survey_id = %s
