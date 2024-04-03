@@ -101,7 +101,12 @@ def health_check() -> tuple[Flask.Response, int]:
 
 
 @app.route("/api/v1/admins", methods=["POST"])
-def create_admin():
+def create_admin() -> tuple[Flask.Response, int]:
+    """Create an admin account
+
+    Returns:
+        tuple[Flask.Response, int]: Tuple containing the response and status code
+    """    
     data = request.get_json()
 
     # Basic validation
