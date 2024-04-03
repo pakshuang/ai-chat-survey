@@ -1,5 +1,5 @@
-import { Button, Input, Flex } from "@chakra-ui/react";
-import { FormEvent, useState, useRef, useEffect } from "react";
+import { Button, Textarea, Flex } from "@chakra-ui/react";
+import { useState, useRef, useEffect } from "react";
 
 interface ChatInputProps {
   onSubmitMessage: (message: string) => void;
@@ -10,23 +10,29 @@ function ChatInput({ onSubmitMessage, isSubmitting }: ChatInputProps) {
   const [message, setMessage] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
-  function handleSubmit(e: FormEvent) {
-    e.preventDefault();
+  function handleSubmit() {
     onSubmitMessage(message);
     setMessage("");
   }
+
+  const handleInputKeyPress = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit();
+    }
+  };
 
   useEffect(() => {
     inputRef.current?.focus();
   }, [message]);
 
   return (
-    <form onSubmit={(e) => handleSubmit(e)}>
+    <form onSubmit={handleSubmit}>
       <Flex flexDirection="row" p="0.5rem" w="60rem" mx="auto">
-        <Input
+        <Textarea
           size="lg"
           type="text"
-          placeholder="Enter message ..."
+          placeholder="Enter message..."
           background="white"
           borderColor="gray.500"
           borderRightRadius="0"
@@ -34,8 +40,11 @@ function ChatInput({ onSubmitMessage, isSubmitting }: ChatInputProps) {
             boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
           }}
           onChange={(e) => setMessage(e.target.value)}
+          onKeyPress={handleInputKeyPress}
           value={message}
           ref={inputRef}
+          rows={1}
+          resize="none"
           autoFocus
         />
         <Button
