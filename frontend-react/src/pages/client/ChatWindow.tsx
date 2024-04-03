@@ -1,5 +1,5 @@
 import { Box, SkeletonCircle, Button, Flex } from "@chakra-ui/react"
-import { useRef, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import ChatMessage from "./ChatMessage"
 import TypingEffect from "./TypingEffect"
 import QuestionInput from "./QuestionInput"
@@ -12,11 +12,7 @@ function ChatWindow({
   surveyState,
   handleSubmit,
 }: ChatWindowProps) {
-  const messagesEndRef = useRef<HTMLDivElement>(null)
   const [botResponded, setBotResponded] = useState(false)
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
 
   useEffect(() => {
     if (messages.slice(-1)[0]?.sender === "bot") {
@@ -25,12 +21,16 @@ function ChatWindow({
     if (messages.slice(-1)[0]?.sender === "user") {
       setBotResponded(false)
     }
-    scrollToBottom()
   }, [messages])
   return (
     <Box
       overflowY="auto"
       flex="1"
+      display="flex"
+      flexDirection="column-reverse"
+      borderRadius="lg"
+      bg="gray.50"
+      p="1rem"
       w="60rem"
       mx="auto"
       css={{
@@ -51,69 +51,62 @@ function ChatWindow({
         },
       }}
     >
-      <ChatMessage sender="bot">{surveyState.subtitle}</ChatMessage>
-      {messages.map((item, index) => {
-        if (index === messages.length - 1 && botResponded) {
-          if (item.message === surveyMessage) {
-            if (surveyState.submitted) {
+      <Box flexDirection="column" display="flex" gap="0.5rem">
+        <ChatMessage sender="bot">{surveyState.subtitle}</ChatMessage>
+        {messages.map((item, index) => {
+          if (index === messages.length - 1 && botResponded) {
+            if (item.message === surveyMessage) {
+              if (surveyState.submitted) {
+                return (
+                  <ChatMessage sender={item.sender}>{item.message}</ChatMessage>
+                )
+              }
               return (
-                <ChatMessage key={index} sender={item.sender}>
-                  {item.message}
+                <ChatMessage sender={"bot"}>
+                  <Flex flexDirection="column">
+                    <TypingEffect text="Thank you for your responses. Please confirm your answers now, as they can't be changed later. Once confirmed, we'll continue with our discussion."></TypingEffect>
+                    <Box>
+                      <Button
+                        onClick={handleSubmit}
+                        colorScheme="green"
+                        mt="0.5rem"
+                      >
+                        Confirm
+                      </Button>
+                    </Box>
+                  </Flex>
                 </ChatMessage>
               )
             }
             return (
-              <ChatMessage key={index} sender={"bot"}>
-                <Flex flexDirection="column">
-                  <TypingEffect
-                    text="Thank you for your responses. Please confirm your answers now, as they can't be changed later. Once confirmed, we'll continue with our discussion."
-                    scrollToBottom={scrollToBottom}
-                  ></TypingEffect>
-                  <Box>
-                    <Button
-                      onClick={handleSubmit}
-                      colorScheme="green"
-                      mt="0.5rem"
-                    >
-                      Confirm
-                    </Button>
-                  </Box>
-                </Flex>
+              <ChatMessage sender="bot">
+                <TypingEffect text={messages.slice(-1)[0].message} />
+                <QuestionInput
+                  questionData={item.question}
+                  handleQuestionResponse={handleQuestionResponse}
+                  submitted={surveyState.submitted}
+                ></QuestionInput>
+              </ChatMessage>
+            )
+          } else {
+            return (
+              <ChatMessage sender={item.sender}>
+                {item.message}
+                <QuestionInput
+                  questionData={item.question}
+                  handleQuestionResponse={handleQuestionResponse}
+                  submitted={surveyState.submitted}
+                ></QuestionInput>
               </ChatMessage>
             )
           }
-          return (
-            <ChatMessage key={index} sender="bot">
-              <TypingEffect
-                text={messages.slice(-1)[0].message}
-                scrollToBottom={scrollToBottom}
-              />
-              <QuestionInput
-                questionData={item.question}
-                handleQuestionResponse={handleQuestionResponse}
-                submitted={surveyState.submitted}
-              ></QuestionInput>
-            </ChatMessage>
-          )
-        } else {
-          return (
-            <ChatMessage key={index} sender={item.sender}>
-              {item.message}
-              <QuestionInput
-                questionData={item.question}
-                handleQuestionResponse={handleQuestionResponse}
-                submitted={surveyState.submitted}
-              ></QuestionInput>
-            </ChatMessage>
-          )
-        }
-      })}
-      {isBotThinking && (
-        <ChatMessage sender="bot">
-          <SkeletonCircle size="6" />
-        </ChatMessage>
-      )}
-      <div ref={messagesEndRef} />
+        })}
+        {isBotThinking && (
+          <ChatMessage sender="bot">
+            <SkeletonCircle size="6" />
+          </ChatMessage>
+        )}
+      </Box>
     </Box>
   )
 }

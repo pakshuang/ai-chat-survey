@@ -30,7 +30,8 @@ const QuestionInput = ({
   };
 
   const handleInputKeyPress = (e) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
       handleQuestionResponse(question_id, tempAnswer);
     }
   };
@@ -87,23 +88,6 @@ const QuestionInput = ({
               </Stack>
             </CheckboxGroup>
           </>
-        );
-      case "short_answer":
-        return (
-          <Input
-            background="white"
-            borderColor="gray.500"
-            _hover={{ borderColor: "gray.500" }}
-            _focus={{
-              borderColor: "gray.500",
-              boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-            }}
-            onChange={handleInputChange}
-            onBlur={handleInputBlur}
-            onKeyPress={handleInputKeyPress}
-            value={tempAnswer}
-            isDisabled={submitted}
-          />
         );
       case "free_response":
         return (
