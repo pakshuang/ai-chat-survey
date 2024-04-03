@@ -636,6 +636,10 @@ def helper_send_message(
                 connection, survey_id, response_id, updated_chat_log_json
             )
         except Exception as e:
+            app.logger.error(
+                "An error occurred while updating the chat log with the bot message: "
+                + str(e)
+            )
             return (
                 jsonify({"message": "An error occurred while updating the chat log"}),
                 500,
@@ -647,6 +651,7 @@ def helper_send_message(
             or len(updated_message_list) > ChatLog.MAX_LEN
         )
         database_operations.close_connection(connection)
+        app.logger.info("Reply generated successfully")
         return (
             jsonify(
                 {
@@ -658,6 +663,9 @@ def helper_send_message(
             201,
         )
     except Exception as e:
+        app.logger.error(
+            "An error was encountered while generating a reply: " + str(e)
+        )
         return (
             jsonify(
                 {
