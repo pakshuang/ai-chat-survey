@@ -14,7 +14,7 @@ import os
 from functools import wraps
 
 import jwt
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Response
 from flask_cors import CORS
 from src import database_operations
 from src.llm_classes.chatlog import ChatLog
@@ -98,11 +98,11 @@ def admin_token_required(f: callable) -> callable:
 
 
 @app.route("/api/v1/health", methods=["GET"])
-def health_check() -> tuple[Flask.Response, int]:
+def health_check() -> tuple[Response, int]:
     """Health check route
 
     Returns:
-        tuple[Flask.Response, int]: Tuple containing the response and status code
+        tuple[Response, int]: Tuple containing the response and status code
     """
     return jsonify({"message": "Server is running!"}), 200
 
@@ -111,11 +111,11 @@ def health_check() -> tuple[Flask.Response, int]:
 
 
 @app.route("/api/v1/admins", methods=["POST"])
-def create_admin() -> tuple[Flask.Response, int]:
+def create_admin() -> tuple[Response, int]:
     """Create an admin account
 
     Returns:
-        tuple[Flask.Response, int]: Tuple containing the response and status code
+        tuple[Response, int]: Tuple containing the response and status code
     """
     data = request.get_json()
 
@@ -154,11 +154,11 @@ def create_admin() -> tuple[Flask.Response, int]:
 
 
 @app.route("/api/v1/admins/login", methods=["POST"])
-def login_admin() -> tuple[Flask.Response, int]:
+def login_admin() -> tuple[Response, int]:
     """Login an admin
 
     Returns:
-        tuple[Flask.Response, int]: Tuple containing the response and status code
+        tuple[Response, int]: Tuple containing the response and status code
     """
     data = request.get_json()
 
@@ -217,14 +217,14 @@ def login_admin() -> tuple[Flask.Response, int]:
 
 @app.route("/api/v1/surveys", methods=["POST"])
 @admin_token_required
-def create_survey(**kwargs) -> tuple[Flask.Response, int]:
+def create_survey(**kwargs) -> tuple[Response, int]:
     """Create a survey
 
     Args:
         kwargs (dict): Dictionary containing the JWT token subject claim (jwt_sub: admin username)
 
     Returns:
-        tuple[Flask.Response, int]: Tuple containing the response and status code
+        tuple[Response, int]: Tuple containing the response and status code
     """
     data = request.get_json()
 
@@ -262,14 +262,14 @@ def create_survey(**kwargs) -> tuple[Flask.Response, int]:
 
 
 @app.route("/api/v1/surveys", methods=["GET"])
-def get_surveys() -> tuple[Flask.Response, int]:
+def get_surveys() -> tuple[Response, int]:
     """Get all surveys
 
     Query Parameters:
         admin (str, optional): Admin username to filter surveys by
 
     Returns:
-        tuple[Flask.Response, int]: Tuple containing the response and status code
+        tuple[Response, int]: Tuple containing the response and status code
     """
     # Connect to the database
     connection = database_operations.connect_to_mysql()
@@ -334,14 +334,14 @@ def get_surveys() -> tuple[Flask.Response, int]:
 
 
 @app.route("/api/v1/surveys/<survey_id>", methods=["GET"])
-def get_survey(survey_id: str) -> tuple[Flask.Response, int]:
+def get_survey(survey_id: str) -> tuple[Response, int]:
     """Get a survey by ID
 
     Args:
         survey_id (str): Survey ID
 
     Returns:
-        tuple[Flask.Response, int]: Tuple containing the response and status code
+        tuple[Response, int]: Tuple containing the response and status code
     """
     if not survey_id:
         app.logger.info("Missing survey ID")
@@ -394,7 +394,7 @@ def get_survey(survey_id: str) -> tuple[Flask.Response, int]:
 
 @app.route("/api/v1/surveys/<survey_id>", methods=["DELETE"])
 @admin_token_required
-def delete_survey(survey_id: str, **kwargs) -> tuple[Flask.Response, int]:
+def delete_survey(survey_id: str, **kwargs) -> tuple[Response, int]:
     """Delete a survey by ID
 
     Args:
@@ -402,7 +402,7 @@ def delete_survey(survey_id: str, **kwargs) -> tuple[Flask.Response, int]:
         kwargs (dict): Dictionary containing the JWT token subject claim (jwt_sub: admin username)
 
     Returns:
-        tuple[Flask.Response, int]: Tuple containing the response and status code
+        tuple[Response, int]: Tuple containing the response and status code
     """
     # Check if survey exists, return 404 if not
     # Connect to the database
@@ -446,11 +446,11 @@ def delete_survey(survey_id: str, **kwargs) -> tuple[Flask.Response, int]:
 
 
 @app.route("/api/v1/responses", methods=["POST"])
-def submit_response() -> tuple[Flask.Response, int]:
+def submit_response() -> tuple[Response, int]:
     """Submit a response to a survey
 
     Returns:
-        tuple[Flask.Response, int]: Tuple containing the response and status code
+        tuple[Response, int]: Tuple containing the response and status code
     """
     data = request.get_json()
     if not data:
@@ -510,7 +510,7 @@ def submit_response() -> tuple[Flask.Response, int]:
 
 @app.route("/api/v1/responses", methods=["GET"])
 @admin_token_required
-def get_responses(**kwargs) -> tuple[Flask.Response, int]:
+def get_responses(**kwargs) -> tuple[Response, int]:
     """Get all responses to a survey
 
     Query Parameters:
@@ -518,7 +518,7 @@ def get_responses(**kwargs) -> tuple[Flask.Response, int]:
         kwargs (dict): Dictionary containing the JWT token subject claim (jwt_sub: admin username)
 
     Returns:
-        tuple[Flask.Response, int]: Tuple containing the response and status code
+        tuple[Response, int]: Tuple containing the response and status code
     """
     # Check if survey ID is provided, return 400 if not
     survey_id = request.args.get("survey")
@@ -591,7 +591,7 @@ def get_responses(**kwargs) -> tuple[Flask.Response, int]:
 
 @app.route("/api/v1/responses/<response_id>", methods=["GET"])
 @admin_token_required
-def get_response(response_id: str, **kwargs) -> tuple[Flask.Response, int]:
+def get_response(response_id: str, **kwargs) -> tuple[Response, int]:
     """Get a response by response ID and survey ID
 
     Args:
@@ -601,7 +601,7 @@ def get_response(response_id: str, **kwargs) -> tuple[Flask.Response, int]:
         survey (str): Survey ID
 
     Returns:
-        tuple[Flask.Response, int]: Tuple containing the response and status code
+        tuple[Response, int]: Tuple containing the response and status code
     """
     if not response_id:
         app.logger.info("Missing response ID")
@@ -679,7 +679,7 @@ def get_response(response_id: str, **kwargs) -> tuple[Flask.Response, int]:
 
 def helper_send_message(
     llm_input: dict[str, object], data_content: str, connection, survey_id, response_id
-) -> tuple[Flask.Response, int]:
+) -> tuple[Response, int]:
     """Generates a response from a large language model.
 
     Args:
@@ -690,7 +690,7 @@ def helper_send_message(
         response_id (str): Response ID
 
     Returns:
-        tuple[Flask.Response, int]: Tuple containing the response and status code
+        tuple[Response, int]: Tuple containing the response and status code
     """
 
     def has_no_chat_log(content: str, message_list: list[dict[str, object]]) -> bool:
@@ -770,7 +770,7 @@ def helper_send_message(
 
 
 @app.route("/api/v1/responses/<response_id>/chat", methods=["POST"])
-def send_chat_message(response_id: str) -> tuple[Flask.Response, int]:
+def send_chat_message(response_id: str) -> tuple[Response, int]:
     """Send a chat message for a response
 
     Args:
@@ -780,7 +780,7 @@ def send_chat_message(response_id: str) -> tuple[Flask.Response, int]:
         survey (str): Survey ID
 
     Returns:
-        tuple[Flask.Response, int]: Tuple containing the response and status code
+        tuple[Response, int]: Tuple containing the response and status code
     """
     # Check that there is "content" in request body
     data = request.get_json()
