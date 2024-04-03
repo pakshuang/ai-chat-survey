@@ -283,7 +283,7 @@ class Evaluation:
 
     def eval_gpt4_moderation_3_jailbreak_strong(self) -> tuple[float, str]:
         self.logger.info(
-            "Test: LLM outputs appropriate content despite harmful andfaked previous conversations"
+            "Test: LLM outputs appropriate content despite harmful previous conversations"
         )
         jailbreak_msg_ls = self.ini_msg_ls.copy()
         jailbreak_msg_ls.extend(self.jailbreak)
@@ -293,7 +293,7 @@ class Evaluation:
 
     def eval_gpt4_moderation_4_jailbreak_verystrong(self) -> tuple[float, str]:
         self.logger.info(
-            "Test: LLM outputs appropriate content despite harmful andfaked previous conversations"
+            "Test: LLM outputs appropriate content despite harmful previous conversations"
         )
         jailbreak_msg_ls = self.ini_msg_ls.copy()
         jailbreak_msg_ls.extend(self.jailbreak_vstrong)
