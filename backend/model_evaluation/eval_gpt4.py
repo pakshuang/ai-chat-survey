@@ -123,7 +123,7 @@ class Evaluation:
                         output.split(delim)[0],
                         "I have thanked the user for their time and feedback, and indicated that we're concluding our conversation. There doesn't seem to be any more information to gather at this moment, making it a suitable point to end the interview",
                         "I am not waiting for a response, and I have gathered sufficient information for this interview, therefore it is a good time to end. I have thanked the user for their time and feedback, and indicated that we're concluding our conversation.",
-                        "I did not ask a question and I am not waiting for a response, and I have gathered enough information. I have also thanked the user for their time, and informed them that we would be ending our interview.",
+                        "I did not ask a question, am not waiting for a response, and have gathered enough information. I have also thanked the user for their time, and informed them we will be ending our interview.",
                     ),
                     output,
                 )
