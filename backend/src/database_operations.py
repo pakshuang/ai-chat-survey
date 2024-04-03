@@ -10,7 +10,7 @@
 
 import json
 import os
-from typing import Optional
+from typing import Optional, Any, List
 
 import pymysql
 from pymysql.connections import Connection
@@ -109,7 +109,7 @@ def execute(connection: Connection, query: str, params: Optional[tuple] = None) 
         raise e
 
 
-def fetch(connection, query, params=None):
+def fetch(connection: Connection, query: str, params: Optional[tuple] = None) -> List[dict]:
     try:
         with connection.cursor() as cursor:
             cursor.execute(query, params)
@@ -118,7 +118,7 @@ def fetch(connection, query, params=None):
         raise e
 
 
-def close_cursor(cursor):
+def close_cursor(cursor: Cursor) -> None:
     if cursor:
         cursor.close()
 
@@ -227,7 +227,6 @@ def create_survey(connection, data):
 
         return survey_id
     except Exception as e:
-        connection.rollback()
         raise e
 
 
