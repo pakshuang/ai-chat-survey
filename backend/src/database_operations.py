@@ -10,7 +10,7 @@
 
 import json
 import os
-from typing import Optional, Any, List
+from typing import Optional, Any, List, Tuple
 
 import pymysql
 from pymysql.connections import Connection
@@ -151,7 +151,17 @@ def summarise(chat_context: str) -> str:
         return chat_context
 
 
-def validate_survey_object(data):
+def validate_survey_object(data: dict) -> Tuple[bool, str]:
+    """
+    Validate a survey object to ensure it follows a specific format.
+
+    Args:
+        data (dict): The survey object to validate.
+
+    Returns:
+        Tuple[bool, str]: A tuple containing a boolean indicating whether the survey object is valid
+                         and a message describing the result.
+    """
     if not isinstance(data, dict):
         return False, "Survey data must be a dictionary"
 
