@@ -1,3 +1,12 @@
+# -*- coding: utf-8 -*-
+"""
+    src.app
+    ~~~~~~~
+
+    This module implements the API for the backend server.
+"""
+
+
 import datetime
 import json
 import logging
