@@ -1,11 +1,29 @@
+# -*- coding: utf-8 -*-
+"""
+    src.database_operations
+    ~~~~~~~
+
+    This module implements the helper functions that do CRUD operations
+    to the database for the backend server.
+"""
+
+
 import json
 import os
+from typing import Optional
 
 import pymysql
+
 from src.llm_classes.llm_level import GPT
 
 
-def connect_to_mysql():
+def connect_to_mysql() -> Optional[pymysql.connections.Connection]:
+    """
+    Connects to a MySQL database.
+
+    Returns:
+        pymysql.connections.Connection or None: A connection object if successful, None otherwise.
+    """
     # Connect to MySQL
     mysql_host = os.environ.get("API_MYSQL_HOST", "database")
     mysql_user = os.environ.get("API_MYSQL_USER", "root")
