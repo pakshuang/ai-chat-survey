@@ -559,7 +559,7 @@ def get_response(response_id, **kwargs):
         # Check if responses exist
         if not responses_data:
             app.logger.info("No responses found for the survey")
-            return jsonify({"message": "No responses found for the survey"}), 404
+            return jsonify([]), 200
 
         # Create response objects dictionary
         response_objects = {}
@@ -806,7 +806,8 @@ def get_response_no_auth(response_id, **kwargs):
 
         # Check if responses exist
         if not responses_data:
-            return jsonify({"message": "No responses found for the survey"}), 404
+            app.logger.info("No responses found for the survey")
+            return jsonify([]), 200
 
         # Create response objects dictionary
         response_objects = {}
