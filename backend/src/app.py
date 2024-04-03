@@ -225,7 +225,7 @@ def create_survey(**kwargs) -> tuple[Flask.Response, int]:
 
     Returns:
         tuple[Flask.Response, int]: Tuple containing the response and status code
-    """    
+    """
     data = request.get_json()
 
     # If there is no data attached in request body
@@ -270,7 +270,7 @@ def get_surveys() -> tuple[Flask.Response, int]:
 
     Returns:
         tuple[Flask.Response, int]: Tuple containing the response and status code
-    """    
+    """
     # Connect to the database
     connection = database_operations.connect_to_mysql()
     if not connection:
@@ -342,7 +342,7 @@ def get_survey(survey_id: str) -> tuple[Flask.Response, int]:
 
     Returns:
         tuple[Flask.Response, int]: Tuple containing the response and status code
-    """    
+    """
     if not survey_id:
         app.logger.info("Missing survey ID")
         return jsonify({"message": "Missing survey ID"}), 400
@@ -403,7 +403,7 @@ def delete_survey(survey_id: str, **kwargs) -> tuple[Flask.Response, int]:
 
     Returns:
         tuple[Flask.Response, int]: Tuple containing the response and status code
-    """    
+    """
     # Check if survey exists, return 404 if not
     # Connect to the database
     connection = database_operations.connect_to_mysql()
@@ -451,7 +451,7 @@ def submit_response() -> tuple[Flask.Response, int]:
 
     Returns:
         tuple[Flask.Response, int]: Tuple containing the response and status code
-    """    
+    """
     data = request.get_json()
     if not data:
         app.logger.info("No data was attached")
@@ -519,7 +519,7 @@ def get_responses(**kwargs) -> tuple[Flask.Response, int]:
 
     Returns:
         tuple[Flask.Response, int]: Tuple containing the response and status code
-    """    
+    """
     # Check if survey ID is provided, return 400 if not
     survey_id = request.args.get("survey")
     if not survey_id:
@@ -602,7 +602,7 @@ def get_response(response_id: str, **kwargs) -> tuple[Flask.Response, int]:
 
     Returns:
         tuple[Flask.Response, int]: Tuple containing the response and status code
-    """    
+    """
     if not response_id:
         app.logger.info("Missing response ID")
         return jsonify({"message": "Missing response ID"}), 400
@@ -781,7 +781,7 @@ def send_chat_message(response_id: str) -> tuple[Flask.Response, int]:
 
     Returns:
         tuple[Flask.Response, int]: Tuple containing the response and status code
-    """    
+    """
     # Check that there is "content" in request body
     data = request.get_json()
     if "content" not in data:
