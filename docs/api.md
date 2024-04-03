@@ -206,7 +206,7 @@ These endpoints are used to submit, read, and update (send message) responses re
 
 ### 1. Submit Survey Response
 
-- **Endpoint:** `/api/v1/responses`
+- **Endpoint:** `/api/v1/surveys/{survey_id}/responses`
 - **Method:** `POST`
 - **Description:** Submit a new survey response (response object).
 - **Request Body:**
@@ -248,7 +248,7 @@ These endpoints are used to submit, read, and update (send message) responses re
 > [!IMPORTANT]
 > A JWT is required.
 
-- **Endpoint:** `/api/v1/responses?survey={survey_id}`
+- **Endpoint:** `/api/v1/surveys/{survey_id}/responses`
 - **Method:** `GET`
 - **Description:** Get all response objects for a survey. An admin JWT that corresponds to the survey creator is required.
 
@@ -256,8 +256,8 @@ These endpoints are used to submit, read, and update (send message) responses re
 
   ```json
   {
-    "responses": [
-      "response object", # See /api/v1/responses/{response_id} for the structure of a response object
+    [
+      "response object", # See /api/v1/surveys/{survey_id}/responses/{response_id} for the structure of a response object
       "response object",
       "response object"
     ]
@@ -278,7 +278,7 @@ These endpoints are used to submit, read, and update (send message) responses re
 > [!IMPORTANT]
 > A JWT is required.
 
-- **Endpoint:** `/api/v1/responses/{response_id}?survey={survey_id}`
+- **Endpoint:** `/api/v1/surveys/{survey_id}/responses{response_id}`
 - **Method:** `GET`
 - **Description:** Get a response object by ID. An admin JWT that corresponds to the survey creator is required.
 - **HTTP Response:**
@@ -313,7 +313,7 @@ These endpoints are used to submit, read, and update (send message) responses re
 
 ### 4. Send Chat Message
 
-- **Endpoint:** `/api/v1/responses/{response_id}/chat?survey={survey_id}`
+- **Endpoint:** `/api/v1/surveys/{survey_id}/responses/{response_id}/chat`
 - **Method:** `POST`
 - **Description:** Send a message to the chatbot. The chatbot will respond with a message.
 - **Request Body:**
