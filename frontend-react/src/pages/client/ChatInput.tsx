@@ -9,7 +9,6 @@ interface ChatInputProps {
 function ChatInput({ onSubmitMessage, isSubmitting }: ChatInputProps) {
   const [message, setMessage] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
-  const formElement = useRef<HTMLFormElement>(null);
 
   function handleSubmit() {
     onSubmitMessage(message);
@@ -28,7 +27,7 @@ function ChatInput({ onSubmitMessage, isSubmitting }: ChatInputProps) {
   }, [message]);
 
   return (
-    <form onSubmit={() => handleSubmit()} ref={formElement}>
+    <form onSubmit={handleSubmit}>
       <Flex flexDirection="row" p="0.5rem" w="60rem" mx="auto">
         <Textarea
           size="lg"
