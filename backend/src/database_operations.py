@@ -10,11 +10,12 @@
 
 import json
 import os
-from typing import Optional, Any, List, Tuple, Dict
+from typing import Any, Dict, List, Optional, Tuple
 
 import pymysql
 from pymysql.connections import Connection
 from pymysql.cursors import Cursor
+
 from src.llm_classes.llm_level import GPT
 
 
@@ -109,7 +110,9 @@ def execute(connection: Connection, query: str, params: Optional[tuple] = None) 
         raise e
 
 
-def fetch(connection: Connection, query: str, params: Optional[tuple] = None) -> List[dict]:
+def fetch(
+    connection: Connection, query: str, params: Optional[tuple] = None
+) -> List[dict]:
     """
     Execute a SQL query using the provided connection and optional parameters, and fetch all results.
 
@@ -306,7 +309,9 @@ def create_survey_object(row: Dict[str, Any]) -> Dict[str, Any]:
 
 # get_surveys()
 # Helper function to create survey object
-def append_question_to_survey(survey_objects: Dict[int, dict], survey_id: int, question_data: dict) -> None:
+def append_question_to_survey(
+    survey_objects: Dict[int, dict], survey_id: int, question_data: dict
+) -> None:
     """
     Append a question to the survey object identified by the provided survey ID.
 
@@ -333,7 +338,9 @@ def append_question_to_survey(survey_objects: Dict[int, dict], survey_id: int, q
 
 # submit_response()
 # Helper function to insert response data into DB
-def save_response_to_database(connection: Connection, data: Dict[str, Any], survey_id: int) -> int:
+def save_response_to_database(
+    connection: Connection, data: Dict[str, Any], survey_id: int
+) -> int:
     """
     Save the survey response data to the database.
 
@@ -449,7 +456,9 @@ def validate_response_object(response_data: Dict[str, Any]) -> Tuple[bool, str]:
 
 # submit_response()
 # Helper function to validate response data structure
-def validate_response(response_data: Dict[str, Any], survey_object: Dict[str, Any]) -> Optional[str]:
+def validate_response(
+    response_data: Dict[str, Any], survey_object: Dict[str, Any]
+) -> Optional[str]:
     """
     Validate a response object against a survey object.
 
@@ -507,7 +516,9 @@ def validate_response(response_data: Dict[str, Any], survey_object: Dict[str, An
 
 # get_responses()
 # Helper method create response_object()
-def create_response_object(survey_id: int, response_id: int, row: Dict[str, Any]) -> Dict[str, Any]:
+def create_response_object(
+    survey_id: int, response_id: int, row: Dict[str, Any]
+) -> Dict[str, Any]:
     """
     Create a response object based on a database row.
 
@@ -532,7 +543,11 @@ def create_response_object(survey_id: int, response_id: int, row: Dict[str, Any]
 
 # get_responses()
 # Helper function to create response object
-def append_answer_to_response(response_objects: Dict[int, Dict[str, Any]], response_id: int, response_data: Dict[str, Any]) -> None:
+def append_answer_to_response(
+    response_objects: Dict[int, Dict[str, Any]],
+    response_id: int,
+    response_data: Dict[str, Any],
+) -> None:
     """
     Append an answer to the response object identified by the provided response ID.
 
@@ -634,7 +649,9 @@ def get_chat_log(connection: Connection, survey_id: int, response_id: int) -> st
 
 # send_chat_message()
 # Helper function update chat log
-def update_chat_log(connection: Connection, survey_id: int, response_id: int, updated_chat_log: str) -> bool:
+def update_chat_log(
+    connection: Connection, survey_id: int, response_id: int, updated_chat_log: str
+) -> bool:
     """
     Update the chat log associated with a survey and response in the database.
 
