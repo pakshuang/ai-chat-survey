@@ -10,7 +10,7 @@
 
 import json
 import os
-from typing import Optional, Any, List, Tuple
+from typing import Optional, Any, List, Tuple, Dict
 
 import pymysql
 from pymysql.connections import Connection
@@ -192,7 +192,17 @@ def validate_survey_object(data: dict) -> Tuple[bool, str]:
     return True, "Survey object format is valid"
 
 
-def create_survey(connection, data):
+def create_survey(connection: Connection, data: dict) -> int:
+    """
+    Create a new survey in the database based on the provided survey data.
+
+    Args:
+        connection (pymysql.connections.Connection): The database connection.
+        data (dict): The survey data to be inserted into the database.
+
+    Returns:
+        int: The ID of the newly created survey.
+    """
     try:
         # Insert survey data into Surveys table
         insert_survey_query = """
@@ -242,7 +252,16 @@ def create_survey(connection, data):
 
 # get_surveys()
 # Helper function to create survey object
-def create_survey_object(row):
+def create_survey_object(row: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Create a survey object based on a database row.
+
+    Args:
+        row (Dict[str, Any]): The database row containing survey information.
+
+    Returns:
+        Dict[str, Any]: A dictionary representing the survey object.
+    """
     survey_object = {
         "metadata": {
             "survey_id": row["survey_id"],
