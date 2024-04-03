@@ -433,7 +433,12 @@ def delete_survey(survey_id: str, **kwargs) -> tuple[Flask.Response, int]:
 
 
 @app.route("/api/v1/responses", methods=["POST"])
-def submit_response():
+def submit_response() -> tuple[Flask.Response, int]:
+    """Submit a response to a survey
+
+    Returns:
+        tuple[Flask.Response, int]: Tuple containing the response and status code
+    """    
     data = request.get_json()
     if not data:
         app.logger.info("No data was attached")
