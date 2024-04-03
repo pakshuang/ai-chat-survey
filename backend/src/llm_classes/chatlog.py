@@ -9,25 +9,27 @@ class ChatLog:
     A simple wrapper around a list of messages that supports the deletion of future messages.
     """
 
+    MIN_LEN = 4  # length at initialisation
     MAX_LEN = 50
-
+    EXIT_DELIM = "--"
     SYSPROMPT = """You are an assistant who is trying to gather user experiences about a product.
         You have collected some survey responses, and you would like to probe further about what the user thinks about the product.
-        Given user responses, pretend you are an interviewer and generate a few questions to ask the user.
+        Given user responses, pretend you are an interviewer and generate a few questions to ask the user based on the survey responses.
         Contextual information about the survey and user responses are provided below:
         {survey_initial_responses}"""
 
     SYSPROMPT2 = """Remember these few questions. This is a semi-structured interview, and try to keep asking questions, based on the user replies, or the questions you generated to ask the user. 
-    When you have no more questions left to ask, remember to thank the user for their time. Only ask the user one question at a time. The user is a customer. Politely decline all inappropriate requests.
-    After that, the system will ask you if you would like to end the interview. Reply with a 'no' if you would like to continue the interview, and 'yes' otherwise.
-    ONLY DECIDE TO END THE INTERVIEW AFTER YOU HAVE THANKED THE USER.
-    Now, please ask the user a question.
+    Only ask the user one question at a time and try to keep the questions interesting. Probe the user if the user shows any inconsistencies in their replies, or ask for clarifications if needed. The user is a customer, so politely decline all inappropriate requests.
+    When you have no more questions left to ask, remember to thank the user for their time and tell the user you intend to end the interview.
+    After that, the system will ask you if you would like to end the interview.
+    You must thank the user before ending the interview.
+    Now, as a survey interviewer, begin the interview by asking the user a question.
     """
 
     END_QUERY = {
         "role": "system",
         "content": """Would you like to end the interview here? 
-        Remember that you should thank the user for their time before ending the interview, so your answer should be 'no' if you haven't.
+        Before you answer the question, remember if you have thanked the user for their time and told them you would be ending the interview. Your answer should be 'no' if you haven't done either.
         Your reply should adhere STRICTLY to the format provided below. Separate your reasoning and the answer (Yes/No) with the symbols --.
         Here are three examples.
         Example 1:

@@ -1,0 +1,12 @@
+---
+version: '3'
+services:
+  evaluation:
+    image: backend
+    build: ./backend
+    container_name: evaluation
+    command: "pipenv run python -m model_evaluation.eval_gpt4"
+    env_file:
+      - .env
+    volumes:
+      - ./backend/logs:/backend/logs

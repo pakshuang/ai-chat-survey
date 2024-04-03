@@ -386,13 +386,12 @@ def submit_response():
         app.logger.info("No data was attached")
         return jsonify({"message": "No data was attached"}), 400
 
-    # Validate survey object format
+    # Validate response object format
     is_valid, message = database_operations.validate_response_object(data)
     if not is_valid:
         app.logger.info(f"Invalid response object format: {message}")
         return jsonify({"message": message}), 400
 
-    # Validate response object against survey object
     # Retrieve survey object from the database
     survey_id = data["metadata"]["survey_id"]
     survey_object_response = get_survey(survey_id)
@@ -465,6 +464,7 @@ def get_responses(**kwargs):
 
         # Check if admin has access to survey, return 403 if not
         if survey[0]["admin_username"] != kwargs["jwt_sub"]:
+            app.logger.info("Accessing other admin's surveys is forbidden")
             return (
                 jsonify({"message": "Accessing other admin's surveys is forbidden"}),
                 403,
@@ -483,7 +483,7 @@ def get_responses(**kwargs):
         # Check if responses exist
         if not responses_data:
             app.logger.info("No responses found for the survey")
-            return jsonify({"message": "No responses found for the survey"}), 404
+            return jsonify([]), 200
 
         # Create response objects dictionary
         response_objects = {}
@@ -512,10 +512,6 @@ def get_responses(**kwargs):
 @app.route("/api/v1/responses/<response_id>", methods=["GET"])
 @admin_token_required
 def get_response(response_id, **kwargs):
-    if not response_id:
-        app.logger.info("Missing response ID")
-        return jsonify({"message": "Missing response ID"}), 400
-
     # Check if survey ID is provided, return 400 if not
     survey_id = request.args.get("survey")
     if not survey_id:
@@ -612,7 +608,7 @@ def helper_send_message(
                 }""",
                 llm=llm,
             )
-            first_question = llm.run(pipe.message_list)
+            first_question = llm.run(pipe.message_list, with_moderation=False)
             updated_message_list = pipe.insert_and_update(
                 first_question, pipe.current_index, is_llm=True
             )
@@ -646,10 +642,8 @@ def helper_send_message(
             )
 
         content = updated_message_list[-1]["content"]
-        is_last = (
-            check_exit(updated_message_list, llm)
-            or len(updated_message_list) > ChatLog.MAX_LEN
-        )
+
+        is_last = check_exit(updated_message_list, llm)
         database_operations.close_connection(connection)
         app.logger.info("Reply generated successfully")
         return (
