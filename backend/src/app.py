@@ -53,7 +53,8 @@ def admin_token_required(f: callable) -> callable:
 
     Returns:
         callable: Decorated function
-    """    
+    """
+
     @wraps(f)
     def decorated(*args, **kwargs):
         token = None
@@ -93,7 +94,7 @@ def health_check() -> tuple[Flask.Response, int]:
 
     Returns:
         tuple[Flask.Response, int]: Tuple containing the response and status code
-    """    
+    """
     return jsonify({"message": "Server is running!"}), 200
 
 
@@ -106,7 +107,7 @@ def create_admin() -> tuple[Flask.Response, int]:
 
     Returns:
         tuple[Flask.Response, int]: Tuple containing the response and status code
-    """    
+    """
     data = request.get_json()
 
     # Basic validation
@@ -144,7 +145,12 @@ def create_admin() -> tuple[Flask.Response, int]:
 
 
 @app.route("/api/v1/admins/login", methods=["POST"])
-def login_admin():
+def login_admin() -> tuple[Flask.Response, int]:
+    """Login an admin
+
+    Returns:
+        tuple[Flask.Response, int]: Tuple containing the response and status code
+    """
     data = request.get_json()
 
     # Basic validation
