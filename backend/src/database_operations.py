@@ -532,7 +532,18 @@ def create_response_object(survey_id: int, response_id: int, row: Dict[str, Any]
 
 # get_responses()
 # Helper function to create response object
-def append_answer_to_response(response_objects, response_id, response_data):
+def append_answer_to_response(response_objects: Dict[int, Dict[str, Any]], response_id: int, response_data: Dict[str, Any]) -> None:
+    """
+    Append an answer to the response object identified by the provided response ID.
+
+    Args:
+        response_objects (Dict[int, Dict[str, Any]]): A dictionary containing response objects indexed by response ID.
+        response_id (int): The ID of the response to which the answer will be appended.
+        response_data (Dict[str, Any]): The data of the answer to be appended to the response.
+
+    Returns:
+        None
+    """
     answer = {
         "question_id": response_data["question_id"],
         "type": response_data["question_type"],
