@@ -507,7 +507,18 @@ def validate_response(response_data: Dict[str, Any], survey_object: Dict[str, An
 
 # get_responses()
 # Helper method create response_object()
-def create_response_object(survey_id, response_id, row):
+def create_response_object(survey_id: int, response_id: int, row: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Create a response object based on a database row.
+
+    Args:
+        survey_id (int): The ID of the survey associated with the response.
+        response_id (int): The ID of the response.
+        row (Dict[str, Any]): The database row containing response information.
+
+    Returns:
+        Dict[str, Any]: A dictionary representing the response object.
+    """
     response_object = {
         "metadata": {
             "survey_id": int(survey_id),
