@@ -179,17 +179,34 @@ The recommended way to run is to use docker compose instead, see [Running the Ap
 > The tests assume that the application is running with a clean database. You should run the tests on a clean slate. For this reason, make sure that any dummy data added to the database upon launch does not interfere with the tests.
 
 1. Navigate to the `ai-chat-survey` directory, the command will vary depending on which directory you are currently in
-2. Run the integration tests:
+2. Move the `insert_dummy_data.sql` file out of the `scripts` directory to ensure that the database is clean:
+
+   ```shell
+   mv scripts/insert_dummy_data.sql .
+   ```
+
+3. Shutdown the containers and remove the volumes to ensure a clean testing environment:
+
+   ```shell
+   docker compose down -v
+   ```
+
+4. Run the integration tests:
 
    ```shell
    docker compose -f compose.yaml -f compose.tests.yaml up integration-tests --build --force-recreate --renew-anon-volumes
    ```
 
-
-3. Shutdown the containers and remove the volumes after running the tests:
+5. Shutdown the containers and remove the volumes after running the tests:
 
    ```shell
    docker compose -f compose.yaml -f compose.tests.yaml down -v
+   ```
+
+6. Move the `insert_dummy_data.sql` file back to the `scripts` directory:
+
+   ```shell
+   mv insert_dummy_data.sql scripts/
    ```
 
 ## Frontend Development
