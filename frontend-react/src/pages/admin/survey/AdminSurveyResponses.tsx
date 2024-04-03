@@ -53,24 +53,30 @@ function AdminSurveyResponses() {
     <Flex minH="100vh" w="100%" bg="gray.100" minW="80rem">
       <VStack mx="auto" my="3rem" spacing="1rem" w="48rem">
         <ViewAdminSurveyTitle survey={survey} />
-        <HStack>
-          <IconButton
-            aria-label="prev"
-            icon={<ChevronLeftIcon />}
-            size="lg"
-            onClick={() =>
-              setIndex((index - 1 + responses.length) % responses.length)
-            }
-          />
-          <Text>{`${index + 1}/${responses.length}`}</Text>
-          <IconButton
-            aria-label="next"
-            icon={<ChevronRightIcon />}
-            size="lg"
-            onClick={() => setIndex((index + 1) % responses.length)}
-          />
-        </HStack>
-        <AdminSurveyResponse response={responses[index]} />
+        {responses.length === 0 ? (
+          <Text>No responses</Text>
+        ) : (
+          <>
+            <HStack>
+              <IconButton
+                aria-label="prev"
+                icon={<ChevronLeftIcon />}
+                size="lg"
+                onClick={() =>
+                  setIndex((index - 1 + responses.length) % responses.length)
+                }
+              />
+              <Text>{`${index + 1}/${responses.length}`}</Text>
+              <IconButton
+                aria-label="next"
+                icon={<ChevronRightIcon />}
+                size="lg"
+                onClick={() => setIndex((index + 1) % responses.length)}
+              />
+            </HStack>
+            <AdminSurveyResponse response={responses[index]} />
+          </>
+        )}
       </VStack>
     </Flex>
   )
