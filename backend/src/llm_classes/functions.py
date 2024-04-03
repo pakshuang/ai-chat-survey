@@ -68,7 +68,7 @@ def check_exit(
     """
     Checks if the interactive survey has come to a conclusion. Returns a boolean.
     """
-    if len(updated_message_list) <= 4:
+    if len(updated_message_list) <= ChatLog.MIN_LEN:
         return False
     exit = updated_message_list.copy()
     exit.append(ChatLog.END_QUERY)

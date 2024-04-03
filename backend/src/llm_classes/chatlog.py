@@ -8,7 +8,7 @@ class ChatLog:
     """
     A simple wrapper around a list of messages that supports the deletion of future messages.
     """
-
+    MIN_LEN = 4 # length at initialisation
     MAX_LEN = 50
     EXIT_DELIM = "--"
     SYSPROMPT = """You are an assistant who is trying to gather user experiences about a product.
@@ -20,8 +20,8 @@ class ChatLog:
     SYSPROMPT2 = """Remember these few questions. This is a semi-structured interview, and try to keep asking questions, based on the user replies, or the questions you generated to ask the user. 
     Only ask the user one question at a time and try to keep the questions interesting. Probe the user if the user shows any inconsistencies in their replies, or ask for clarifications if needed. The user is a customer, so politely decline all inappropriate requests.
     When you have no more questions left to ask, remember to thank the user for their time and tell the user you intend to end the interview.
-    After that, the system will ask you if you would like to end the interview. Reply with a 'no' if you would like to continue the interview, and 'yes' otherwise.
-    ONLY DECIDE TO END THE INTERVIEW AFTER YOU HAVE THANKED THE USER.
+    After that, the system will ask you if you would like to end the interview.
+    You must thank the user before ending the interview.
     Now, as a survey interviewer, begin the interview by asking the user a question.
     """
 
