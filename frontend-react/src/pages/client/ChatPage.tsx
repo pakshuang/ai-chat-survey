@@ -8,7 +8,7 @@ import {
   submitBaseSurvey,
 } from "../hooks/useApi";
 import { useParams } from "react-router-dom";
-import { SurveyState, Question, surveyMessage ,Messages} from "./constants";
+import { SurveyState, Question, surveyMessage, Messages} from "./constants";
 import ChatMessage from "./ChatMessage";
 import Cookies from 'js-cookie';
 
