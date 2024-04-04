@@ -1,11 +1,30 @@
+# -*- coding: utf-8 -*-
+"""
+    src.database_operations
+    ~~~~~~~
+
+    This module implements the helper functions that do CRUD operations
+    to the database for the backend server.
+"""
+
+
 import json
 import os
+from typing import Any, Dict, List, Optional, Tuple
 
 import pymysql
+from pymysql.connections import Connection
+from pymysql.cursors import Cursor
 from src.llm_classes.llm_level import GPT
 
 
-def connect_to_mysql():
+def connect_to_mysql() -> Optional[pymysql.connections.Connection]:
+    """
+    Connects to a MySQL database.
+
+    Returns:
+        pymysql.connections.Connection or None: A connection object if successful, None otherwise.
+    """
     # Connect to MySQL
     mysql_host = os.environ.get("API_MYSQL_HOST", "database")
     mysql_user = os.environ.get("API_MYSQL_USER", "root")
@@ -20,41 +39,90 @@ def connect_to_mysql():
             database=mysql_db,
             cursorclass=pymysql.cursors.DictCursor,
         )
-        print("Connected to MySQL database successfully!")
         return connection
     except pymysql.Error as e:
         raise e
 
 
-def get_cursor(connection):
+def get_cursor(connection: Connection) -> Cursor:
+    """
+    Returns a cursor object associated with the provided database connection.
+
+    Args:
+        connection: pymysql.connections.Connection object representing the database connection.
+
+    Returns:
+        pymysql.cursors.Cursor: Cursor object for executing SQL queries.
+    """
     return connection.cursor()
 
 
-def close_connection(connection):
+def close_connection(connection: Connection) -> None:
+    """
+    Close the provided database connection if it's open.
+
+    Args:
+        connection (pymysql.connections.Connection): The database connection to be closed.
+    """
     if connection:
         connection.close()
 
 
-def commit(connection):
+def commit(connection: Connection) -> None:
+    """
+    Commit the changes made to the database through the provided connection if it's open.
+
+    Args:
+        connection (pymysql.connections.Connection): The database connection used to commit changes.
+    """
     if connection:
         connection.commit()
 
 
-def rollback(connection):
+def rollback(connection: Connection) -> None:
+    """
+    Roll back any uncommitted changes made to the database through the provided connection if it's open.
+
+    Args:
+        connection (pymysql.connections.Connection): The database connection used to rollback changes.
+    """
     if connection:
         connection.rollback()
 
 
-def execute(connection, query, params=None):
+def execute(connection: Connection, query: str, params: Optional[tuple] = None) -> None:
+    """
+    Execute a SQL query using the provided connection and optional parameters.
+
+    Args:
+        connection (pymysql.connections.Connection): The database connection to execute the query.
+        query (str): The SQL query to execute.
+        params (tuple, optional): Optional parameters to be used in the query (default is None).
+    """
     try:
         with connection.cursor() as cursor:
             cursor.execute(query, params)
             commit(connection)  # Commit changes after successful execution
     except Exception as e:
+        # Roll back changes if execution fails
+        rollback(connection)
         raise e
 
 
-def fetch(connection, query, params=None):
+def fetch(
+    connection: Connection, query: str, params: Optional[tuple] = None
+) -> List[dict]:
+    """
+    Execute a SQL query using the provided connection and optional parameters, and fetch all results.
+
+    Args:
+        connection (pymysql.connections.Connection): The database connection to execute the query.
+        query (str): The SQL query to execute.
+        params (tuple, optional): Optional parameters to be used in the query (default is None).
+
+    Returns:
+        List[dict]: A list of dictionaries representing the fetched results.
+    """
     try:
         with connection.cursor() as cursor:
             cursor.execute(query, params)
@@ -63,7 +131,13 @@ def fetch(connection, query, params=None):
         raise e
 
 
-def close_cursor(cursor):
+def close_cursor(cursor: Cursor) -> None:
+    """
+    Close the provided cursor if it's open.
+
+    Args:
+        cursor (pymysql.cursors.Cursor): The cursor to be closed.
+    """
     if cursor:
         cursor.close()
 
@@ -73,6 +147,15 @@ def close_cursor(cursor):
 
 # create_survey
 def summarise(chat_context: str) -> str:
+    """
+    Summarize the provided chat context text.
+
+    Args:
+        chat_context (str): The text to be summarized.
+
+    Returns:
+        str: The summarized text, with a maximum length of 1500 characters.
+    """
     MAX_LEN = 1500
     if len(chat_context) > MAX_LEN:
         llm = GPT()
@@ -96,7 +179,17 @@ def summarise(chat_context: str) -> str:
         return chat_context
 
 
-def validate_survey_object(data):
+def validate_survey_object(data: dict) -> Tuple[bool, str]:
+    """
+    Validate a survey object to ensure it follows a specific format.
+
+    Args:
+        data (dict): The survey object to validate.
+
+    Returns:
+        Tuple[bool, str]: A tuple containing a boolean indicating whether the survey object is valid
+                         and a message describing the result.
+    """
     if not isinstance(data, dict):
         return False, "Survey data must be a dictionary"
 
@@ -127,7 +220,17 @@ def validate_survey_object(data):
     return True, "Survey object format is valid"
 
 
-def create_survey(connection, data):
+def create_survey(connection: Connection, data: dict) -> int:
+    """
+    Create a new survey in the database based on the provided survey data.
+
+    Args:
+        connection (pymysql.connections.Connection): The database connection.
+        data (dict): The survey data to be inserted into the database.
+
+    Returns:
+        int: The ID of the newly created survey.
+    """
     try:
         # Insert survey data into Surveys table
         insert_survey_query = """
@@ -172,13 +275,21 @@ def create_survey(connection, data):
 
         return survey_id
     except Exception as e:
-        connection.rollback()
         raise e
 
 
 # get_surveys()
 # Helper function to create survey object
-def create_survey_object(row):
+def create_survey_object(row: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Create a survey object based on a database row.
+
+    Args:
+        row (Dict[str, Any]): The database row containing survey information.
+
+    Returns:
+        Dict[str, Any]: A dictionary representing the survey object.
+    """
     survey_object = {
         "metadata": {
             "survey_id": row["survey_id"],
@@ -197,7 +308,20 @@ def create_survey_object(row):
 
 # get_surveys()
 # Helper function to create survey object
-def append_question_to_survey(survey_objects, survey_id, question_data):
+def append_question_to_survey(
+    survey_objects: Dict[int, dict], survey_id: int, question_data: dict
+) -> None:
+    """
+    Append a question to the survey object identified by the provided survey ID.
+
+    Args:
+        survey_objects (Dict[int, dict]): A dictionary containing survey objects indexed by survey ID.
+        survey_id (int): The ID of the survey to which the question will be appended.
+        question_data (dict): The data of the question to be appended to the survey.
+
+    Returns:
+        None
+    """
     # If the question does not exist, append it to the list
     survey_objects[survey_id]["questions"].append(
         {
@@ -213,7 +337,20 @@ def append_question_to_survey(survey_objects, survey_id, question_data):
 
 # submit_response()
 # Helper function to insert response data into DB
-def save_response_to_database(connection, data, survey_id):
+def save_response_to_database(
+    connection: Connection, data: Dict[str, Any], survey_id: int
+) -> int:
+    """
+    Save the survey response data to the database.
+
+    Args:
+        connection (Connection): The database connection.
+        data (Dict[str, Any]): The survey response data to be saved.
+        survey_id (int): The ID of the survey for which the response is being saved.
+
+    Returns:
+        int: The ID of the newly saved response.
+    """
     try:
         query = """
         SELECT MAX(response_id) FROM Survey_Responses WHERE survey_id = %s
