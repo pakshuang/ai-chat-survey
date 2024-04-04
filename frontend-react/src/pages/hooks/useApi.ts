@@ -72,7 +72,7 @@ export const getResponseBySurveyId = async (
   id: string
 ): Promise<Response[]> => {
   return AdminApiService(localStorage.getItem("jwt") ?? "")
-    .get(`responses?survey=${id}`)
+    .get(`surveys/${id}/responses`)
     .then((res) => res.data)
 }
 
