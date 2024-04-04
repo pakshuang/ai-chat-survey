@@ -58,8 +58,8 @@ export const getUserSurvey = (survey_id: number): Promise<AxiosResponse> => {
   return ApiService.get(`/surveys/${survey_id}`);
 };
 
-export const submitBaseSurvey = (body: object): Promise<AxiosResponse> => {
-  return ApiService.post(`/responses`, body);
+export const submitBaseSurvey = (survey_id: string, body: object): Promise<AxiosResponse> => {
+  return ApiService.post(`/surveys/${survey_id}/responses`, body);
 };
 export const getSurveyById = (id: string): Promise<GetSurvey> => {
   return AdminApiService(localStorage.getItem("jwt") ?? "")
@@ -78,7 +78,7 @@ export const sendMessageApi = (
   message: string
 ): Promise<AxiosResponse> => {
   return ApiService.post(
-    `/responses/${responseID}/chat?survey=${surveyID}`,
+    `/surveys/${surveyID}/responses/${responseID}/chat`,
     { content: message },
     {
       headers: {

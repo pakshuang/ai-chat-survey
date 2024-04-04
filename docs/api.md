@@ -1,10 +1,10 @@
 # API
 
-This document describes the backend API for the project. It is intended to be read by developers and other technical stakeholders. This API contract will allow the frontend team to develop the UI before the backend is complete.
+This document describes the backend API for the project. It is intended to be read by developers and other technical stakeholders.
 
 ## Admins
 
-Admins are the users who have access to the admin portal. There will be no endpoints to RUD admins, but there will be an endpoint to create an admin. The only way to create an admin is for the engineer to manually insert a record into the database. The admin will then be able to log in and access the admin portal.
+Admins have access to the admin portal, they can create and delete surveys as well as view the responses to surveys they create. There is an endpoint to Create an admin, but no endpoints to Read, Update, or Delete admins. After creation, the admin is able to log in and access the admin portal.
 
 ### 1. Create Admin
 
@@ -66,7 +66,7 @@ Admins are the users who have access to the admin portal. There will be no endpo
 
 ## Surveys
 
-These endpoints are used to create, read, and delete surveys, which are the first phase of the survey process.
+These endpoints are used to Create, Read, and Delete surveys.
 
 ### 1. Create Survey
 
@@ -202,11 +202,11 @@ These endpoints are used to create, read, and delete surveys, which are the firs
 > [!NOTE]
 > Survey responses (reponse objects) are json objects, representing a respondents answers to a survey as well as their chatlog. HTTP responses are also json objects, but they are the entire response from the API. The two are different and should not be confused.
 
-These endpoints are used to submit, read, and update (send message) responses response objects, which are the combined data collected from the survey and chat completed by a single respondent.
+These endpoints are used to Create, Read, and Update (send message) responses, which are the combined data collected from the answers and chat completed by a single respondent.
 
 ### 1. Submit Survey Response
 
-- **Endpoint:** `/api/v1/responses`
+- **Endpoint:** `/api/v1/surveys/{survey_id}/responses`
 - **Method:** `POST`
 - **Description:** Submit a new survey response (response object).
 - **Request Body:**
@@ -248,7 +248,7 @@ These endpoints are used to submit, read, and update (send message) responses re
 > [!IMPORTANT]
 > A JWT is required.
 
-- **Endpoint:** `/api/v1/responses?survey={survey_id}`
+- **Endpoint:** `/api/v1/surveys/{survey_id}/responses`
 - **Method:** `GET`
 - **Description:** Get all response objects for a survey. An admin JWT that corresponds to the survey creator is required.
 
@@ -256,8 +256,8 @@ These endpoints are used to submit, read, and update (send message) responses re
 
   ```json
   {
-    "responses": [
-      "response object", # See /api/v1/responses/{response_id} for the structure of a response object
+    [
+      "response object", # See /api/v1/surveys/{survey_id}/responses/{response_id} for the structure of a response object
       "response object",
       "response object"
     ]
@@ -278,7 +278,7 @@ These endpoints are used to submit, read, and update (send message) responses re
 > [!IMPORTANT]
 > A JWT is required.
 
-- **Endpoint:** `/api/v1/responses/{response_id}?survey={survey_id}`
+- **Endpoint:** `/api/v1/surveys/{survey_id}/responses/{response_id}`
 - **Method:** `GET`
 - **Description:** Get a response object by ID. An admin JWT that corresponds to the survey creator is required.
 - **HTTP Response:**
@@ -313,7 +313,7 @@ These endpoints are used to submit, read, and update (send message) responses re
 
 ### 4. Send Chat Message
 
-- **Endpoint:** `/api/v1/responses/{response_id}/chat?survey={survey_id}`
+- **Endpoint:** `/api/v1/surveys/{survey_id}/responses/{response_id}/chat`
 - **Method:** `POST`
 - **Description:** Send a message to the chatbot. The chatbot will respond with a message.
 - **Request Body:**
