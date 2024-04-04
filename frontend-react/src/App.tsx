@@ -1,16 +1,17 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { RouterProvider, createBrowserRouter } from "react-router-dom"
 
-import Home from "./pages/Home";
-import AdminHomePage from "./pages/admin/AdminHomePage";
-import AdminSurveyPage from "./pages/admin/survey/AdminSurveyPage";
-import SignupPage from "./pages/admin/login/SignupPage";
-import LoginPage from "./pages/admin/login/LoginPage";
-import ChatPage from "./pages/client/ChatPage";
-import { ChakraProvider } from "@chakra-ui/react";
-import { theme } from "./components/theme";
-import { QueryClient, QueryClientProvider } from "react-query";
-import ViewAdminSurvey from "./pages/admin/survey/ViewAdminSurvey";
-import NotFoundPage from "./pages/NotFoundPage";
+import Home from "./pages/Home"
+import AdminHomePage from "./pages/admin/AdminHomePage"
+import AdminSurveyPage from "./pages/admin/survey/AdminSurveyPage"
+import SignupPage from "./pages/admin/login/SignupPage"
+import LoginPage from "./pages/admin/login/LoginPage"
+import ChatPage from "./pages/client/ChatPage"
+import { ChakraProvider } from "@chakra-ui/react"
+import { theme } from "./components/theme"
+import { QueryClient, QueryClientProvider } from "react-query"
+import ViewAdminSurvey from "./pages/admin/survey/ViewAdminSurvey"
+import NotFoundPage from "./pages/NotFoundPage"
+import AdminSurveyResponses from "./pages/admin/survey/AdminSurveyResponses"
 
 const router = createBrowserRouter([
   { path: "/", element: <Home /> },
@@ -19,13 +20,14 @@ const router = createBrowserRouter([
   { path: "/admin/login", element: <LoginPage /> },
   { path: "/admin/survey", element: <AdminHomePage /> },
   { path: "/admin/survey/:id", element: <ViewAdminSurvey /> },
+  { path: "/admin/survey/:id/responses", element: <AdminSurveyResponses /> },
   { path: "/admin/survey/create", element: <AdminSurveyPage /> },
   { path: "/chat/:id", element: <ChatPage /> },
   { path: "*", element: <NotFoundPage /> },
-]);
+])
 
 function App() {
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient()
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -33,7 +35,7 @@ function App() {
         <RouterProvider router={router} />
       </ChakraProvider>
     </QueryClientProvider>
-  );
+  )
 }
 
-export default App;
+export default App

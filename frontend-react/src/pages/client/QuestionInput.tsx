@@ -27,7 +27,8 @@ const QuestionInput = ({
   };
 
   const handleInputKeyPress = (e) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
       handleQuestionResponse(question_id, tempAnswer);
     }
   };

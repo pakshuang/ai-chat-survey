@@ -1,9 +1,9 @@
-import { Box, SkeletonCircle, Button, Flex } from "@chakra-ui/react";
-import { useRef, useEffect, useState } from "react";
-import ChatMessage from "./ChatMessage";
-import TypingEffect from "./TypingEffect";
-import QuestionInput from "./QuestionInput";
-import { ChatWindowProps, surveyMessage } from "./constants";
+import { Box, SkeletonCircle, Button, Flex } from "@chakra-ui/react"
+import { useEffect, useState } from "react"
+import ChatMessage from "./ChatMessage"
+import TypingEffect from "./TypingEffect"
+import QuestionInput from "./QuestionInput"
+import { ChatWindowProps, surveyMessage } from "./constants"
 
 function ChatWindow({
   messages,
@@ -12,25 +12,27 @@ function ChatWindow({
   surveyState,
   handleSubmit,
 }: ChatWindowProps) {
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const [botResponded, setBotResponded] = useState(false);
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  const [botResponded, setBotResponded] = useState(false)
 
   useEffect(() => {
     if (messages.slice(-1)[0]?.sender === "bot") {
-      setBotResponded(true);
+      setBotResponded(true)
     }
     if (messages.slice(-1)[0]?.sender === "user") {
-      setBotResponded(false);
+      setBotResponded(false)
     }
+  }, [messages])
   }, [messages]);
   const disabled=messages.filter((ele) => ele.question!==undefined).some((ele) => ele.question.answer==undefined || ele.question.answer.length === 0 || ele.question.answer==="");
   return (
     <Box
       overflowY="auto"
       flex="1"
+      display="flex"
+      flexDirection="column-reverse"
+      borderRadius="lg"
+      bg="gray.50"
+      p="1rem"
       w="60rem"
       mx="auto"
       css={{
@@ -52,76 +54,77 @@ function ChatWindow({
       }}
     >
       
-    <ChatMessage sender="bot">{surveyState.subtitle}</ChatMessage>
-      {messages.map((item, index) => {
-        if (index === messages.length - 1 && botResponded) {
-          if (item.message === surveyMessage) {
-            if (surveyState.submitted) {
+      <Box flexDirection="column" display="flex" gap="0.5rem">
+      <ChatMessage sender="bot">{surveyState.subtitle}</ChatMessage>
+        {messages.map((item, index) => {
+          if (index === messages.length - 1 && botResponded) {
+            if (item.message === surveyMessage) {
+              if (surveyState.submitted) {
+                return (
+                  <ChatMessage key={index} sender={item.sender}>
+                    {item.message}
+                  </ChatMessage>
+                )
+              }
               return (
-                <ChatMessage sender={item.sender}>{item.message}</ChatMessage>
-              );
-            }
-            return (
-              <ChatMessage sender={"bot"}>
-                <Flex flexDirection="column">
-                  <TypingEffect
-                    text="Thank you for your responses. Please confirm your answers now, as they can't be changed later. Once confirmed, we'll continue with our discussion."
-                    scrollToBottom={scrollToBottom}
-                  ></TypingEffect>
-                  <Box>
-                    <Button onClick={handleSubmit} colorScheme="green" mt="0.5rem" isDisabled={disabled}>
-                      Confirm
-                    </Button>
+                <ChatMessage key={index} sender={"bot"}>
+                  <Flex flexDirection="column">
+                    <TypingEffect text="Thank you for your responses. Please confirm your answers now, as they can't be changed later. Once confirmed, we'll continue with our discussion." />
+                    <Box>
+                      <Button
+                        onClick={handleSubmit}
+                        colorScheme="green"
+                        mt="0.5rem" isDisabled={disabled}
+                      >
+                        Confirm
+                      </Button>
                     {disabled &&  `Please complete question(s) ` +messages
-                        .filter((ele) => ele.question !== undefined) // Filter out messages without questions
+                        .filter((ele) => ele.question !== undefined) 
                         .map((ele, index) => {
                           if (ele.question.answer === undefined || ele.question.answer.length === 0 || ele.question.answer === "") {
                             return `${index + 1}`;
                           }
-                          return null; // Filter out messages where the question is answered
+                          return null; 
                         })
-                        .filter(Boolean) // Filter out null values
+                        .filter(Boolean) 
                         .join(", ") +` before submitting.`}
 
-                  </Box>
-                </Flex>
+                    </Box>
+                  </Flex>
+                </ChatMessage>
+              )
+            }
+            return (
+              <ChatMessage key={index} sender="bot">
+                <TypingEffect text={messages.slice(-1)[0].message} />
+                <QuestionInput
+                  questionData={item.question}
+                  handleQuestionResponse={handleQuestionResponse}
+                  submitted={surveyState.submitted}
+                ></QuestionInput> 
               </ChatMessage>
-            );
+            )
+          } else {
+            return (
+              <ChatMessage key={index} sender={item.sender}>
+                {item.message}
+                <QuestionInput
+                  questionData={item.question}
+                  handleQuestionResponse={handleQuestionResponse}
+                  submitted={surveyState.submitted}
+                ></QuestionInput>
+              </ChatMessage>
+            )
           }
-          return (
-            <ChatMessage sender="bot">
-              <TypingEffect
-                text={messages.slice(-1)[0].message}
-                scrollToBottom={scrollToBottom}
-              />
-              {item.question !==undefined &&<QuestionInput
-                questionData={item.question}
-                handleQuestionResponse={handleQuestionResponse}
-                submitted={surveyState.submitted}
-              ></QuestionInput> }
-            </ChatMessage>
-          );
-        } else {
-          return (
-            <ChatMessage sender={item.sender}>
-              {item.message}
-              {item.question !==undefined &&<QuestionInput
-                questionData={item.question}
-                handleQuestionResponse={handleQuestionResponse}
-                submitted={surveyState.submitted}
-              ></QuestionInput> }
-            </ChatMessage>
-          );
-        }
-      })}
-      {isBotThinking && (
-        <ChatMessage sender="bot">
-          <SkeletonCircle size="6" />
-        </ChatMessage>
-      )}
-      <div ref={messagesEndRef} />
+        })}
+        {isBotThinking && (
+          <ChatMessage sender="bot">
+            <SkeletonCircle size="6" />
+          </ChatMessage>
+        )}
+      </Box>
     </Box>
-  );
+  )
 }
 
-export default ChatWindow;
+export default ChatWindow

@@ -11,7 +11,6 @@ import {
   Flex,
   HStack,
   Input,
-  Textarea,
   Link,
   Select,
   Spinner,
@@ -28,7 +27,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import { useQuery } from "react-query"
-import { ArrowBackIcon, InfoIcon, DeleteIcon } from "@chakra-ui/icons"
+import { ArrowBackIcon, InfoIcon, DeleteIcon, ViewIcon } from "@chakra-ui/icons"
 import { useNavigate, useParams } from "react-router-dom"
 import {
   getSurveyById,
@@ -39,6 +38,7 @@ import {
 } from "../../hooks/useApi"
 import { needOptions, QuestionType } from "./constants"
 import { useEffect } from "react"
+import ViewAdminSurveyTitle from "./ViewAdminSurveyTitle"
 
 function ViewAdminSurvey() {
   const { id } = useParams()
@@ -79,8 +79,8 @@ function ViewAdminSurvey() {
 
   return (
     <Flex minH="100vh" w="100%" bg="gray.100" minW="80rem">
-      <VStack mx="auto" my="5rem" spacing="0" w="48rem">
-        <Card w="48rem" bg="gray.50" p="1.5rem">
+      <VStack mx="auto" my="3rem" spacing="0" w="48rem">
+        <Card w="48rem" bg="gray.50" p="1.5rem" mb="1rem">
           <HStack>
             <InfoIcon />
             <Text>
@@ -91,34 +91,7 @@ function ViewAdminSurvey() {
             </Text>
           </HStack>
         </Card>
-        <Card w="48rem" bg="white" p="1.5rem" mt="1rem">
-          <Input
-            value={survey.title}
-            variant="flushed"
-            size="md"
-            fontSize="3xl"
-            fontWeight="bold"
-            isReadOnly
-          />
-          <Textarea
-            value={survey.subtitle}
-            size="md"
-            fontSize="lg"
-            mt="1rem"
-            rows={2}
-            resize="vertical"
-            isReadOnly
-          />
-          <Textarea
-            value={survey.chat_context}
-            size="md"
-            fontSize="md"
-            mt="1rem"
-            rows={3}
-            resize="vertical"
-            isReadOnly
-          />
-        </Card>
+        <ViewAdminSurveyTitle survey={survey} />
         <Accordion
           allowMultiple
           defaultIndex={survey.questions?.map((_, i) => i)}
@@ -146,8 +119,8 @@ function ViewAdminSurvey() {
                   <Input
                     value={question.question}
                     variant="unstyled"
-                    size="lg"
-                    fontSize="2xl"
+                    size="md"
+                    fontSize="xl"
                     fontWeight="bold"
                     w="42rem"
                     isReadOnly
@@ -157,7 +130,7 @@ function ViewAdminSurvey() {
               </AccordionButton>
               <AccordionPanel p="1.5rem">
                 <VStack spacing="2rem" alignItems="flex-start">
-                  <Select value={question.type} isDisabled>
+                  <Select value={question.type} isReadOnly>
                     <option value={QuestionType.MCQ}>
                       Multiple Choice Question
                     </option>
@@ -193,6 +166,15 @@ function ViewAdminSurvey() {
             }}
           >
             Back to home
+          </Button>
+          <Button
+            leftIcon={<ViewIcon />}
+            colorScheme="green"
+            onClick={() => {
+              navigate(`/admin/survey/${id}/responses`)
+            }}
+          >
+            View responses
           </Button>
           <Button leftIcon={<DeleteIcon />} colorScheme="red" onClick={onOpen}>
             Delete survey

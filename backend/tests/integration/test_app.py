@@ -23,7 +23,7 @@ def test_create_admin_success():
         json={"username": "admin1", "password": "password1"},
     )
 
-    print(response.json())
+    assert response.json() == {"message": "Admin admin1 created successfully"}
     assert response.status_code == 201
 
 
@@ -33,7 +33,7 @@ def test_create_admin_second_success():
         json={"username": "admin2", "password": "password2"},
     )
 
-    print(response.json())
+    assert response.json() == {"message": "Admin admin2 created successfully"}
     assert response.status_code == 201
 
 
@@ -43,33 +43,29 @@ def test_create_admin_existing_admin():
         json={"username": "admin1", "password": "password2"},
     )
 
-    print(response.json())
+    assert response.json() == {"message": "Admin already exists"}
     assert response.status_code == 400
-    assert response.json().get("message") == "Admin already exists"
 
 
 def test_create_admin_missing_data():
     response = requests.post(ADMINS_ENDPOINT, json={})
 
-    print(response.json())
     assert response.status_code == 400
-    assert response.json().get("message") == "Missing data"
+    assert response.json() == {"message": "Missing data"}
 
 
 def test_create_admin_missing_username():
     response = requests.post(ADMINS_ENDPOINT, json={"password": "password1"})
 
-    print(response.json())
     assert response.status_code == 400
-    assert response.json().get("message") == "Missing data"
+    assert response.json() == {"message": "Missing data"}
 
 
 def test_create_admin_missing_password():
     response = requests.post(ADMINS_ENDPOINT, json={"username": "admin1"})
 
-    print(response.json())
     assert response.status_code == 400
-    assert response.json().get("message") == "Missing data"
+    assert response.json() == {"message": "Missing data"}
 
 
 # Test cases for login_admin
@@ -96,9 +92,8 @@ def test_admin_login_success():
 def test_admin_login_missing_data():
     response = requests.post(ADMINS_ENDPOINT + "/login", json={})
 
-    print(response.json())
     assert response.status_code == 400
-    assert response.json().get("message") == "Missing data"
+    assert response.json() == {"message": "Missing data"}
 
 
 def test_admin_login_missing_username():
@@ -107,9 +102,8 @@ def test_admin_login_missing_username():
         json={"password": "password1"},
     )
 
-    print(response.json())
     assert response.status_code == 400
-    assert response.json().get("message") == "Missing data"
+    assert response.json() == {"message": "Missing data"}
 
 
 def test_admin_login_missing_password():
@@ -118,9 +112,8 @@ def test_admin_login_missing_password():
         json={"username": "admin1"},
     )
 
-    print(response.json())
     assert response.status_code == 400
-    assert response.json().get("message") == "Missing data"
+    assert response.json() == {"message": "Missing data"}
 
 
 def test_admin_login_invalid_username():
@@ -129,9 +122,8 @@ def test_admin_login_invalid_username():
         json={"username": "admin3", "password": "password1"},
     )
 
-    print(response.json())
     assert response.status_code == 401
-    assert response.json().get("message") == "Invalid credentials"
+    assert response.json() == {"message": "Invalid credentials"}
 
 
 def test_admin_login_wrong_password():
@@ -140,15 +132,13 @@ def test_admin_login_wrong_password():
         json={"username": "admin1", "password": "password2"},
     )
 
-    print(response.json())
     assert response.status_code == 401
-    assert response.json().get("message") == "Invalid credentials"
+    assert response.json() == {"message": "Invalid credentials"}
 
 
 # Test cases for create_survey
 
 SURVEYS_ENDPOINT = BACKEND_URL + "/api/v1/surveys"
-SURVEY_ID = 0
 SURVEY_DATA = {
     "metadata": {
         "created_by": "admin1",
@@ -184,20 +174,16 @@ def test_create_survey_success():
     headers = {"Authorization": "Bearer " + VALID_JWT}
     response = requests.post(SURVEYS_ENDPOINT, json=SURVEY_DATA, headers=headers)
 
-    print(response.json())
     assert response.status_code == 201
-    assert "survey_id" in response.json()
-    global SURVEY_ID
-    SURVEY_ID = response.json().get("survey_id")
+    assert response.json() == {"survey_id": 1}
 
 
 def test_create_survey_missing_data():
     headers = {"Authorization": "Bearer " + VALID_JWT}
     response = requests.post(SURVEYS_ENDPOINT, json={}, headers=headers)
 
-    print(response.json())
     assert response.status_code == 400
-    assert response.json().get("message") == "Missing data"
+    assert response.json() == {"message": "Missing data"}
 
 
 def test_create_survey_missing_metadata():
@@ -207,44 +193,29 @@ def test_create_survey_missing_metadata():
     headers = {"Authorization": "Bearer " + VALID_JWT}
     response = requests.post(SURVEYS_ENDPOINT, json=survey_data, headers=headers)
 
-    print(response.json())
     assert response.status_code == 400
-    assert response.json().get("message") == "Missing or empty 'metadata' field"
+    assert response.json() == {"message": "Missing or empty 'metadata' field"}
 
 
 def test_create_survey_unauthorized():
     headers = {"Authorization": "Bearer " + "INVALID_JWT"}
     response = requests.post(SURVEYS_ENDPOINT, json=SURVEY_DATA, headers=headers)
 
-    print(response.json())
     assert response.status_code == 401
-    assert response.json().get("message") == "Token is invalid!"
+    assert response.json() == {"message": "Token is invalid!"}
 
 
 def test_create_survey_missing_jwt():
     response = requests.post(SURVEYS_ENDPOINT, json=SURVEY_DATA)
 
-    print(response.json())
     assert response.status_code == 400
-    assert response.json().get("message") == "Token is missing!"
+    assert response.json() == {"message": "Token is missing!"}
 
 
 # Test cases for get_surveys
 
 
 def test_get_surveys_success():
-    response = requests.get(SURVEYS_ENDPOINT)
-
-    global SURVEY_DATA
-    SURVEY_DATA["metadata"]["survey_id"] = SURVEY_ID
-
-    print(response.json())
-    assert response.status_code == 200
-    assert len(response.json()) > 0
-    assert SURVEY_DATA in response.json()
-
-
-def test_get_surveys_filtered_success():
     response = requests.post(
         ADMINS_ENDPOINT + "/login",
         json={"username": "admin2", "password": "password2"},
@@ -285,28 +256,35 @@ def test_get_surveys_filtered_success():
 
     requests.post(SURVEYS_ENDPOINT, json=survey_data, headers=headers)
 
+    response = requests.get(SURVEYS_ENDPOINT)
+
+    SURVEY_DATA["metadata"]["survey_id"] = 1
+    survey_data["metadata"]["survey_id"] = 2
+
+    assert response.status_code == 200
+    assert response.json() == [survey_data, SURVEY_DATA]
+
+
+def test_get_surveys_filtered_success():
     response = requests.get(SURVEYS_ENDPOINT + "?admin=admin1")
 
-    print(response.json())
     assert response.status_code == 200
-    assert len(response.json()) == 1
-    assert SURVEY_DATA in response.json()
+    assert response.json() == [SURVEY_DATA]
 
 
 def test_get_surveys_empty_success():
     response = requests.get(SURVEYS_ENDPOINT + "?admin=admin3")
 
-    print(response.json())
     assert response.status_code == 200
+    assert response.json() == []
 
 
 # Test cases for get_survey<survey_id>
 
 
 def test_get_survey_success():
-    response = requests.get(SURVEYS_ENDPOINT + "/" + str(SURVEY_ID))
+    response = requests.get(SURVEYS_ENDPOINT + "/1")
 
-    print(response.json())
     assert response.status_code == 200
     assert response.json() == SURVEY_DATA
 
@@ -314,9 +292,8 @@ def test_get_survey_success():
 def test_get_survey_not_found():
     response = requests.get(SURVEYS_ENDPOINT + "/0")
 
-    print(response.json())
     assert response.status_code == 404
-    assert response.json().get("message") == "Survey not found"
+    assert response.json() == {"message": "Survey not found"}
 
 
 # Test cases for delete_survey<survey_id>
@@ -337,29 +314,26 @@ def test_delete_survey_success():
         SURVEYS_ENDPOINT + "/" + str(admin2_survey_id), headers=headers
     )
 
-    print(response.json())
     assert response.status_code == 200
-    assert response.json().get("message") == "Survey deleted successfully"
+    assert response.json() == {"message": "Survey deleted successfully"}
 
     response = requests.get(SURVEYS_ENDPOINT + "?admin=admin2")
-    assert len(response.json()) == 0
+    assert response.json() == []
 
 
 def test_delete_survey_missing_jwt():
     response = requests.delete(SURVEYS_ENDPOINT + "/1")
 
-    print(response.json())
     assert response.status_code == 400
-    assert response.json().get("message") == "Token is missing!"
+    assert response.json() == {"message": "Token is missing!"}
 
 
 def test_delete_survey_unauthorized():
     headers = {"Authorization": "Bearer " + "INVALID_JWT"}
     response = requests.delete(SURVEYS_ENDPOINT + "/1", headers=headers)
 
-    print(response.json())
     assert response.status_code == 401
-    assert response.json().get("message") == "Token is invalid!"
+    assert response.json() == {"message": "Token is invalid!"}
 
 
 def test_delete_survey_wrong_admin():
@@ -372,11 +346,10 @@ def test_delete_survey_wrong_admin():
     headers = {"Authorization": "Bearer " + admin2_jwt}
     response = requests.delete(SURVEYS_ENDPOINT + "/1", headers=headers)
 
-    print(response.json())
     assert response.status_code == 403
-    assert (
-        response.json().get("message") == "Accessing other admin's surveys is forbidden"
-    )
+    assert response.json() == {
+        "message": "Accessing other admin's surveys is forbidden"
+    }
 
 
 def test_delete_survey_not_found():
@@ -389,6 +362,275 @@ def test_delete_survey_not_found():
     headers = {"Authorization": "Bearer " + admin2_jwt}
     response = requests.delete(SURVEYS_ENDPOINT + "/0", headers=headers)
 
-    print(response.json())
     assert response.status_code == 404
-    assert response.json().get("message") == "Survey not found"
+    assert response.json() == {"message": "Survey not found"}
+
+
+# Test cases for submit_response
+
+
+def test_submit_response_success():
+    response_data = {
+        "metadata": {"survey_id": 1},
+        "answers": [
+            {
+                "question_id": 1,
+                "type": "multiple_choice",
+                "question": "Which performance did you enjoy the most?",
+                "options": ["Clowns", "Acrobats", "Jugglers", "Magicians"],
+                "answer": ["Clowns"],
+            },
+            {
+                "question_id": 2,
+                "type": "multiple_response",
+                "question": "What did you like about the venue?",
+                "options": ["Seating", "Lighting", "Sound"],
+                "answer": ["Seating", "Lighting"],
+            },
+            {
+                "question_id": 3,
+                "type": "free_response",
+                "question": "Do you have any feedback about the venue?",
+                "options": [],
+                "answer": ["The venue was spacious and well-maintained."],
+            },
+        ],
+    }
+
+    response = requests.post(SURVEYS_ENDPOINT + "/1" + "/responses", json=response_data)
+
+    assert response.status_code == 201
+    assert response.json() == {"response_id": 1}
+
+
+def test_submit_response_missing_data():
+    response = requests.post(SURVEYS_ENDPOINT + "/1" + "/responses", json={})
+
+    assert response.status_code == 400
+    assert response.json() == {"message": "No data was attached"}
+
+
+def test_submit_response_invalid_response_format():
+    response_data = {
+        "answers": [
+            {
+                "question_id": 1,
+                "type": "multiple_choice",
+                "question": "Which performance did you enjoy the most?",
+                "options": ["Clowns", "Acrobats", "Jugglers", "Magicians"],
+                "answer": ["Clowns"],
+            },
+            {
+                "question_id": 2,
+                "type": "multiple_response",
+                "question": "What did you like about the venue?",
+                "options": ["Seating", "Lighting", "Sound"],
+                "answer": ["Seating", "Lighting"],
+            },
+            {
+                "question_id": 3,
+                "type": "free_response",
+                "question": "Do you have any feedback about the venue?",
+                "options": [],
+                "answer": [],
+            },
+        ],
+    }
+
+    response = requests.post(SURVEYS_ENDPOINT + "/1" + "/responses", json=response_data)
+
+    assert response.status_code == 400
+    assert response.json() == {
+        "message": "Response data must contain 'metadata' and 'answers' keys"
+    }
+
+
+def test_submit_response_response_survey_incongruent():
+    response_data = {
+        "metadata": {"survey_id": 1},
+        "answers": [
+            {
+                "question_id": 1,
+                "type": "multiple_choice",
+                "question": "Which performance did you enjoy the most?",
+                "options": ["Clowns", "Acrobats", "Jugglers", "Magicians"],
+                "answer": ["Clowns"],
+            },
+            {
+                "question_id": 2,
+                "type": "multiple_response",
+                "question": "What did you like about the venue?",
+                "options": ["Seating", "Lighting", "Sound"],
+                "answer": ["Seating", "Lighting"],
+            },
+        ],
+    }
+
+    response = requests.post(SURVEYS_ENDPOINT + "/1" + "/responses", json=response_data)
+
+    assert response.status_code == 400
+    assert response.json() == {
+        "message": "Number of questions in response does not match survey"
+    }
+
+
+# Test cases for get_responses
+
+
+def test_get_responses_success():
+    headers = {"Authorization": "Bearer " + VALID_JWT}
+    response = requests.get(SURVEYS_ENDPOINT + "/1" + "/responses", headers=headers)
+
+    response_data = {
+        "metadata": {"response_id": 1, "survey_id": 1},
+        "answers": [
+            {
+                "question_id": 1,
+                "type": "multiple_choice",
+                "question": "Which performance did you enjoy the most?",
+                "options": ["Clowns", "Acrobats", "Jugglers", "Magicians"],
+                "answer": ["Clowns"],
+            },
+            {
+                "question_id": 2,
+                "type": "multiple_response",
+                "question": "What did you like about the venue?",
+                "options": ["Seating", "Lighting", "Sound"],
+                "answer": ["Seating", "Lighting"],
+            },
+            {
+                "question_id": 3,
+                "type": "free_response",
+                "question": "Do you have any feedback about the venue?",
+                "options": [],
+                "answer": ["The venue was spacious and well-maintained."],
+            },
+        ],
+    }
+
+    assert response.status_code == 200
+    assert response.json()[0].get("answers") == response_data.get("answers")
+
+
+def test_get_responses_missing_jwt():
+    response = requests.get(SURVEYS_ENDPOINT + "/1" + "/responses")
+
+    assert response.status_code == 400
+    assert response.json() == {"message": "Token is missing!"}
+
+
+def test_get_responses_unauthorized():
+    headers = {"Authorization": "Bearer " + "INVALID_JWT"}
+    response = requests.get(SURVEYS_ENDPOINT + "/1" + "/responses", headers=headers)
+
+    assert response.status_code == 401
+    assert response.json() == {"message": "Token is invalid!"}
+
+
+def test_get_responses_wrong_admin():
+    response = requests.post(
+        ADMINS_ENDPOINT + "/login",
+        json={"username": "admin2", "password": "password2"},
+    )
+    admin2_jwt = response.json().get("jwt")
+
+    headers = {"Authorization": "Bearer " + admin2_jwt}
+    response = requests.get(SURVEYS_ENDPOINT + "/1" + "/responses", headers=headers)
+
+    assert response.status_code == 403
+    assert response.json() == {
+        "message": "Accessing other admin's surveys is forbidden"
+    }
+
+
+def test_get_responses_survey_not_found():
+    headers = {"Authorization": "Bearer " + VALID_JWT}
+    response = requests.get(SURVEYS_ENDPOINT + "/0" + "/responses", headers=headers)
+
+    assert response.status_code == 404
+    assert response.json() == {"message": "Survey not found"}
+
+
+# Test cases for get_response<response_id>
+
+
+def test_get_response_success():
+    headers = {"Authorization": "Bearer " + VALID_JWT}
+    response = requests.get(
+        SURVEYS_ENDPOINT + "/1" + "/responses" + "/1", headers=headers
+    )
+
+    response_data = {
+        "metadata": {"response_id": 1, "survey_id": 1},
+        "answers": [
+            {
+                "question_id": 1,
+                "type": "multiple_choice",
+                "question": "Which performance did you enjoy the most?",
+                "options": ["Clowns", "Acrobats", "Jugglers", "Magicians"],
+                "answer": ["Clowns"],
+            },
+            {
+                "question_id": 2,
+                "type": "multiple_response",
+                "question": "What did you like about the venue?",
+                "options": ["Seating", "Lighting", "Sound"],
+                "answer": ["Seating", "Lighting"],
+            },
+            {
+                "question_id": 3,
+                "type": "free_response",
+                "question": "Do you have any feedback about the venue?",
+                "options": [],
+                "answer": ["The venue was spacious and well-maintained."],
+            },
+        ],
+    }
+
+    assert response.status_code == 200
+    assert response.json().get("answers") == response_data.get("answers")
+
+
+def test_get_response_missing_jwt():
+    response = requests.get(SURVEYS_ENDPOINT + "/1" + "/responses" + "/1")
+
+    assert response.status_code == 400
+    assert response.json() == {"message": "Token is missing!"}
+
+
+def test_get_response_unauthorized():
+    headers = {"Authorization": "Bearer " + "INVALID_JWT"}
+    response = requests.get(
+        SURVEYS_ENDPOINT + "/1" + "/responses" + "/1", headers=headers
+    )
+
+    assert response.status_code == 401
+    assert response.json() == {"message": "Token is invalid!"}
+
+
+def test_get_response_wrong_admin():
+    response = requests.post(
+        ADMINS_ENDPOINT + "/login",
+        json={"username": "admin2", "password": "password2"},
+    )
+    admin2_jwt = response.json().get("jwt")
+
+    headers = {"Authorization": "Bearer " + admin2_jwt}
+    response = requests.get(
+        SURVEYS_ENDPOINT + "/1" + "/responses" + "/1", headers=headers
+    )
+
+    assert response.status_code == 403
+    assert response.json() == {
+        "message": "Accessing other admin's surveys is forbidden"
+    }
+
+
+def test_get_response_not_found():
+    headers = {"Authorization": "Bearer " + VALID_JWT}
+    response = requests.get(
+        SURVEYS_ENDPOINT + "/1" + "/responses" + "/0", headers=headers
+    )
+
+    assert response.status_code == 200
+    assert response.json() == []

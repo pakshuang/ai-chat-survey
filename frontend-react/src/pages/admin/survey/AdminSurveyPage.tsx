@@ -68,10 +68,8 @@ function AdminSurveyPage() {
       q.options = options
     })
     data.metadata.created_at = dayjs().format("YYYY-MM-DD HH:mm:ss")
-    console.log(data)
     submitSurvey(data)
-      .then((res) => {
-        console.log(res)
+      .then(() => {
         toast({
           title: "New survey created",
           status: "success",
@@ -110,7 +108,7 @@ function AdminSurveyPage() {
   return (
     <FormProvider {...methods}>
       <Flex minH="100vh" w="100%" bg="gray.100" minW="80rem">
-        <VStack mx="auto" my="5rem" spacing="0" w="48rem">
+        <VStack mx="auto" my="3rem" spacing="0" w="48rem">
           <AdminSurveyTitle />
           <Accordion allowMultiple index={openIndex}>
             {questions.map((question, index) => (

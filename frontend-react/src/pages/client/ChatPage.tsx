@@ -8,7 +8,7 @@ import {
   submitBaseSurvey,
 } from "../hooks/useApi";
 import { useParams } from "react-router-dom";
-import { SurveyState, surveyMessage ,Messages} from "./constants";
+import { SurveyState, Question, surveyMessage ,Messages} from "./constants";
 import ChatMessage from "./ChatMessage";
 import Cookies from 'js-cookie';
 
@@ -43,7 +43,7 @@ function ChatPage() {
       const newMessages= [...messages, {sender: "user", message: message }]
       setMessages(newMessages)
       try{
-        const res = await sendMessageApi(responseId, id, message)
+        const res = await sendMessageApi(responseId, Number(id), message)
         const data = res.data
         if (data.is_last){
           setIslast(true)
@@ -57,8 +57,8 @@ function ChatPage() {
 
   useEffect(() => {
     if (surveyState.title==="" ||messages.length===0){
-      getUserSurvey(id).then((rep) => {
-        const answeredQuestions = rep.data.questions.map((question, index) => {
+      getUserSurvey(Number(id)).then((rep) => {
+        const answeredQuestions = rep.data.questions.map((question: Question) => {
           return {
             sender: "bot",
             message: question.question,
@@ -84,7 +84,9 @@ function ChatPage() {
 
   const handleQuestionResponse = (id: number, val: string | number) => {
     const updatedQuestions = [...messages];
-    updatedQuestions[id - 1].question.answer = val;
+    if (updatedQuestions[id - 1]?.question) {
+      updatedQuestions[id - 1].question!.answer = val;
+    }
     let updId=surveyState.displayIndex;
     if (val){
       updId = Math.max(id, surveyState.displayIndex);
@@ -109,12 +111,13 @@ function ChatPage() {
         ele.answer = [ele.answer];
       }
     });
-    setSurveyState({ ...surveyState, submitted: true })
+
     try {
-      setIsLoading(true)
-      const rep = await submitBaseSurvey(body);
+      setSurveyState({ ...surveyState, submitted: true });
+      setIsLoading(true);
+      const rep = await submitBaseSurvey(id, body);
       setResponseId(rep.data.response_id);
-      const res = await sendMessageApi(rep.data.response_id, id, "")
+      const res = await sendMessageApi(rep.data.response_id, Number(id), "");
       const data = res.data;
       setMessages([...messages, { sender: "bot", message: data["content"] }])
     } catch(error){
@@ -122,19 +125,21 @@ function ChatPage() {
     }
     setIsLoading(false)
   };
-  const clearCookies = () => {
-    Cookies.remove(`surveyState_${id}`);
-    Cookies.remove(`messages_${id}`)
-  };
 
   const displayedMessages = surveyState.submitted ? messages : messages.slice(0,surveyState.displayIndex+1)
   return (
-    <Flex flexDirection="column" bg="gray.100" h="100vh" w="100%" minW="65rem">
-      <Flex justifyContent="center">
-        <Heading fontSize="xl" p="1rem">
-          {surveyState.title}
-        </Heading>
-      </Flex>
+    <Flex
+      flexDirection="column"
+      bg="gray.100"
+      h="100vh"
+      w="100%"
+      minW="65rem"
+      gap="1rem"
+      py="1rem"
+    >
+      <Heading fontSize="xl" p="0.5rem" textAlign="center">
+        {surveyState.title}
+      </Heading>
       <ChatWindow
         handleSubmit={handleSubmit}
         messages={displayedMessages}

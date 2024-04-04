@@ -4,6 +4,7 @@ export type ChatMessageProps = {
   children: React.ReactNode;
   sender: "user" | "bot";
 };
+
 export type Messages = {
   sender: "user" | "bot";
   message: string;
@@ -27,7 +28,7 @@ export type Question = {
 };
 
 export type QuestionProps = {
-  questionData: Question;
+  questionData?: Question;
   handleQuestionResponse: (id: number, val: string | number) => void;
   submitted: boolean;
 };

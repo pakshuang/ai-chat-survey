@@ -1,5 +1,5 @@
-import { Button, Input, Flex } from "@chakra-ui/react";
-import { FormEvent, useState, useRef, useEffect } from "react";
+import { Button, Textarea, Flex } from "@chakra-ui/react";
+import React, { useState, useRef, useEffect } from "react";
 
 interface ChatInputProps {
   onSubmitMessage: (message: string) => void;
@@ -8,25 +8,36 @@ interface ChatInputProps {
 
 function ChatInput({ onSubmitMessage, isSubmitting }: ChatInputProps) {
   const [message, setMessage] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  function handleSubmit(e: FormEvent) {
+  function handleSubmit(
+    e:
+      | React.FormEvent<HTMLFormElement>
+      | React.MouseEvent<HTMLButtonElement>
+      | React.KeyboardEvent<HTMLTextAreaElement>
+  ) {
+    onSubmitMessage(message);
     e.preventDefault();
-    onSubmitMessage(message)
+    e.stopPropagation();
     setMessage("");
   }
+
+  const handleInputKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      handleSubmit(e);
+    }
+  };
 
   useEffect(() => {
     inputRef.current?.focus();
   }, [message]);
 
   return (
-    <form onSubmit={(e) => handleSubmit(e)}>
-      <Flex flexDirection="row" p="4" pb="1rem" w="60rem" mx="auto">
-        <Input
+    <form>
+      <Flex flexDirection="row" p="0.5rem" w="60rem" mx="auto">
+        <Textarea
           size="lg"
-          type="text"
-          placeholder="Enter message ..."
+          placeholder="Enter message..."
           background="white"
           borderColor="gray.500"
           borderRightRadius="0"
@@ -34,19 +45,21 @@ function ChatInput({ onSubmitMessage, isSubmitting }: ChatInputProps) {
             boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
           }}
           onChange={(e) => setMessage(e.target.value)}
+          onKeyPress={handleInputKeyPress}
           value={message}
           ref={inputRef}
-          isDisabled={isSubmitting}
+          rows={1}
+          resize="none"
           autoFocus
         />
         <Button
           size="lg"
           type="submit"
+          onClick={handleSubmit}
           colorScheme="blue"
           borderColor="gray.500"
           borderLeftRadius="0"
           isLoading={isSubmitting}
-          isDisabled={message===""}
         >
           Send
         </Button>

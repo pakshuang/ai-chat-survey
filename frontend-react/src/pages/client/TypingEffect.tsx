@@ -3,13 +3,11 @@ import { useState, useEffect } from "react";
 interface TypingEffectProps {
   text: string;
   typingSpeed?: number;
-  scrollToBottom: () => void;
 }
 
 function TypingEffect({
   text,
   typingSpeed = 10,
-  scrollToBottom,
 }: TypingEffectProps) {
   const [displayText, setDisplayText] = useState("");
 
@@ -22,7 +20,6 @@ function TypingEffect({
         currentText += text[currentText.length];
         setDisplayText(currentText);
       }
-      scrollToBottom()
     }, typingSpeed);
     return () => clearInterval(typingInterval);
   }, [text, typingSpeed]);
