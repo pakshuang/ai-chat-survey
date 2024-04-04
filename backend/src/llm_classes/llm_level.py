@@ -96,7 +96,9 @@ class LocalLLMGPTQ(LLM):
         # tokenizer = AutoTokenizer.from_pretrained(path)
         # self.model, self.tokenizer = model, tokenizer
 
-    def run(self, messages: list, seed: int = random.randint(1, 9999), with_moderation=True):
+    def run(
+        self, messages: list, seed: int = random.randint(1, 9999), with_moderation=True
+    ):
         """Runs the llm given a current conversation and seed and outputs a string.
 
         Args:
