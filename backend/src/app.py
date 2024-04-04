@@ -541,7 +541,6 @@ def get_responses(survey_id: str, **kwargs) -> tuple[Response, int]:
 
         # Check if admin has access to survey, return 403 if not
         if survey[0]["admin_username"] != kwargs["jwt_sub"]:
-            app.logger.info("Accessing other admin's surveys is forbidden")
             return (
                 jsonify({"message": "Accessing other admin's surveys is forbidden"}),
                 403,
@@ -669,8 +668,9 @@ def helper_send_message(
     """Generates a response from a large language model.
 
     Args:
-        llm_input (dict): Input to the large language model
-        data_content (str): User input
+        llm_input (dict): A dictionary dict[str, object]  which contains a chat context string,
+        response object, and message list
+        user_input (str): User input
         connection: MySQL connection object
         survey_id (str): Survey ID
         response_id (str): Response ID
@@ -688,7 +688,7 @@ def helper_send_message(
         chat_log_dict = json.loads(llm_input["chat_log"])
         message_list = chat_log_dict["messages"]
 
-        has_no_chat_log = has_no_chat_log(data_content, message_list)
+        has_no_chat_log = has_no_chat_log(user_input, message_list)
         if has_no_chat_log:
             pipe = construct_chatlog(
                 f"""{llm_input["chat_context"]}\n{
@@ -705,7 +705,7 @@ def helper_send_message(
 
         else:
             pipe = ChatLog(message_list, llm=llm)
-            pipe.insert_and_update(data_content, pipe.current_index)  # user input
+            pipe.insert_and_update(user_input, pipe.current_index)  # user input
             next_question = llm.run(pipe.message_list)
             updated_message_list = pipe.insert_and_update(
                 next_question, pipe.current_index, is_llm=True
@@ -722,10 +722,6 @@ def helper_send_message(
                 connection, survey_id, response_id, updated_chat_log_json
             )
         except Exception as e:
-            app.logger.error(
-                "An error occurred while updating the chat log with the bot message: "
-                + str(e)
-            )
             return (
                 jsonify({"message": "An error occurred while updating the chat log"}),
                 500,

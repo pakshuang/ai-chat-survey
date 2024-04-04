@@ -391,7 +391,17 @@ def save_response_to_database(
         return e
 
 
-def validate_response_object(response_data):
+def validate_response_object(response_data: dict[str, Any]) -> tuple[bool, str]:
+    """
+    Validate a response object to ensure it follows a specific format.
+
+    Args:
+        response_data (Dict[str, Any]): The response object to validate.
+
+    Returns:
+        Tuple[bool, str]: A tuple containing a boolean indicating whether the response object is valid
+                         and a message describing the result.
+    """
     if not isinstance(response_data, dict):
         return False, "Response data must be a dictionary"
 
@@ -445,7 +455,19 @@ def validate_response_object(response_data):
 
 # submit_response()
 # Helper function to validate response data structure
-def validate_response(response_data, survey_object):
+def validate_response(
+    response_data: dict[str, Any], survey_object: dict[str, Any]
+) -> Optional[str]:
+    """
+    Validate a response object against a survey object.
+
+    Args:
+        response_data (Dict[str, Any]): The response object to validate.
+        survey_object (Dict[str, Any]): The survey object against which to validate the response.
+
+    Returns:
+        Optional[str]: A message indicating any validation errors, or None if the response is valid.
+    """
     response_questions = response_data.get("answers", [])
     survey_questions = survey_object.get("questions", [])
 
@@ -493,7 +515,20 @@ def validate_response(response_data, survey_object):
 
 # get_responses()
 # Helper method create response_object()
-def create_response_object(survey_id, response_id, row):
+def create_response_object(
+    survey_id: int, response_id: int, row: dict[str, Any]
+) -> dict[str, Any]:
+    """
+    Create a response object based on a database row.
+
+    Args:
+        survey_id (int): The ID of the survey associated with the response.
+        response_id (int): The ID of the response.
+        row (Dict[str, Any]): The database row containing response information.
+
+    Returns:
+        Dict[str, Any]: A dictionary representing the response object.
+    """
     response_object = {
         "metadata": {
             "survey_id": int(survey_id),
@@ -507,7 +542,22 @@ def create_response_object(survey_id, response_id, row):
 
 # get_responses()
 # Helper function to create response object
-def append_answer_to_response(response_objects, response_id, response_data):
+def append_answer_to_response(
+    response_objects: dict[int, dict[str, Any]],
+    response_id: int,
+    response_data: dict[str, Any],
+) -> None:
+    """
+    Append an answer to the response object identified by the provided response ID.
+
+    Args:
+        response_objects (Dict[int, Dict[str, Any]]): A dictionary containing response objects indexed by response ID.
+        response_id (int): The ID of the response to which the answer will be appended.
+        response_data (Dict[str, Any]): The data of the answer to be appended to the response.
+
+    Returns:
+        None
+    """
     answer = {
         "question_id": response_data["question_id"],
         "type": response_data["question_type"],
@@ -524,7 +574,17 @@ def append_answer_to_response(response_objects, response_id, response_data):
 
 # send_chat_message()
 # Helper function to fetch the chat_context from Surveys
-def fetch_chat_context(connection, survey_id):
+def fetch_chat_context(connection: Connection, survey_id: int) -> str:
+    """
+    Fetch the chat context associated with a survey from the database.
+
+    Args:
+        connection (Connection): The database connection.
+        survey_id (int): The ID of the survey for which to fetch the chat context.
+
+    Returns:
+        str: The chat context associated with the survey.
+    """
     try:
         # Fetch chat context from the database
         chat_context_query = """
@@ -544,7 +604,18 @@ def fetch_chat_context(connection, survey_id):
 
 # send_chat_message()
 # Helper function to get the chatLog or create a new chatLog
-def get_chat_log(connection, survey_id, response_id):
+def get_chat_log(connection: Connection, survey_id: int, response_id: int) -> str:
+    """
+    Get the chat log associated with a survey and response from the database.
+
+    Args:
+        connection (Connection): The database connection.
+        survey_id (int): The ID of the survey.
+        response_id (int): The ID of the response.
+
+    Returns:
+        str: The chat log associated with the survey and response.
+    """
     try:
         # Check if chat log exists for the survey
         chat_log_query = """
@@ -577,7 +648,21 @@ def get_chat_log(connection, survey_id, response_id):
 
 # send_chat_message()
 # Helper function update chat log
-def update_chat_log(connection, survey_id, response_id, updated_chat_log):
+def update_chat_log(
+    connection: Connection, survey_id: int, response_id: int, updated_chat_log: str
+) -> bool:
+    """
+    Update the chat log associated with a survey and response in the database.
+
+    Args:
+        connection (Connection): The database connection.
+        survey_id (int): The ID of the survey.
+        response_id (int): The ID of the response.
+        updated_chat_log (str): The updated chat log to be stored in the database.
+
+    Returns:
+        bool: True if the chat log was successfully updated, False otherwise.
+    """
     try:
         # Update chat_log in the database
         update_chat_log_query = """
