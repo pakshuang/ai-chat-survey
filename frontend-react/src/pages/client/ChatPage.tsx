@@ -16,7 +16,7 @@ function ChatPage() {
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [messages,setMessagesInteral] = useState<Messages[]>(() => {
-    const savedMessages= Cookies.get(`messages_${id}`);
+    const savedMessages = Cookies.get(`messages_${id}`);
   return savedMessages ? JSON.parse(savedMessages) : []
   });
   const [surveyState, setSurveyStateInternal] = useState<SurveyState>(() => {
