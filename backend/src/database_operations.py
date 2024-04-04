@@ -10,7 +10,7 @@
 
 import json
 import os
-from typing import Any, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 import pymysql
 from pymysql.connections import Connection
@@ -111,7 +111,7 @@ def execute(connection: Connection, query: str, params: Optional[tuple] = None) 
 
 def fetch(
     connection: Connection, query: str, params: Optional[tuple] = None
-) -> list[dict]:
+) -> List[dict]:
     """
     Execute a SQL query using the provided connection and optional parameters, and fetch all results.
 
@@ -179,7 +179,7 @@ def summarise(chat_context: str) -> str:
         return chat_context
 
 
-def validate_survey_object(data: dict) -> tuple[bool, str]:
+def validate_survey_object(data: dict) -> Tuple[bool, str]:
     """
     Validate a survey object to ensure it follows a specific format.
 
@@ -280,7 +280,7 @@ def create_survey(connection: Connection, data: dict) -> int:
 
 # get_surveys()
 # Helper function to create survey object
-def create_survey_object(row: dict[str, Any]) -> dict[str, Any]:
+def create_survey_object(row: Dict[str, Any]) -> Dict[str, Any]:
     """
     Create a survey object based on a database row.
 
@@ -309,7 +309,7 @@ def create_survey_object(row: dict[str, Any]) -> dict[str, Any]:
 # get_surveys()
 # Helper function to create survey object
 def append_question_to_survey(
-    survey_objects: dict[int, dict], survey_id: int, question_data: dict
+    survey_objects: Dict[int, dict], survey_id: int, question_data: dict
 ) -> None:
     """
     Append a question to the survey object identified by the provided survey ID.
@@ -338,7 +338,7 @@ def append_question_to_survey(
 # submit_response()
 # Helper function to insert response data into DB
 def save_response_to_database(
-    connection: Connection, data: dict[str, Any], survey_id: int
+    connection: Connection, data: Dict[str, Any], survey_id: int
 ) -> int:
     """
     Save the survey response data to the database.
