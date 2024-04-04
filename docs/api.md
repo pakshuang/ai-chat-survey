@@ -278,7 +278,7 @@ These endpoints are used to submit, read, and update (send message) responses re
 > [!IMPORTANT]
 > A JWT is required.
 
-- **Endpoint:** `/api/v1/surveys/{survey_id}/responses{response_id}`
+- **Endpoint:** `/api/v1/surveys/{survey_id}/responses/{response_id}`
 - **Method:** `GET`
 - **Description:** Get a response object by ID. An admin JWT that corresponds to the survey creator is required.
 - **HTTP Response:**
