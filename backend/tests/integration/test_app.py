@@ -632,5 +632,5 @@ def test_get_response_not_found():
         SURVEYS_ENDPOINT + "/1" + "/responses" + "/0", headers=headers
     )
 
-    assert response.status_code == 404
-    assert response.json() == {"message": "No responses found for the survey"}
+    assert response.status_code == 200
+    assert response.json() == []
