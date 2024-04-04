@@ -673,7 +673,8 @@ def helper_send_message(
     """Generates a response from a large language model.
 
     Args:
-        llm_input (dict): Input to the large language model
+        llm_input (dict): A dictionary dict[str, object]  which contains a chat context string,
+        response object, and message list
         data_content (str): User input
         connection: MySQL connection object
         survey_id (str): Survey ID
@@ -761,7 +762,7 @@ def helper_send_message(
 
 @app.route("/api/v1/responses/<response_id>/chat", methods=["POST"])
 def send_chat_message(response_id: str) -> tuple[Response, int]:
-    """Send a chat message for a response
+    """Obtains the query_parameter survey id and obtains a response object, then sends a chat message.
 
     Args:
         response_id (str): Response ID

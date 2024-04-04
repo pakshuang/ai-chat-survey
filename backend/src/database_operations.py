@@ -10,7 +10,7 @@
 
 import json
 import os
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Optional
 
 import pymysql
 from pymysql.connections import Connection
@@ -111,7 +111,7 @@ def execute(connection: Connection, query: str, params: Optional[tuple] = None) 
 
 def fetch(
     connection: Connection, query: str, params: Optional[tuple] = None
-) -> List[dict]:
+) -> list[dict]:
     """
     Execute a SQL query using the provided connection and optional parameters, and fetch all results.
 
@@ -179,7 +179,7 @@ def summarise(chat_context: str) -> str:
         return chat_context
 
 
-def validate_survey_object(data: dict) -> Tuple[bool, str]:
+def validate_survey_object(data: dict) -> tuple[bool, str]:
     """
     Validate a survey object to ensure it follows a specific format.
 
@@ -280,7 +280,7 @@ def create_survey(connection: Connection, data: dict) -> int:
 
 # get_surveys()
 # Helper function to create survey object
-def create_survey_object(row: Dict[str, Any]) -> Dict[str, Any]:
+def create_survey_object(row: dict[str, Any]) -> dict[str, Any]:
     """
     Create a survey object based on a database row.
 
@@ -309,7 +309,7 @@ def create_survey_object(row: Dict[str, Any]) -> Dict[str, Any]:
 # get_surveys()
 # Helper function to create survey object
 def append_question_to_survey(
-    survey_objects: Dict[int, dict], survey_id: int, question_data: dict
+    survey_objects: dict[int, dict], survey_id: int, question_data: dict
 ) -> None:
     """
     Append a question to the survey object identified by the provided survey ID.
@@ -338,7 +338,7 @@ def append_question_to_survey(
 # submit_response()
 # Helper function to insert response data into DB
 def save_response_to_database(
-    connection: Connection, data: Dict[str, Any], survey_id: int
+    connection: Connection, data: dict[str, Any], survey_id: int
 ) -> int:
     """
     Save the survey response data to the database.
@@ -391,7 +391,7 @@ def save_response_to_database(
         return e
 
 
-def validate_response_object(response_data: Dict[str, Any]) -> Tuple[bool, str]:
+def validate_response_object(response_data: dict[str, Any]) -> tuple[bool, str]:
     """
     Validate a response object to ensure it follows a specific format.
 
@@ -456,7 +456,7 @@ def validate_response_object(response_data: Dict[str, Any]) -> Tuple[bool, str]:
 # submit_response()
 # Helper function to validate response data structure
 def validate_response(
-    response_data: Dict[str, Any], survey_object: Dict[str, Any]
+    response_data: dict[str, Any], survey_object: dict[str, Any]
 ) -> Optional[str]:
     """
     Validate a response object against a survey object.
@@ -516,8 +516,8 @@ def validate_response(
 # get_responses()
 # Helper method create response_object()
 def create_response_object(
-    survey_id: int, response_id: int, row: Dict[str, Any]
-) -> Dict[str, Any]:
+    survey_id: int, response_id: int, row: dict[str, Any]
+) -> dict[str, Any]:
     """
     Create a response object based on a database row.
 
@@ -543,9 +543,9 @@ def create_response_object(
 # get_responses()
 # Helper function to create response object
 def append_answer_to_response(
-    response_objects: Dict[int, Dict[str, Any]],
+    response_objects: dict[int, dict[str, Any]],
     response_id: int,
-    response_data: Dict[str, Any],
+    response_data: dict[str, Any],
 ) -> None:
     """
     Append an answer to the response object identified by the provided response ID.
