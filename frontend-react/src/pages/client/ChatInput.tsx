@@ -10,15 +10,18 @@ function ChatInput({ onSubmitMessage, isSubmitting }: ChatInputProps) {
   const [message, setMessage] = useState("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  function handleSubmit() {
+  function handleSubmit(
+    e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>
+  ) {
     onSubmitMessage(message);
+    e.preventDefault();
+    e.stopPropagation();
     setMessage("");
   }
 
   const handleInputKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSubmit();
+      handleSubmit(e);
     }
   };
 
@@ -27,7 +30,7 @@ function ChatInput({ onSubmitMessage, isSubmitting }: ChatInputProps) {
   }, [message]);
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form>
       <Flex flexDirection="row" p="0.5rem" w="60rem" mx="auto">
         <Textarea
           size="lg"
@@ -49,6 +52,7 @@ function ChatInput({ onSubmitMessage, isSubmitting }: ChatInputProps) {
         <Button
           size="lg"
           type="submit"
+          onClick={handleSubmit}
           colorScheme="blue"
           borderColor="gray.500"
           borderLeftRadius="0"
