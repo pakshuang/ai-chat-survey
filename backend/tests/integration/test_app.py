@@ -283,7 +283,7 @@ def test_get_surveys_empty_success():
 
 
 def test_get_survey_success():
-    response = requests.get(SURVEYS_ENDPOINT + "/" + str(1))
+    response = requests.get(SURVEYS_ENDPOINT + "/1")
 
     assert response.status_code == 200
     assert response.json() == SURVEY_DATA
@@ -368,8 +368,6 @@ def test_delete_survey_not_found():
 
 # Test cases for submit_response
 
-RESPONSE_ENDPOINT = BACKEND_URL + "/api/v1/responses"
-
 
 def test_submit_response_success():
     response_data = {
@@ -399,14 +397,14 @@ def test_submit_response_success():
         ],
     }
 
-    response = requests.post(RESPONSE_ENDPOINT, json=response_data)
+    response = requests.post(SURVEYS_ENDPOINT + "/1" + "/responses", json=response_data)
 
     assert response.status_code == 201
     assert response.json() == {"response_id": 1}
 
 
 def test_submit_response_missing_data():
-    response = requests.post(RESPONSE_ENDPOINT, json={})
+    response = requests.post(SURVEYS_ENDPOINT + "/1" + "/responses", json={})
 
     assert response.status_code == 400
     assert response.json() == {"message": "No data was attached"}
@@ -439,7 +437,7 @@ def test_submit_response_invalid_response_format():
         ],
     }
 
-    response = requests.post(RESPONSE_ENDPOINT, json=response_data)
+    response = requests.post(SURVEYS_ENDPOINT + "/1" + "/responses", json=response_data)
 
     assert response.status_code == 400
     assert response.json() == {
@@ -468,7 +466,7 @@ def test_submit_response_response_survey_incongruent():
         ],
     }
 
-    response = requests.post(RESPONSE_ENDPOINT, json=response_data)
+    response = requests.post(SURVEYS_ENDPOINT + "/1" + "/responses", json=response_data)
 
     assert response.status_code == 400
     assert response.json() == {
@@ -481,7 +479,7 @@ def test_submit_response_response_survey_incongruent():
 
 def test_get_responses_success():
     headers = {"Authorization": "Bearer " + VALID_JWT}
-    response = requests.get(RESPONSE_ENDPOINT + "?survey=1", headers=headers)
+    response = requests.get(SURVEYS_ENDPOINT + "/1" + "/responses", headers=headers)
 
     response_data = {
         "metadata": {"response_id": 1, "survey_id": 1},
@@ -514,16 +512,8 @@ def test_get_responses_success():
     assert response.json()[0].get("answers") == response_data.get("answers")
 
 
-def test_get_responses_missing_survey():
-    headers = {"Authorization": "Bearer " + VALID_JWT}
-    response = requests.get(RESPONSE_ENDPOINT, headers=headers)
-
-    assert response.status_code == 400
-    assert response.json() == {"message": "Missing survey ID"}
-
-
 def test_get_responses_missing_jwt():
-    response = requests.get(RESPONSE_ENDPOINT + "?survey=1")
+    response = requests.get(SURVEYS_ENDPOINT + "/1" + "/responses")
 
     assert response.status_code == 400
     assert response.json() == {"message": "Token is missing!"}
@@ -531,7 +521,7 @@ def test_get_responses_missing_jwt():
 
 def test_get_responses_unauthorized():
     headers = {"Authorization": "Bearer " + "INVALID_JWT"}
-    response = requests.get(RESPONSE_ENDPOINT, headers=headers)
+    response = requests.get(SURVEYS_ENDPOINT + "/1" + "/responses", headers=headers)
 
     assert response.status_code == 401
     assert response.json() == {"message": "Token is invalid!"}
@@ -545,7 +535,7 @@ def test_get_responses_wrong_admin():
     admin2_jwt = response.json().get("jwt")
 
     headers = {"Authorization": "Bearer " + admin2_jwt}
-    response = requests.get(RESPONSE_ENDPOINT + "?survey=1", headers=headers)
+    response = requests.get(SURVEYS_ENDPOINT + "/1" + "/responses", headers=headers)
 
     assert response.status_code == 403
     assert response.json() == {
@@ -555,7 +545,7 @@ def test_get_responses_wrong_admin():
 
 def test_get_responses_survey_not_found():
     headers = {"Authorization": "Bearer " + VALID_JWT}
-    response = requests.get(RESPONSE_ENDPOINT + "?survey=0", headers=headers)
+    response = requests.get(SURVEYS_ENDPOINT + "/0" + "/responses", headers=headers)
 
     assert response.status_code == 404
     assert response.json() == {"message": "Survey not found"}
@@ -566,7 +556,9 @@ def test_get_responses_survey_not_found():
 
 def test_get_response_success():
     headers = {"Authorization": "Bearer " + VALID_JWT}
-    response = requests.get(RESPONSE_ENDPOINT + "/1?survey=1", headers=headers)
+    response = requests.get(
+        SURVEYS_ENDPOINT + "/1" + "/responses" + "/1", headers=headers
+    )
 
     response_data = {
         "metadata": {"response_id": 1, "survey_id": 1},
@@ -599,16 +591,8 @@ def test_get_response_success():
     assert response.json().get("answers") == response_data.get("answers")
 
 
-def test_get_response_missing_survey():
-    headers = {"Authorization": "Bearer " + VALID_JWT}
-    response = requests.get(RESPONSE_ENDPOINT + "/1", headers=headers)
-
-    assert response.status_code == 400
-    assert response.json() == {"message": "Missing survey ID"}
-
-
 def test_get_response_missing_jwt():
-    response = requests.get(RESPONSE_ENDPOINT + "/1?survey=1")
+    response = requests.get(SURVEYS_ENDPOINT + "/1" + "/responses" + "/1")
 
     assert response.status_code == 400
     assert response.json() == {"message": "Token is missing!"}
@@ -616,7 +600,9 @@ def test_get_response_missing_jwt():
 
 def test_get_response_unauthorized():
     headers = {"Authorization": "Bearer " + "INVALID_JWT"}
-    response = requests.get(RESPONSE_ENDPOINT + "/1?survey=1", headers=headers)
+    response = requests.get(
+        SURVEYS_ENDPOINT + "/1" + "/responses" + "/1", headers=headers
+    )
 
     assert response.status_code == 401
     assert response.json() == {"message": "Token is invalid!"}
@@ -630,7 +616,9 @@ def test_get_response_wrong_admin():
     admin2_jwt = response.json().get("jwt")
 
     headers = {"Authorization": "Bearer " + admin2_jwt}
-    response = requests.get(RESPONSE_ENDPOINT + "/1?survey=1", headers=headers)
+    response = requests.get(
+        SURVEYS_ENDPOINT + "/1" + "/responses" + "/1", headers=headers
+    )
 
     assert response.status_code == 403
     assert response.json() == {
@@ -640,7 +628,9 @@ def test_get_response_wrong_admin():
 
 def test_get_response_not_found():
     headers = {"Authorization": "Bearer " + VALID_JWT}
-    response = requests.get(RESPONSE_ENDPOINT + "/0?survey=1", headers=headers)
+    response = requests.get(
+        SURVEYS_ENDPOINT + "/1" + "/responses" + "/0", headers=headers
+    )
 
     assert response.status_code == 200
     assert response.json() == []

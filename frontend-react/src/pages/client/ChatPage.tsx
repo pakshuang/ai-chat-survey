@@ -97,7 +97,7 @@ function ChatPage() {
     try {
       setSurveyState({ ...surveyState, submitted: true });
       setIsLoading(true);
-      const rep = await submitBaseSurvey(body);
+      const rep = await submitBaseSurvey(id, body);
       setResponseId(rep.data.response_id);
       const res = await sendMessageApi(rep.data.response_id, Number(id), "");
       const data = res.data;
