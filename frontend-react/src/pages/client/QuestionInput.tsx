@@ -16,6 +16,9 @@ const QuestionInput = ({
   handleQuestionResponse,
   submitted,
 }: QuestionProps) => {
+  if (questionData===undefined){
+    return null
+  }
   const { question_id, type, options, answer } = questionData;
   const [tempAnswer, setTempAnswer] = useState(answer);
   const handleInputChange = (e) => {

@@ -22,7 +22,6 @@ function ChatWindow({
       setBotResponded(false)
     }
   }, [messages])
-  }, [messages]);
   const disabled=messages.filter((ele) => ele.question!==undefined).some((ele) => ele.question.answer==undefined || ele.question.answer.length === 0 || ele.question.answer==="");
   return (
     <Box
