@@ -65,10 +65,8 @@ export const submitBaseSurvey = (
   return ApiService.post(`/surveys/${survey_id}/responses`, body)
 }
 
-export const getSurveyById = (id: string): Promise<GetSurvey> => {
-  return AdminApiService(localStorage.getItem("jwt") ?? "")
-    .get(`/surveys/${id}`)
-    .then((res) => res.data)
+export const getSurveyById = async (id: string): Promise<GetSurvey> => {
+  return ApiService.get(`/surveys/${id}`).then((res) => res.data)
 }
 
 export const getResponseBySurveyId = async (
