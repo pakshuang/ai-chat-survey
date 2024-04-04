@@ -668,14 +668,14 @@ def get_response(response_id: str, **kwargs) -> tuple[Response, int]:
 
 
 def helper_send_message(
-    llm_input: dict[str, object], data_content: str, connection, survey_id, response_id
+    llm_input: dict[str, object], user_input: str, connection, survey_id, response_id
 ) -> tuple[Response, int]:
     """Generates a response from a large language model.
 
     Args:
         llm_input (dict): A dictionary dict[str, object]  which contains a chat context string,
         response object, and message list
-        data_content (str): User input
+        user_input (str): User input
         connection: MySQL connection object
         survey_id (str): Survey ID
         response_id (str): Response ID
@@ -693,7 +693,7 @@ def helper_send_message(
         chat_log_dict = json.loads(llm_input["chat_log"])
         message_list = chat_log_dict["messages"]
 
-        has_no_chat_log = has_no_chat_log(data_content, message_list)
+        has_no_chat_log = has_no_chat_log(user_input, message_list)
         if has_no_chat_log:
             pipe = construct_chatlog(
                 f"""{llm_input["chat_context"]}\n{
@@ -710,7 +710,7 @@ def helper_send_message(
 
         else:
             pipe = ChatLog(message_list, llm=llm)
-            pipe.insert_and_update(data_content, pipe.current_index)  # user input
+            pipe.insert_and_update(user_input, pipe.current_index)  # user input
             next_question = llm.run(pipe.message_list)
             updated_message_list = pipe.insert_and_update(
                 next_question, pipe.current_index, is_llm=True
