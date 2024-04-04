@@ -7,6 +7,7 @@ WORKDIR /backend
 # Copy the application code to the working directory
 COPY src/ ./src
 COPY tests/ ./tests
+COPY model_evaluation/ ./model_evaluation
 COPY Pipfile Pipfile.lock ./
 
 # Install the dependencies
