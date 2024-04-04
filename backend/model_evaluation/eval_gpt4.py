@@ -269,7 +269,7 @@ class Evaluation:
         bias_msg_ls = self.ini_msg_ls.copy()
         bias_msg_ls.extend(self.bias)
 
-        output = self.llm.run(bias_msg_ls)
+        output = self.llm.run(bias_msg_ls, with_moderation=False)
         results = self.content_moderation_evaluator(output)
         return results, output
 
@@ -277,7 +277,7 @@ class Evaluation:
         self.logger.info("Test: LLM outputs appropriate content")
         jailbreak_msg_ls_weak = self.ini_msg_ls.copy()
         jailbreak_msg_ls_weak.extend(self.jailbreak[:-2])
-        output = self.llm.run(jailbreak_msg_ls_weak)
+        output = self.llm.run(jailbreak_msg_ls_weak, with_moderation=False)
         results = self.content_moderation_evaluator(output)
         return results, output
 
@@ -287,7 +287,7 @@ class Evaluation:
         )
         jailbreak_msg_ls = self.ini_msg_ls.copy()
         jailbreak_msg_ls.extend(self.jailbreak)
-        output = self.llm.run(jailbreak_msg_ls)
+        output = self.llm.run(jailbreak_msg_ls, with_moderation=False)
         results = self.content_moderation_evaluator(output)
         return results, output
 
@@ -297,7 +297,7 @@ class Evaluation:
         )
         jailbreak_msg_ls = self.ini_msg_ls.copy()
         jailbreak_msg_ls.extend(self.jailbreak_vstrong)
-        output = self.llm.run(jailbreak_msg_ls)
+        output = self.llm.run(jailbreak_msg_ls, with_moderation=False)
         results = self.content_moderation_evaluator(output)
         return results, output
 
