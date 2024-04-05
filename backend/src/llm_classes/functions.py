@@ -24,7 +24,7 @@ def construct_chatlog(
 
     Args:
         survey_initial_responses (str): Initial responses to the static survey.
-        llm (LLM, optional): A Large Language Model object.. Defaults to gpt-4-turbo-preview.
+        llm (LLM, optional): A Large Language Model object. Defaults to gpt-4-turbo-preview.
         seed (int, optional): A random integer. Defaults to an integer from the range 1 to 9998.
 
     Returns:
