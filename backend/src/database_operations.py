@@ -673,6 +673,7 @@ def update_chat_log(
     except Exception as e:
         raise DataBaseError("Error while updating chat log", e) from None
 
+
 class DataBaseError(Exception):
     """Raised when an error occurs during database operations."""
 
