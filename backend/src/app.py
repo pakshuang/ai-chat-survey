@@ -663,7 +663,7 @@ def get_response(survey_id: str, response_id: str, **kwargs) -> tuple[Response, 
 
 
 def helper_send_message(
-    llm_input: dict[str, object], data_content: str, connection, survey_id, response_id
+    llm_input: dict[str, object], user_input: str, connection, survey_id, response_id
 ) -> tuple[Response, int]:
     """Generates a response from a large language model.
 
