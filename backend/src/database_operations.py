@@ -18,7 +18,7 @@ from pymysql.cursors import Cursor
 from src.llm_classes.llm_level import GPT
 
 
-def connect_to_mysql() -> Optional[pymysql.connections.Connection]:
+def connect_to_mysql() -> Optional[Connection]:
     """
     Connects to a MySQL database.
 
@@ -106,7 +106,7 @@ def execute(connection: Connection, query: str, params: Optional[tuple] = None) 
     except Exception as e:
         # Roll back changes if execution fails
         rollback(connection)
-        raise e
+        raise DataBaseError("Error while executing SQL query!", e) from None
 
 
 def fetch(
@@ -128,7 +128,7 @@ def fetch(
             cursor.execute(query, params)
             return cursor.fetchall()
     except Exception as e:
-        raise e
+        raise DataBaseError("Error while fetching from SQL!", e) from None
 
 
 def close_cursor(cursor: Cursor) -> None:
@@ -273,7 +273,7 @@ def create_survey(connection: Connection, data: dict) -> int:
 
         return survey_id
     except Exception as e:
-        raise e
+        raise DataBaseError("Error while creating survey", e) from None
 
 
 # get_surveys()
@@ -386,7 +386,7 @@ def save_response_to_database(
 
         return new_response_id
     except Exception as e:
-        return e
+        raise DataBaseError("Error while saving response!", e) from None
 
 
 def validate_response_object(response_data: dict[str, Any]) -> tuple[bool, str]:
@@ -594,7 +594,7 @@ def fetch_chat_context(connection: Connection, survey_id: int) -> str:
         result = result[0]["chat_context"]
         return result
     except Exception as e:
-        raise e
+        raise DataBaseError("Error while fetching chat context!", e) from None
 
 
 # send_chat_message()
@@ -638,7 +638,7 @@ def get_chat_log(connection: Connection, survey_id: int, response_id: int) -> st
         return chat_log  # Return chat log
 
     except Exception as e:
-        raise e
+        raise DataBaseError("Error while getting chat log", e) from None
 
 
 # send_chat_message()
@@ -671,4 +671,11 @@ def update_chat_log(
 
         return True
     except Exception as e:
-        raise e
+        raise DataBaseError("Error while updating chat log", e) from None
+
+class DataBaseError(Exception):
+    """Raised when an error occurs during database operations."""
+
+    def __init__(self, message, error):
+        self.message = message
+        super().__init__(f"{self.message}: {error}")
