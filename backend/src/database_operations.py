@@ -205,15 +205,15 @@ def validate_survey_object(data: dict) -> Tuple[bool, str]:
         return False, "Questions field must be a list"
 
     for question in data["questions"]:
+        # Checks this first
+        if not isinstance(question["options"], list):
+            return False, "Options field in a question must be a list"
+        
         for key in required_question_keys:
             if key not in question:
                 return False, f"Missing or empty '{key}' field in a question"
-            elif key == "type":
-                if question[key] not in question_types:
-                    return False, f"Invalid question type"
-
-        if not isinstance(question["options"], list):
-            return False, "Options field in a question must be a list"
+            elif key == "type" and (question[key] not in question_types):
+                return False, f"Invalid question type"
 
     return True, "Survey object format is valid"
 
@@ -400,6 +400,8 @@ def validate_response_object(response_data: dict[str, Any]) -> tuple[bool, str]:
         Tuple[bool, str]: A tuple containing a boolean indicating whether the response object is valid
                          and a message describing the result.
     """
+    question_types = ["multiple_choice", "multiple_response", "free_response"]
+
     if not isinstance(response_data, dict):
         return False, "Response data must be a dictionary"
 
@@ -423,13 +425,8 @@ def validate_response_object(response_data: dict[str, Any]) -> tuple[bool, str]:
         for key in keys:
             if key not in answer:
                 return False, f"Each answer must contain '{key}' key"
-            elif key == "type":
-                if answer[key] not in [
-                    "multiple_choice",
-                    "multiple_response",
-                    "free_response",
-                ]:
-                    return False, f"Invalid question type"
+            elif key == "type" and (answer[key] not in question_types):
+                return False, f"Invalid question type"
 
         if not isinstance(answer["question_id"], int):
             return False, "'question_id' must be an integer"
