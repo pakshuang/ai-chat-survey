@@ -172,7 +172,7 @@ def summarise(chat_context: str) -> str:
     MAX_LEN = 1500
     if len(chat_context) > MAX_LEN:
         llm = GPT()
-        output = llm.run(SUMMARISE_DEFAULT)
+        output = llm.run(SUMMARISE_DEFAULT, with_moderation=False)
         output = output[:MAX_LEN]
         return output
     else:
