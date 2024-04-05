@@ -21,7 +21,7 @@ class Evaluation:
         """Initialises the Evaluation class and prepare the necessary items needed.
         A HuggingFace api key is optional. In the .env file, insert your READ api key as
         HF_API_KEY=<api_key>.
-        """        
+        """
 
         with open("./model_evaluation/response_data/fake_conversation.json", "rb") as f:
             conv = json.load(f)
@@ -64,7 +64,7 @@ class Evaluation:
 
         Returns:
             float: Score from 0 to 1.
-        """        
+        """
         response = self.client.moderations.create(input=text)
 
         return 1 - sum(dict(response.results[0].category_scores).values())
@@ -80,8 +80,8 @@ class Evaluation:
             expected (tuple[str]): A
         Returns:
             float: Score from 0 to 1.
-        """        
-        
+        """
+
         inputs = {"source_sentence": text, "sentences": list(expected)}
         payload = {"inputs": inputs}
 
@@ -115,7 +115,7 @@ class Evaluation:
 
         Returns:
             tuple[float, str]: Returns a tuple containing the score and model output.
-        """        
+        """
         self.logger.info(
             "Test: LLM does not exit the interview after question is asked."
         )
@@ -152,8 +152,7 @@ class Evaluation:
 
         Returns:
             tuple[float, str]: Returns a tuple containing the score and model output.
-        """        
-
+        """
 
         self.logger.info(
             "Test: LLM exits the interview after determining it is time to end and thanking the user."
@@ -193,7 +192,7 @@ class Evaluation:
 
         Returns:
             tuple[float, str]: Returns a tuple containing the score and model output.
-        """        
+        """
 
         self.logger.info(
             "Test: LLM does not exit the interview after question is asked 2."
@@ -233,8 +232,7 @@ class Evaluation:
 
         Returns:
             tuple[float, str]: Returns a tuple containing the score and model output.
-        """        
-
+        """
 
         self.logger.info(
             "Test: LLM does not exit the interview after question is asked 3."
@@ -275,7 +273,7 @@ class Evaluation:
 
         Returns:
             tuple[float, str]: Returns a tuple containing the score and model output.
-        """        
+        """
 
         self.logger.info(
             "Test: LLM does not exit the interview because it is expecting a response. (No question)"
@@ -309,7 +307,7 @@ class Evaluation:
 
         Returns:
             tuple[float, str]: Returns a tuple containing the score and model output.
-        """        
+        """
         self.logger.info("Test: LLM picks on inconsistency between survey and chat")
         memory_msg_ls = self.ini_msg_ls.copy()
         memory_msg_ls.extend(self.memory[:-8])
@@ -330,7 +328,7 @@ class Evaluation:
 
         Returns:
             tuple[float, str]: Returns a tuple containing the score and model output.
-        """        
+        """
         self.logger.info("Test: LLM points out inconsistency when hinted")
         memory_msg_ls = self.ini_msg_ls.copy()
         memory_msg_ls.extend(self.memory[:-12])
@@ -351,7 +349,7 @@ class Evaluation:
 
         Returns:
             tuple[float, str]: Returns a tuple containing the score and model output.
-        """        
+        """
         self.logger.info("Test: LLM outputs appropriate content")
         bias_msg_ls = self.ini_msg_ls.copy()
         bias_msg_ls.extend(self.bias)
@@ -365,7 +363,7 @@ class Evaluation:
 
         Returns:
             tuple[float, str]: Returns a tuple containing the score and model output.
-        """        
+        """
         self.logger.info("Test: LLM outputs appropriate content")
         jailbreak_msg_ls_weak = self.ini_msg_ls.copy()
         jailbreak_msg_ls_weak.extend(self.jailbreak[:-2])
@@ -379,7 +377,7 @@ class Evaluation:
 
         Returns:
             tuple[float, str]: Returns a tuple containing the score and model output.
-        """        
+        """
         self.logger.info(
             "Test: LLM outputs appropriate content despite harmful previous conversations"
         )
@@ -395,7 +393,7 @@ class Evaluation:
 
         Returns:
             tuple[float, str]: Returns a tuple containing the score and model output.
-        """        
+        """
         self.logger.info(
             "Test: LLM outputs appropriate content despite harmful previous conversations"
         )
@@ -411,7 +409,7 @@ def run_all(instance: Evaluation) -> None:
 
     Args:
         instance (Evaluation): A class for evaluation tasks.
-    """    
+    """
 
     instance.logger.info(
         f"EVALUATION WITH PASS THRESHOLD: {Evaluation.PASS_THRESHOLD * 100}%"
