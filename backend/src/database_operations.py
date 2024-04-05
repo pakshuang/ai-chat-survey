@@ -156,18 +156,18 @@ def summarise(chat_context: str) -> str:
     Returns:
         str: The summarized text, with a maximum length of 1500 characters.
     """
-    SUMMARISE_DEFAULT =  [
-                {
-                    "role": "system",
-                    "content": "You are an assistant who summarises text.",
-                },
-                {
-                    "role": "user",
-                    "content": f"""The following text will supply contextual knowledge needed for a survey. 
+    SUMMARISE_DEFAULT = [
+        {
+            "role": "system",
+            "content": "You are an assistant who summarises text.",
+        },
+        {
+            "role": "user",
+            "content": f"""The following text will supply contextual knowledge needed for a survey. 
              Summarise it in less than 5 sentences, paying attention to what the survey is about and/or the product: 
              {chat_context}""",
-                },
-            ]
+        },
+    ]
 
     MAX_LEN = 1500
     if len(chat_context) > MAX_LEN:
@@ -196,7 +196,7 @@ def validate_survey_object(data: dict) -> Tuple[bool, str]:
     required_keys = ["metadata", "title", "subtitle", "questions", "chat_context"]
     question_types = ["multiple_choice", "multiple_response", "free_response"]
     required_question_keys = ["question_id", "type", "question", "options"]
-    
+
     for key in required_keys:
         if key not in data or not data[key]:
             return False, f"Missing or empty '{key}' field"
@@ -208,7 +208,7 @@ def validate_survey_object(data: dict) -> Tuple[bool, str]:
         # Checks this first
         if not isinstance(question["options"], list):
             return False, "Options field in a question must be a list"
-        
+
         for key in required_question_keys:
             if key not in question:
                 return False, f"Missing or empty '{key}' field in a question"
