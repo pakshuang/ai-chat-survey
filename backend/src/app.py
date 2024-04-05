@@ -15,7 +15,6 @@ from functools import wraps
 
 import jwt
 from flask import Flask, Response, jsonify, request
-
 from src import database_operations
 from src.llm_classes.chatlog import ChatLog
 from src.llm_classes.functions import (
