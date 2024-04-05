@@ -67,7 +67,12 @@ class GPT(LLM):
             str: text output from the Large Language Model.
         """
         output = self.client.chat.completions.create(
-            model=self.model, messages=messages, stream=False, temperature=0.4, top_p=0.4, seed=seed
+            model=self.model,
+            messages=messages,
+            stream=False,
+            temperature=0.4,
+            top_p=0.4,
+            seed=seed,
         )
         output_text = output.choices[0].message.content
         if with_moderation and self.content_moderation.is_harmful(output_text):
