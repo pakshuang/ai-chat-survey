@@ -640,7 +640,7 @@ def test_get_response_not_found():
 
 def test_send_chat_message_success():
     response = requests.post(
-        SURVEYS_ENDPOINT + "/1" + "/responses" + "/1" + "/chat", json={"content": "Hi"}
+        SURVEYS_ENDPOINT + "/1" + "/responses" + "/1" + "/chat", json={"content": ""}
     )
 
     assert response.status_code == 201
