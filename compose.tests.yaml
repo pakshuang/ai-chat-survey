@@ -6,7 +6,19 @@ services:
     container_name: integration-tests
     command: >
       /bin/bash -c "
-      wget google.com &&
+      curl https://api.openai.com/v1/chat/completions   -H "Content-Type: application/json"   -H "Authorization: Bearer ${{ secrets.OPENAI_API_KEY }}"   -d '{
+          "model": "gpt-3.5-turbo",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a poetic assistant, skilled in explaining complex programming concepts with creative flair."
+            },
+            {
+              "role": "user",
+              "content": "Compose a poem that explains the concept of recursion in programming."
+            }
+          ]
+        }' &&
       pipenv install pytest -q &&
       pipenv run python -m pytest tests/integration -vv > /backend/logs/integration_tests.log"
     env_file:
