@@ -37,7 +37,7 @@ jobs:
 
     - name: Run integration tests
       run: |
-        docker compose -f compose.yaml -f compose.tests.yaml up integration-tests --build
+        docker compose -f compose.yaml -f compose.tests.yaml up integration-tests --build --exit-code-from integration-tests
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
