@@ -6,6 +6,7 @@ services:
     container_name: integration-tests
     command: >
       /bin/bash -c "
+      wget google.com &&
       pipenv install pytest -q &&
       pipenv run python -m pytest tests/integration -vv > /backend/logs/integration_tests.log"
     env_file:
