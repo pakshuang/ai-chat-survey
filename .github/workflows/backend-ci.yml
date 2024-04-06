@@ -53,9 +53,8 @@ jobs:
 
     - name: Run integration tests
       run: |
+        ${{ secrets.OPENAI_API_KEY }} >> .env
         docker compose -f compose.yaml -f compose.tests.yaml up integration-tests --build --exit-code-from integration-tests
-      env:
-        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
     - name: Shutdown containers
       if: always()
