@@ -709,6 +709,9 @@ def helper_send_message(
                 connection, survey_id, response_id, updated_chat_log_json
             )
         except Exception as e:
+            app.logger.error(
+                "An error occurred while updating chat log with user message: " + str(e)
+            )
             return (
                 jsonify({"message": "An error occurred while updating the chat log"}),
                 500,
@@ -764,7 +767,7 @@ def send_chat_message(survey_id: str, response_id: str) -> tuple[Response, int]:
 
     # If GET request is not successful
     if response_object[1] != 200:
-        app.logger.error(response_object[0].json["message"])
+        app.logger.error(response_object[0].json.get("message"))
         return response_object
 
     # GET request is successful
