@@ -669,6 +669,7 @@ def test_openai_connection():
         },
     )
 
+    print(response.json())
     assert response.status_code == 200
 
 
