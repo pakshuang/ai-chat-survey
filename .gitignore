@@ -169,8 +169,7 @@ cython_debug/
 .vscode/settings.json
 
 #Ignore all in models
-# exclude everything
-models/*
+**/models/*
 
-# exception to the rule
-!models/.gitkeep 
+#exception to the rule
+!**/models/.gitkeep
