@@ -26,6 +26,10 @@ jobs:
       run: |
         rm scripts/insert_dummy_data.sql
 
+    - name: Create .env file
+      run: |
+        cp sample.env .env
+
     - name: Run integration tests
       run: |
         docker compose -f compose.yaml -f compose.tests.yaml up integration-tests --build --force-recreate --renew-anon-volumes
