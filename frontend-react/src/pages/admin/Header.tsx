@@ -7,7 +7,7 @@ function Header() {
   const username = localStorage.getItem("username") || "";
 
   return (
-    <Box w="100%" p="1rem" color="transparent" boxShadow="base">
+    <Box w="100%" p="1rem" bg="white" boxShadow="base">
       <Flex justifyContent="flex-end" alignItems="center" gap="1rem">
         <Button
           colorScheme="red"
