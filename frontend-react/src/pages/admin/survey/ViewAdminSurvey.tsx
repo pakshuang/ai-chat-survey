@@ -130,7 +130,7 @@ function ViewAdminSurvey() {
               </AccordionButton>
               <AccordionPanel p="1.5rem">
                 <VStack spacing="2rem" alignItems="flex-start">
-                  <Select value={question.type} isReadOnly>
+                  <Select value={question.type} isDisabled>
                     <option value={QuestionType.MCQ}>
                       Multiple Choice Question
                     </option>
