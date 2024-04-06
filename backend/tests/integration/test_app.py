@@ -651,7 +651,7 @@ def test_send_chat_message_success():
 
 def test_openai_connection():
     headers = {"Authorization": "Bearer " + os.getenv("OPENAI_API_KEY")}
-    response = requests.get(
+    response = requests.post(
         "https://api.openai.com/v1/chat/completions",
         headers=headers,
         json={
@@ -668,6 +668,8 @@ def test_openai_connection():
             ],
         },
     )
+
+    assert response.status_code == 200
 
 
 def test_send_chat_message_missing_content():
