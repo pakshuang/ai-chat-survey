@@ -31,6 +31,10 @@ jobs:
       run: |
         cp sample.env .env
 
+    - name: Grant execute permission to run_backend_integration_tests.sh
+      run: |
+        chmod +x scripts/run_backend_integration_tests.sh
+
     - name: Run integration tests
       run: |
         ./scripts/run_backend_integration_tests.sh
