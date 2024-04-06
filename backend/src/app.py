@@ -15,7 +15,6 @@ from functools import wraps
 
 import jwt
 from flask import Flask, Response, jsonify, request
-from flask_cors import CORS
 from src import database_operations
 from src.llm_classes.chatlog import ChatLog
 from src.llm_classes.functions import (
@@ -35,21 +34,9 @@ logging.basicConfig(
 )
 
 app = Flask(__name__)
-CORS(app)
 app.config["SECRET_KEY"] = os.environ.get(
     "FLASK_SECRET_KEY", "default_key_for_development"
 )
-
-
-@app.after_request
-def handle_options(response):
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Credentials"] = "true"
-    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
-    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
-
-    return response
-
 
 # JWT
 

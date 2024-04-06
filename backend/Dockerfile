@@ -14,9 +14,6 @@ COPY Pipfile Pipfile.lock ./
 RUN pip install --no-cache-dir pipenv==2023.12.1 \
 && pipenv install --deploy
 
-# Expose the port on which the application will run
-EXPOSE ${BACKEND_CONTAINER_PORT}
-
 # Define the command to run the application
 CMD ["pipenv", "run", "python", "-m", "src.app"]
 
