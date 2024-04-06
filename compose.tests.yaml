@@ -6,10 +6,12 @@ services:
     container_name: integration-tests
     command: >
       /bin/bash -c "
-      pipenv install pytest &&
+      pipenv install pytest -q &&
       pipenv run python -m pytest tests/integration -vv"
     env_file:
       - .env
+    volumes:
+      - ./backend/logs:/backend/logs
     depends_on:
       - backend
       - database
