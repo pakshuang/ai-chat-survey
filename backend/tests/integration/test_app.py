@@ -649,6 +649,27 @@ def test_send_chat_message_success():
     assert "is_last" in response.json()
 
 
+def test_openai_connection():
+    headers = {"Authorization": "Bearer " + os.getenv("OPENAI_API_KEY")}
+    response = requests.get(
+        "https://api.openai.com/v1/chat/completions",
+        headers=headers,
+        json={
+            "model": "gpt-3.5-turbo",
+            "messages": [
+                {
+                    "role": "system",
+                    "content": "You are a poetic assistant, skilled in explaining complex programming concepts with creative flair.",
+                },
+                {
+                    "role": "user",
+                    "content": "Compose a poem that explains the concept of recursion in programming.",
+                },
+            ],
+        },
+    )
+
+
 def test_send_chat_message_missing_content():
     response = requests.post(
         SURVEYS_ENDPOINT + "/1" + "/responses" + "/1" + "/chat", json={}
