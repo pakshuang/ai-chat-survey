@@ -33,7 +33,7 @@ jobs:
 
     - name: Prevent dummy data from being inserted
       run: |
-        database/insert_dummy_data.sql
+        rm database/insert_dummy_data.sql
 
     - name: Run integration tests
       run: |
