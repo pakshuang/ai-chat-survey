@@ -25,7 +25,7 @@
 - [Backend](backend.md): Insert Description and details about the backend components and technologies used.
 
 ## Future Directions and Recommendations
-- Insert ideas for future directions and recommendations go here.
+- 
 
 ## Conclusion
 - Insert conclusion goes here.
