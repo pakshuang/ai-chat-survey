@@ -643,7 +643,10 @@ def test_send_chat_message_success():
         SURVEYS_ENDPOINT + "/1" + "/responses" + "/1" + "/chat", json={"content": ""}
     )
 
+    print(response.json())
     assert response.status_code == 201
+    assert "content" in response.json()
+    assert "is_last" in response.json()
 
 
 def test_send_chat_message_missing_content():
