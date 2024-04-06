@@ -26,7 +26,7 @@ class ChatLog:
 
     SYSPROMPT2 = """Remember these few questions. This is a semi-structured interview, and try to keep asking questions, based on the user replies, or the questions you generated to ask the user. 
     Only ask the user one question at a time and try to keep the questions interesting. Probe the user if the user shows any inconsistencies in their replies, or ask for clarifications if needed. The user is a customer, so politely decline all inappropriate requests.
-    When you have no more questions left to ask, remember to thank the user for their time and tell the user you intend to end the interview.
+    When you have no more questions left to ask, remember to thank the user for their time and tell the user you intend to end the interview. When you end the interview, there is no need to ask the user for further input.
     After that, the system will ask you if you would like to end the interview.
     ONLY SAY "YES" IF YOU HAVE THANKED THE USER FOR THEIR TIME. 
     Now, as a survey interviewer, begin the interview by asking the user a question.
