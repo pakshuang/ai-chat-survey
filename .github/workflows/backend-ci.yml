@@ -42,10 +42,12 @@ jobs:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
     - name: Shutdown containers
+      if: always()
       run: |
         docker compose -f compose.yaml -f compose.tests.yaml down
 
     - name: Upload Test Artifacts
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: integration_tests log
