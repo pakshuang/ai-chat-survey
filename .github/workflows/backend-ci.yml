@@ -31,18 +31,22 @@ jobs:
       run: |
         cp sample.env .env
 
-    - name: Grant execute permission to run_backend_integration_tests.sh
+    - name: Prevent dummy data from being inserted
       run: |
-        chmod +x scripts/run_backend_integration_tests.sh
+        database/insert_dummy_data.sql
 
     - name: Run integration tests
       run: |
-        ./scripts/run_backend_integration_tests.sh
+        docker compose -f compose.yaml -f compose.tests.yaml up integration-tests --build
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+    - name: Shutdown containers
+      run: |
+        docker compose -f compose.yaml -f compose.tests.yaml down
 
     - name: Upload Test Artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: test-artifacts
+        name: integration_tests log
         path: ./backend/logs/integration_tests.log
