@@ -18,7 +18,7 @@ from pymysql.cursors import Cursor
 from src.llm_classes.llm_level import GPT
 
 
-def connect_to_mysql() -> Optional[pymysql.connections.Connection]:
+def connect_to_mysql() -> Optional[Connection]:
     """
     Connects to a MySQL database.
 
@@ -106,7 +106,7 @@ def execute(connection: Connection, query: str, params: Optional[tuple] = None) 
     except Exception as e:
         # Roll back changes if execution fails
         rollback(connection)
-        raise e
+        raise DataBaseError("Error while executing SQL query!", e) from None
 
 
 def fetch(
@@ -128,7 +128,7 @@ def fetch(
             cursor.execute(query, params)
             return cursor.fetchall()
     except Exception as e:
-        raise e
+        raise DataBaseError("Error while fetching from SQL!", e) from None
 
 
 def close_cursor(cursor: Cursor) -> None:
@@ -156,23 +156,23 @@ def summarise(chat_context: str) -> str:
     Returns:
         str: The summarized text, with a maximum length of 1500 characters.
     """
+    SUMMARISE_DEFAULT = [
+        {
+            "role": "system",
+            "content": "You are an assistant who summarises text.",
+        },
+        {
+            "role": "user",
+            "content": f"""The following text will supply contextual knowledge needed for a survey. 
+             Summarise it in less than 5 sentences, paying attention to what the survey is about and/or the product: 
+             {chat_context}""",
+        },
+    ]
+
     MAX_LEN = 1500
     if len(chat_context) > MAX_LEN:
         llm = GPT()
-        output = llm.run(
-            [
-                {
-                    "role": "system",
-                    "content": "You are an assistant who summarises text.",
-                },
-                {
-                    "role": "user",
-                    "content": f"""The following text will supply contextual knowledge needed for a survey. 
-             Summarise it in less than 5 sentences, paying attention to what the survey is about and/or the product: 
-             {chat_context}""",
-                },
-            ]
-        )
+        output = llm.run(SUMMARISE_DEFAULT, with_moderation=False)
         output = output[:MAX_LEN]
         return output
     else:
@@ -194,6 +194,9 @@ def validate_survey_object(data: dict) -> Tuple[bool, str]:
         return False, "Survey data must be a dictionary"
 
     required_keys = ["metadata", "title", "subtitle", "questions", "chat_context"]
+    question_types = ["multiple_choice", "multiple_response", "free_response"]
+    required_question_keys = ["question_id", "type", "question", "options"]
+
     for key in required_keys:
         if key not in data or not data[key]:
             return False, f"Missing or empty '{key}' field"
@@ -202,20 +205,15 @@ def validate_survey_object(data: dict) -> Tuple[bool, str]:
         return False, "Questions field must be a list"
 
     for question in data["questions"]:
-        required_question_keys = ["question_id", "type", "question", "options"]
+        # Checks this first
+        if not isinstance(question["options"], list):
+            return False, "Options field in a question must be a list"
+
         for key in required_question_keys:
             if key not in question:
                 return False, f"Missing or empty '{key}' field in a question"
-            elif key == "type":
-                if question[key] not in [
-                    "multiple_choice",
-                    "multiple_response",
-                    "free_response",
-                ]:
-                    return False, f"Invalid question type"
-
-        if not isinstance(question["options"], list):
-            return False, "Options field in a question must be a list"
+            elif key == "type" and (question[key] not in question_types):
+                return False, f"Invalid question type"
 
     return True, "Survey object format is valid"
 
@@ -275,7 +273,7 @@ def create_survey(connection: Connection, data: dict) -> int:
 
         return survey_id
     except Exception as e:
-        raise e
+        raise DataBaseError("Error while creating survey", e) from None
 
 
 # get_surveys()
@@ -388,7 +386,7 @@ def save_response_to_database(
 
         return new_response_id
     except Exception as e:
-        return e
+        raise DataBaseError("Error while saving response!", e) from None
 
 
 def validate_response_object(response_data: dict[str, Any]) -> tuple[bool, str]:
@@ -402,6 +400,8 @@ def validate_response_object(response_data: dict[str, Any]) -> tuple[bool, str]:
         Tuple[bool, str]: A tuple containing a boolean indicating whether the response object is valid
                          and a message describing the result.
     """
+    question_types = ["multiple_choice", "multiple_response", "free_response"]
+
     if not isinstance(response_data, dict):
         return False, "Response data must be a dictionary"
 
@@ -425,13 +425,8 @@ def validate_response_object(response_data: dict[str, Any]) -> tuple[bool, str]:
         for key in keys:
             if key not in answer:
                 return False, f"Each answer must contain '{key}' key"
-            elif key == "type":
-                if answer[key] not in [
-                    "multiple_choice",
-                    "multiple_response",
-                    "free_response",
-                ]:
-                    return False, f"Invalid question type"
+            elif key == "type" and (answer[key] not in question_types):
+                return False, f"Invalid question type"
 
         if not isinstance(answer["question_id"], int):
             return False, "'question_id' must be an integer"
@@ -599,7 +594,7 @@ def fetch_chat_context(connection: Connection, survey_id: int) -> str:
         result = result[0]["chat_context"]
         return result
     except Exception as e:
-        raise e
+        raise DataBaseError("Error while fetching chat context!", e) from None
 
 
 # send_chat_message()
@@ -643,7 +638,7 @@ def get_chat_log(connection: Connection, survey_id: int, response_id: int) -> st
         return chat_log  # Return chat log
 
     except Exception as e:
-        raise e
+        raise DataBaseError("Error while getting chat log", e) from None
 
 
 # send_chat_message()
@@ -676,4 +671,12 @@ def update_chat_log(
 
         return True
     except Exception as e:
-        raise e
+        raise DataBaseError("Error while updating chat log", e) from None
+
+
+class DataBaseError(Exception):
+    """Raised when an error occurs during database operations."""
+
+    def __init__(self, message, error):
+        self.message = message
+        super().__init__(f"{self.message}: {error}")
