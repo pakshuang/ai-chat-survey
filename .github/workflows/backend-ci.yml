@@ -40,3 +40,9 @@ jobs:
         ./scripts/run_backend_integration_tests.sh
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+    - name: Upload Test Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-artifacts
+        path: backend/logs/integration_tests.log
