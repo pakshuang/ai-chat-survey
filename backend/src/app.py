@@ -737,7 +737,7 @@ def helper_send_message(
         return (
             jsonify(
                 {
-                    "message": "An error was encountered while generating a reply:"
+                    "message": "An error was encountered while generating a reply: "
                     + str(e)
                 }
             ),
