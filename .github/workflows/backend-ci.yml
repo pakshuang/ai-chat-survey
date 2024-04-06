@@ -14,17 +14,18 @@ on:
       - '!backend/logs/**'
       - '!backend/model_evaluation/**'
       - '!backend/README.md'
+      - 'database/**'
+      - '!database/README.md'
+      - '!database/insert_dummy_data.sql'
+      - 'scripts/run_backend_integration_tests.sh'
+      - '.github/workflows/backend-ci.yml'
 
 jobs:
-  test:
+  backend-integration-tests:
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
-
-    - name: Remove dummy data
-      run: |
-        rm scripts/insert_dummy_data.sql
 
     - name: Create .env file
       run: |
@@ -32,10 +33,6 @@ jobs:
 
     - name: Run integration tests
       run: |
-        docker compose -f compose.yaml -f compose.tests.yaml up integration-tests --build --force-recreate --renew-anon-volumes
+        ./scripts/run_backend_integration_tests.sh
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-
-    - name: Shutdown services
-      run: |
-        docker compose -f compose.yaml -f compose.tests.yaml down -v

@@ -216,14 +216,13 @@ def test_create_survey_missing_jwt():
 
 
 def test_get_surveys_success():
+    # Create another survey
     response = requests.post(
         ADMINS_ENDPOINT + "/login",
         json={"username": "admin2", "password": "password2"},
     )
     admin2_jwt = response.json().get("jwt")
-
     headers = {"Authorization": "Bearer " + admin2_jwt}
-
     survey_data = {
         "metadata": {
             "created_by": "admin2",
@@ -253,9 +252,9 @@ def test_get_surveys_success():
         ],
         "chat_context": "We are a cheese company.",
     }
-
     requests.post(SURVEYS_ENDPOINT, json=survey_data, headers=headers)
 
+    # Get all surveys
     response = requests.get(SURVEYS_ENDPOINT)
 
     SURVEY_DATA["metadata"]["survey_id"] = 1
@@ -634,3 +633,26 @@ def test_get_response_not_found():
 
     assert response.status_code == 200
     assert response.json() == []
+
+
+# Test cases for send_chat_message
+
+
+def test_send_chat_message_success():
+    response = requests.post(SURVEYS_ENDPOINT + "/1" + "/responses" + "/1" + "/chat", json={"content": "Hi"})
+
+    assert response.status_code == 201
+
+
+def test_send_chat_message_missing_content():
+    response = requests.post(SURVEYS_ENDPOINT + "/1" + "/responses" + "/1" + "/chat", json={})
+
+    assert response.status_code == 400
+    assert response.json() == {"message": "Missing content"}
+
+
+# def test_send_chat_message_survey_not_found():
+#     response = requests.post(SURVEYS_ENDPOINT + "/0" + "/responses" + "/1" + "/chat", json={"content": "Hi"})
+
+#     assert response.status_code == 404
+#     assert response.json() == {"message": "Survey not found"}

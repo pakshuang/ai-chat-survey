@@ -7,7 +7,7 @@ services:
     command: >
       /bin/bash -c "
       pipenv install pytest -q &&
-      pipenv run python -m pytest tests/integration -vv"
+      pipenv run python -m pytest tests/integration -vv > /backend/logs/integration-tests.log"
     env_file:
       - .env
     volumes:

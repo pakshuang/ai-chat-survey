@@ -762,10 +762,10 @@ def send_chat_message(survey_id: str, response_id: str) -> tuple[Response, int]:
     # Step 1: Retrieve Response Object
     response_object = get_response_no_auth(survey_id, response_id)
 
-    # If GET request is not successful, return 500
+    # If GET request is not successful
     if response_object[1] != 200:
-        app.logger.error("Failed to retrieve survey object")
-        return jsonify({"message": "Failed to retrieve survey object"}), 500
+        app.logger.error(response_object[0].json["message"])
+        return response_object
 
     # GET request is successful
     response_object = response_object[0].json
