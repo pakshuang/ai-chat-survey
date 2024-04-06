@@ -639,13 +639,17 @@ def test_get_response_not_found():
 
 
 def test_send_chat_message_success():
-    response = requests.post(SURVEYS_ENDPOINT + "/1" + "/responses" + "/1" + "/chat", json={"content": "Hi"})
+    response = requests.post(
+        SURVEYS_ENDPOINT + "/1" + "/responses" + "/1" + "/chat", json={"content": "Hi"}
+    )
 
     assert response.status_code == 201
 
 
 def test_send_chat_message_missing_content():
-    response = requests.post(SURVEYS_ENDPOINT + "/1" + "/responses" + "/1" + "/chat", json={})
+    response = requests.post(
+        SURVEYS_ENDPOINT + "/1" + "/responses" + "/1" + "/chat", json={}
+    )
 
     assert response.status_code == 400
     assert response.json() == {"message": "Missing content"}
