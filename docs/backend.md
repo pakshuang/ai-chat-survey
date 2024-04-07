@@ -12,8 +12,9 @@ integrate LLMs into surveys
 - Rubrics:
   - Justification for models/solution chosen, probably by tying back to user interviews
     from Front-End team
+  
 ## Model Evaluation
-- Insert model evaluation
+- [Model Evaluation](evaluation.md)
 - Rubrics: 
   - In-depth study of performance of model and it's failings.
   - Interpretation of model
