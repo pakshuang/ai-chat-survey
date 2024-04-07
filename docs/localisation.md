@@ -61,7 +61,7 @@ The finetuning script is intended to be run from the CLI using several available
 
 ### Example
 ```shell
-python Qlora-GPTQ-script.py --base C:\dolphin-2.2.1-mistral-7B-GPTQ --dataset-path C:\Users\ME\Downloads\datee.csv --output-path ../../backend/models --has-system-prompt 0 --train-size 0.5 --r 8 --bits 4 --steps 100
+python Qlora-GPTQ-script.py --base ../../backend/models/dolphin-2.2.1-mistral-7B-GPTQ --dataset-path C:\Users\ME\Downloads\datee.csv --output-path ../../backend/models --has-system-prompt 0 --train-size 0.5 --r 8 --bits 4 --steps 100
 ```
 Explanation:
 The following command assumes one has downloaded a model from huggingface and provides it to base. The Mistral models have not been trained with system prompts, so `datee.csv` is a `csv` file with `input` and `output` columns containing expected queries and responses to the LLM, and there is no need for a `system` column. `--has-system-prompt` is, for the same reason, set to 0. The output path of the trained adapter model is set to the `models` folder, but this is already done by default.
