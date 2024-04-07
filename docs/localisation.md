@@ -1,6 +1,13 @@
 # Localisation
 This script is only meant for technical stakeholders committed to the localisation of the LLM in this project. It provides some assistance and groundwork for what could be done in the future for this app.
 
+## Motivation
+In today's data-driven landscape, companies are increasingly cognizant of the critical importance of safeguarding sensitive information while also optimizing operational efficiency. In pursuit of these dual objectives, the utilization of Local Language Models (LLMs) emerges as a strategic imperative. This essay delves into the rationale behind the growing preference for LLMs in corporate settings, particularly focusing on the nexus between data security and the manifold benefits inherent in leveraging locally-tailored linguistic intelligence.
+
+Amidst escalating concerns over data privacy breaches and regulatory compliance, the adoption of LLMs offers a compelling solution to mitigate risks associated with outsourcing linguistic processing to distant servers. By harnessing locally-hosted language models, companies can fortify their data security apparatus, circumventing potential vulnerabilities inherent in transmitting sensitive information across vast networks. This localized approach not only bolsters confidentiality protocols but also instills a sense of trust and confidence among stakeholders, assuring them of stringent data protection measures.
+
+## Suggestions
+
 An existing script `root/scripts/finetuning/Qlora-GPTQ-script.py` has been created to provide a simple pipeline for future finetuning efforts. To run this script, one needs to have a different set of Python dependencies from the rest of the app, which primarily focuses on the deployment of the Large Language Model.
 
 > **Warning**: Pipenv does not seem to be compatible with Pytorch for GPU support. We recommend using another python environment.
