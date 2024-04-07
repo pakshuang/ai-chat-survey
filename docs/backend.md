@@ -1,7 +1,7 @@
 # Backend Report
 
 ## Section Introduction
-- Insert brief introduction to this section
+This section serves as a comprehensive exploration of the backend infrastructure underpinning our AI chatbot survey system. Here, we present an in-depth analysis of the LLM (Large Language Model) at the heart of our solution, along with a detailed examination of the backend architecture. Through this report, we aim to provide a thorough understanding of our model selection rationale, its integration into the survey framework, and the overarching architecture supporting its functionality. Furthermore, we discuss our approach to model evaluation, post-deployment tracking, and strategies for continuous improvement.
 
 ## Literature Review
 - Insert literature review regarding traditional surveys as well as efforts to 
