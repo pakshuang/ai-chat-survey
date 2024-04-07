@@ -8,10 +8,47 @@ This section serves as a comprehensive exploration of the backend infrastructure
 integrate LLMs into surveys
 
 ## Backend Architecture
-- Insert description and diagrams of backend architecture
-- Rubrics:
-  - Justification for models/solution chosen, probably by tying back to user interviews
-    from Front-End team
+### 1. Introduction to Backend Architecture
+
+Brief overview of the purpose and importance of the backend architecture in supporting the AI chatbot survey system.
+
+### 2. Components of the Backend Architecture
+
+#### a. Server
+
+Description of the backend server responsible for handling requests and processing data.
+
+#### b. Database
+
+Explanation of the data storage solution used for persisting survey data, user information, etc.
+
+#### c. API
+
+Overview of the interface through which the frontend communicates with the backend.
+
+#### d. Messaging Queue (if applicable)
+
+Description of any messaging queues used for asynchronous communication between components.
+
+#### e. Authentication/Authorization
+
+Explanation of components responsible for user authentication and authorization.
+
+### 3. Interactions between Components
+
+Description of how the different components interact with each other. Illustration of the flow of data and interactions between components using diagrams if necessary.
+
+### 4. Technology Stack
+
+List of technologies and frameworks used for each component. Justification for the choice of each technology based on factors like scalability, performance, etc.
+
+### 5. Scalability and Performance Considerations
+
+Discussion on how the architecture is designed to handle scalability and ensure optimal performance. Explanation of strategies such as horizontal scaling, caching mechanisms, and load balancing.
+
+### 6. Justification for Models/Solution Chosen
+
+Tie-back to user interviews conducted by the frontend team to justify the choice of models and solutions in the backend architecture. Explanation of how the architecture aligns with user requirements and expectations gathered from user feedback.
   
 ## Model Evaluation
 - [Model Evaluation](evaluation.md)
