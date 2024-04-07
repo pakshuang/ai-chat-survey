@@ -169,7 +169,12 @@ cython_debug/
 .vscode/settings.json
 
 #Ignore all in models
-**/models/*
+**/models/**/*.json
+**/models/**/*.safetensors
+**/models/**/*.gitattributes
+**/models/**/*.py
+**/models/**/*.md
+**/models/**/*.model
 
 #exception to the rule
 !**/models/.gitkeep
