@@ -26,4 +26,4 @@ integrate LLMs into surveys
      deployment.
 
 ## Conclusion
-- Provide a brief conclusion of the backend report
+In conclusion, this backend report has provided a detailed examination of the infrastructure supporting our AI chatbot survey system. We have explored the core components, including the LLM model, and discussed the rationale behind our model selection and its integration into the survey framework. Additionally, we have examined the backend architecture, shedding light on the design decisions and the system's functionality. Through thorough model evaluation and post-deployment tracking, we have gained insights into the performance of our solution and identified avenues for improvement. 
