@@ -167,3 +167,9 @@ cython_debug/
 
 #Ignore VSCode Settings
 .vscode/settings.json
+
+#Ignore all in models
+**/models/**
+
+#exception to the rule
+!**/models/.gitkeep
