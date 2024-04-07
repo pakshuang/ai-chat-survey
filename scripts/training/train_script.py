@@ -7,6 +7,7 @@ from transformers import GPTQConfig, GenerationConfig
 from peft import LoraConfig, get_peft_model, get_peft_model, prepare_model_for_kbit_training
 from peft import AutoPeftModelForCausalLM
 import torch
+import logging
 
 
 def main():
@@ -97,8 +98,9 @@ def main():
     trainer.train()
     trainer.model.save_pretrained(args.output)
 
-
-    # Your script logic here
+    logging.warning("""Your model has been finetuned and the LORA adapters can now be found in backend/models/. 
+                    Continuing this script will require more VRAM. The following portion may not function properly without >=8GB of VRAM.""")
+    # Test inference.
 
     persisted_model = AutoPeftModelForCausalLM.from_pretrained(
         str(pathlib.Path(__file__).parent.resolve()) + "/../../backend/models",
@@ -132,9 +134,6 @@ def main():
             messages = [
                 {"role": "user", "content": row["input"]}
             ]
-
-        print("MESSAGES ARE HERE")
-        print(messages)
 
         for_gen = tokenizer.apply_chat_template(messages, return_tensors="pt", tokenize=False)
         
