@@ -54,7 +54,12 @@ Explanation:
 The following command assumes one has downloaded a model from huggingface and provides it to base. The Mistral models have not been trained with system prompts, so `datee.csv` is a `csv` file with `input` and `output` columns containing expected queries and responses to the LLM, and there is no need for a `system` column. `--has-system-prompt` is, for the same reason, set to 0. The output path of the trained adapter model is set to the `models` folder, but this is already done by default.
 
 
+## Considerations for Deployment
 
+1. A new docker container will need to be run for local models. This docker container will require:
+ - Access to the GPU
+ - Pytorch and other dependencies listed in `requirements.txt`
+2. A class defined for this model. A skeletal class has already been defined in `root/backend/src/llm_classes`
 
 
 
