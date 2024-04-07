@@ -10,6 +10,16 @@ services:
     depends_on:
       - backend
       
+  gpu:
+    image: pytorch/pytorch:2.1.0-cuda11.8-cudnn8-runtime
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
   backend:
     image: backend
     container_name: backend
@@ -27,7 +37,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./database:/docker-entrypoint-initdb.d
+      - ./scripts:/docker-entrypoint-initdb.d
 
   nginx:
     image: nginx:latest
