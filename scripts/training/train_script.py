@@ -3,9 +3,11 @@ from datasets import Dataset, DatasetDict
 import pandas as pd
 import pathlib
 from transformers import AutoModelForCausalLM, AutoTokenizer, Trainer, TrainingArguments, DataCollatorForLanguageModeling
-from transformers import GPTQConfig
-from peft import LoraConfig, get_peft_model, get_peft_model, prepare_model_for_kbit_training, PeftModel
-import random
+from transformers import GPTQConfig, GenerationConfig
+from peft import LoraConfig, get_peft_model, get_peft_model, prepare_model_for_kbit_training
+from peft import AutoPeftModelForCausalLM
+import torch
+
 
 def main():
     # Create argument parser
@@ -42,6 +44,8 @@ def main():
     tokenizer = AutoTokenizer.from_pretrained(
         args.base_model, 
     )
+    tokenizer.pad_token = tokenizer.eos_token
+    tokenizer.pad_token_id = tokenizer.eos_token_id
 
     base.gradient_checkpointing_enable()
     base = prepare_model_for_kbit_training(base)
@@ -93,8 +97,67 @@ def main():
     trainer.train()
     trainer.model.save_pretrained(args.output)
 
- 
+
     # Your script logic here
+
+    persisted_model = AutoPeftModelForCausalLM.from_pretrained(
+        str(pathlib.Path(__file__).parent.resolve()) + "/../../backend/models",
+        low_cpu_mem_usage=True,
+        return_dict=True,
+        torch_dtype=torch.float16,
+        device_map="cuda",
+    )
+
+    
+
+ 
+    generation_config = GenerationConfig(
+        penalty_alpha=0.6, 
+        do_sample = True, 
+        top_k=5, 
+        temperature=0.5, 
+        repetition_penalty=1.2,
+        max_new_tokens=args.max_len
+    )
+    for row in ds_splits["test"]:
+        print(args.has_sys)
+
+        if args.has_sys:
+            messages = [
+            {"role": "system", "content": row["system"]},
+            {"role": "user", "content": row["input"]}
+            ]   
+
+        else:
+            messages = [
+                {"role": "user", "content": row["input"]}
+            ]
+
+        print("MESSAGES ARE HERE")
+        print(messages)
+
+        for_gen = tokenizer.apply_chat_template(messages, return_tensors="pt", tokenize=False)
+        
+        encoding = tokenizer(
+                for_gen,
+                truncation=True,
+                max_length=args.max_len,
+                padding="max_length",
+                return_tensors="pt"
+            ).to('cuda')
+        
+        outputs = persisted_model.generate(
+            input_ids=encoding.input_ids,
+            attention_mask=encoding.attention_mask,
+            generation_config=generation_config,
+            eos_token_id = tokenizer.eos_token_id,
+            pad_token_id = tokenizer.pad_token_id
+        )
+        print(tokenizer.decode(outputs[0], skip_special_tokens=True))
+
+
+
+
 
 def split_dataset(ds: Dataset, args: argparse.ArgumentParser, seed: int = 1):
     ds_train_devtest = ds.train_test_split(test_size=1-args.train, seed=seed)
@@ -107,6 +170,7 @@ def split_dataset(ds: Dataset, args: argparse.ArgumentParser, seed: int = 1):
     return ds_splits
 
 def format_input_outputs(row, has_sys: bool, tokenizer, max_len: int):
+    
     if has_sys:
         messages = [
             {
@@ -140,6 +204,8 @@ def format_input_outputs(row, has_sys: bool, tokenizer, max_len: int):
 
     return result["input_ids"].copy()
     
+
+
 
 
 if __name__ == "__main__":
