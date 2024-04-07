@@ -19,7 +19,7 @@ An existing script `root/scripts/finetuning/Qlora-GPTQ-script.py` has been creat
 
 ## Installation
 
-Simply install from `requirements.txt` normally using the environment of your choice. After activating your desired environment,
+Simply install from `requirements.txt` normally, or within an environment of your choice. After activating your desired environment,
 ```shell
 pip install -r requirements.txt
 ```
