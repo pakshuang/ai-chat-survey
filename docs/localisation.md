@@ -2,9 +2,12 @@
 This script is only meant for technical stakeholders committed to the localisation of the LLM in this project. It provides some assistance and groundwork for what could be done in the future for this app.
 
 ## Motivation
-In today's data-driven landscape, companies are increasingly cognizant of the critical importance of safeguarding sensitive information while also optimizing operational efficiency. In pursuit of these dual objectives, the utilization of Local Language Models (LLMs) emerges as a strategic imperative. This essay delves into the rationale behind the growing preference for LLMs in corporate settings, particularly focusing on the nexus between data security and the manifold benefits inherent in leveraging locally-tailored linguistic intelligence.
 
-Amidst escalating concerns over data privacy breaches and regulatory compliance, the adoption of LLMs offers a compelling solution to mitigate risks associated with outsourcing linguistic processing to distant servers. By harnessing locally-hosted language models, companies can fortify their data security apparatus, circumventing potential vulnerabilities inherent in transmitting sensitive information across vast networks. This localized approach not only bolsters confidentiality protocols but also instills a sense of trust and confidence among stakeholders, assuring them of stringent data protection measures.
+In the modern data-centric environment, companies prioritize safeguarding sensitive information while enhancing operational efficiency. To achieve these goals, leveraging Local Language Models (LLMs) becomes crucial.
+
+While LLMs are accessible via APIs, relying solely on external services can pose risks, especially if these APIs cease to provide LLM support, causing disruptions.
+
+Furthermore, maintaining data privacy is paramount for companies, making it essential to avoid sharing sensitive information with external API providers when interacting with a model. Deploying LLMs internally helps mitigate these risks and ensures data remains secure within the organization's infrastructure.
 
 ## Suggestions
 
