@@ -1,6 +1,7 @@
 import argparse
 import logging
 import pathlib
+import random
 
 import pandas as pd
 import torch
@@ -17,6 +18,7 @@ from transformers import (
     DataCollatorForLanguageModeling,
     GenerationConfig,
     GPTQConfig,
+    PreTrainedTokenizer,
     Trainer,
     TrainingArguments,
 )
@@ -197,7 +199,6 @@ def main():
     if exit == "exit":
         return
     # Test inference.
-
     persisted_model = AutoPeftModelForCausalLM.from_pretrained(
         str(pathlib.Path(__file__).parent.resolve()) + "/../../backend/models",
         low_cpu_mem_usage=True,
@@ -248,7 +249,20 @@ def main():
         print(tokenizer.decode(outputs[0], skip_special_tokens=True))
 
 
-def split_dataset(ds: Dataset, args: argparse.ArgumentParser, seed: int = 1):
+def split_dataset(
+    ds: Dataset, args: argparse.ArgumentParser, seed: int = random.randint(1, 9999)
+) -> DatasetDict:
+    """Splits dataset into train, test and validation in this proportion, respectively: x: (1-x)/2: (1-x)/2
+
+    Args:
+        ds (Dataset): _description_
+        args (argparse.ArgumentParser): Argument parser. args.train is used.
+        seed (int, optional): Seed value. Defaults to a random integer.
+
+    Returns:
+        DatasetDict: Returned dataset as a dictionary.
+    """
+
     ds_train_devtest = ds.train_test_split(test_size=1 - args.train, seed=seed)
     ds_devtest = ds_train_devtest["test"].train_test_split(test_size=0.5, seed=seed)
     ds_splits = DatasetDict(
@@ -261,7 +275,20 @@ def split_dataset(ds: Dataset, args: argparse.ArgumentParser, seed: int = 1):
     return ds_splits
 
 
-def format_input_outputs(row, has_sys: bool, tokenizer, max_len: int):
+def format_input_outputs(
+    row: dict, has_sys: bool, tokenizer: PreTrainedTokenizer, max_len: int
+) -> list[int]:
+    """Formats each row of the dataset using the prompt template of the base model, before tokenizing.
+
+    Args:
+        row (dict): A row of the dataset.
+        has_sys (bool): True if the model supports system prompts, False otherwise.
+        tokenizer (PreTrainedTokenizer): Tokenizer of the base model.
+        max_len (int): Maximum length of encoded values accepted
+
+    Returns:
+        list[int]: A list of encoded outputs.
+    """
 
     if has_sys:
         messages = [
