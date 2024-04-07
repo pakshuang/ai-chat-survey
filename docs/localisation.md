@@ -19,10 +19,16 @@ An existing script `root/scripts/finetuning/Qlora-GPTQ-script.py` has been creat
 
 ## Installation
 
-Simply install from `requirements.txt` normally, or within an environment of your choice. After activating your desired environment,
+1. Simply install from `requirements.txt` normally, or within an environment of your choice. After activating your desired environment,
 ```shell
 pip install -r requirements.txt
 ```
+2. (Optional) Ideally, one would like a local copy of a GPTQ base model. The following is an example of how to obtain such a model in the `models` folder:
+```shell
+cd ai-chat-survey/backend/models
+git clone git clone https://huggingface.co/TheBloke/Nous-Hermes-2-SOLAR-10.7B-GPTQ -b gptq-4bit-32g-actorder_True
+```
+
 ## Finetuning
 
 The script is to be run from the CLI, with arguments. This script finetunes a GPTQ-quantised model with parameter-efficient finetuning techniques to reduce computational time and memory. This is done with a LORA adapter. After training, the LORA model will be saved in `backend/models/`, where ideally, one could deploy the app in a container.
