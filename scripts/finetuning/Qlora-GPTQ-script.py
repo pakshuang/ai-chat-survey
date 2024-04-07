@@ -91,7 +91,11 @@ def main():
         default=-1,
     )
     parser.add_argument(
-        "--group_size", type=int, default=128, help="Specify GPTQ group_size."
+        "--batch_size",
+        dest="batch_size",
+        type=int,
+        help="Defaults to 4",
+        default=4,
     )
     # Parse the arguments
     args = parser.parse_args()
@@ -168,7 +172,7 @@ def main():
         args=TrainingArguments(
             output_dir=args.output,
             warmup_steps=1,
-            per_device_train_batch_size=4,
+            per_device_train_batch_size=args.batch_size,
             gradient_accumulation_steps=1,
             gradient_checkpointing=True,
             max_steps=args.steps,
@@ -189,6 +193,9 @@ def main():
         """Your model has been finetuned and the LORA adapters can now be found in backend/models/. 
                     Continuing this script will require more VRAM. The following portion may not function properly without >=8GB of VRAM."""
     )
+    exit = input('Type "exit" if you wish to end: ')
+    if exit == "exit":
+        return
     # Test inference.
 
     persisted_model = AutoPeftModelForCausalLM.from_pretrained(
