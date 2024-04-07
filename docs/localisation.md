@@ -60,6 +60,7 @@ The following command assumes one has downloaded a model from huggingface and pr
  - Access to the GPU
  - Pytorch and other dependencies listed in `requirements.txt`
 2. A class defined for this model. A skeletal class has already been defined in `root/backend/src/llm_classes`
+3. It is strongly recommended to consider models >= 30B parameters as these models tend to have smaller performance losses through quantisation.
 
 
 
