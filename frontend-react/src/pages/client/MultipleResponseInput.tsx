@@ -14,7 +14,10 @@ function MultipleResponseInput({
   function handleSubmit(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
     setIsSubmitting(true);
-    answers.forEach((answer) => handleQuestionResponse(questionID, answer));
+    handleQuestionResponse(
+      questionID,
+      answers.map((item) => String(item))
+    );
   }
 
   return (

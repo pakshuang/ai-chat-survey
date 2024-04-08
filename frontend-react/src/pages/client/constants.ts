@@ -42,7 +42,7 @@ export type MultipleChoiceInputProps = {
 export type MultipleResponseInputProps = {
   questionID: number;
   options: string[];
-  handleQuestionResponse: (id: number, val: string | number) => void;
+  handleQuestionResponse: (id: number, val: string[]) => void;
 }
 
 export const surveyMessage =

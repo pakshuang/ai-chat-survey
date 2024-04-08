@@ -68,7 +68,7 @@ const QuestionInput = ({
             <Text fontSize="sm">(You may pick more than one option.)</Text>
             <CheckboxGroup
               isDisabled={submitted}
-              value={tempAnswer}
+              value={answer}
               onChange={(values) => {
                 handleQuestionResponse(question_id, values);
               }}

@@ -11,6 +11,7 @@ import { useParams } from "react-router-dom";
 import { Messages, Question, surveyMessage } from "./constants";
 import ChatMessage from "./ChatMessage";
 import MultipleChoiceInput from "./MultipleChoiceInput";
+import MultipleResponseInput from "./MultipleResponseInput";
 
 function ChatPage() {
   const { id } = useParams();
@@ -69,7 +70,10 @@ function ChatPage() {
     });
   }, []);
 
-  const handleQuestionResponse = (id: number, val: string | number) => {
+  const handleQuestionResponse = (
+    id: number,
+    val: string | number | string[]
+  ) => {
     const updatedQuestions = [...messages];
     if (updatedQuestions[id - 1]?.question) {
       updatedQuestions[id - 1].question!.answer = val;
@@ -98,7 +102,7 @@ function ChatPage() {
     try {
       setSurveyState({ ...surveyState, submitted: true });
       setIsLoading(true);
-      const rep = await submitBaseSurvey(id, body);
+      const rep = await submitBaseSurvey(id!, body);
       setResponseId(rep.data.response_id);
       const res = await sendMessageApi(rep.data.response_id, Number(id), "");
       const data = res.data;
@@ -145,6 +149,18 @@ function ChatPage() {
         messages[surveyState.displayIndex].question?.type ===
           "multiple_choice" && (
           <MultipleChoiceInput
+            questionID={
+              messages[surveyState.displayIndex].question!.question_id
+            }
+            options={messages[surveyState.displayIndex].question!.options!}
+            handleQuestionResponse={handleQuestionResponse}
+          />
+        )}
+      {!surveyState.submitted &&
+        messages.length > 0 &&
+        messages[surveyState.displayIndex].question?.type ===
+          "multiple_response" && (
+          <MultipleResponseInput
             questionID={
               messages[surveyState.displayIndex].question!.question_id
             }
