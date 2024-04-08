@@ -25,16 +25,13 @@ Explanation of the data storage solution used for persisting survey data, user i
 #### c. API
 
 Overview of the interface through which the frontend communicates with the backend.
+- [API](api.md)
 
-#### d. Messaging Queue (if applicable)
-
-Description of any messaging queues used for asynchronous communication between components.
-
-#### e. Authentication/Authorization
+#### d. Authentication/Authorization
 
 Explanation of components responsible for user authentication and authorization.
 
-### 3. Interactions between Components
+### e. Interactions between Components
 
 Description of how the different components interact with each other. Illustration of the flow of data and interactions between components using diagrams if necessary.
 
