@@ -42,7 +42,7 @@ const QuestionInput = ({
         return (
           <RadioGroup
             isDisabled={submitted}
-            value={tempAnswer}
+            value={answer}
             onChange={(e) => {
               handleQuestionResponse(question_id, e);
             }}

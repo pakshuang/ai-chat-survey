@@ -10,6 +10,7 @@ import {
 import { useParams } from "react-router-dom";
 import { Messages, Question, surveyMessage } from "./constants";
 import ChatMessage from "./ChatMessage";
+import MultipleChoiceInput from "./MultipleChoiceInput";
 
 function ChatPage() {
   const { id } = useParams();
@@ -139,6 +140,18 @@ function ChatPage() {
         handleQuestionResponse={handleQuestionResponse}
         surveyState={surveyState}
       />
+      {!surveyState.submitted &&
+        messages.length > 0 &&
+        messages[surveyState.displayIndex].question?.type ===
+          "multiple_choice" && (
+          <MultipleChoiceInput
+            questionID={
+              messages[surveyState.displayIndex].question!.question_id
+            }
+            options={messages[surveyState.displayIndex].question!.options!}
+            handleQuestionResponse={handleQuestionResponse}
+          />
+        )}
       {surveyState.submitted && !isLast && (
         <ChatInput onSubmitMessage={sendMessage} isSubmitting={isLoading} />
       )}
