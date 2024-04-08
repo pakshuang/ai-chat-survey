@@ -33,5 +33,17 @@ export type QuestionProps = {
   submitted: boolean;
 };
 
+export type MultipleChoiceInputProps = {
+  questionID: number;
+  options: string[];
+  handleQuestionResponse: (id: number, val: string | number) => void;
+}
+
+export type MultipleResponseInputProps = {
+  questionID: number;
+  options: string[];
+  handleQuestionResponse: (id: number, val: string | number) => void;
+}
+
 export const surveyMessage =
   "You've submitted the first part of our survey! Hang on tight while we process your responses...";

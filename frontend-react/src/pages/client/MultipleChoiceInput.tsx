@@ -34,7 +34,7 @@ function MultipleChoiceInput({
           borderRightRadius="0"
           border="1px"
           borderColor="gray.500"
-          onChange={(e) => setAnswer(e)}
+          onChange={(ans) => setAnswer(ans)}
         >
           {options.map((option: string, index: number) => (
             <Radio
