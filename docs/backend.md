@@ -20,8 +20,6 @@ The backend server is the core component responsible for processing incoming req
 
 #### b. Database
 
-#### b. Database
-
 The MySQL database, named `ai_chat_survey_db`, serves as the centralized repository for storing survey data, user information, chat logs, and other relevant data. It consists of tables including `Admins`, `Surveys`, `Questions`, `Survey_Responses`, and `ChatLog`, designed to efficiently store and manage different types of data.
 
 ##### Entity Relationship (ER) Diagram:
