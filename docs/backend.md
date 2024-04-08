@@ -20,7 +20,28 @@ The backend server is the core component responsible for processing incoming req
 
 #### b. Database
 
-The MySQL database, named ai_chat_survey_db, serves as the centralized repository for storing survey data, user information, chat logs, and other relevant data. It consists of tables including Admins, Surveys, Questions, Survey_Responses, and ChatLog, designed to efficiently store and manage different types of data.
+#### b. Database
+
+The MySQL database, named `ai_chat_survey_db`, serves as the centralized repository for storing survey data, user information, chat logs, and other relevant data. It consists of tables including `Admins`, `Surveys`, `Questions`, `Survey_Responses`, and `ChatLog`, designed to efficiently store and manage different types of data.
+
+##### Schema Diagram:
+
+![Database Schema Diagram](diagrams/images/db_schema.png)
+
+##### Explanation of [Database Schema](../database/init.sql):
+
+- **Admins**: Stores information about administrators who have access to the system. This table includes fields such as `admin_username`, `password`, and `created_at`.
+
+- **Surveys**: Contains details of the surveys created in the system. Fields include `survey_id`, `title`, `subtitle`, `admin_username`, `created_at`, and `chat_context`.
+
+- **Questions**: Stores the questions associated with each survey. Fields include `question_id`, `survey_id`, `question`, `question_type`, and `options`.
+
+- **Survey_Responses**: Holds the responses submitted for each survey question. Fields include `response_id`, `survey_id`, `question_id`, `answer`, and `submitted_at`.
+
+- **ChatLog**: Logs the chat interactions between users and the chatbot. Fields include `chat_id`, `survey_id`, `response_id`, `chat_log`, and `created_at`.
+
+The database schema is designed to maintain data integrity and efficiently handle various aspects of the AI chatbot survey system, from survey creation to user interactions and response storage.
+
 
 #### c. API
 
