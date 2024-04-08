@@ -1,9 +1,9 @@
-import { Box, SkeletonCircle, Button, Flex } from "@chakra-ui/react"
-import { useEffect, useState } from "react"
-import ChatMessage from "./ChatMessage"
-import TypingEffect from "./TypingEffect"
-import QuestionInput from "./QuestionInput"
-import { ChatWindowProps, surveyMessage } from "./constants"
+import { Box, SkeletonCircle, Button, Flex } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import ChatMessage from "./ChatMessage";
+import TypingEffect from "./TypingEffect";
+import QuestionInput from "./QuestionInput";
+import { ChatWindowProps, surveyMessage } from "./constants";
 
 function ChatWindow({
   messages,
@@ -12,16 +12,16 @@ function ChatWindow({
   surveyState,
   handleSubmit,
 }: ChatWindowProps) {
-  const [botResponded, setBotResponded] = useState(false)
+  const [botResponded, setBotResponded] = useState(false);
 
   useEffect(() => {
     if (messages.slice(-1)[0]?.sender === "bot") {
-      setBotResponded(true)
+      setBotResponded(true);
     }
     if (messages.slice(-1)[0]?.sender === "user") {
-      setBotResponded(false)
+      setBotResponded(false);
     }
-  }, [messages])
+  }, [messages]);
   return (
     <Box
       overflowY="auto"
@@ -61,7 +61,7 @@ function ChatWindow({
                   <ChatMessage key={index} sender={item.sender}>
                     {item.message}
                   </ChatMessage>
-                )
+                );
               }
               return (
                 <ChatMessage key={index} sender={"bot"}>
@@ -78,18 +78,13 @@ function ChatWindow({
                     </Box>
                   </Flex>
                 </ChatMessage>
-              )
+              );
             }
             return (
               <ChatMessage key={index} sender="bot">
                 <TypingEffect text={messages.slice(-1)[0].message} />
-                <QuestionInput
-                  questionData={item.question}
-                  handleQuestionResponse={handleQuestionResponse}
-                  submitted={surveyState.submitted}
-                ></QuestionInput>
               </ChatMessage>
-            )
+            );
           } else {
             return (
               <ChatMessage key={index} sender={item.sender}>
@@ -98,9 +93,9 @@ function ChatWindow({
                   questionData={item.question}
                   handleQuestionResponse={handleQuestionResponse}
                   submitted={surveyState.submitted}
-                ></QuestionInput>
+                />
               </ChatMessage>
-            )
+            );
           }
         })}
         {isBotThinking && (
@@ -110,7 +105,7 @@ function ChatWindow({
         )}
       </Box>
     </Box>
-  )
+  );
 }
 
-export default ChatWindow
+export default ChatWindow;
