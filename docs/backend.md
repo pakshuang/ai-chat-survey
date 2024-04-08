@@ -51,13 +51,14 @@ Authentication and authorization components ensure secure access to the system. 
 
 ### e. Interactions between Components
 The backend components interact harmoniously to facilitate the flow of data and operations within the system:
-- Frontend to Server: The frontend communicates with the backend server through API endpoints defined in app.py, triggering actions such as creating surveys, submitting responses, retrieving data, and sending chat messages.
+- `Frontend` to `Server`: The frontend communicates with the backend server through API endpoints defined in `app.py`, triggering actions such as creating surveys, submitting responses, retrieving data, and sending chat messages.
 
-- Server to Database: Upon receiving requests, the server interacts with the MySQL database to fetch or store data. SQL queries are executed to perform CRUD operations on tables such as Surveys, Questions, and Survey_Responses, ensuring data persistence and integrity.
+- `Server` to `Database`: Upon receiving requests, the server interacts with the MySQL database to fetch or store data. SQL queries are executed to perform CRUD operations on tables such as `Surveys`, `Questions`, and `Survey_Responses`, ensuring data persistence and integrity.
 
-- Authentication/Authorization Flow: User authentication and authorization processes are handled by the server, which verifies user credentials against the Admins table in the database. Upon successful authentication, users are granted access to functionalities based on their assigned roles and permissions.
+- `Authentication/Authorization` Flow: User authentication and authorization processes are handled by the server, which verifies user credentials against the `Admins` table in the database. Upon successful authentication, users are granted access to functionalities based on their assigned roles and permissions.
 
 - Data Flow: Data flows between various tables in the database as surveys are created, questions are added, responses are submitted, chat logs are recorded, and user messages are processed by ChatGPT. Foreign key constraints maintain referential integrity, ensuring data consistency and reliability.
+
 ### 4. Technology Stack
 
 List of technologies and frameworks used for each component. Justification for the choice of each technology based on factors like scalability, performance, etc.
