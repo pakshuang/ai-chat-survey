@@ -26,8 +26,8 @@ function MultipleResponseInput({
         <CheckboxGroup size="lg" onChange={(ans) => setAnswers(ans)}>
           <Box
             p="1rem"
+            maxH="130px"
             overflowY="auto"
-            maxH="15rem"
             display="flex"
             backgroundColor="white"
             alignItems="left"
