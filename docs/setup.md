@@ -197,6 +197,11 @@ The recommended way to run is to use docker compose instead, see [Running the Ap
    ```
 
 3. Once the tests are done, you can view the results in `backend/logs/integration_tests.log`.
+4. To run the integration tests with the backend scaled to 3 instances, you can use the following command:
+
+   ```shell
+   ./scripts/run_backend_integration_tests.sh 3
+   ```
 
 ## Frontend Development
 
