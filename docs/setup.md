@@ -63,7 +63,7 @@ If you have already built the images, you can use the following command to start
 docker-compose up -d
 ```
 
-If you want to horizontally scale the frontend or backend services, you can use the following command (do not scale the database service or nginx service):
+If you want to horizontally scale (application level) the frontend or backend services, you can use the following command (do not scale the database service or nginx service):
 
 ```shell
 docker-compose up -d --scale frontend=2 --scale backend=2
