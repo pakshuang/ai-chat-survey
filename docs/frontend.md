@@ -6,8 +6,14 @@ This section serves as an overview of the frontend architecture and design behin
 
 ## Architecture
 
-- Implementation details
+- Implementation details, e.g.
+  - Routing
+  - Fetching data from the backend with axios
+  - Authentication / authorisation
+  - Form submission
 - Technologies used + justification
+  - React
+  - Chakra UI
 - At most one diagram
 
 ## Initial design
@@ -25,7 +31,7 @@ This section serves as an overview of the frontend architecture and design behin
 
 ## Initial user interviews
 
-- Rubrics: where possible, ~5 Interviews described briefly; results summarised, indicating how it led to refinements in solution
+- Rubrics: where possible, ~5 interviews described briefly; results summarised, indicating how it led to refinements in solution
 
 The following table shows the profiles of the users we interviewed.
 
@@ -45,9 +51,7 @@ The following table shows the feedback from each user as well as the refinements
 ## Final design
 
 - Wireframes and high-fidelity application
-  - Rubrics: Wireframes to High-fidelity application
-    evolution demonstrated. Justification for choices link back to
-    lecture on design, or from other readings
+  - Rubrics: Wireframes to high-fidelity application evolution demonstrated. Justification for choices link back to lecture on design, or from other readings
 
 ### Admin portal
 
