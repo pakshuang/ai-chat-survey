@@ -1,11 +1,10 @@
 # Backend Report
 
-## Section Introduction
-This section serves as a comprehensive exploration of the backend infrastructure underpinning our AI chatbot survey system. Here, we present an in-depth analysis of the LLM (Large Language Model) at the heart of our solution, along with a detailed examination of the backend architecture. Through this report, we aim to provide a thorough understanding of our model selection rationale, its integration into the survey framework, and the overarching architecture supporting its functionality. Furthermore, we discuss our approach to model evaluation, post-deployment tracking, and strategies for continuous improvement.
+## Introduction
+This section serves as a comprehensive exploration of the backend infrastructure underpinning our AI chatbot survey system. Here, we present an in-depth analysis of the Large Language Model (LLM), in our case ChatGPT, at the heart of our solution, along with a detailed examination of the backend architecture. It aims to provide a thorough understanding of our model selection rationale, its integration into the survey framework, and the overarching architecture supporting its functionality. Furthermore, we discuss our approach to model evaluation, post-deployment tracking, and strategies for continuous improvement.
 
 ## Literature Review
-- Insert literature review regarding traditional surveys as well as efforts to 
-integrate LLMs into surveys
+- Insert literature review regarding traditional surveys as well as efforts to integrate LLMs into surveys
 
 ## Backend Architecture
 ### 1. Introduction to Backend Architecture
@@ -16,15 +15,13 @@ The backend architecture of our AI Chatbot Survey system serves as the foundatio
 
 List of technologies and frameworks used for each component. Justification for the choice of each technology based on factors like scalability, performance, etc.
 
-### 3. Interactions between Components
+### 3. Interaction between components
 The backend components interact harmoniously to facilitate the flow of data and operations within the system:
 - `Frontend` to `Server`: The frontend communicates with the backend server through API endpoints defined in `app.py`, triggering actions such as creating surveys, submitting responses, retrieving data, and sending chat messages.
 
 - `Server` to `Database`: Upon receiving requests, the server interacts with the MySQL database to fetch or store data. SQL queries are executed to perform CRUD operations on tables such as `Surveys`, `Questions`, and `Survey_Responses`, ensuring data persistence and integrity.
 
 - `Authentication/Authorization` Flow: User authentication and authorization processes are handled by the server, which verifies user credentials against the `Admins` table in the database. Upon successful authentication, users are granted access to functionalities based on their assigned roles and permissions.
-
-- Data Flow: Data flows between various tables in the database as surveys are created, questions are added, responses are submitted, chat logs are recorded, and user messages are processed by ChatGPT. Foreign key constraints maintain referential integrity, ensuring data consistency and reliability.
 
 ### 4. Components of the Backend Architecture
 
@@ -74,8 +71,8 @@ Tie-back to user interviews conducted by the frontend team to justify the choice
 
 ## Scalability and Performance Considerations
 
-Discussion on how the architecture is designed to handle scalability and ensure optimal performance. Explanation of strategies such as horizontal scaling, caching mechanisms, and load balancing.
+- Discussion on how the architecture is designed to handle scalability and ensure optimal performance. Explanation of strategies such as horizontal scaling, caching mechanisms, and load balancing.
 
 
 ## Conclusion
-In conclusion, this backend report has provided a detailed examination of the infrastructure supporting our AI chatbot survey system. We have explored the core components, including the LLM model, and discussed the rationale behind our model selection and its integration into the survey framework. Additionally, we have examined the backend architecture, shedding light on the design decisions and the system's functionality. Through thorough model evaluation and post-deployment tracking, we have gained insights into the performance of our solution and identified avenues for improvement. 
+In conclusion, this backend report has provided a detailed examination of the infrastructure supporting our AI chatbot survey system. We have explored the core components and discussed the rationale behind using ChatGPT and its integration into the survey framework. Additionally, we have examined the backend architecture, shedding light on the design decisions and the system's functionality.
