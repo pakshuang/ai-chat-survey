@@ -551,6 +551,7 @@ def append_answer_to_response(
         response_objects (Dict[int, Dict[str, Any]]): A dictionary containing response objects indexed by response ID.
         response_id (int): The ID of the response to which the answer will be appended.
         response_data (Dict[str, Any]): The data of the answer to be appended to the response.
+        chat_log_data (Dict[str, Any]): The chat log history to be append to the response
 
     Returns:
         None
@@ -567,7 +568,7 @@ def append_answer_to_response(
         ),
     }
     response_objects[response_id]["answers"].append(answer)
-    if chat_log_data is not None:
+    if chat_log_data is []:
         chat_log = json.loads(chat_log_data[0]['chat_log'])
         # Extract the list of messages
         messages = chat_log['messages']

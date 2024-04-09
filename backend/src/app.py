@@ -894,7 +894,7 @@ def get_response_no_auth(survey_id, response_id):
                     )
                 )
             database_operations.append_answer_to_response(
-                response_objects, response_id, response_data, None,
+                response_objects, response_id, response_data, [],
             )
         response_objects = response_objects[int(response_id)]
         return jsonify(response_objects), 200
