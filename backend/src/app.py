@@ -562,9 +562,14 @@ def get_responses(survey_id: str, **kwargs) -> tuple[Response, int]:
             chat_log_query = """
             SELECT chat_log FROM ChatLog WHERE survey_id = %s AND response_id = %s
             """
-            chat_log_data = database_operations.fetch(connection, chat_log_query, (survey_id, response_id))
+            chat_log_data = database_operations.fetch(
+                connection, chat_log_query, (survey_id, response_id)
+            )
             database_operations.append_answer_to_response(
-                response_objects, response_id, response_data, chat_log_data,
+                response_objects,
+                response_id,
+                response_data,
+                chat_log_data,
             )
 
         # Convert dictionary to list of response objects
@@ -647,9 +652,14 @@ def get_response(survey_id: str, response_id: str, **kwargs) -> tuple[Response, 
             chat_log_query = """
             SELECT chat_log FROM ChatLog WHERE survey_id = %s AND response_id = %s
             """
-            chat_log_data = database_operations.fetch(connection, chat_log_query, (survey_id, response_id))
+            chat_log_data = database_operations.fetch(
+                connection, chat_log_query, (survey_id, response_id)
+            )
             database_operations.append_answer_to_response(
-                response_objects, response_id, response_data, chat_log_data,
+                response_objects,
+                response_id,
+                response_data,
+                chat_log_data,
             )
         response_objects = response_objects[int(response_id)]
         app.logger.info("Response fetched successfully")
@@ -894,7 +904,10 @@ def get_response_no_auth(survey_id, response_id):
                     )
                 )
             database_operations.append_answer_to_response(
-                response_objects, response_id, response_data, [],
+                response_objects,
+                response_id,
+                response_data,
+                [],
             )
         response_objects = response_objects[int(response_id)]
         return jsonify(response_objects), 200
