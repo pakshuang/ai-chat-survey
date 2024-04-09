@@ -6,11 +6,9 @@ This section serves as an overview of the frontend architecture and design behin
 
 ## Architecture
 
-- Implementation details, e.g.
+- Implementation details
   - Routing
-  - Fetching data from the backend with axios
   - Authentication / authorisation
-  - Form submission
 - Technologies used + justification
   - React
   - Chakra UI
