@@ -12,6 +12,7 @@ import { Messages, Question, surveyMessage } from "./constants";
 import ChatMessage from "./ChatMessage";
 import MultipleChoiceInput from "./MultipleChoiceInput";
 import MultipleResponseInput from "./MultipleResponseInput";
+import FreeResponseInput from "./FreeResponseInput";
 
 function ChatPage() {
   const { id } = useParams();
@@ -165,6 +166,17 @@ function ChatPage() {
               messages[surveyState.displayIndex].question!.question_id
             }
             options={messages[surveyState.displayIndex].question!.options!}
+            handleQuestionResponse={handleQuestionResponse}
+          />
+        )}
+      {!surveyState.submitted &&
+        messages.length > 0 &&
+        messages[surveyState.displayIndex].question?.type ===
+          "free_response" && (
+          <FreeResponseInput
+            questionID={
+              messages[surveyState.displayIndex].question!.question_id
+            }
             handleQuestionResponse={handleQuestionResponse}
           />
         )}

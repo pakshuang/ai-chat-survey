@@ -45,5 +45,10 @@ export type MultipleResponseInputProps = {
   handleQuestionResponse: (id: number, val: string[]) => void;
 }
 
+export type FreeResponseInputProps = {
+  questionID: number;
+  handleQuestionResponse: (id: number, val: string) => void;
+}
+
 export const surveyMessage =
   "You've submitted the first part of our survey! Hang on tight while we process your responses...";
