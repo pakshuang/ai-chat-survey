@@ -558,8 +558,13 @@ def get_responses(survey_id: str, **kwargs) -> tuple[Response, int]:
                         survey_id, response_id, response_data
                     )
                 )
+            # Retrieve chatlog if it exists
+            chat_log_query = """
+            SELECT chat_log FROM ChatLog WHERE survey_id = %s AND response_id = %s
+            """
+            chat_log_data = database_operations.fetch(connection, chat_log_query, (survey_id, response_id))
             database_operations.append_answer_to_response(
-                response_objects, response_id, response_data
+                response_objects, response_id, response_data, chat_log_data,
             )
 
         # Convert dictionary to list of response objects
@@ -638,8 +643,13 @@ def get_response(survey_id: str, response_id: str, **kwargs) -> tuple[Response, 
                         survey_id, response_id, response_data
                     )
                 )
+            # Retrieve chatlog if it exists
+            chat_log_query = """
+            SELECT chat_log FROM ChatLog WHERE survey_id = %s AND response_id = %s
+            """
+            chat_log_data = database_operations.fetch(connection, chat_log_query, (survey_id, response_id))
             database_operations.append_answer_to_response(
-                response_objects, response_id, response_data
+                response_objects, response_id, response_data, chat_log_data,
             )
         response_objects = response_objects[int(response_id)]
         app.logger.info("Response fetched successfully")
@@ -692,7 +702,6 @@ def helper_send_message(
 
         else:
             pipe = ChatLog(message_list, llm=llm)
-            pipe.insert_and_update(user_input, pipe.current_index)  # user input
             next_question = llm.run(pipe.message_list)
             updated_message_list = pipe.insert_and_update(
                 next_question, pipe.current_index, is_llm=True
@@ -885,7 +894,7 @@ def get_response_no_auth(survey_id, response_id):
                     )
                 )
             database_operations.append_answer_to_response(
-                response_objects, response_id, response_data
+                response_objects, response_id, response_data, None,
             )
         response_objects = response_objects[int(response_id)]
         return jsonify(response_objects), 200
