@@ -87,14 +87,18 @@ function ChatWindow({
             );
           } else {
             return (
-              <ChatMessage key={index} sender={item.sender}>
-                {item.message}
-                <QuestionInput
-                  questionData={item.question}
-                  handleQuestionResponse={handleQuestionResponse}
-                  submitted={surveyState.submitted}
-                />
-              </ChatMessage>
+              <>
+                <ChatMessage key={index} sender={item.sender}>
+                  {item.message}
+                </ChatMessage>
+                <ChatMessage key={index} sender="user">
+                  <QuestionInput
+                    questionData={item.question}
+                    handleQuestionResponse={handleQuestionResponse}
+                    submitted={surveyState.submitted}
+                  />
+                </ChatMessage>
+              </>
             );
           }
         })}
