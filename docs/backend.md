@@ -9,7 +9,9 @@ This section serves as a comprehensive exploration of the backend infrastructure
 ## Backend Architecture
 ### 1. Introduction to Backend Architecture
 
-The backend architecture of our AI Chatbot Survey system serves as the foundation for managing data, handling user interactions, and ensuring system integrity. It plays a pivotal role in supporting the seamless operation of the entire system, from processing user requests to persisting data securely.
+- The backend architecture of our AI Chatbot Survey system serves as the foundation for managing data, handling user interactions, and ensuring system integrity. It plays a pivotal role in supporting the seamless operation of the entire system, from processing user requests to persisting data securely.
+
+- Discussion on how the architecture is designed to handle scalability and ensure optimal performance. Explanation of strategies such as horizontal scaling, caching mechanisms, and load balancing.
 
 ### 2. Technology Stack
 
@@ -24,7 +26,6 @@ The backend components interact harmoniously to facilitate the flow of data and 
 - `Authentication/Authorization` Flow: User authentication and authorization processes are handled by the server, which verifies user credentials against the `Admins` table in the database. Upon successful authentication, users are granted access to functionalities based on their assigned roles and permissions.
 
 ### 4. Components of the Backend Architecture
-
 
 #### a. Server/API
 The backend server is the core component responsible for processing incoming requests from the frontend and executing the necessary logic. Implemented using Flask in app.py, the server handles various functionalities such as creating surveys, submitting responses, sending chat messages to ChatGPT, and interacting with the database.
@@ -68,11 +69,6 @@ Tie-back to user interviews conducted by the frontend team to justify the choice
   - Rubrics:
       - Demonstrate an awareness of how model can be tracked and improved after
         deployment.
-
-## Scalability and Performance Considerations
-
-- Discussion on how the architecture is designed to handle scalability and ensure optimal performance. Explanation of strategies such as horizontal scaling, caching mechanisms, and load balancing.
-
 
 ## Conclusion
 In conclusion, this backend report has provided a detailed examination of the infrastructure supporting our AI chatbot survey system. We have explored the core components and discussed the rationale behind using ChatGPT and its integration into the survey framework. Additionally, we have examined the backend architecture, shedding light on the design decisions and the system's functionality.
