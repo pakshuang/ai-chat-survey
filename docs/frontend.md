@@ -2,19 +2,18 @@
 
 ## Introduction
 
-- Technologies used + justification
+This section serves as an overview of the frontend architecture and design behind our web application. We explain the technical details of our implementation, as well as present the evolution of our interface and experience design based on dogfooding and user interviews, from our initial wireframes all the way to the final high-fidelity application.
 
 ## Architecture
 
-- Architecture diagrams
 - Implementation details
+- Technologies used + justification
+- At most one diagram
 
 ## Initial design
 
 - Wireframes and high-fidelity application
-  - Rubrics: Wireframes to High-fidelity application
-    evolution demonstrated. Justification for choices link back to
-    lecture on design, or from other readings
+  - Rubrics: Wireframes to high-fidelity application evolution demonstrated. Justification for choices link back to lecture on design, or from other readings
 
 ### Admin portal
 
