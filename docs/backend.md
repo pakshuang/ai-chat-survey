@@ -27,7 +27,6 @@ The backend components interact harmoniously to facilitate the flow of data and 
 
 ### 4. Components of the Backend Architecture
 
-
 #### a. Server/API
 The backend server is the core component responsible for processing incoming requests from the frontend and executing the necessary logic. Implemented using Flask in app.py, the server handles various functionalities such as creating surveys, submitting responses, sending chat messages to ChatGPT, and interacting with the database.
 
