@@ -22,7 +22,7 @@ function MultipleChoiceInput({
         <RadioGroup
           size="lg"
           p="1rem"
-          maxH="130px"
+          maxH="200px"
           overflowY="auto"
           display="flex"
           backgroundColor="white"
