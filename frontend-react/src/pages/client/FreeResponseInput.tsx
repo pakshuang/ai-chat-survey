@@ -6,7 +6,7 @@ function FreeResponseInput({
   questionID,
   handleQuestionResponse,
 }: FreeResponseInputProps) {
-  const [answer, setAnswer] = useState("");
+  const [answer, setAnswer] = useState<string>("");
   const isAnswered = answer !== "";
 
   function handleSubmit(

@@ -8,16 +8,15 @@ function MultipleResponseInput({
   handleQuestionResponse,
 }: MultipleResponseInputProps) {
   const [answers, setAnswers] = useState<(string | number)[]>([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const isAnswered = answers.length > 0;
 
   function handleSubmit(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
-    setIsSubmitting(true);
     handleQuestionResponse(
       questionID,
       answers.map((item) => String(item))
     );
+    setAnswers([]);
   }
 
   return (
@@ -61,7 +60,6 @@ function MultipleResponseInput({
           height="auto"
           onClick={handleSubmit}
           isDisabled={!isAnswered}
-          isLoading={isSubmitting}
         >
           Send
         </Button>

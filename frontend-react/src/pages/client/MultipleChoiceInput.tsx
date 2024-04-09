@@ -8,13 +8,12 @@ function MultipleChoiceInput({
   handleQuestionResponse,
 }: MultipleChoiceInputProps) {
   const [answer, setAnswer] = useState<string>("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const isAnswered = answer !== "";
 
   function handleSubmit(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
-    setIsSubmitting(true);
     handleQuestionResponse(questionID, answer);
+    setAnswer("");
   }
 
   return (
@@ -58,7 +57,6 @@ function MultipleChoiceInput({
           height="auto"
           onClick={handleSubmit}
           isDisabled={!isAnswered}
-          isLoading={isSubmitting}
         >
           Send
         </Button>
