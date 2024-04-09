@@ -86,6 +86,13 @@ function ChatWindow({
               </ChatMessage>
             );
           } else {
+            if (!item.question) {
+              return (
+                <ChatMessage key={index} sender={item.sender}>
+                  {item.message}
+                </ChatMessage>
+              );
+            }
             return (
               <>
                 <ChatMessage key={index} sender={item.sender}>
