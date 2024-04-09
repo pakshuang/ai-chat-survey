@@ -505,7 +505,7 @@ def test_get_responses_success():
                 "answer": ["The venue was spacious and well-maintained."],
             },
         ],
-        "messages": []
+        "messages": [],
     }
 
     assert response.status_code == 200
@@ -586,7 +586,7 @@ def test_get_response_success():
                 "answer": ["The venue was spacious and well-maintained."],
             },
         ],
-        "messages": []
+        "messages": [],
     }
 
     assert response.status_code == 200
