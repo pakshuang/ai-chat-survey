@@ -505,10 +505,12 @@ def test_get_responses_success():
                 "answer": ["The venue was spacious and well-maintained."],
             },
         ],
+        "messages": []
     }
 
     assert response.status_code == 200
     assert response.json()[0].get("answers") == response_data.get("answers")
+    assert response.json()[0].get("messages") == response_data.get("messages")
 
 
 def test_get_responses_missing_jwt():
