@@ -22,7 +22,7 @@ function ChatInput({ onSubmitMessage, isSubmitting }: ChatInputProps) {
     setMessage("");
   }
 
-  const handleInputKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       handleSubmit(e);
     }
@@ -45,7 +45,7 @@ function ChatInput({ onSubmitMessage, isSubmitting }: ChatInputProps) {
             boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
           }}
           onChange={(e) => setMessage(e.target.value)}
-          onKeyPress={handleInputKeyPress}
+          onKeyDown={handleKeyDown}
           value={message}
           ref={inputRef}
           rows={1}
