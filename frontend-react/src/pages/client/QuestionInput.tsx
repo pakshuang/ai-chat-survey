@@ -6,9 +6,10 @@ import {
   RadioGroup,
   Stack,
   Text,
-} from "@chakra-ui/react"
-import { useState } from "react"
-import { QuestionProps } from "./constants"
+  Box,
+} from "@chakra-ui/react";
+import { useState } from "react";
+import { QuestionProps } from "./constants";
 
 const QuestionInput = ({
   questionData,
@@ -16,24 +17,24 @@ const QuestionInput = ({
   submitted,
 }: QuestionProps) => {
   if (questionData == undefined) {
-    return null
+    return null;
   }
-  const { question_id, type, options, answer } = questionData
-  const [tempAnswer, setTempAnswer] = useState(answer)
+  const { question_id, type, options, answer } = questionData;
+  const [tempAnswer, setTempAnswer] = useState(answer);
   const handleInputChange = (e) => {
-    setTempAnswer(e.target.value)
-  }
+    setTempAnswer(e.target.value);
+  };
 
   const handleInputBlur = () => {
-    handleQuestionResponse(question_id, tempAnswer)
-  }
+    handleQuestionResponse(question_id, tempAnswer);
+  };
 
   const handleInputKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault()
-      handleQuestionResponse(question_id, tempAnswer)
+      e.preventDefault();
+      handleQuestionResponse(question_id, tempAnswer);
     }
-  }
+  };
 
   const renderQuestionType = () => {
     switch (type) {
@@ -43,7 +44,7 @@ const QuestionInput = ({
             isDisabled={submitted}
             value={Array.isArray(answer) ? answer[0] : answer}
             onChange={(e) => {
-              handleQuestionResponse(question_id, e)
+              handleQuestionResponse(question_id, e);
             }}
           >
             <Stack direction="column">
@@ -60,7 +61,7 @@ const QuestionInput = ({
               ))}
             </Stack>
           </RadioGroup>
-        )
+        );
       case "multiple_response":
         return (
           <>
@@ -69,7 +70,7 @@ const QuestionInput = ({
               isDisabled={submitted}
               value={answer}
               onChange={(values) => {
-                handleQuestionResponse(question_id, values)
+                handleQuestionResponse(question_id, values);
               }}
             >
               <Stack direction="column">
@@ -87,12 +88,13 @@ const QuestionInput = ({
               </Stack>
             </CheckboxGroup>
           </>
-        )
+        );
       case "free_response":
         return (
           <Textarea
             background="white"
             borderColor="gray.500"
+            resize="none"
             _hover={{ borderColor: "gray.500" }}
             _focus={{
               borderColor: "gray.500",
@@ -104,13 +106,13 @@ const QuestionInput = ({
             value={tempAnswer}
             isDisabled={submitted}
           />
-        )
+        );
       default:
-        return type
+        return type;
     }
-  }
+  };
 
-  return renderQuestionType()
-}
+  return renderQuestionType();
+};
 
-export default QuestionInput
+export default QuestionInput;

@@ -77,7 +77,7 @@ function ChatPage() {
   ) => {
     const updatedQuestions = [...messages];
     if (updatedQuestions[id - 1]?.question) {
-      updatedQuestions[id - 1].question!.answer = val;
+      updatedQuestions[id - 1].question!.answer = String(val);
     }
     const updId = Math.max(id, surveyState.displayIndex);
     setSurveyState({ ...surveyState, displayIndex: updId });
