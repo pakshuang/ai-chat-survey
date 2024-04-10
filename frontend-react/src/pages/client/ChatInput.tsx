@@ -13,7 +13,6 @@ function ChatInput({ onSubmitMessage, isSubmitting }: ChatInputProps) {
 
   function handleSubmit(
     e:
-      | React.FormEvent<HTMLFormElement>
       | React.MouseEvent<HTMLButtonElement>
       | React.KeyboardEvent<HTMLTextAreaElement>
   ) {
