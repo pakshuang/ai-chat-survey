@@ -16,6 +16,9 @@ function ChatInput({ onSubmitMessage, isSubmitting }: ChatInputProps) {
       | React.MouseEvent<HTMLButtonElement>
       | React.KeyboardEvent<HTMLTextAreaElement>
   ) {
+    if (isEmpty) {
+      return;
+    }
     onSubmitMessage(message);
     e.preventDefault();
     e.stopPropagation();
