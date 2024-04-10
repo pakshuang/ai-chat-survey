@@ -531,6 +531,7 @@ def create_response_object(
             "submitted_at": row["submitted_at"].strftime("%Y-%m-%d %H:%M:%S"),
         },
         "answers": [],
+        "messages": [],
     }
     return response_object
 
@@ -541,6 +542,7 @@ def append_answer_to_response(
     response_objects: dict[int, dict[str, Any]],
     response_id: int,
     response_data: dict[str, Any],
+    chat_log_data: dict[str, Any],
 ) -> None:
     """
     Append an answer to the response object identified by the provided response ID.
@@ -549,6 +551,7 @@ def append_answer_to_response(
         response_objects (Dict[int, Dict[str, Any]]): A dictionary containing response objects indexed by response ID.
         response_id (int): The ID of the response to which the answer will be appended.
         response_data (Dict[str, Any]): The data of the answer to be appended to the response.
+        chat_log_data (Dict[str, Any]): The chat log history to be append to the response
 
     Returns:
         None
@@ -565,6 +568,11 @@ def append_answer_to_response(
         ),
     }
     response_objects[response_id]["answers"].append(answer)
+    if chat_log_data is []:
+        chat_log = json.loads(chat_log_data[0]["chat_log"])
+        # Extract the list of messages
+        messages = chat_log["messages"]
+        response_objects[response_id]["messages"] = messages[3:]
 
 
 # send_chat_message()
