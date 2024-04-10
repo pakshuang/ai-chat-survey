@@ -9,6 +9,7 @@ interface ChatInputProps {
 function ChatInput({ onSubmitMessage, isSubmitting }: ChatInputProps) {
   const [message, setMessage] = useState("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const isEmpty = message.trim() === "";
 
   function handleSubmit(
     e:
@@ -60,6 +61,7 @@ function ChatInput({ onSubmitMessage, isSubmitting }: ChatInputProps) {
           borderColor="gray.500"
           borderLeftRadius="0"
           isLoading={isSubmitting}
+          isDisabled={isEmpty}
         >
           Send
         </Button>
