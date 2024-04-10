@@ -30,8 +30,8 @@ function SurveyCard({ survey }: { survey: GetSurvey }) {
           {survey.title}
         </Heading>
       </CardHeader>
-      <Flex h="full" ml="1rem" mr="0.5rem" overflowY="scroll" mb="1rem">
-        <Stack divider={<StackDivider />} spacing="4" h="full" w="full">
+      <Flex h="full" mx="0.5rem" overflowY="scroll" mb="1rem">
+        <Stack divider={<StackDivider />} h="full" w="full" mx="0.5rem">
           <Box>
             <Heading size="xs" textTransform="uppercase">
               Description
