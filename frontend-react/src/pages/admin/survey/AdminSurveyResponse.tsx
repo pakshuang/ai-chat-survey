@@ -14,6 +14,15 @@ function AdminSurveyResponse({ response }: { response: Response }) {
             <Divider orientation="horizontal" />
           </VStack>
         ))}
+        {response.messages.map((mes, index) => (
+          <VStack key={`mes-${index}`} w="full" alignItems="start">
+            {mes.role === "user" ? (
+              <Text>{mes.content}</Text>
+            ) : (
+              <Text as="b">{mes.content}</Text>
+            )}
+          </VStack>
+        ))}
       </VStack>
     </Card>
   )

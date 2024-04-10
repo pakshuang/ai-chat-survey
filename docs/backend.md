@@ -9,7 +9,9 @@ This section serves as a comprehensive exploration of the backend infrastructure
 ## Backend Architecture
 ### 1. Introduction to Backend Architecture
 
-The backend architecture of our AI Chatbot Survey system serves as the foundation for managing data, handling user interactions, and ensuring system integrity. It plays a pivotal role in supporting the seamless operation of the entire system, from processing user requests to persisting data securely.
+- The backend architecture of our AI Chatbot Survey system serves as the foundation for managing data, handling user interactions, and ensuring system integrity. It plays a pivotal role in supporting the seamless operation of the entire system, from processing user requests to persisting data securely.
+
+- Discussion on how the architecture is designed to handle scalability and ensure optimal performance. Explanation of strategies such as horizontal scaling, caching mechanisms, and load balancing.
 
 ### 2. Technology Stack
 
@@ -25,11 +27,84 @@ The backend components interact harmoniously to facilitate the flow of data and 
 
 ### 4. Components of the Backend Architecture
 
-
 #### a. Server/API
-The backend server is the core component responsible for processing incoming requests from the frontend and executing the necessary logic. Implemented using Flask in app.py, the server handles various functionalities such as creating surveys, submitting responses, sending chat messages to ChatGPT, and interacting with the database.
+The backend server is the core component responsible for processing incoming requests from the frontend via our API, and executing the necessary logic. Implemented using Flask in app.py, the server handles various functionalities such as creating surveys, submitting responses, sending chat messages to ChatGPT, and interacting with the database.
 
-The API provides a standardized interface through which the frontend communicates with the backend. Documented in [API](api.md), it defines endpoints for various operations such as creating surveys, submitting responses, retrieving data, and sending chat messages. This facilitates seamless interaction between the frontend and backend components.
+Our API consists of the following:
+##### Admins
+
+Admins play a crucial role in managing the system. They have access to an admin portal where they can create and delete surveys, as well as view responses to surveys they create. The API provides endpoints specifically for admin management:
+
+##### 1. Create Admin
+
+- **Endpoint:** `/api/v1/admins`
+- **Method:** `POST`
+- **Description:** Creates a new admin with a username and password.
+
+##### 2. Login
+
+- **Endpoint:** `/api/v1/admins/login`
+- **Method:** `POST`
+- **Description:** Logs in an admin and issues a JWT upon successful login.
+
+##### Surveys
+
+Surveys are a fundamental aspect of the AI Chat Bot system, providing the necessary context and structure for interactions. The API supports the creation, retrieval, and deletion of surveys:
+
+##### 1. Create Survey
+
+- **Endpoint:** `/api/v1/surveys`
+- **Method:** `POST`
+- **Description:** Creates a new survey with metadata, title, subtitle, questions, and chat context.
+
+##### 2. Get Surveys
+
+- **Endpoint:** `/api/v1/surveys/?admin={username}`
+- **Method:** `GET`
+- **Description:** Retrieves all survey objects, optionally filtered by the admin who created them.
+
+##### 3. Get Survey
+
+- **Endpoint:** `/api/v1/surveys/{survey_id}`
+- **Method:** `GET`
+- **Description:** Retrieves a survey object by ID.
+
+##### 4. Delete Survey
+
+- **Endpoint:** `/api/v1/surveys/{survey_id}`
+- **Method:** `DELETE`
+- **Description:** Deletes a survey by ID, requiring admin authentication.
+
+##### Survey Responses
+
+Survey responses capture user interactions and feedback. The API allows for the submission, retrieval, and update of survey responses:
+
+##### 1. Submit Survey Response
+
+- **Endpoint:** `/api/v1/surveys/{survey_id}/responses`
+- **Method:** `POST`
+- **Description:** Submits a new survey response.
+- **Request Body:** JSON format containing response metadata and answers.
+
+##### 2. Get Survey Responses
+
+- **Endpoint:** `/api/v1/surveys/{survey_id}/responses`
+- **Method:** `GET`
+- **Description:** Retrieves all response objects for a survey, requiring admin authentication.
+
+##### 3. Get Survey Response
+
+- **Endpoint:** `/api/v1/surveys/{survey_id}/responses/{response_id}`
+- **Method:** `GET`
+- **Description:** Retrieves a response object by ID, requiring admin authentication.
+
+##### 4. Send Chat Message
+
+- **Endpoint:** `/api/v1/surveys/{survey_id}/responses/{response_id}/chat`
+- **Method:** `POST`
+- **Description:** Sends a message to the chatbot and receives a response.
+
+For the detailed API documentation, refer to [api.md](api.md).
 
 #### b. Database
 
@@ -68,11 +143,6 @@ Tie-back to user interviews conducted by the frontend team to justify the choice
   - Rubrics:
       - Demonstrate an awareness of how model can be tracked and improved after
         deployment.
-
-## Scalability and Performance Considerations
-
-- Discussion on how the architecture is designed to handle scalability and ensure optimal performance. Explanation of strategies such as horizontal scaling, caching mechanisms, and load balancing.
-
 
 ## Conclusion
 In conclusion, this backend report has provided a detailed examination of the infrastructure supporting our AI chatbot survey system. We have explored the core components and discussed the rationale behind using ChatGPT and its integration into the survey framework. Additionally, we have examined the backend architecture, shedding light on the design decisions and the system's functionality.
