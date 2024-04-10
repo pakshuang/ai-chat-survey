@@ -70,4 +70,8 @@ export type Response = {
     submitted_at: string
   }
   answers: Answer[]
+  messages: {
+    content: string
+    role: string
+  }[]
 }
