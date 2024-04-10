@@ -71,13 +71,10 @@ function ChatPage() {
     });
   }, []);
 
-  const handleQuestionResponse = (
-    id: number,
-    val: string | number | string[]
-  ) => {
+  const handleQuestionResponse = (id: number, val: string | string[]) => {
     const updatedQuestions = [...messages];
     if (updatedQuestions[id - 1]?.question) {
-      updatedQuestions[id - 1].question!.answer = String(val);
+      updatedQuestions[id - 1].question!.answer = val;
     }
     const updId = Math.max(id, surveyState.displayIndex);
     setSurveyState({ ...surveyState, displayIndex: updId });
