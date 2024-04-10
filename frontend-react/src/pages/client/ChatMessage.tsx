@@ -19,7 +19,9 @@ function ChatMessage({ children, sender }: ChatMessageProps) {
             src="https://emojiisland.com/cdn/shop/products/Emoji_Icon_-_Sunglasses_cool_emoji_large.png?v=1571606093"
           />
         )}
-        <Text fontSize="xl">{children}</Text>
+        <Text fontSize="xl" flexGrow="1">
+          {children}
+        </Text>
       </Flex>
     </Card>
   );
