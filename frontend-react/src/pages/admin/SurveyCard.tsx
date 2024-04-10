@@ -50,15 +50,6 @@ function SurveyCard({ survey }: { survey: GetSurvey }) {
           </Box>
           <Box>
             <Heading size="xs" textTransform="uppercase">
-              Analysis
-            </Heading>
-            <Text pt="2" fontSize="sm">
-              See a detailed analysis of all your business clients. asdf asdf
-              asdf asdf asdf sadf asdf sadf sadf asdf sadf asdf
-            </Text>
-          </Box>
-          <Box>
-            <Heading size="xs" textTransform="uppercase">
               Number of Questions
             </Heading>
             <Text pt="2" fontSize="sm">
