@@ -15,9 +15,6 @@ RUN npm install
 # Copying all the files in our project
 COPY . .
 
-# Expose the port on which the application will run
-EXPOSE 5173
-
 # Starting our application
 CMD ["npm","run","dev"]
 

@@ -1,0 +1,69 @@
+name: Backend CI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+      - '!backend/logs/**'
+      - '!backend/model_evaluation/**'
+      - '!backend/README.md'
+      - 'database/**'
+      - '!database/README.md'
+      - '!database/insert_dummy_data.sql'
+      - 'scripts/run_backend_integration_tests.sh'
+      - '.github/workflows/backend-ci.yml'
+
+jobs:
+  backend-integration-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Check OpenAI connection
+      run: |
+        curl https://api.openai.com/v1/chat/completions   -H "Content-Type: application/json"   -H "Authorization: Bearer ${{ secrets.OPENAI_API_KEY }}"   -d '{
+          "model": "gpt-3.5-turbo",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a poetic assistant, skilled in explaining complex programming concepts with creative flair."
+            },
+            {
+              "role": "user",
+              "content": "Compose a poem that explains the concept of recursion in programming."
+            }
+          ]
+        }'
+
+    - name: Create .env file
+      run: |
+        cp sample.env .env
+
+    - name: Prevent dummy data from being inserted
+      run: |
+        rm database/insert_dummy_data.sql
+
+    - name: Run integration tests
+      run: |
+        echo ${{ secrets.OPENAI_API_KEY }} >> .env
+        docker compose -f compose.yaml -f compose.tests.yaml up integration-tests --build --exit-code-from integration-tests
+
+    - name: Shutdown containers
+      if: always()
+      run: |
+        docker compose -f compose.yaml -f compose.tests.yaml down
+
+    - name: Upload Test Artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: Logs
+        path: ./backend/logs/
