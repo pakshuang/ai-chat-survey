@@ -1,0 +1,26 @@
+@startuml backend-architecture
+
+package "Docker" {
+    component "Reverse Proxy (nginx)" as reverse_proxy {
+        [Nginx Server] as nginx
+    }
+
+    component "Backend (flask)" as backend {
+        [Prompt Engineering &\nOpenAI API Integration Layer\n(/llm_classes)] as OA
+        [API Controller &\nService Logic Layer\n(app.py)] as API
+        [Data Access Layer\n(database_operations.py)] as DAL
+    }
+
+    component "RDBMS (MySQL)" as database {
+        database "Database\n(ai_chat_survey_db)" as DB
+    }
+
+    nginx <-right-> API : HTTP request/response
+    API <-down-> DAL : accesses
+    DAL <-right-> DB : data interaction
+    OA <-left-> API : uses
+}
+
+[OpenAI Chat Completion API\n(https://api.openai.com/v1/chat/completions)] <-left-> OA: HTTP request/response
+
+@enduml

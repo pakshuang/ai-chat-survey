@@ -10,7 +10,9 @@ This section serves as a comprehensive exploration of the backend infrastructure
 
 ## Backend Architecture
 
-### 1. Introduction to Backend Architecture
+### 1. Introduction to the Backend Architecture
+
+![Backend Architecture](diagrams/images/backend-architecture.png)
 
 - The backend architecture of our AI Chatbot Survey system serves as the foundation for managing data, handling user interactions, and ensuring system integrity. It plays a pivotal role in supporting the seamless operation of the entire system, from processing user requests to persisting data securely.
 
