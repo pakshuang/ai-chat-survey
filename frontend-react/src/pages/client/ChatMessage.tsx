@@ -1,5 +1,7 @@
 import { Flex, Card, Avatar, Text } from "@chakra-ui/react";
 import { ChatMessageProps } from "./constants";
+import bot from "../../assets/bot.svg";
+import user from "../../assets/user.svg";
 
 function ChatMessage({ children, sender }: ChatMessageProps) {
   const isUser = sender === "user";
@@ -10,16 +12,22 @@ function ChatMessage({ children, sender }: ChatMessageProps) {
           <Avatar
             name="User"
             size="md"
-            src="https://upload.wikimedia.org/wikipedia/commons/e/ef/Emoji_u263a.svg"
+            src={user}
+            borderRadius={0}
+            // Icon by <a href="https://freeicons.io/profile/722">Fasil</a> on <a href="https://freeicons.io">freeicons.io</a>
           />
         ) : (
           <Avatar
             name={sender.charAt(0).toUpperCase() + sender.slice(1)}
             size="md"
-            src="https://emojiisland.com/cdn/shop/products/Emoji_Icon_-_Sunglasses_cool_emoji_large.png?v=1571606093"
+            src={bot}
+            borderRadius={0}
+            // Icon by <a href="https://freeicons.io/profile/433683">Pexelpy</a> on <a href="https://freeicons.io">freeicons.io</a>
           />
         )}
-        <Text fontSize="xl">{children}</Text>
+        <Text fontSize="xl" flexGrow="1">
+          {children}
+        </Text>
       </Flex>
     </Card>
   );

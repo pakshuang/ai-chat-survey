@@ -298,6 +298,12 @@ These endpoints are used to Create, Read, and Update (send message) responses, w
         "options": ["string"],
         "answer": ["string"],
       }
+    ],
+    "messages": [
+      {
+        "role": "string", # system, user, assistant 
+        "content": "string"
+      }
     ]
   }
   ```
