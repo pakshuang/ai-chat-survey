@@ -6,38 +6,41 @@ import {
   Heading,
   Spinner,
   VStack,
-} from "@chakra-ui/react"
-import SurveyCard from "./SurveyCard"
-import NewSurveyCard from "./NewSurveyCard"
-import { useQuery } from "react-query"
-import { getSurveys, logout, shouldLogout } from "../hooks/useApi"
-import { useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import Header from "./Header"
-import { getCookie } from "typescript-cookie"
+} from "@chakra-ui/react";
+import SurveyCard from "./SurveyCard";
+import NewSurveyCard from "./NewSurveyCard";
+import { useQuery } from "react-query";
+import { getSurveys, logout, shouldLogout } from "../hooks/useApi";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import Header from "./Header";
 
 function AdminHomePage() {
-  const { data: surveys, isLoading, refetch } = useQuery("surveys", getSurveys)
+  const { data: surveys, isLoading, refetch } = useQuery("surveys", getSurveys);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
-    refetch()
-  }, [])
+    refetch();
+  }, []);
 
   useEffect(() => {
     if (shouldLogout()) {
-      logout()
-      navigate("/admin/login")
+      logout();
+      navigate("/admin/login");
     }
-  }, [getCookie("username"), getCookie("jwt")])
+  }, [
+    localStorage.getItem("username"),
+    localStorage.getItem("jwt"),
+    localStorage.getItem("jwtExp"),
+  ]);
 
   if (isLoading || !surveys)
     return (
       <Center mt="3rem">
         <Spinner />
       </Center>
-    )
+    );
 
   return (
     <Flex
@@ -64,7 +67,7 @@ function AdminHomePage() {
         </Grid>
       </VStack>
     </Flex>
-  )
+  );
 }
 
-export default AdminHomePage
+export default AdminHomePage;
