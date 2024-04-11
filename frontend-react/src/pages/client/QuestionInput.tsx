@@ -5,8 +5,8 @@ import {
   Radio,
   RadioGroup,
   Stack,
-  Input,
   Text,
+  Box,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { QuestionProps } from "./constants";
@@ -42,13 +42,13 @@ const QuestionInput = ({
         return (
           <RadioGroup
             isDisabled={submitted}
-            value={tempAnswer}
+            value={Array.isArray(answer) ? answer[0] : answer}
             onChange={(e) => {
               handleQuestionResponse(question_id, e);
             }}
           >
             <Stack direction="column">
-              {options.map((option: string, index: number) => (
+              {options?.map((option: string, index: number) => (
                 <Radio
                   borderColor="black"
                   colorScheme="green"
@@ -68,13 +68,13 @@ const QuestionInput = ({
             <Text fontSize="sm">(You may pick more than one option.)</Text>
             <CheckboxGroup
               isDisabled={submitted}
-              value={tempAnswer}
+              value={answer}
               onChange={(values) => {
                 handleQuestionResponse(question_id, values);
               }}
             >
               <Stack direction="column">
-                {options.map((option: string, index: number) => (
+                {options?.map((option: string, index: number) => (
                   <Checkbox
                     borderColor="black"
                     colorScheme="green"
@@ -94,6 +94,7 @@ const QuestionInput = ({
           <Textarea
             background="white"
             borderColor="gray.500"
+            resize="none"
             _hover={{ borderColor: "gray.500" }}
             _focus={{
               borderColor: "gray.500",
