@@ -2,7 +2,6 @@ import axios, { AxiosResponse } from "axios"
 import { LoginResponse, LoginSignupData } from "../admin/login/constants"
 import { GetSurvey, Response, Survey } from "../admin/survey/constants"
 import dayjs from "dayjs"
-import { getCookie, removeCookie, setCookie } from "typescript-cookie"
 
 const baseUrl: string = import.meta.env.VITE_BASE_URL
 
@@ -10,48 +9,47 @@ export const ApiService = axios.create({
   baseURL: baseUrl,
 })
 
-export const AdminApiService = () => {
-  const token = getCookie("jwt")
-  return axios.create({
+export const AdminApiService = (token: string) =>
+  axios.create({
     baseURL: baseUrl,
     headers: { Authorization: `Bearer ${token}` },
   })
-}
 
 export const signup = (data: LoginSignupData) =>
   ApiService.post("/admins", data)
 
 export const login = (data: LoginSignupData) =>
   ApiService.post<LoginResponse>("/admins/login", data).then((res) => {
-    const date = dayjs(res.data.jwt_exp).toDate()
-    setCookie("username", data.username)
-    setCookie("jwt", res.data.jwt, {
-      expires: date,
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict",
-    })
+    localStorage.setItem("username", data.username)
+    localStorage.setItem("jwt", res.data.jwt)
+    localStorage.setItem("jwtExp", res.data.jwt_exp)
   })
 
 export const logout = () => {
-  removeCookie("username")
-  removeCookie("jwt")
+  localStorage.removeItem("username")
+  localStorage.removeItem("jwt")
+  localStorage.removeItem("jwtExp")
 }
 
 export const isJwtExpired = () => {
-  return !getCookie("jwt")
+  if (!localStorage.getItem("jwtExp")) return true
+  return dayjs(localStorage.getItem("jwtExp")).isBefore(dayjs())
 }
 
 export const shouldLogout = () => {
-  return !getCookie("username") || isJwtExpired()
+  return (
+    !localStorage.getItem("username") ||
+    !localStorage.getItem("jwt") ||
+    isJwtExpired()
+  )
 }
 
 export const submitSurvey = (data: Survey) =>
-  AdminApiService().post("/surveys", data)
+  AdminApiService(localStorage.getItem("jwt") ?? "").post("/surveys", data)
 
 export const getSurveys = async (): Promise<GetSurvey[]> => {
-  const username = getCookie("username")
-  return AdminApiService()
+  const username = localStorage.getItem("username") ?? ""
+  return AdminApiService(localStorage.getItem("jwt") ?? "")
     .get(`surveys?admin=${username}`)
     .then((res) => res.data)
 }
@@ -74,13 +72,13 @@ export const getSurveyById = async (id: string): Promise<GetSurvey> => {
 export const getResponseBySurveyId = async (
   id: string
 ): Promise<Response[]> => {
-  return AdminApiService()
+  return AdminApiService(localStorage.getItem("jwt") ?? "")
     .get(`surveys/${id}/responses`)
     .then((res) => res.data)
 }
 
 export const deleteSurvey = (id: string) =>
-  AdminApiService()
+  AdminApiService(localStorage.getItem("jwt") ?? "")
     .delete(`/surveys/${id}`)
     .then((res) => res.data)
 

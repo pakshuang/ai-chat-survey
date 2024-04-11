@@ -21,8 +21,7 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.1",
     "react-query": "^3.39.3",
-    "react-router-dom": "^6.22.3",
-    "typescript-cookie": "^1.0.6"
+    "react-router-dom": "^6.22.3"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
