@@ -13,6 +13,7 @@ function ChatMessage({ children, sender }: ChatMessageProps) {
             name="User"
             size="md"
             src={user}
+            borderRadius={0}
             // Icon by <a href="https://freeicons.io/profile/722">Fasil</a> on <a href="https://freeicons.io">freeicons.io</a>
           />
         ) : (
@@ -20,6 +21,7 @@ function ChatMessage({ children, sender }: ChatMessageProps) {
             name={sender.charAt(0).toUpperCase() + sender.slice(1)}
             size="md"
             src={bot}
+            borderRadius={0}
             // Icon by <a href="https://freeicons.io/profile/433683">Pexelpy</a> on <a href="https://freeicons.io">freeicons.io</a>
           />
         )}
