@@ -1,11 +1,10 @@
-import { Avatar, Box, Button, Flex, Tooltip } from "@chakra-ui/react"
-import { logout } from "../hooks/useApi"
-import { useNavigate } from "react-router-dom"
-import { getCookie } from "typescript-cookie"
+import { Avatar, Box, Button, Flex, Tooltip } from "@chakra-ui/react";
+import { logout } from "../hooks/useApi";
+import { useNavigate } from "react-router-dom";
 
 function Header() {
-  const navigate = useNavigate()
-  const username = getCookie("username") || ""
+  const navigate = useNavigate();
+  const username = localStorage.getItem("username") || "";
 
   return (
     <Box w="100%" p="1rem" bg="gray.50" boxShadow="base">
@@ -14,8 +13,8 @@ function Header() {
           colorScheme="red"
           variant="outline"
           onClick={() => {
-            logout()
-            navigate("/admin/login")
+            logout();
+            navigate("/admin/login");
           }}
         >
           Logout
@@ -25,7 +24,7 @@ function Header() {
         </Tooltip>
       </Flex>
     </Box>
-  )
+  );
 }
 
-export default Header
+export default Header;

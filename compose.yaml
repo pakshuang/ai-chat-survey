@@ -1,14 +1,13 @@
 ---
 version: "3"
 services:
-  frontend:
-    image: frontend-react
-    build: ./frontend-react
-    depends_on:
-      - backend
+  database:
+    image: mysql:8.3.0
     env_file:
       - .env
-      
+    volumes:
+      - ./database:/docker-entrypoint-initdb.d
+
   backend:
     image: backend
     build: ./backend
@@ -19,13 +18,14 @@ services:
     volumes:
       - ./backend/logs:/backend/logs
 
-  database:
-    image: mysql:8.3.0
+  frontend:
+    image: frontend
+    build: ./frontend
+    depends_on:
+      - backend
     env_file:
       - .env
-    volumes:
-      - ./database:/docker-entrypoint-initdb.d
-
+      
   nginx:
     image: nginx:latest
     command: >
@@ -35,10 +35,9 @@ services:
     depends_on:
       - frontend
       - backend
-      - database
     env_file:
       - .env
     ports:
-      - "80:${NGINX_CONTAINER_PORT}"
+      - "${NGINX_HOST_PORT}:${NGINX_CONTAINER_PORT}"
     volumes:
-      - ./nginx:/etc/nginx/conf.d/
+      - ./reverse-proxy:/etc/nginx/conf.d/
