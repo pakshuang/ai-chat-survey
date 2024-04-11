@@ -25,60 +25,73 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
-} from "@chakra-ui/react"
-import { useQuery } from "react-query"
-import { ArrowBackIcon, InfoIcon, DeleteIcon, ViewIcon } from "@chakra-ui/icons"
-import { useNavigate, useParams } from "react-router-dom"
+} from "@chakra-ui/react";
+import { useQuery } from "react-query";
+import {
+  ArrowBackIcon,
+  InfoIcon,
+  DeleteIcon,
+  ViewIcon,
+} from "@chakra-ui/icons";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   getSurveyById,
   getSurveys,
   logout,
   shouldLogout,
   deleteSurvey,
-} from "../../hooks/useApi"
-import { needOptions, QuestionType } from "./constants"
-import { useEffect } from "react"
-import ViewAdminSurveyTitle from "./ViewAdminSurveyTitle"
+} from "../../hooks/useApi";
+import { needOptions, QuestionType } from "./constants";
+import { useEffect } from "react";
+import ViewAdminSurveyTitle from "./ViewAdminSurveyTitle";
+import Header from "../Header";
 
 function ViewAdminSurvey() {
-  const { id } = useParams()
+  const { id } = useParams();
 
-  const { data: surveys } = useQuery("surveys", getSurveys)
+  const { data: surveys } = useQuery("surveys", getSurveys);
 
   const { data: survey, isLoading } = useQuery(`survey-${id}`, () =>
     getSurveyById(id ?? "0")
-  )
+  );
 
-  const navigate = useNavigate()
-  const toast = useToast()
+  const navigate = useNavigate();
+  const toast = useToast();
 
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
-    const ids = surveys?.map((s) => s.metadata.survey_id)
-    if (ids && !ids.includes(parseInt(id ?? "0"))) navigate("/admin/404")
-  }, [surveys])
+    const ids = surveys?.map((s) => s.metadata.survey_id);
+    if (ids && !ids.includes(parseInt(id ?? "0"))) navigate("/admin/404");
+  }, [surveys]);
 
   useEffect(() => {
     if (shouldLogout()) {
-      logout()
-      navigate("/admin/login")
+      logout();
+      navigate("/admin/login");
     }
   }, [
     localStorage.getItem("username"),
     localStorage.getItem("jwt"),
     localStorage.getItem("jwtExp"),
-  ])
+  ]);
 
   if (isLoading || !survey)
     return (
       <Center mt="3rem">
         <Spinner />
       </Center>
-    )
+    );
 
   return (
-    <Flex minH="100vh" w="100%" bg="gray.100" minW="80rem">
+    <Flex
+      minH="100vh"
+      w="100%"
+      bg="gray.100"
+      minW="80rem"
+      flexDirection="column"
+    >
+      <Header />
       <VStack mx="auto" my="3rem" spacing="0" w="48rem">
         <Card w="48rem" bg="gray.50" p="1.5rem" mb="1rem">
           <HStack>
@@ -130,7 +143,7 @@ function ViewAdminSurvey() {
               </AccordionButton>
               <AccordionPanel p="1.5rem">
                 <VStack spacing="2rem" alignItems="flex-start">
-                  <Select value={question.type} isReadOnly>
+                  <Select value={question.type} isDisabled>
                     <option value={QuestionType.MCQ}>
                       Multiple Choice Question
                     </option>
@@ -162,7 +175,7 @@ function ViewAdminSurvey() {
             leftIcon={<ArrowBackIcon />}
             colorScheme="blue"
             onClick={() => {
-              navigate("/admin/survey")
+              navigate("/admin/survey");
             }}
           >
             Back to home
@@ -171,7 +184,7 @@ function ViewAdminSurvey() {
             leftIcon={<ViewIcon />}
             colorScheme="green"
             onClick={() => {
-              navigate(`/admin/survey/${id}/responses`)
+              navigate(`/admin/survey/${id}/responses`);
             }}
           >
             View responses
@@ -204,9 +217,9 @@ function ViewAdminSurvey() {
                       title: "Survey deleted",
                       status: "success",
                       isClosable: true,
-                    })
-                  })
-                  navigate("/admin/survey")
+                    });
+                  });
+                  navigate("/admin/survey");
                 }}
               >
                 Confirm
@@ -216,7 +229,7 @@ function ViewAdminSurvey() {
         </Modal>
       </VStack>
     </Flex>
-  )
+  );
 }
 
-export default ViewAdminSurvey
+export default ViewAdminSurvey;

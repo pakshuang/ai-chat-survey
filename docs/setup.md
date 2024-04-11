@@ -6,7 +6,7 @@ This document describes how to set up the project. It is intended to be read by 
 
 - [Docker](https://www.docker.com/)
 - [Python](https://www.python.org/)
-- [Node.js](https://nodejs.org/):
+- [Node.js](https://nodejs.org/)
 
 ## Quick Installation For Windows
 
@@ -36,10 +36,13 @@ This document describes how to set up the project. It is intended to be read by 
 
 3. Initialise `.env` file:
    Windows CMD:
+
    ```shell
    copy sample.env .env
    ```
+
    Unix:
+
    ```shell
    cp sample.env .env
    ```
@@ -58,6 +61,12 @@ If you have already built the images, you can use the following command to start
 
 ```shell
 docker-compose up -d
+```
+
+If you want to horizontally scale (application level) the frontend or backend services, you can use the following command (do not scale the database service or nginx service):
+
+```shell
+docker-compose up -d --scale frontend=2 --scale backend=2
 ```
 
 During development, you may want to run the application on a clean slate. To do this, you can use the following command:
@@ -117,12 +126,14 @@ docker-compose down --rmi all --volumes
 5. Running the backend:
 
    Windows CMD:
+
    ```shell
    copy ../.env .env
    pipenv run python src/app.py
    ```
 
    Unix:
+
    ```shell
    cp ../.env .env
    pipenv run python src/app.py
@@ -179,34 +190,17 @@ The recommended way to run is to use docker compose instead, see [Running the Ap
 > The tests assume that the application is running with a clean database. You should run the tests on a clean slate. For this reason, make sure that any dummy data added to the database upon launch does not interfere with the tests.
 
 1. Navigate to the `ai-chat-survey` directory, the command will vary depending on which directory you are currently in
-2. Move the `insert_dummy_data.sql` file out of the `scripts` directory to ensure that the database is clean:
+2. Run the integration tests script in a Unix-like shell:
 
    ```shell
-   mv scripts/insert_dummy_data.sql .
+   ./scripts/run_backend_integration_tests.sh
    ```
 
-3. Shutdown the containers and remove the volumes to ensure a clean testing environment:
+3. Once the tests are done, you can view the results in `backend/logs/integration_tests.log`.
+4. To run the integration tests with the backend scaled to 3 instances, you can use the following command:
 
    ```shell
-   docker compose down -v
-   ```
-
-4. Run the integration tests:
-
-   ```shell
-   docker compose -f compose.yaml -f compose.tests.yaml up integration-tests --build --force-recreate --renew-anon-volumes
-   ```
-
-5. Shutdown the containers and remove the volumes after running the tests:
-
-   ```shell
-   docker compose -f compose.yaml -f compose.tests.yaml down -v
-   ```
-
-6. Move the `insert_dummy_data.sql` file back to the `scripts` directory:
-
-   ```shell
-   mv insert_dummy_data.sql scripts/
+   ./scripts/run_backend_integration_tests.sh 3
    ```
 
 ## Frontend Development

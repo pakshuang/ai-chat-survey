@@ -1,5 +1,5 @@
 import { Box, SkeletonCircle, Button, Flex } from "@chakra-ui/react"
-import { useEffect, useState } from "react"
+import { Fragment, useEffect, useState } from "react"
 import ChatMessage from "./ChatMessage"
 import TypingEffect from "./TypingEffect"
 import QuestionInput from "./QuestionInput"
@@ -22,7 +22,6 @@ function ChatWindow({
       setBotResponded(false)
     }
   }, [messages])
-  const disabled=messages.filter((ele) => ele.question!==undefined).some((ele) => ele.question.answer==undefined || ele.question.answer.length === 0 || ele.question.answer==="");
   return (
     <Box
       overflowY="auto"
@@ -52,9 +51,8 @@ function ChatWindow({
         },
       }}
     >
-      
       <Box flexDirection="column" display="flex" gap="0.5rem">
-      <ChatMessage sender="bot">{surveyState.subtitle}</ChatMessage>
+        <ChatMessage sender="bot">{surveyState.subtitle}</ChatMessage>
         {messages.map((item, index) => {
           if (index === messages.length - 1 && botResponded) {
             if (item.message === surveyMessage) {
@@ -73,21 +71,28 @@ function ChatWindow({
                       <Button
                         onClick={handleSubmit}
                         colorScheme="green"
-                        mt="0.5rem" isDisabled={disabled}
+                        mt="0.5rem"
+                        isDisabled={disabled}
                       >
                         Confirm
                       </Button>
-                    {disabled &&  `Please complete question(s) ` +messages
-                        .filter((ele) => ele.question !== undefined) 
-                        .map((ele, index) => {
-                          if (ele.question.answer === undefined || ele.question.answer.length === 0 || ele.question.answer === "") {
-                            return `${index + 1}`;
-                          }
-                          return null; 
-                        })
-                        .filter(Boolean) 
-                        .join(", ") +` before submitting.`}
-
+                      {disabled &&
+                        `Please complete question(s) ` +
+                          messages
+                            .filter((ele) => ele.question !== undefined)
+                            .map((ele, index) => {
+                              if (
+                                ele.question.answer === undefined ||
+                                ele.question.answer.length === 0 ||
+                                ele.question.answer === ""
+                              ) {
+                                return `${index + 1}`
+                              }
+                              return null
+                            })
+                            .filter(Boolean)
+                            .join(", ") +
+                          ` before submitting.`}
                     </Box>
                   </Flex>
                 </ChatMessage>
@@ -96,23 +101,27 @@ function ChatWindow({
             return (
               <ChatMessage key={index} sender="bot">
                 <TypingEffect text={messages.slice(-1)[0].message} />
-                <QuestionInput
-                  questionData={item.question}
-                  handleQuestionResponse={handleQuestionResponse}
-                  submitted={surveyState.submitted}
-                ></QuestionInput> 
               </ChatMessage>
             )
           } else {
+            if (!item.question) {
+              return (
+                <ChatMessage key={index} sender={item.sender}>
+                  {item.message}
+                </ChatMessage>
+              )
+            }
             return (
-              <ChatMessage key={index} sender={item.sender}>
-                {item.message}
-                <QuestionInput
-                  questionData={item.question}
-                  handleQuestionResponse={handleQuestionResponse}
-                  submitted={surveyState.submitted}
-                ></QuestionInput>
-              </ChatMessage>
+              <Fragment key={index}>
+                <ChatMessage sender={item.sender}>{item.message}</ChatMessage>
+                <ChatMessage sender="user">
+                  <QuestionInput
+                    questionData={item.question}
+                    handleQuestionResponse={handleQuestionResponse}
+                    submitted={surveyState.submitted}
+                  />
+                </ChatMessage>
+              </Fragment>
             )
           }
         })}

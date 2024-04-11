@@ -15,7 +15,6 @@ from functools import wraps
 
 import jwt
 from flask import Flask, Response, jsonify, request
-from flask_cors import CORS
 from src import database_operations
 from src.llm_classes.chatlog import ChatLog
 from src.llm_classes.functions import (
@@ -35,21 +34,9 @@ logging.basicConfig(
 )
 
 app = Flask(__name__)
-CORS(app)
 app.config["SECRET_KEY"] = os.environ.get(
     "FLASK_SECRET_KEY", "default_key_for_development"
 )
-
-
-@app.after_request
-def handle_options(response):
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Credentials"] = "true"
-    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
-    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
-
-    return response
-
 
 # JWT
 
@@ -571,8 +558,18 @@ def get_responses(survey_id: str, **kwargs) -> tuple[Response, int]:
                         survey_id, response_id, response_data
                     )
                 )
+            # Retrieve chatlog if it exists
+            chat_log_query = """
+            SELECT chat_log FROM ChatLog WHERE survey_id = %s AND response_id = %s
+            """
+            chat_log_data = database_operations.fetch(
+                connection, chat_log_query, (survey_id, response_id)
+            )
             database_operations.append_answer_to_response(
-                response_objects, response_id, response_data
+                response_objects,
+                response_id,
+                response_data,
+                chat_log_data,
             )
 
         # Convert dictionary to list of response objects
@@ -651,8 +648,18 @@ def get_response(survey_id: str, response_id: str, **kwargs) -> tuple[Response, 
                         survey_id, response_id, response_data
                     )
                 )
+            # Retrieve chatlog if it exists
+            chat_log_query = """
+            SELECT chat_log FROM ChatLog WHERE survey_id = %s AND response_id = %s
+            """
+            chat_log_data = database_operations.fetch(
+                connection, chat_log_query, (survey_id, response_id)
+            )
             database_operations.append_answer_to_response(
-                response_objects, response_id, response_data
+                response_objects,
+                response_id,
+                response_data,
+                chat_log_data,
             )
         response_objects = response_objects[int(response_id)]
         app.logger.info("Response fetched successfully")
@@ -663,7 +670,7 @@ def get_response(survey_id: str, response_id: str, **kwargs) -> tuple[Response, 
 
 
 def helper_send_message(
-    llm_input: dict[str, object], data_content: str, connection, survey_id, response_id
+    llm_input: dict[str, object], user_input: str, connection, survey_id, response_id
 ) -> tuple[Response, int]:
     """Generates a response from a large language model.
 
@@ -705,7 +712,6 @@ def helper_send_message(
 
         else:
             pipe = ChatLog(message_list, llm=llm)
-            pipe.insert_and_update(user_input, pipe.current_index)  # user input
             next_question = llm.run(pipe.message_list)
             updated_message_list = pipe.insert_and_update(
                 next_question, pipe.current_index, is_llm=True
@@ -722,6 +728,9 @@ def helper_send_message(
                 connection, survey_id, response_id, updated_chat_log_json
             )
         except Exception as e:
+            app.logger.error(
+                "An error occurred while updating chat log with user message: " + str(e)
+            )
             return (
                 jsonify({"message": "An error occurred while updating the chat log"}),
                 500,
@@ -747,7 +756,7 @@ def helper_send_message(
         return (
             jsonify(
                 {
-                    "message": "An error was encountered while generating a reply:"
+                    "message": "An error was encountered while generating a reply: "
                     + str(e)
                 }
             ),
@@ -775,10 +784,10 @@ def send_chat_message(survey_id: str, response_id: str) -> tuple[Response, int]:
     # Step 1: Retrieve Response Object
     response_object = get_response_no_auth(survey_id, response_id)
 
-    # If GET request is not successful, return 500
+    # If GET request is not successful
     if response_object[1] != 200:
-        app.logger.error("Failed to retrieve survey object")
-        return jsonify({"message": "Failed to retrieve survey object"}), 500
+        app.logger.error(response_object[0].json.get("message"))
+        return response_object
 
     # GET request is successful
     response_object = response_object[0].json
@@ -895,7 +904,10 @@ def get_response_no_auth(survey_id, response_id):
                     )
                 )
             database_operations.append_answer_to_response(
-                response_objects, response_id, response_data
+                response_objects,
+                response_id,
+                response_data,
+                [],
             )
         response_objects = response_objects[int(response_id)]
         return jsonify(response_objects), 200

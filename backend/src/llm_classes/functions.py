@@ -2,14 +2,14 @@ import logging
 import random
 import re
 
-from .chatlog import ChatLog
-from .llm_level import GPT, LLM
+from src.llm_classes.chatlog import ChatLog
+from src.llm_classes.llm_level import GPT, LLM
 
 # Custom logger
 logger = logging.getLogger("exit_logger")
-logger.setLevel(logging.WARNING)
+logger.setLevel(logging.INFO)
 file_handler = logging.FileHandler("./logs/exit_chat.log")
-file_handler.setLevel(logging.WARNING)
+file_handler.setLevel(logging.INFO)
 formatter = logging.Formatter(
     "%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]"
 )
@@ -24,7 +24,7 @@ def construct_chatlog(
 
     Args:
         survey_initial_responses (str): Initial responses to the static survey.
-        llm (LLM, optional): A Large Language Model object.. Defaults to gpt-4-turbo-preview.
+        llm (LLM, optional): A Large Language Model object. Defaults to gpt-4-turbo-preview.
         seed (int, optional): A random integer. Defaults to an integer from the range 1 to 9998.
 
     Returns:
@@ -108,5 +108,5 @@ def check_exit(
     result = llm.run(exit, seed=seed, with_moderation=False)
 
     is_last = bool(re.search(r"[yY]es", result.split(delim)[-1]))
-    logger.warning(f"exit: {is_last}, Reasoning: {result}")
+    logger.info(f"exit: {is_last}, Reasoning: {result}")
     return is_last or (len(updated_message_list) > ChatLog.MAX_LEN)

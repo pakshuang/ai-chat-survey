@@ -169,6 +169,48 @@ INSERT INTO ChatLog (survey_id, response_id, chat_log, created_at)
 VALUES (
         1,
         1,
-        '{"messages": [{"sender": "client", "message": "User message 1", "timestamp": "2024-03-23 10:00:00"}, {"sender": "bot", "message": "Bot response 1", "timestamp": "2024-03-23 10:05:00"}, {"sender": "client", "message": "User message 2", "timestamp": "2024-03-23 10:10:00"}, {"sender": "bot", "message": "Bot response 2", "timestamp": "2024-03-23 10:15:00"}]}',
+        '{"messages": [
+            {
+              "role": "system",
+              "content": "You are an assistant who is trying to gather user experiences about a product.\\n        You have collected some survey responses, and you would like to probe further about what the user thinks about the product.\\n        Given user responses, pretend you are an interviewer and generate a few questions to ask the user based on the survey responses.\\n        Contextual information about the survey and user responses are provided below:\\n At Full Stack Full Send, we are excited to introduce our latest innovation in household cleaning products: an environmentally friendly laundry detergent. Understanding the growing concern for sustainable and effective cleaning solutions, this new product combines the efficiency and reliability of FSFS detergents with a strong commitment to environmental stewardship.\\n1. How important is environmental sustainability to you when purchasing laundry detergent?\\nOptions:\\nNot at all important, Slightly Important, Important, Fairly Important, Very Important\\nAnswer:\\nFairly Important"
+            },
+            {
+              "role": "assistant",
+              "content": "1. Can you share more about what factors make environmental sustainability fairly important to you in choosing a laundry detergent?\\n2. How do you typically assess the environmental sustainability of laundry detergents before making a purchase?\\n3. Have you used environmentally friendly laundry detergents in the past? If so, how did your experience with those products compare to traditional detergents?\\n4. In addition to environmental sustainability, what other features do you look for in a laundry detergent (e.g., scent, cleaning power, price)?\\n5. How likely are you to recommend an environmentally sustainable laundry detergent to friends or family, based on your current priorities?"
+            },
+            {
+              "role": "system",
+              "content": "Remember these few questions. This is a semi-structured interview, and try to keep asking questions, based on the user replies, or the questions you generated to ask the user. \\n    Only ask the user one question at a time and try to keep the questions interesting. Probe the user if the user shows any inconsistencies in their replies, or ask for clarifications if needed. The user is a customer, so politely decline all inappropriate requests.\\n    When you have no more questions left to ask, remember to thank the user for their time and tell the user you intend to end the interview. When you end the interview, there is no need to ask the user for further input.\\n    After that, the system will ask you if you would like to end the interview.\\n    ONLY SAY \\\"YES\\\" IF YOU HAVE THANKED THE USER FOR THEIR TIME. \\n    Now, as a survey interviewer, begin the interview by asking the user a question.\\n    "
+            },
+            {
+              "role": "assistant",
+              "content": "Can you share more about what factors make environmental sustainability fairly important to you in choosing a laundry detergent?"
+            },
+            {
+              "role": "user",
+              "content": "I think sustainability is a very important concept, especially when the effects of global warming are getting worse day by day"
+            },
+            {
+              "role": "assistant",
+              "content": "Its great to hear that youre conscious of the environmental impact. Could you tell me how you typically assess the environmental sustainability of laundry detergents before making a purchase?"
+            },
+            {
+              "role": "user",
+              "content": "I look at where it is made, and how it made"
+            },
+            {
+              "role": "assistant",
+              "content": "Thats insightful. When you mention looking at how its made, could you elaborate on what specific aspects you consider? For example, are you looking at the ingredients, the manufacturing process, or perhaps the companys overall environmental policies?"
+            },
+            {
+              "role": "user",
+              "content": "Yes, I look at the companys overall environmental policies"
+            },
+            {
+              "role": "assistant",
+              "content": "That is a thoughtful approach. Have you used environmentally friendly laundry detergents in the past? If so, how did your experience with those products compare to traditional detergents in terms of cleaning effectiveness and overall satisfaction?"
+            }
+          ]
+        }',
         NOW()
     );

@@ -1,44 +1,61 @@
-import React from "react";
+import React from "react"
 
 export type ChatMessageProps = {
-  children: React.ReactNode;
-  sender: "user" | "bot";
-};
+  children: React.ReactNode
+  sender: "user" | "bot"
+}
 
 export type Messages = {
-  sender: "user" | "bot";
-  message: string;
-  question?: Question;
-};
+  sender: "user" | "bot"
+  message: string
+  question?: Question
+}
 
 export type ChatWindowProps = {
-  messages: Messages[];
-  isBotThinking: boolean;
-  surveyState:SurveyState;
-  handleQuestionResponse: (id: number, val: string | number) => void;
-  handleSubmit: () => void;
-};
+  messages: Messages[]
+  isBotThinking: boolean
+  surveyState: any
+  handleQuestionResponse: (id: number, val: string) => void
+  handleSubmit: () => void
+}
 
 export type Question = {
-  question_id: number;
-  question: string;
-  type: string;
-  options?: string[];
-  answer?: string | number | string[];
-};
+  question_id: number
+  question: string
+  type: string
+  options?: string[]
+  answer?: string | string[]
+}
 
 export type QuestionProps = {
-  questionData?: Question;
-  handleQuestionResponse: (id: number, val: string | number) => void;
-  submitted: boolean;
-};
-
-export type SurveyState ={
-  displayIndex: number,
+  questionData?: Question
+  handleQuestionResponse: (id: number, val: string) => void
   submitted: boolean
-  subtitle: string,
-  title: string,
+}
+
+export type MultipleChoiceInputProps = {
+  questionID: number
+  options: string[]
+  handleQuestionResponse: (id: number, val: string) => void
+}
+
+export type MultipleResponseInputProps = {
+  questionID: number
+  options: string[]
+  handleQuestionResponse: (id: number, val: string[]) => void
+}
+
+export type FreeResponseInputProps = {
+  questionID: number
+  handleQuestionResponse: (id: number, val: string) => void
+}
+
+export type SurveyState = {
+  displayIndex: number
+  submitted: boolean
+  subtitle: string
+  title: string
 }
 
 export const surveyMessage =
-  "You've submitted the first part of our survey! Hang on tight while we process your responses...";
+  "You've submitted the first part of our survey! Hang on tight while we process your responses..."

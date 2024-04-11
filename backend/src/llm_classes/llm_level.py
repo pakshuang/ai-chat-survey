@@ -67,7 +67,12 @@ class GPT(LLM):
             str: text output from the Large Language Model.
         """
         output = self.client.chat.completions.create(
-            model=self.model, messages=messages, stream=False, seed=seed
+            model=self.model,
+            messages=messages,
+            stream=False,
+            temperature=0.4,
+            top_p=0.4,
+            seed=seed,
         )
         output_text = output.choices[0].message.content
         if with_moderation and self.content_moderation.is_harmful(output_text):
@@ -96,7 +101,9 @@ class LocalLLMGPTQ(LLM):
         # tokenizer = AutoTokenizer.from_pretrained(path)
         # self.model, self.tokenizer = model, tokenizer
 
-    def run(self, messages: list, seed: int = random.randint(1, 9999)):
+    def run(
+        self, messages: list, seed: int = random.randint(1, 9999), with_moderation=True
+    ):
         """Runs the llm given a current conversation and seed and outputs a string.
 
         Args:

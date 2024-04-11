@@ -1,42 +1,35 @@
 import { Button, Textarea, Flex } from "@chakra-ui/react";
-import React, { useState, useRef, useEffect } from "react";
+import { FreeResponseInputProps } from "./constants";
+import { useState } from "react";
 
-interface ChatInputProps {
-  onSubmitMessage: (message: string) => void;
-  isSubmitting: boolean;
-}
-
-function ChatInput({ onSubmitMessage, isSubmitting }: ChatInputProps) {
-  const [message, setMessage] = useState("");
-  const inputRef = useRef<HTMLTextAreaElement>(null);
-  const isEmpty = message.trim() === "";
+function FreeResponseInput({
+  questionID,
+  handleQuestionResponse,
+}: FreeResponseInputProps) {
+  const [answer, setAnswer] = useState<string>("");
+  const isAnswered = answer !== "";
 
   function handleSubmit(
     e:
-      | React.MouseEvent<HTMLButtonElement>
+      | React.FormEvent<HTMLFormElement>
       | React.KeyboardEvent<HTMLTextAreaElement>
   ) {
-    if (isEmpty) {
+    if (!isAnswered) {
       return;
     }
-    onSubmitMessage(message);
     e.preventDefault();
-    e.stopPropagation();
-    setMessage("");
+    handleQuestionResponse(questionID, answer);
+    setAnswer("");
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
     if (e.key === "Enter" && !e.shiftKey) {
       handleSubmit(e);
     }
-  };
-
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, [message]);
+  }
 
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <Flex flexDirection="row" p="0.5rem" w="60rem" mx="auto">
         <Textarea
           size="lg"
@@ -47,10 +40,9 @@ function ChatInput({ onSubmitMessage, isSubmitting }: ChatInputProps) {
           _focus={{
             boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
           }}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={(e) => setAnswer(e.target.value)}
           onKeyDown={handleKeyDown}
-          value={message}
-          ref={inputRef}
+          value={answer}
           rows={1}
           resize="none"
           autoFocus
@@ -58,12 +50,10 @@ function ChatInput({ onSubmitMessage, isSubmitting }: ChatInputProps) {
         <Button
           size="lg"
           type="submit"
-          onClick={handleSubmit}
           colorScheme="blue"
           borderColor="gray.500"
           borderLeftRadius="0"
-          isLoading={isSubmitting}
-          isDisabled={isEmpty}
+          isDisabled={!isAnswered}
         >
           Send
         </Button>
@@ -72,4 +62,4 @@ function ChatInput({ onSubmitMessage, isSubmitting }: ChatInputProps) {
   );
 }
 
-export default ChatInput;
+export default FreeResponseInput;
