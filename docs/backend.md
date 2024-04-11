@@ -14,7 +14,7 @@ This section serves as a comprehensive exploration of the backend infrastructure
 
 ![Backend Architecture](diagrams/images/backend-architecture.png)
 
-- The backend architecture of our AI Chatbot Survey system serves as the foundation for managing data, handling user interactions, and ensuring system integrity. It plays a pivotal role in supporting the seamless operation of the entire system, from processing user requests to persisting data securely.
+- The backend architecture of our AI Chatbot Survey system serves as the foundation for managing data, handling respondent interactions, and ensuring system integrity. It plays a pivotal role in supporting the seamless operation of the entire system, from processing respondent requests to persisting data securely.
 
 - The backend is composed of three key components: the `API`, the `Database`, and the `Model`.
   - **API**: The API component acts as the intermediary between the frontend and the backend. It receives requests from the frontend, processes them, and interacts with the database to fetch or store data. It also conducts prompt engineering and communicates with the model for chatbot interactions.
@@ -25,17 +25,26 @@ This section serves as a comprehensive exploration of the backend infrastructure
 
 - **API (Flask)**: Flask was chosen for the API component due to its lightweight nature, simplicity, and flexibility. Flask is well-suited for building RESTful APIs, making it an ideal choice for our system's backend. It provides a robust framework for handling HTTP requests, routing, and interacting with the database.
 - **Database (MySQL)**: MySQL was selected as the database management system for its reliability, scalability, and performance. MySQL is a widely-used relational database that offers ACID compliance, data security, and efficient data retrieval. It provides robust support for complex queries, transactions, and data integrity.
-- **Model (ChatGPT)**: GPT-4 was chosen as the conversational model for the chatbot component. ChatGPT offers state-of-the-art conversational capabilities, enabling natural and engaging interactions with users. It leverages the power of large language models to generate contextually relevant responses, enhancing the user experience.
+- **Model (ChatGPT)**: GPT-4 was chosen as the conversational model for the chatbot component. ChatGPT offers state-of-the-art conversational capabilities, enabling natural and engaging interactions with respondents. It leverages the power of large language models to generate contextually relevant responses, enhancing the respondent experience.
+- **Authentication (JWT)**: JSON Web Tokens (JWT) are used for admin authentication and authorization in the system. JWT provides a secure and efficient way to verify admin identities and manage access control. It enables the API to authenticate admins, issue tokens, and enforce role-based access policies.
+- **Testing (Pytest, Unittest)**: Pytest and Unittest are utilized for testing the backend components, ensuring code quality, reliability, and functionality. Pytest offers a powerful testing framework with support for fixtures, parametrization, and test discovery. Unittest provides a built-in testing framework for writing test cases and asserting expected outcomes.
+- **Formatting (Black, isort)**: Black and isort are used for code formatting and style consistency. Black automatically formats Python code to adhere to PEP 8 guidelines, enhancing readability and maintainability. Isort sorts import statements alphabetically, making code organization more structured and uniform.
 
 ### 3. Interaction between components
 
 The backend components interact harmoniously to facilitate the flow of data and operations within the system:
 
-- `Frontend` to `Server`: The frontend communicates with the backend server through API endpoints defined in `app.py`, triggering actions such as creating surveys, submitting responses, retrieving data, and sending chat messages.
+- `Client` to `API Controller Layer` through `Reverse Proxy`: The client sends HTTP requests to the `API Controller Layer` via a reverse proxy, which forwards requests to the appropriate endpoints. The `API Controller Layer` processes incoming requests, performs authentication if required using JWTs, and interacts with the `Service Logic Layer` to fulfill the requests.
 
-- `Server` to `Database`: Upon receiving requests, the server interacts with the MySQL database to fetch or store data. SQL queries are executed to perform CRUD operations on tables such as `Surveys`, `Questions`, and `Survey_Responses`, ensuring data persistence and integrity.
+- `Service Logic Layer` to `Data Access Layer`: Upon receiving requests, the `Service Logic Layer` applies the business logic and accesses the `Data Access Layer` to access or modify data in the database.
 
-- `Authentication/Authorization` Flow: User authentication and authorization processes are handled by the server, which verifies user credentials against the `Admins` table in the database. Upon successful authentication, users are granted access to functionalities based on their assigned roles and permissions.
+- `Data Access Layer` to `Database`: The `Data Access Layer` interacts with the `Database` to perform CRUD operations, ensuring data integrity and persistence.
+
+- `Service Logic Layer` to `Prompt Engineering Layer`: In the case of chatbot interactions, the `Service Logic Layer` communicates with the `Prompt Engineering Layer` to generate prompts for the model based on respondent answers and messages. The `Prompt Engineering Layer` is responsible for guiding the model's responses and ensuring contextually relevant interactions.
+
+- `Prompt Engineering Layer` to `OpenAI API Integration Layer`: The `Prompt Engineering Layer` interfaces with the `OpenAI API Integration Layer` to send prompts to the GPT-4 model and receive responses. The `OpenAI API Integration Layer` manages the communication with the OpenAI API, handling model interactions and responses.
+
+- `API Controller Layer` to `Client`: The `API Controller Layer` sends HTTP responses back to the client, providing the requested data, acknowledging the completion of operations, or forwarding chatbot responses generated by the model.
 
 ### 4. Components of the Backend Architecture
 
