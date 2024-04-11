@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Flex, Heading, Box } from "@chakra-ui/react";
+import { Flex, Heading, Box, Link, Text, VStack } from "@chakra-ui/react";
 import ChatWindow from "./ChatWindow";
 import ChatInput from "./ChatInput";
 import {
@@ -188,6 +188,35 @@ function ChatPage() {
           </ChatMessage>
         </Box>
       )}
+      <VStack
+        pos="absolute"
+        bottom="0.5rem"
+        left="0.5rem"
+        alignItems="start"
+        spacing={0}
+      >
+        <Text fontSize="0.5rem" color="gray.400">
+          Bot icon by{" "}
+          <Link href="https://freeicons.io/profile/722" isExternal>
+            Fasil
+          </Link>{" "}
+          on{" "}
+          <Link href="https://freeicons.io" isExternal>
+            freeicons.io
+          </Link>
+        </Text>
+
+        <Text fontSize="0.5rem" color="gray.400">
+          User icon by{" "}
+          <Link href="https://freeicons.io/profile/433683" isExternal>
+            Pexelpy
+          </Link>{" "}
+          on{" "}
+          <Link href="https://freeicons.io" isExternal>
+            freeicons.io
+          </Link>
+        </Text>
+      </VStack>
     </Flex>
   );
 }
