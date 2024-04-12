@@ -35,13 +35,11 @@ function ChatPage() {
   })
   const setMessages = (messages: Messages[]) => {
     setMessagesInteral(messages)
-    Cookies.set(`messages_${id}`, JSON.stringify(messages), { expires: 7 })
+    Cookies.set(`messages_${id}`, JSON.stringify(messages), { expires: 7, httpOnly: true })
   }
   const setSurveyState = (newSurveyState: SurveyState) => {
     setSurveyStateInternal(newSurveyState)
-    Cookies.set(`surveyState_${id}`, JSON.stringify(newSurveyState), {
-      expires: 7,
-    })
+    Cookies.set(`surveyState_${id}`, JSON.stringify(newSurveyState), { expires: 7, httpOnly: true })
   }
   const [responseId, setResponseId] = useState(1)
   const [isLast, setIslast] = useState(false)
@@ -54,6 +52,8 @@ function ChatPage() {
       const data = res.data
       if (data.is_last) {
         setIslast(true)
+        Cookies.remove(`messages_${id}`);
+        Cookies.remove(`surveyState_${id}`);
       }
       setMessages([...newMessages, { sender: "bot", message: data["content"] }])
     } catch (error) {
