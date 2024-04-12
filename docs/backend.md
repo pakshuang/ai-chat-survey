@@ -53,6 +53,11 @@ The backend components interact harmoniously to facilitate the flow of data and 
 The backend server is the core component responsible for processing incoming requests from the frontend via our API, and executing the necessary logic. Implemented using Flask in app.py, the server handles various functionalities such as creating surveys, submitting responses, sending chat messages to ChatGPT, and interacting with the database.
 
 Our API consists of the following:
+<style scoped>
+table {
+  font-size: 10px;
+}
+</style>
 
 | Component: Resource                     | Endpoint                                                   | Method | Description                                                                       |
 |-----------------------------------------|------------------------------------------------------------|--------|-----------------------------------------------------------------------------------|
