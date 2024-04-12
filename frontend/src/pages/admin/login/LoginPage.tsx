@@ -1,28 +1,28 @@
 import { SubmitHandler } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LoginSignupData, errorToast } from "./constants";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { login } from "../../hooks/useApi";
 import { LoginSignupForm } from "./LoginSignupForm";
 import { useToast } from "@chakra-ui/react";
 
 function LoginPage() {
-  const [searchParams] = useSearchParams();
-  const [redirectToasted, setRedirectToasted] = useState(false);
   const [isUnauthorised, setIsUnauthorised] = useState(false);
   const navigate = useNavigate();
   const toast = useToast();
 
-  if (searchParams.get("redirect") && !redirectToasted) {
-    toast({
-      title: "Your account has been created.",
-      description: "Go ahead and log in.",
-      status: "success",
-      duration: 9000,
-      isClosable: true,
-    });
-    setRedirectToasted(true);
-  }
+  useEffect(() => {
+    if (sessionStorage.getItem("redirected") == "1") {
+      toast({
+        title: "Your account has been created.",
+        description: "Go ahead and log in.",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+      sessionStorage.removeItem("redirected");
+    }
+  });
 
   const onSubmit: SubmitHandler<LoginSignupData> = async (values) => {
     try {

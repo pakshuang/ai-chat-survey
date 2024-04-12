@@ -2,52 +2,20 @@
 
 This document describes how to set up the project. It is intended to be read by developers and other technical stakeholders.
 
-## Prerequisites
-
-- [Docker](https://www.docker.com/)
 - [Python](https://www.python.org/)
 - [Node.js](https://nodejs.org/)
 
-## Quick Installation For Windows
+## Installing the Application
 
-1. Clone the repository:
+1. Install [Docker](https://www.docker.com/get-started) and [Docker Compose](https://docs.docker.com/compose/install/).
 
-   ```shell
-       git clone https://github.com/pakshuang/ai-chat-survey.git
-   ```
-
-2. Open the ai-chat-survey folder on Windows Explorer and click `installer_win.bat`.
-
-3. Enter your `OPENAI_API_KEY` and follow the instructions in the file.
-
-## Installation (General)
-
-1. Clone the repository:
-
-   ```shell
-   git clone https://github.com/pakshuang/ai-chat-survey.git
-   ```
-
-2. Change into the project directory:
-
-   ```shell
-   cd ai-chat-survey
-   ```
-
-3. Initialise `.env` file:
-   Windows CMD:
-
-   ```shell
-   copy sample.env .env
-   ```
-
-   Unix:
+2. Initialise `.env` file (use `copy` for Windows CMD):
 
    ```shell
    cp sample.env .env
    ```
 
-4. Fill in the `.env` file with the necessary environment variables. Some of the variables are already filled in with default values.
+3. Fill in the `.env` file with the necessary environment variables. Some of the variables are already filled in with default values.
 
 ## Running the Application
 
@@ -57,7 +25,7 @@ To run the application, use the following command:
 docker-compose up -d --build
 ```
 
-If you have already built the images, you can use the following command to start the application:
+If you have already built the images, you can use the following command to start the application without rebuilding the images:
 
 ```shell
 docker-compose up -d
@@ -72,6 +40,7 @@ docker-compose up -d --scale frontend=2 --scale backend=2
 During development, you may want to run the application on a clean slate. To do this, you can use the following command:
 
 ```shell
+docker-compose down --volumes
 docker-compose up -d --build --force-recreate --renew-anon-volumes
 ```
 
@@ -123,16 +92,7 @@ docker-compose down --rmi all --volumes
    - You can specify if the package is a development dependency by adding the `--dev` flag.
    - Remember to commit the `Pipfile` and `Pipfile.lock` after adding a new dependency.
 
-5. Running the backend:
-
-   Windows CMD:
-
-   ```shell
-   copy ../.env .env
-   pipenv run python src/app.py
-   ```
-
-   Unix:
+5. Running the backend (use `copy` for Windows CMD):
 
    ```shell
    cp ../.env .env
@@ -184,33 +144,39 @@ The recommended way to run is to use docker compose instead, see [Running the Ap
       pipenv run python -m pytest --cov=src tests/unit/llm_classes # all unit test files in the llm_classes directory
       ```
 
+> [!WARNING]
+> Do not run the integration tests (tests/integration) this way. The integration tests require the backend and database to be running.
+
 ### Integration Tests
 
 > [!IMPORTANT]
-> The tests assume that the application is running with a clean database. You should run the tests on a clean slate. For this reason, make sure that any dummy data added to the database upon launch does not interfere with the tests.
+> The tests assume that the application is running with a clean database and environment. The `run_backend_integration_tests.sh` script ensures this, so make sure to use the script to run the integration tests.
 
 1. Navigate to the `ai-chat-survey` directory, the command will vary depending on which directory you are currently in
 2. Run the integration tests script in a Unix-like shell:
 
-   ```shell
-   ./scripts/run_backend_integration_tests.sh
-   ```
+      - For 1 backend instance:
+
+      ```shell
+      ./scripts/run_backend_integration_tests.sh
+      ```
+
+      - For 3 backend instances:
+
+      ```shell
+      ./scripts/run_backend_integration_tests.sh 3
+      ```
 
 3. Once the tests are done, you can view the results in `backend/logs/integration_tests.log`.
-4. To run the integration tests with the backend scaled to 3 instances, you can use the following command:
-
-   ```shell
-   ./scripts/run_backend_integration_tests.sh 3
-   ```
 
 ## Frontend Development
 
 ### Setting up the frontend development environment
 
-1. Navigate to the `frontend-react` directory:
+1. Navigate to the `frontend` directory:
 
    ```shell
-   cd frontend-react
+   cd frontend
    ```
 
 2. Install dependencies:
@@ -241,13 +207,13 @@ The recommended way to run is to use docker compose instead, see [Running the Ap
 1. Building the image
 
    ```shell
-   docker build -t frontend-react .
+   docker build -t frontend .
    ```
 
 2. Running the image
 
    ```shell
-   docker run --name frontend-react -p 5173:5173 frontend-react
+   docker run --name frontend -p 5173:5173 frontend
    ```
 
 The recommended way to run is to use docker compose instead, see [Running the Application](#running-the-application).
