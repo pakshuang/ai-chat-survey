@@ -54,18 +54,19 @@ The backend server is the core component responsible for processing incoming req
 
 Our API consists of the following:
 
-| Component             | Resource          | Endpoint                                                   | Method | Description                                                                       |
-|-----------------------|-------------------|------------------------------------------------------------|--------|-----------------------------------------------------------------------------------|
-| **Admins**            | Create Admin      | `/api/v1/admins`                                           | POST   | Creates a new admin with a username and password.                                 |
-|                       | Login             | `/api/v1/admins/login`                                     | POST   | Logs in an admin and issues a JWT upon successful login.                          |
-| **Surveys**           | Create Survey     | `/api/v1/surveys`                                          | POST   | Creates a new survey with metadata, title, subtitle, questions, and chat context. |
-|                       | Get Surveys       | `/api/v1/surveys/?admin={username}`                        | GET    | Retrieves all survey objects, optionally filtered by the admin who created them.  |
-|                       | Get Survey        | `/api/v1/surveys/{survey_id}`                              | GET    | Retrieves a survey object by ID.                                                  |
-|                       | Delete Survey     | `/api/v1/surveys/{survey_id}`                              | DELETE | Deletes a survey by ID, requiring admin authentication.                           |
-| **Survey Responses**  | Submit Response   | `/api/v1/surveys/{survey_id}/responses`                    | POST   | Submits a new survey response.                                                    |
-|                       | Get Responses     | `/api/v1/surveys/{survey_id}/responses`                    | GET    | Retrieves all response objects for a survey, requiring admin authentication.      |
-|                       | Get Response      | `/api/v1/surveys/{survey_id}/responses/{response_id}`      | GET    | Retrieves a response object by ID, requiring admin authentication.                |
-|                       | Send Chat Message | `/api/v1/surveys/{survey_id}/responses/{response_id}/chat` | POST   | Sends a message to the chatbot and receives a response.                           |
+| Component: Resource                     | Endpoint                                                   | Method | Description                                                                       |
+|-----------------------------------------|------------------------------------------------------------|--------|-----------------------------------------------------------------------------------|
+| **Admins: Create Admin**                | `/api/v1/admins`                                           | POST   | Creates a new admin with a username and password.                                 |
+| **Admins: Login**                       | `/api/v1/admins/login`                                     | POST   | Logs in an admin and issues a JWT upon successful login.                          |
+| **Surveys: Create Survey**              | `/api/v1/surveys`                                          | POST   | Creates a new survey with metadata, title, subtitle, questions, and chat context. |
+| **Surveys: Get Surveys**                | `/api/v1/surveys/?admin={username}`                        | GET    | Retrieves all survey objects, optionally filtered by the admin who created them.  |
+| **Surveys: Get Survey**                 | `/api/v1/surveys/{survey_id}`                              | GET    | Retrieves a survey object by ID.                                                  |
+| **Surveys: Delete Survey**              | `/api/v1/surveys/{survey_id}`                              | DELETE | Deletes a survey by ID, requiring admin authentication.                           |
+| **Survey Responses: Submit Response**   | `/api/v1/surveys/{survey_id}/responses`                    | POST   | Submits a new survey response.                                                    |
+| **Survey Responses: Get Responses**     | `/api/v1/surveys/{survey_id}/responses`                    | GET    | Retrieves all response objects for a survey, requiring admin authentication.      |
+| **Survey Responses: Get Response**      | `/api/v1/surveys/{survey_id}/responses/{response_id}`      | GET    | Retrieves a response object by ID, requiring admin authentication.                |
+| **Survey Responses: Send Chat Message** | `/api/v1/surveys/{survey_id}/responses/{response_id}/chat` | POST   | Sends a message to the chatbot and receives a response.                           |
+
 
 #### Components:
 
