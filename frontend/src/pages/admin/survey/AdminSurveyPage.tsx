@@ -5,18 +5,17 @@ import {
   HStack,
   VStack,
   useToast,
-} from "@chakra-ui/react"
-import AdminSurveyAccordion from "./AdminSurveyAccordion"
-import { AddIcon, ExternalLinkIcon } from "@chakra-ui/icons"
-import { useForm, FormProvider, useFieldArray } from "react-hook-form"
-import { createNewQuestion, Survey } from "./constants"
-import AdminSurveyTitle from "./AdminSurveyTitle"
-import { useEffect, useState } from "react"
-import { logout, shouldLogout, submitSurvey } from "../../hooks/useApi"
-import dayjs from "dayjs"
-import { useNavigate } from "react-router-dom"
-import Header from "../Header"
-import { getCookie } from "typescript-cookie"
+} from "@chakra-ui/react";
+import AdminSurveyAccordion from "./AdminSurveyAccordion";
+import { AddIcon, ExternalLinkIcon } from "@chakra-ui/icons";
+import { useForm, FormProvider, useFieldArray } from "react-hook-form";
+import { createNewQuestion, Survey } from "./constants";
+import AdminSurveyTitle from "./AdminSurveyTitle";
+import { useEffect, useState } from "react";
+import { logout, shouldLogout, submitSurvey } from "../../hooks/useApi";
+import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
+import Header from "../Header";
 
 function AdminSurveyPage() {
   const methods = useForm<Survey>({
@@ -28,14 +27,14 @@ function AdminSurveyPage() {
       metadata: {
         name: "",
         description: "",
-        created_by: getCookie("username") ?? "",
+        created_by: localStorage.getItem("username") ?? "",
         created_at: "",
       },
     },
     mode: "onSubmit",
-  })
+  });
 
-  const [openIndex, setOpenIndex] = useState([0])
+  const [openIndex, setOpenIndex] = useState([0]);
 
   const {
     fields: questions,
@@ -44,45 +43,49 @@ function AdminSurveyPage() {
   } = useFieldArray({
     control: methods.control,
     name: "questions",
-  })
+  });
 
-  const toast = useToast()
-  const navigate = useNavigate()
+  const toast = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (shouldLogout()) {
-      logout()
-      navigate("/admin/login")
+      logout();
+      navigate("/admin/login");
     }
-  }, [getCookie("username"), getCookie("jwt")])
+  }, [
+    localStorage.getItem("username"),
+    localStorage.getItem("jwt"),
+    localStorage.getItem("jwtExp"),
+  ]);
 
-  const { handleSubmit } = methods
+  const { handleSubmit } = methods;
 
   const onSubmit = (data: Survey) => {
     data.questions.forEach((q, i) => {
-      q.question_id = i + 1
+      q.question_id = i + 1;
       // @ts-ignore
-      const options: string[] = q.options?.map((o) => o.value) ?? []
-      q.options = options
-    })
-    data.metadata.created_at = dayjs().format("YYYY-MM-DD HH:mm:ss")
+      const options: string[] = q.options?.map((o) => o.value) ?? [];
+      q.options = options;
+    });
+    data.metadata.created_at = dayjs().format("YYYY-MM-DD HH:mm:ss");
     submitSurvey(data)
       .then(() => {
         toast({
           title: "New survey created",
           status: "success",
           isClosable: true,
-        })
-        navigate("/admin/survey")
+        });
+        navigate("/admin/survey");
       })
       .catch((e) => {
-        console.log(e)
-      })
-  }
+        console.log(e);
+      });
+  };
 
   const onInvalid = () => {
-    const errors = methods.formState.errors
-    const errorKeys = Object.keys(methods.formState.errors)
+    const errors = methods.formState.errors;
+    const errorKeys = Object.keys(methods.formState.errors);
     if (
       errorKeys.includes("chat_context") &&
       errors["chat_context"]?.type === "maxLength"
@@ -91,17 +94,17 @@ function AdminSurveyPage() {
         title: "Please keep chatbot context less than 1000 characters",
         status: "error",
         isClosable: true,
-      })
-      return
+      });
+      return;
     }
     if (Object.keys(methods.formState.errors).length > 0) {
       toast({
         title: "Please fill all fields",
         status: "error",
         isClosable: true,
-      })
+      });
     }
-  }
+  };
 
   return (
     <FormProvider {...methods}>
@@ -133,8 +136,8 @@ function AdminSurveyPage() {
               h="3rem"
               w="50%"
               onClick={() => {
-                append(createNewQuestion())
-                setOpenIndex(openIndex.concat(questions.length))
+                append(createNewQuestion());
+                setOpenIndex(openIndex.concat(questions.length));
               }}
             >
               Add Question
@@ -152,7 +155,7 @@ function AdminSurveyPage() {
         </VStack>
       </Flex>
     </FormProvider>
-  )
+  );
 }
 
-export default AdminSurveyPage
+export default AdminSurveyPage;

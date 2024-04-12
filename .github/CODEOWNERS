@@ -5,7 +5,7 @@
 .github/CODEOWNERS @pakshuang
 /backend/ @sumhungyee
 /backend/tests/ @limchoonhao
-/frontend-react/ @nixonwidjaja
+/frontend/ @nixonwidjaja
 /docs/ @junhuiii @valerietanhx
 README.md @junhuiii @valerietanhx
 compose.yaml @pakshuang
