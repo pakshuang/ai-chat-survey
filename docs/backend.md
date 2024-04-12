@@ -59,7 +59,7 @@ table {
 }
 </style>
 
-| Component: Resource                     | Endpoint                                                   | Method | Description                                                                       |
+| Resource: API Method                     | Endpoint                                                   | HTTP Method | Description                                                                       |
 |-----------------------------------------|------------------------------------------------------------|--------|-----------------------------------------------------------------------------------|
 | **Admins: Create Admin**                | `/api/v1/admins`                                           | POST   | Creates a new admin with a username and password.                                 |
 | **Admins: Login**                       | `/api/v1/admins/login`                                     | POST   | Logs in an admin and issues a JWT upon successful login.                          |
