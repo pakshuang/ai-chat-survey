@@ -72,21 +72,6 @@ table {
 | **Survey Responses: Get Response**      | `/api/v1/surveys/{survey_id}/responses/{response_id}`      | GET    | Retrieves a response object by ID, requiring admin authentication.                |
 | **Survey Responses: Send Chat Message** | `/api/v1/surveys/{survey_id}/responses/{response_id}/chat` | POST   | Sends a message to the chatbot and receives a response.                           |
 
-
-#### Components:
-
-##### Admins
-
-Admins play a crucial role in managing the system. They have access to an admin portal where they can create and delete surveys, as well as view responses to surveys they create. The API provides endpoints specifically for admin management.
-
-##### Surveys
-
-Surveys are a fundamental aspect of the AI Chat Bot system, providing the necessary context and structure for interactions. The API supports the creation, retrieval, and deletion of surveys.
-
-##### Survey Responses
-
-Survey responses capture user interactions and feedback. The API allows for the submission, retrieval, and update of survey responses.
-
 For the detailed API documentation, refer to [api.md](api.md).
 
 #### b. Database
