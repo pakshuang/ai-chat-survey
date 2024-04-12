@@ -568,7 +568,7 @@ def append_answer_to_response(
         ),
     }
     response_objects[response_id]["answers"].append(answer)
-    if chat_log_data is []:
+    if chat_log_data:
         chat_log = json.loads(chat_log_data[0]["chat_log"])
         # Extract the list of messages
         messages = chat_log["messages"]
