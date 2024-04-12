@@ -72,27 +72,9 @@ function ChatWindow({
                         onClick={handleSubmit}
                         colorScheme="green"
                         mt="0.5rem"
-                        isDisabled={disabled}
                       >
                         Confirm
                       </Button>
-                      {disabled &&
-                        `Please complete question(s) ` +
-                          messages
-                            .filter((ele) => ele.question !== undefined)
-                            .map((ele, index) => {
-                              if (
-                                ele.question.answer === undefined ||
-                                ele.question.answer.length === 0 ||
-                                ele.question.answer === ""
-                              ) {
-                                return `${index + 1}`
-                              }
-                              return null
-                            })
-                            .filter(Boolean)
-                            .join(", ") +
-                          ` before submitting.`}
                     </Box>
                   </Flex>
                 </ChatMessage>
