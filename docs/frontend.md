@@ -18,6 +18,8 @@ This section serves as an overview of the frontend architecture and design behin
 
 We aimed to move fast to quickly show our users a minimal viable product from both a functional and aesthetic point of view. Hence, we produced one set of low-fidelity wireframes and immediately transformed them into a working web application, which we dogfooded and which users tried out during user interviews.
 
+Note that our favicon, selected to illustrate the AI capabilities of our app, is by [Pexelpy](https://freeicons.io/profile/433683) on [freeicons.io](https://freeicons.io).
+
 ### Admin portal
 
 Here are the initial wireframes for the various parts of admin portal. From left to right, top to bottom, we have the landing page, login page, signup page, admin homepage, new survey page, survey page, and survey responses page.
