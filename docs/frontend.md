@@ -37,7 +37,7 @@ This section serves as an overview of the frontend architecture and design behin
 
 ## Initial design
 
-We aimed to move fast to quickly show our users a minimal viable product from both a functional and aesthetic point of view. Hence, we produced one set of low-fidelity wireframes and immediately transformed them into a working web application, which we dogfooded and which users tried out during user interviews.
+Our goal was to swiftly deliver a minimal viable product to our users, focusing on both functionality and aesthetics. To achieve this, we created low-fidelity wireframes and promptly developed them into a functional web application. We tested the app ourselves and gathered user feedback during interviews.
 
 Note that our favicon, selected to illustrate the AI capabilities of our app, is by [Pexelpy](https://freeicons.io/profile/433683) on [freeicons.io](https://freeicons.io).
 
