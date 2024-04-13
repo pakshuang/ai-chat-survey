@@ -1,26 +1,30 @@
 @startuml backend-architecture
 
-package "Docker" #aliceblue;line:blue;text:blue {
-    component "API (Flask)" as backend #aliceblue;line:blue;text:blue {
+package "Docker Bridge Network: ai-chat-survey_default)" #aliceblue;line:blue;text:blue {
+    node "Flask API\n(Service: backend)" as backend #aliceblue;line:blue;text:blue {
         [Prompt Engineering &\nOpenAI API Integration Layer\n(/llm_classes)] as OA
         [API Controller &\nService Logic Layer\n(app.py)] as API
         [Data Access Layer\n(database_operations.py)] as DAL
     }
 
-    component "Reverse Proxy (Nginx)" as reverse_proxy #aliceblue;line:blue;text:blue {
+    node "Nginx Reverse Proxy\n(Service: reverse_proxy)" as reverse_proxy #aliceblue;line:blue;text:blue {
         [Nginx Server] as nginx
     }
 
-    component "RDBMS (MySQL)" as database #aliceblue;line:blue;text:blue {
+    node "MySQL RDBMS\n(Service: database)" as database #aliceblue;line:blue;text:blue {
         database "Database\n(ai_chat_survey_db)" as DB
     }
-
+    
     nginx <-right-> API : HTTP request/response
     API <-down-> DAL : accesses
     DAL <-right-> DB : data interaction
     OA <-left-> API : uses
 }
 
-[OpenAI GPT-4 Chat Completion API\n(https://api.openai.com/v1/chat/completions)] <-left-> OA: HTTP request/response
+cloud "Internet" {
+    [OpenAI GPT-4 Chat Completion API\n(https://api.openai.com/v1/chat/completions)]  as chat_api
+} 
+
+OA <-right-> chat_api: HTTP request/response
 
 @enduml
