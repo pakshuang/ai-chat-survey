@@ -3,7 +3,7 @@
 ## Table of Contents
 
 1. [Intro](#intro)
-2. [Setup/Installation](#setupinstallation)
+2. [Setup](#setup)
 3. [Overall Architecture](#overall-architecture)
 4. [Frontend](#frontend)
 5. [Backend](#backend)
@@ -14,7 +14,9 @@
 
 - Insert intro
 
-## Installing the Application
+## Setup
+
+### Installing the Application
 
 1. Install [Docker](https://www.docker.com/get-started) and [Docker Compose](https://docs.docker.com/compose/install/).
 
@@ -26,9 +28,7 @@
 
 3. Fill in the `.env` file with the necessary environment variables. Some of the variables are already filled in with default values.
 
-## Running the Application
-
-To run the application, use the following command:
+### Running the Application
 
 ```shell
 docker-compose up -d --build
@@ -40,18 +40,17 @@ If you want to horizontally scale (application level) the frontend or backend se
 docker-compose up -d --scale frontend=2 --scale backend=2
 ```
 
-## Stopping the Application
-
-To stop the application, use the following command:
+### Stopping the Application
 
 ```shell
 docker-compose down
 ```
 
-- Further details about setup/installation can be found in [Setup](setup.md), such as:
-  - Backend Development Environment
-  - Testing (Backend)
-  - Frontend Development Environment
+Further details about setup/installation can be found in [Setup](setup.md), such as:
+
+- Backend Development Environment
+- Testing (Backend)
+- Frontend Development Environment
 
 ## Overall Architecture
 
