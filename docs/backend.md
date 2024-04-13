@@ -50,9 +50,8 @@ The backend components interact harmoniously to facilitate the flow of data and 
 
 #### a. Server/API
 
-The backend server is the core component responsible for processing incoming requests from the frontend via our API, and executing the necessary logic. Implemented using Flask in app.py, the server handles various functionalities such as creating surveys, submitting responses, sending chat messages to ChatGPT, and interacting with the database.
+The backend server is the core component responsible for processing incoming requests from the frontend via our API. Implemented using Flask in app.py, the server handles various functionalities such as creating surveys, submitting responses, sending chat messages to ChatGPT, with the following endpoints:
 
-Our API consists of the following:
 <style scoped>
 table {
   font-size: 10px;
@@ -80,7 +79,7 @@ The MySQL database, named `ai_chat_survey_db`, serves as the centralized reposit
 
 ##### Entity Relationship (ER) Diagram
 
-![Entity Relationship (ER) Diagram](diagrams/images/db_schema.png)
+<img src="diagrams/images/db_schema.png" alt="Entity Relationship (ER) Diagram" width="400"/>
 
 - **Admins**: Stores information about administrators who have access to the system. 
 - **Surveys**: Contains details of the surveys created in the system. 
