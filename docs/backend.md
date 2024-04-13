@@ -53,79 +53,24 @@ The backend components interact harmoniously to facilitate the flow of data and 
 The backend server is the core component responsible for processing incoming requests from the frontend via our API, and executing the necessary logic. Implemented using Flask in app.py, the server handles various functionalities such as creating surveys, submitting responses, sending chat messages to ChatGPT, and interacting with the database.
 
 Our API consists of the following:
+<style scoped>
+table {
+  font-size: 10px;
+}
+</style>
 
-##### Admins
-
-Admins play a crucial role in managing the system. They have access to an admin portal where they can create and delete surveys, as well as view responses to surveys they create. The API provides endpoints specifically for admin management:
-
-##### 1. Create Admin
-
-- **Endpoint:** `/api/v1/admins`
-- **Method:** `POST`
-- **Description:** Creates a new admin with a username and password.
-
-##### 2. Login
-
-- **Endpoint:** `/api/v1/admins/login`
-- **Method:** `POST`
-- **Description:** Logs in an admin and issues a JWT upon successful login.
-
-##### Surveys
-
-Surveys are a fundamental aspect of the AI Chat Bot system, providing the necessary context and structure for interactions. The API supports the creation, retrieval, and deletion of surveys:
-
-##### 1. Create Survey
-
-- **Endpoint:** `/api/v1/surveys`
-- **Method:** `POST`
-- **Description:** Creates a new survey with metadata, title, subtitle, questions, and chat context.
-
-##### 2. Get Surveys
-
-- **Endpoint:** `/api/v1/surveys/?admin={username}`
-- **Method:** `GET`
-- **Description:** Retrieves all survey objects, optionally filtered by the admin who created them.
-
-##### 3. Get Survey
-
-- **Endpoint:** `/api/v1/surveys/{survey_id}`
-- **Method:** `GET`
-- **Description:** Retrieves a survey object by ID.
-
-##### 4. Delete Survey
-
-- **Endpoint:** `/api/v1/surveys/{survey_id}`
-- **Method:** `DELETE`
-- **Description:** Deletes a survey by ID, requiring admin authentication.
-
-##### Survey Responses
-
-Survey responses capture user interactions and feedback. The API allows for the submission, retrieval, and update of survey responses:
-
-##### 1. Submit Survey Response
-
-- **Endpoint:** `/api/v1/surveys/{survey_id}/responses`
-- **Method:** `POST`
-- **Description:** Submits a new survey response.
-- **Request Body:** JSON format containing response metadata and answers.
-
-##### 2. Get Survey Responses
-
-- **Endpoint:** `/api/v1/surveys/{survey_id}/responses`
-- **Method:** `GET`
-- **Description:** Retrieves all response objects for a survey, requiring admin authentication.
-
-##### 3. Get Survey Response
-
-- **Endpoint:** `/api/v1/surveys/{survey_id}/responses/{response_id}`
-- **Method:** `GET`
-- **Description:** Retrieves a response object by ID, requiring admin authentication.
-
-##### 4. Send Chat Message
-
-- **Endpoint:** `/api/v1/surveys/{survey_id}/responses/{response_id}/chat`
-- **Method:** `POST`
-- **Description:** Sends a message to the chatbot and receives a response.
+| Resource: API Method                     | Endpoint                                                   | HTTP Method | Description                                                                       |
+|-----------------------------------------|------------------------------------------------------------|--------|-----------------------------------------------------------------------------------|
+| **Admins: Create Admin**                | `/api/v1/admins`                                           | POST   | Creates a new admin with a username and password.                                 |
+| **Admins: Login**                       | `/api/v1/admins/login`                                     | POST   | Logs in an admin and issues a JWT upon successful login.                          |
+| **Surveys: Create Survey**              | `/api/v1/surveys`                                          | POST   | Creates a new survey with metadata, title, subtitle, questions, and chat context. |
+| **Surveys: Get Surveys**                | `/api/v1/surveys/?admin={username}`                        | GET    | Retrieves all survey objects, optionally filtered by the admin who created them.  |
+| **Surveys: Get Survey**                 | `/api/v1/surveys/{survey_id}`                              | GET    | Retrieves a survey object by ID.                                                  |
+| **Surveys: Delete Survey**              | `/api/v1/surveys/{survey_id}`                              | DELETE | Deletes a survey by ID, requiring admin authentication.                           |
+| **Survey Responses: Submit Response**   | `/api/v1/surveys/{survey_id}/responses`                    | POST   | Submits a new survey response.                                                    |
+| **Survey Responses: Get Responses**     | `/api/v1/surveys/{survey_id}/responses`                    | GET    | Retrieves all response objects for a survey, requiring admin authentication.      |
+| **Survey Responses: Get Response**      | `/api/v1/surveys/{survey_id}/responses/{response_id}`      | GET    | Retrieves a response object by ID, requiring admin authentication.                |
+| **Survey Responses: Send Chat Message** | `/api/v1/surveys/{survey_id}/responses/{response_id}/chat` | POST   | Sends a message to the chatbot and receives a response.                           |
 
 For the detailed API documentation, refer to [api.md](api.md).
 
@@ -137,19 +82,15 @@ The MySQL database, named `ai_chat_survey_db`, serves as the centralized reposit
 
 ![Entity Relationship (ER) Diagram](diagrams/images/db_schema.png)
 
-##### Explanation of [Database Schema](../database/init.sql)
+- **Admins**: Stores information about administrators who have access to the system. 
+- **Surveys**: Contains details of the surveys created in the system. 
 
-- **Admins**: Stores information about administrators who have access to the system. This table includes fields such as `admin_username`, `password`, and `created_at`.
+- **Questions**: Stores the questions associated with each survey. 
+- **Survey_Responses**: Holds the responses submitted for each survey question. 
 
-- **Surveys**: Contains details of the surveys created in the system. Fields include `survey_id`, `title`, `subtitle`, `admin_username`, `created_at`, and `chat_context`.
+- **ChatLog**: Logs the chat interactions between users and the chatbot. 
 
-- **Questions**: Stores the questions associated with each survey. Fields include `question_id`, `survey_id`, `question`, `question_type`, and `options`.
-
-- **Survey_Responses**: Holds the responses submitted for each survey question. Fields include `response_id`, `survey_id`, `question_id`, `answer`, and `submitted_at`.
-
-- **ChatLog**: Logs the chat interactions between users and the chatbot. Fields include `chat_id`, `survey_id`, `response_id`, `chat_log`, and `created_at`.
-
-The database schema is designed to maintain data integrity and efficiently handle various aspects of the AI chatbot survey system, from survey creation to user interactions and response storage.
+For the full database schema, please refer to [init.sql](../database/init.sql)
 
 #### c. Model (ChatGPT)
 
