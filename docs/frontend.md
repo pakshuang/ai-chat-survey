@@ -45,6 +45,14 @@ Note that our favicon, selected to illustrate the AI capabilities of our app, is
 
 Here are the initial wireframes for the various parts of admin portal. From left to right, top to bottom, we have the landing page, login page, signup page, admin homepage, new survey page, survey page, and survey responses page.
 
+Admins are able to:
+- Signup and login to their account.
+- View all surveys they have created, ordered in descending order based on their creation time.
+- Create new surveys, provide survey title, description, and chat context to the GPT model, and specify questions with Multiple Choice, Multiple Responses, and Free Response format.
+- View a specific survey and the responses of each surveys, including the conversations with the GPT model, after creating the survey.
+- Delete a survey.
+- Logout of their account.
+
 <img src="wireframes/landing-page.png" width="32%"/> <img src="wireframes/login.png" width="32%"/> <img src="wireframes/signup.png" width="32%"/> 
 
 <img src="wireframes/admin-homepage.png" width="32%"/> <img src="wireframes/new-survey.png" width="32%"/>
