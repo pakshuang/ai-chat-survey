@@ -7,8 +7,9 @@
 3. [Overall Architecture](#overall-architecture)
 4. [Frontend](#frontend)
 5. [Backend](#backend)
-6. [Future Directions and Recommendations](#future-directions-and-recommendations)
-7. [Conclusion](#conclusion)
+6. [DevOps](#devops)
+7. [Future Directions and Recommendations](#future-directions-and-recommendations)
+8. [Conclusion](#conclusion)
 
 ## Intro
 
@@ -56,6 +57,13 @@ Further details about setup/installation can be found in [Setup](setup.md), such
 
 ![Architecture](diagrams/images/overall-architecture.png)
 
+### Components
+
+- **Reverse Proxy (Nginx)**: Handles incoming requests and routes them to the backend or frontend. This unifies the frontend and backend under a single domain and allows for easy scaling of the frontend and backend services as well as avoids CORS issues.
+- **Frontend (React)**: User interface for the application. It can be scaled horizontally to handle more users.
+- **Backend (Flask)**: Handles the business logic and interacts with the database. It can be scaled horizontally to handle more users.
+- **Database (MySQL)**: Stores the data for the application.
+
 ## Frontend
 
 - [Frontend](frontend.md): Insert Description and details about the frontend components and technologies used.
@@ -63,6 +71,17 @@ Further details about setup/installation can be found in [Setup](setup.md), such
 ## Backend
 
 - [Backend](backend.md): Insert Description and details about the backend components and technologies used.
+
+## DevOps
+
+- **Docker**: The application is split into multiple services (frontend, backend, database, nginx) and each service is containerised using Docker.
+- **Docker Compose**: The application is orchestrated using Docker Compose. This allows for easy management and deployment of the application and its services. The `docker-compose.yml` file defines the services, environment variables, bind mounts, etc. for the application. Overlapping or alternate compose files are used for additional purposes such as integration testing and model evaluation.
+- **GitHub Repository**: The codebase is hosted on a mono-repo on GitHub. This allows for easy access to all parts of the application and ensures that all parts are versioned together. The repository is private and access is restricted to team members.
+- **GitHub Pull Requests**: Features are developed on separate branches and merged regularly. Pull requests are used to merge changes into the main branch. Pull requests require approval from code owners of the files changed and must pass the CI pipeline before they can be merged.
+- **GitHub Actions**: Continuous Integration (CI) is set up using GitHub Actions. The CI pipeline runs linters to ensure proper formatting as well as integration tests to ensure the application is working as expected. These checks are automated and are required to pass before a pull request can be merged.
+- **GitHub Issues**: Issues are used to track tasks, bugs, and enhancements. They are labelled and assigned to team members to keep track of progress.
+- **Bash Scripts**: Bash scripts are used to automate common tasks such as local integration testing.
+- **Telegram**: A private Telegram group is used for communication between team members. The group uses the "Topics" feature to categorise messages into different topics such as "General", "Frontend", "API", "BRD", "Pull Requests", etc.
 
 ## Future Directions and Recommendations
 
