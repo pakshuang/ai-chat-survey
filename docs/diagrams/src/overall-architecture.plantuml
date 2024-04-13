@@ -1,0 +1,27 @@
+@startuml overall-architecture
+
+
+package "Docker Bridge Network: ai-chat-survey_default)" #aliceblue;line:blue;text:blue{
+    node "Flask API\n(Service: backend)" as backend #aliceblue;line:blue;text:blue
+
+    node "Nginx Reverse Proxy\n(Service: reverse_proxy)" as reverse_proxy #aliceblue;line:blue;text:blue
+
+    node "MySQL RDBMS\n(Service: database)" as database #aliceblue;line:blue;text:blue
+
+    node "React Frontend\n(Service: frontend)" as frontend #aliceblue;line:blue;text:blue
+
+    reverse_proxy <-down-> backend : HTTP request/response
+    reverse_proxy <-left-> frontend : HTTP request/response
+    backend <-left-> database : data interaction
+}
+
+cloud "Internet"{
+    actor "Client" as client
+    [OpenAI GPT-4 Chat Completion API\n(https://api.openai.com/v1/chat/completions)]  as chat_api
+}
+
+client <-left-> reverse_proxy: HTTP request/response
+chat_api <-left-> backend: HTTP request/response
+client -[hidden]down-> chat_api
+
+@enduml
