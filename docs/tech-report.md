@@ -54,7 +54,7 @@ Further details about setup/installation can be found in [Setup](setup.md), such
 
 ## Overall Architecture
 
-- Insert description of the overall architecture goes here.
+![Architecture](diagrams/images/overall-architecture.png)
 
 ## Frontend
 
