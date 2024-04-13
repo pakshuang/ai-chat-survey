@@ -24,7 +24,7 @@ Here are the initial wireframes for the various parts of admin portal. From left
 
 <img src="wireframes/landing-page.png" width="32%"/> <img src="wireframes/login.png" width="32%"/> <img src="wireframes/signup.png" width="32%"/> 
 
-<img src="wireframes/admin-homepage.png" width="32%"/><img src="wireframes/new-survey.png" width="32%"/>
+<img src="wireframes/admin-homepage.png" width="32%"/> <img src="wireframes/new-survey.png" width="32%"/>
 <img src="wireframes/survey.png" width="32%"/>
 
 <img src="wireframes/survey-responses.png" width="32%"/>
