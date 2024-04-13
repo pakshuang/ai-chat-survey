@@ -1,6 +1,7 @@
 # Tech Report
 
 ## Table of Contents
+
 1. [Intro](#intro)
 2. [Setup/Installation](#setupinstallation)
 3. [Overall Architecture](#overall-architecture)
@@ -10,9 +11,11 @@
 7. [Conclusion](#conclusion)
 
 ## Intro
+
 - Insert intro
 
 ## Setup/Installation
+
 1. Clone the repository:
 
    ```shell
@@ -79,6 +82,7 @@ During development, you may want to stop the application and remove all images a
 ```shell
 docker-compose down --rmi all --volumes
 ```
+
 - For more detailed setup/installation instructions such as:
   - Backend Development Environment
   - Testing (Backend)
@@ -87,16 +91,21 @@ docker-compose down --rmi all --volumes
   please visit [setup.md](setup.md).
 
 ## Overall Architecture
+
 - Insert description of the overall architecture goes here.
 
 ## Frontend
+
 - [Frontend](frontend.md): Insert Description and details about the frontend components and technologies used.
 
 ## Backend
+
 - [Backend](backend.md): Insert Description and details about the backend components and technologies used.
 
 ## Future Directions and Recommendations
+
 - [Localisation](localisation.md)
 
 ## Conclusion
+
 - Insert conclusion goes here.
