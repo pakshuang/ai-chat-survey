@@ -19,6 +19,8 @@ This section serves as an overview of the frontend architecture and design behin
 - Wireframes and high-fidelity application
   - Rubrics: Wireframes to high-fidelity application evolution demonstrated. Justification for choices link back to lecture on design, or from other readings
 
+Note that our favicon, selected to illustrate the AI capabilities of our app, is by [Pexelpy](https://freeicons.io/profile/433683) on [freeicons.io](https://freeicons.io).
+
 ### Admin portal
 
 - Design of admin portal
