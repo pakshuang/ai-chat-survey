@@ -16,20 +16,24 @@ This section serves as an overview of the frontend architecture and design behin
 
 ## Initial design
 
-- Wireframes and high-fidelity application
-  - Rubrics: Wireframes to high-fidelity application evolution demonstrated. Justification for choices link back to lecture on design, or from other readings
+We aimed to move fast to quickly show our users a minimal viable product from both a functional and aesthetic point of view. Hence, we produced one set of low-fidelity wireframes and immediately transformed them into a working web application, which we dogfooded and which users tried out during user interviews.
 
 ### Admin portal
 
-- Design of admin portal
+Here are the initial wireframes for the various parts of admin portal. From left to right, top to bottom, we have the landing page, login page, signup page, admin homepage, new survey page, survey page, and survey responses page.
+
+<img src="wireframes/landing-page.png" width="32%"/> <img src="wireframes/login.png" width="32%"/> <img src="wireframes/signup.png" width="32%"/> 
+
+<img src="wireframes/admin-homepage.png" width="32%"/><img src="wireframes/new-survey.png" width="32%"/>
+<img src="wireframes/survey.png" width="32%"/>
+
+<img src="wireframes/survey-responses.png" width="32%"/>
 
 ### Client interface
 
 - Design of client interface
 
 ## Initial user interviews
-
-- Rubrics: where possible, ~5 interviews described briefly; results summarised, indicating how it led to refinements in solution
 
 The following table shows the profiles of the users we interviewed.
 
@@ -48,12 +52,25 @@ The following table shows the feedback from each user as well as the refinements
 
 ## Final design
 
-- Wireframes and high-fidelity application
-  - Rubrics: Wireframes to high-fidelity application evolution demonstrated. Justification for choices link back to lecture on design, or from other readings
-
 ### Admin portal
 
-- Design of admin portal
+The design of the admin portal was largely unaffected by our user interviews, which focused more on the client interface. However, based on feedback on users' uncertainty about the importance of chat context, we added a tooltip to give more information on the importance of the chat context in generating good survey questions.
+
+<img src="final-designs/chatbot-context-tooltip.png"/>
+
+Based on our dogfooding of our initial implementation, we also:
+
+- Added a header to all admin pages to enable the user to check which account they're logged into and also log out easily
+
+<img src="final-designs/header.png"/>
+
+Hovering over the avatar would reveal the current account's username.
+
+- Added a section to each survey page to allow admins to easily test out the client interface
+- Made survey description and chat context scroll vertically instead of horizontally for easier reading
+  - In the screenshot below, note how the description and chat context are larger text boxes, rather than single lines of input as originally designed in the wireframe
+
+<img src="final-designs/survey-interface-and-scroll.png"/>
 
 ### Client interface
 
