@@ -50,27 +50,40 @@ The backend components interact harmoniously to facilitate the flow of data and 
 
 #### a. Server/API
 
-The backend server is the core component responsible for processing incoming requests from the frontend via our API, and executing the necessary logic. Implemented using Flask in app.py, the server handles various functionalities such as creating surveys, submitting responses, sending chat messages to ChatGPT, and interacting with the database.
+The backend server is the core component responsible for processing incoming requests from the frontend via our API. Implemented using Flask in app.py, the server handles various functionalities such as creating surveys, submitting responses, sending chat messages to ChatGPT, with the following endpoints:
 
-Our API consists of the following:
 <style scoped>
 table {
   font-size: 10px;
 }
+table th:first-of-type {
+    width: 10%;
+}
+table th:nth-of-type(2) {
+    width: 20%;
+}
+table th:nth-of-type(3) {
+    width: 10%;
+}
+table th:nth-of-type(4) {
+    width: 50%;
+}
 </style>
 
-| Resource: API Method                     | Endpoint                                                   | HTTP Method | Description                                                                       |
-|-----------------------------------------|------------------------------------------------------------|--------|-----------------------------------------------------------------------------------|
-| **Admins: Create Admin**                | `/api/v1/admins`                                           | POST   | Creates a new admin with a username and password.                                 |
-| **Admins: Login**                       | `/api/v1/admins/login`                                     | POST   | Logs in an admin and issues a JWT upon successful login.                          |
-| **Surveys: Create Survey**              | `/api/v1/surveys`                                          | POST   | Creates a new survey with metadata, title, subtitle, questions, and chat context. |
-| **Surveys: Get Surveys**                | `/api/v1/surveys/?admin={username}`                        | GET    | Retrieves all survey objects, optionally filtered by the admin who created them.  |
-| **Surveys: Get Survey**                 | `/api/v1/surveys/{survey_id}`                              | GET    | Retrieves a survey object by ID.                                                  |
-| **Surveys: Delete Survey**              | `/api/v1/surveys/{survey_id}`                              | DELETE | Deletes a survey by ID, requiring admin authentication.                           |
-| **Survey Responses: Submit Response**   | `/api/v1/surveys/{survey_id}/responses`                    | POST   | Submits a new survey response.                                                    |
-| **Survey Responses: Get Responses**     | `/api/v1/surveys/{survey_id}/responses`                    | GET    | Retrieves all response objects for a survey, requiring admin authentication.      |
-| **Survey Responses: Get Response**      | `/api/v1/surveys/{survey_id}/responses/{response_id}`      | GET    | Retrieves a response object by ID, requiring admin authentication.                |
-| **Survey Responses: Send Chat Message** | `/api/v1/surveys/{survey_id}/responses/{response_id}/chat` | POST   | Sends a message to the chatbot and receives a response.                           |
+| Resource         | API Method        | HTTP Method | Description                                                                       |
+|------------------|-------------------|-------------|-----------------------------------------------------------------------------------|
+| Admins           | Create Admin      | POST        | Creates a new admin with a username and password.                                 |
+| Admins           | Login             | POST        | Logs in an admin and issues a JWT upon successful login.                          |
+| Surveys          | Create Survey     | POST        | Creates a new survey with metadata, title, subtitle, questions, and chat context. |
+| Surveys          | Get Surveys       | GET         | Retrieves all survey objects, optionally filtered by the admin who created them.  |
+| Surveys          | Get Survey        | GET         | Retrieves a survey object by ID.                                                  |
+| Surveys          | Delete Survey     | DELETE      | Deletes a survey by ID, requiring admin authentication.                           |
+| Survey Responses | Submit Response   | POST        | Submits a new survey response.                                                    |
+| Survey Responses | Get Responses     | GET         | Retrieves all response objects for a survey, requiring admin authentication.      |
+| Survey Responses | Get Response      | GET         | Retrieves a response object by ID, requiring admin authentication.                |
+| Survey Responses | Send Chat Message | POST        | Sends a message to the chatbot and receives a response.                           |
+
+We decided not to implement full CRUD operations for the 3 resources (Admins, Surveys, and Survey Responses) due to the time constraints in implementing this project. For example, an `update` operations for Surveys was not developed so that the codebase would be smaller and easier to develop, test and maintain.
 
 For the detailed API documentation, refer to [api.md](api.md).
 
@@ -80,7 +93,7 @@ The MySQL database, named `ai_chat_survey_db`, serves as the centralized reposit
 
 ##### Entity Relationship (ER) Diagram
 
-![Entity Relationship (ER) Diagram](diagrams/images/db_schema.png)
+<img src="diagrams/images/db_schema.png" alt="Entity Relationship (ER) Diagram" width="400"/>
 
 - **Admins**: Stores information about administrators who have access to the system. 
 - **Surveys**: Contains details of the surveys created in the system. 
