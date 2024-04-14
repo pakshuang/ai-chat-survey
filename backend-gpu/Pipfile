@@ -3,6 +3,24 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
+[[source]]
+url = "https://download.pytorch.org/whl/cpu/"
+verify_ssl = true
+name = "pytorch_cpu"
+
+[[source]]
+url = "https://download.pytorch.org/whl/cu118/"
+verify_ssl = true
+name = "pytorch_cu118"
+
+[torch_cpu]
+torch = {index="pytorch_cpu"}
+torchvision = {index="pytorch_cpu"}
+
+[torch_cu118]
+torch = {index="pytorch_cu118"}
+torchvision = {index="pytorch_cu118"}
+
 [packages]
 flask = "*"
 openai = "*"
@@ -11,6 +29,7 @@ pymysql = "*"
 pyjwt = "*"
 requests = "*"
 cryptography = "*"
+
 
 [dev-packages]
 black = "*"

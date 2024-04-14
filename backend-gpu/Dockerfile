@@ -1,13 +1,11 @@
-# Use an official Python runtime as the base image
-FROM python:3.11.8
+# Use an official PyTorch image with CUDA support as the base image
+FROM pytorch/pytorch:2.1.0-cuda11.8-cudnn8-runtime
 
 # Set the working directory in the container
-WORKDIR /backend
+WORKDIR /backend-gpu
 
 # Copy the application code to the working directory
 COPY src/ ./src
-COPY tests/ ./tests
-COPY model_evaluation/ ./model_evaluation
 COPY Pipfile Pipfile.lock ./
 
 # Install the dependencies
