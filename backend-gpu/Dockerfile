@@ -1,11 +1,6 @@
 # Use an official PyTorch image with CUDA support as the base image
 FROM pytorch/pytorch:2.1.0-cuda11.8-cudnn8-runtime
 
-# Update Python version
-RUN conda update -n base -c defaults conda && \
-    conda install -y python=3.11.8 && \
-    conda update --all --yes
-  
 # Set the working directory in the container
 WORKDIR /backend-gpu
 
