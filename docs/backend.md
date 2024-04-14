@@ -14,7 +14,7 @@ The integration of LLMs into survey research represents a cutting-edge frontier 
 
 Another development in the use of LLMs in survey research is detailed in the study by Maiorino et al. (2023), which explores the application of generative language models for survey question generation at SurveyMonkey. Their work demonstrates the possibility of using LLMs in the survey design process by generating comprehensive survey questions from a simple "seed" prompt. This process of "concept expansion" is particularly notable for its efficiency and its ability to integrate seamlessly with industry-standard questions.
 
-Our group seeks to expand the use of Large Language Models in surveys by leveraging on the "concept expansion" ability of LLMs in order to create an interactive survey experience through personalised questions with the use of prompt engineering techniques such as Chain of Thought prompting (Wei et al., 2022).
+Our group seeks to expand the use of LLMs in surveys by leveraging on the "concept expansion" ability of LLMs in order to create an interactive survey experience through personalised questions with the use of prompt engineering techniques such as Chain of Thought prompting (Wei et al., 2022). Unlike Maiorino's approach, which focuses on generating static questions for survey designers, our strategy involves dynamically creating personalized questions in response to user inputs, enhancing the interactivity of the survey experience.
 
 ## Backend Architecture
 
