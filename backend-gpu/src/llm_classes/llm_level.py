@@ -82,7 +82,7 @@ class GPT(LLM):
 
 
 class LocalLLMGPTQ(LLM):
-    # LOCAL-LLMS CAN BE DEFINED IN THIS CLASS SUCH THAT THE APP CAN SUPPORT LOCALLLMS
+    # LOCAL-LLMS CAN BE DEFINED IN THIS CLASS SUCH THAT THE APP CAN SUPPORT LOCAL LLMs
     # REQUIRES:
     # 1. THE TRANSFORMERS LIBRARY, WHICH IS NOT IMPORTED:
     #       from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -96,10 +96,9 @@ class LocalLLMGPTQ(LLM):
     """A class for GPTQ-quantised LLM"""
 
     def __init__(self, path):
-        pass
-        # model = AutoModelForCausalLM.from_pretrained(path, device_map="cuda")
-        # tokenizer = AutoTokenizer.from_pretrained(path)
-        # self.model, self.tokenizer = model, tokenizer
+        model = AutoModelForCausalLM.from_pretrained(path, device_map="cuda")
+        tokenizer = AutoTokenizer.from_pretrained(path)
+        self.model, self.tokenizer = model, tokenizer
 
     def run(
         self, messages: list, seed: int = random.randint(1, 9999), with_moderation=True
@@ -115,16 +114,16 @@ class LocalLLMGPTQ(LLM):
             str: text output from the Large Language Model.
         """
         pass
-        # conversations = self.tokenizer.apply_chat_template(messages)
-        # input_ids = self.tokenizer(messages, return_tensors='pt').input_ids.cuda()
+        conversations = self.tokenizer.apply_chat_template(messages)
+        input_ids = self.tokenizer(messages, return_tensors='pt').input_ids.cuda()
 
-        # return self.model.generate(
-        # inputs=input_ids,
-        # temperature=0.7,
-        # do_sample=True,
-        # top_p=0.95,
-        # top_k=40,
-        # repetition_penalty=1,
-        # max_new_tokens=2048,
-        # eos_token_id=bot.tok.eos_token_id,
-        # )
+        return self.model.generate(
+        inputs=input_ids,
+        temperature=0.7,
+        do_sample=True,
+        top_p=0.95,
+        top_k=40,
+        repetition_penalty=1,
+        max_new_tokens=2048,
+        eos_token_id=bot.tok.eos_token_id,
+        )
