@@ -64,7 +64,7 @@ const QuestionInput = ({
         );
       case "multiple_response":
         return (
-          <>
+          <Stack direction="column">
             <Text fontSize="sm">(You may pick more than one option.)</Text>
             <CheckboxGroup
               isDisabled={submitted}
@@ -87,7 +87,7 @@ const QuestionInput = ({
                 ))}
               </Stack>
             </CheckboxGroup>
-          </>
+          </Stack>
         );
       case "free_response":
         return (

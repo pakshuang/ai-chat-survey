@@ -1,4 +1,4 @@
-import { Box, SkeletonCircle, Button, Flex } from "@chakra-ui/react";
+import { Box, SkeletonCircle, Button, Flex, Text } from "@chakra-ui/react";
 import { Fragment, useEffect, useState } from "react";
 import ChatMessage from "./ChatMessage";
 import TypingEffect from "./TypingEffect";
@@ -25,6 +25,7 @@ function ChatWindow({
   return (
     <Box
       overflowY="auto"
+      minH="65px"
       flex="1"
       display="flex"
       flexDirection="column-reverse"
@@ -52,14 +53,16 @@ function ChatWindow({
       }}
     >
       <Box flexDirection="column" display="flex" gap="0.5rem">
-        <ChatMessage sender="bot">{surveyState.subtitle}</ChatMessage>
+        <ChatMessage sender="bot">
+          <Text fontSize="xl">{surveyState.subtitle}</Text>
+        </ChatMessage>
         {messages.map((item, index) => {
           if (index === messages.length - 1 && botResponded) {
             if (item.message === surveyMessage) {
               if (surveyState.submitted) {
                 return (
                   <ChatMessage key={index} sender={item.sender}>
-                    {item.message}
+                    <Text fontSize="xl">{item.message}</Text>
                   </ChatMessage>
                 );
               }
@@ -82,20 +85,24 @@ function ChatWindow({
             }
             return (
               <ChatMessage key={index} sender="bot">
-                <TypingEffect text={messages.slice(-1)[0].message} />
+                <Text fontSize="xl">
+                  <TypingEffect text={messages.slice(-1)[0].message} />
+                </Text>
               </ChatMessage>
             );
           } else {
             if (!item.question) {
               return (
                 <ChatMessage key={index} sender={item.sender}>
-                  {item.message}
+                  <Text fontSize="xl">{item.message}</Text>
                 </ChatMessage>
               );
             }
             return (
               <Fragment key={index}>
-                <ChatMessage sender={item.sender}>{item.message}</ChatMessage>
+                <ChatMessage sender={item.sender}>
+                  <Text fontSize="xl">{item.message}</Text>
+                </ChatMessage>
                 <ChatMessage sender="user">
                   <QuestionInput
                     questionData={item.question}
@@ -109,7 +116,9 @@ function ChatWindow({
         })}
         {isBotThinking && (
           <ChatMessage sender="bot">
-            <SkeletonCircle size="6" />
+            <SkeletonCircle size="4" alignSelf="flex-end" ml="8px" />
+            <SkeletonCircle size="4" alignSelf="flex-end" mx="0px" />
+            <SkeletonCircle size="4" alignSelf="flex-end" />
           </ChatMessage>
         )}
       </Box>
