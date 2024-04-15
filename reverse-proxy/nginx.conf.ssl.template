@@ -1,6 +1,6 @@
 server {
     listen 80;
-    server_name example.org;
+    server_name ${DOMAIN};
     server_tokens off;
 
     location /.well-known/acme-challenge/ {
