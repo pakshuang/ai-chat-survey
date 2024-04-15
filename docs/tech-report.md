@@ -14,7 +14,7 @@
 ## Intro
 In today's rapidly evolving business landscape, understanding customer needs and preferences is the cornerstone of success. Traditional survey methods, while informative, often fall short in capturing the intricacies of consumer behavior and sentiment.
 
-In this report, we unveil a groundbreaking project poised to revolutionize the way businesses conduct customer research. Leveraging the power of advanced Language Models, particularly ChatGPT, we're introducing a dynamic and personalized survey experience that transcends the limitations of conventional approaches.
+In this report, we unveil a proof-of-concept project poised to revolutionize the way businesses conduct customer research. Leveraging the power of advanced Language Models, particularly ChatGPT, we're introducing a dynamic and personalized survey experience that transcends the limitations of conventional approaches.
 
 Our vision is simple yet transformative: to create surveys that adapt in real-time based on each respondent's unique input. By integrating ChatGPT into our survey platform, we're not only collecting data but engaging customers in meaningful conversations. This innovative approach enables us to pursue unique lines of inquiry, uncovering insights that traditional surveys often miss.
 
@@ -97,4 +97,8 @@ Further details about setup/installation can be found in [Setup](setup.md), such
 
 ## Conclusion
 
-- Insert conclusion goes here.
+In conclusion, our project has demonstrated the potential of integrating ChatGPT into customer research surveys, offering a glimpse into a future where technology enhances the survey experience. While our endeavor may be modest in scope, its implications are significant.
+
+Through our proof of concept, we've showcased the feasibility of leveraging ChatGPT to personalize survey interactions and uncover unique insights from respondents. By adopting this approach, businesses can gain a deeper understanding of customer preferences and feedback, ultimately guiding strategic decision-making processes.
+
+While our project may be a small step, it symbolizes a larger shift towards more dynamic and engaging survey methodologies. As technology continues to evolve, opportunities abound for further exploration and refinement in this field.
