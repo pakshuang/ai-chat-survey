@@ -30,6 +30,7 @@ services:
     image: nginx:latest
     command: >
       /bin/sh -c "
+      chmod +x /etc/nginx/conf.d/generate_nginx_config.sh &&
       /etc/nginx/conf.d/generate_nginx_config.sh && 
       nginx -g 'daemon off;'"
     depends_on:
