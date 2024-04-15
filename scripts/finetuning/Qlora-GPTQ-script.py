@@ -49,7 +49,7 @@ def main():
         dest="output",
         type=str,
         help="Output path",
-        default=str(pathlib.Path(__file__).parent.resolve()) + "/../../backend/models",
+        default=str(pathlib.Path(__file__).parent.resolve()) + "/../../backend-gpu/models",
     )
     parser.add_argument(
         "--learning-rate", dest="lr", type=float, help="Learning rate", default=2.5e-4
@@ -192,7 +192,7 @@ def main():
     trainer.model.save_pretrained(args.output)
 
     logging.warning(
-        """Your model has been finetuned and the LORA adapters can now be found in backend/models/. 
+        """Your model has been finetuned and the LORA adapters can now be found in backend-gpu/models/. 
                     Continuing this script will require more VRAM. The following portion may not function properly without >=8GB of VRAM."""
     )
     exit = input('Type "exit" if you wish to end: ')
@@ -200,7 +200,7 @@ def main():
         return
     # Test inference.
     persisted_model = AutoPeftModelForCausalLM.from_pretrained(
-        str(pathlib.Path(__file__).parent.resolve()) + "/../../backend/models",
+        str(pathlib.Path(__file__).parent.resolve()) + "/../../backend-gpu/models",
         low_cpu_mem_usage=True,
         return_dict=True,
         torch_dtype=torch.float16,

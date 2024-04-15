@@ -4,7 +4,9 @@ from abc import ABC, abstractmethod
 
 from dotenv import load_dotenv
 from openai import OpenAI
-
+from peft import AutoPeftModelForCausalLM
+import torch
+from transformers import AutoTokenizer
 
 class LLM(ABC):
     """A large language model class.
@@ -82,24 +84,21 @@ class GPT(LLM):
 
 
 class LocalLLMGPTQ(LLM):
-    # LOCAL-LLMS CAN BE DEFINED IN THIS CLASS SUCH THAT THE APP CAN SUPPORT LOCALLLMS
-    # REQUIRES:
-    # 1. THE TRANSFORMERS LIBRARY, WHICH IS NOT IMPORTED:
-    #       from transformers import AutoModelForCausalLM, AutoTokenizer
-    # 2. NVIDIA-GPU (With at least 8GB VRAM)
-    # 3. CUDA (At least 11.8)
-    # The following skeleton code will help:
-    # path = "C:\..." (Where you store your model)
-    # model = AutoModelForCausalLM.from_pretrained(path, device_map="cuda")
-    # tokenizer = AutoTokenizer.from_pretrained(path)
-    #
+
     """A class for GPTQ-quantised LLM"""
 
-    def __init__(self, path):
-        pass
-        # model = AutoModelForCausalLM.from_pretrained(path, device_map="cuda")
-        # tokenizer = AutoTokenizer.from_pretrained(path)
-        # self.model, self.tokenizer = model, tokenizer
+    def __init__(self):
+        self.path = "../models/"
+        model = AutoPeftModelForCausalLM.from_pretrained(
+            self.path,
+            low_cpu_mem_usage=True,
+            return_dict=True,
+            torch_dtype=torch.float16,
+            device_map="cuda",
+        )
+
+        tokenizer = AutoTokenizer.from_pretrained(self.path + "/dolphin-2.2.1-mistral-7B-GPTQ/")
+        self.model, self.tokenizer = model, tokenizer
 
     def run(
         self, messages: list, seed: int = random.randint(1, 9999), with_moderation=True
@@ -114,7 +113,6 @@ class LocalLLMGPTQ(LLM):
         Returns:
             str: text output from the Large Language Model.
         """
-        pass
         # conversations = self.tokenizer.apply_chat_template(messages)
         # input_ids = self.tokenizer(messages, return_tensors='pt').input_ids.cuda()
 
