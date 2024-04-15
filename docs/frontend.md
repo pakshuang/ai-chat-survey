@@ -9,31 +9,39 @@ This section serves as an overview of the frontend architecture and design behin
 ### Technologies Used and Justification
 
 #### React
+
 - Improved developer experience: React is easy to understand and with relatively small amount of code, developers can build robust and powerful app with desired animation and user experience. React allows developers to build highly interactive and responsive user interfaces, resulting in a smoother and more engaging experience for users.
 - Code reusability: React is intuitive and promotes the concept of reusable components, which are self-contained modules that can be used across different parts of an application. This modular approach makes it easier to build complex user interfaces by breaking them down into smaller, reusable components.
 
 #### Chakra UI
+
 - Chakra UI supports React, and every component is customizable using the Style props. They map to almost all necessary CSS properties that are available.
 - Simpler components: The best feature of Chakra UI is how components are designed to be small so that you can compose them together. You can build bigger elements easily by arranging them the same as HTML tags.
 - Easy to theme and customize: One of the advantages of Chakra UI is that you can easily adjust it to your design needs.
 
 #### Axios
+
 - Axios is a popular JavaScript library used for making HTTP requests from a web browser. It provides an easy-to-use API that allows you to send asynchronous HTTP requests to a server and handle the responses.
 - Easier syntax: The methods for different HTTP requests, such as GET and POST, are clearly defined in Axios. This results in more readable code and a shallower learning curve for new developers.
 - Advanced and robust features: Axios comes packed with advanced features like request and response interceptors, automatic JSON data transformation, and configurable timeouts, which can save time for developers.
 
 ### Authentication and Authorization Considerations
+
 - We use a simple set of username and password for admin authentication. Backend will then verify if the password matches with the username.
 - Backend will send JWT token upon successful login, in which frontend will store the username and JWT in `localStorage`.
 - Few alternatives to store the token include storing in memory or storing in cookie. Storing the token in a variable in memory is easy and hard to steal using an XSS (Cross-Site Scripting) attack, but a new token is needed every time the user refreshes the page, thus this option is not the most optimal for our app. Storing in a secure, same-site cookie is considered the most secure way to store JWT, but the implementation is complicated, hence we decided it's not worth the time and effort to implement this option. Therefore, we proceed with storing JWT in `localStorage` as it's easy to implement and tokens stored in `localStorage` are not automatically sent with every HTTP request like cookies are, reducing the risk of CSRF (Cross-Site Request Forgery) attacks. In addition, `localStorage` access is typically faster than cookie access. However, it's vulnerable to XSS attack. With these benefits and drawbacks in mind, we decided to go with `localStorage` implementation.
 - We employed several authorization protections for admin routes. Admins can only access their surveys and responses list if they are logged in. Trying to manually change the url when they are not logged in will bring them to the login page. Furthermore, after login, admins can only access their own list of surveys and responses. They cannot access other admins' surveys. Trying to manually change the url to surveys they did not create will bring them to 404 Not Found page.
-- Future development: Given more time, using secure, same-site cookie is preferable as it's more secure. Moreover, using UUID as survey's identifier is more secure, standardized, and professional as admins will not be able to guess other admins' survey UUID. 
+- Future development: Given more time, using secure, same-site cookie is preferable as it's more secure. Moreover, using UUID as survey's identifier is more secure, standardized, and professional as admins will not be able to guess other admins' survey UUID.
 
 ### Routing
+
 - We use `react-router-dom` for our app routing. Admin routes are protected, except signup and login page. Accessing other admin routes without login will bring them to the login page.
 - Client routes (chat page) are accessible by everyone. Accessing invalid routes will bring users to 404 Not Found page.
 
 ### Chat Page
+
+- We design the Chat Page to provide users with a more engaging and interactive experience compared to traditional survey form. The simplistic look and chat-like design helps to replicate the feeling of conversing with a person.
+- Messages displayed are retrieved from backend through an API call to ensure that the chat remains dynamic and responsive with real-time update and personalised interaction based on user input.
 
 ## Initial design
 
@@ -46,6 +54,7 @@ Note that our favicon, selected to illustrate the AI capabilities of our app, is
 Here are the initial wireframes for the various parts of admin portal. From left to right, top to bottom, we have the landing page, login page, signup page, admin homepage, new survey page, survey page, and survey responses page.
 
 Admins are able to:
+
 - Signup and login to their account.
 - View all surveys they have created, ordered in descending order based on their creation time.
 - Create new surveys, provide survey title, description, and chat context to the GPT model, and specify questions with Multiple Choice, Multiple Responses, and Free Response format.
@@ -53,7 +62,7 @@ Admins are able to:
 - Delete a survey.
 - Logout of their account.
 
-<img src="wireframes/landing-page.png" width="32%"/> <img src="wireframes/login.png" width="32%"/> <img src="wireframes/signup.png" width="32%"/> 
+<img src="wireframes/landing-page.png" width="32%"/> <img src="wireframes/login.png" width="32%"/> <img src="wireframes/signup.png" width="32%"/>
 
 <img src="wireframes/admin-homepage.png" width="32%"/> <img src="wireframes/new-survey.png" width="32%"/>
 <img src="wireframes/survey.png" width="32%"/>
