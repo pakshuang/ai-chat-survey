@@ -8,17 +8,17 @@ server {
     }
 
     location / {
-        return 301 https://$host$request_uri;
+        return 301 https://www.${DOMAIN}$request_uri;
     }
 }
 
 server {
     listen 433 ssl;
-    server_name ${DOMAIN} www.${DOMAIN};
+    server_name www.${DOMAIN};
     server_tokens off;
 
-    ssl_certificate /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/www.${DOMAIN}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/www.${DOMAIN}/privkey.pem;
     include /etc/letsencrypt/options-ssl-nginx.conf;
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
