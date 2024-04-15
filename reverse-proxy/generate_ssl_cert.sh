@@ -10,7 +10,7 @@ if [ "$ENV" = "production" ]; then
     echo "Nginx started successfully."
 
     apt-get update
-    apt-get install certbot python3-certbot-nginx
+    apt-get install -y certbot python3-certbot-nginx
 
     certbot --nginx -d ${DOMAIN} \
     --email ${CERT_EMAIL} --agree-tos --no-eff-email \
