@@ -2,7 +2,7 @@ ENV=${NGINX_ENV:-development}
 
 if [ "$ENV" = "production" ]; then
     # Wait for Nginx to start
-    while ! nc -z localhost 443; do
+    while ! curl -s localhost:443 > /dev/null; do
         echo "Waiting for Nginx to start..."
         sleep 1
     done
