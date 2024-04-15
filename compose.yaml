@@ -32,6 +32,9 @@ services:
       /bin/sh -c "
       chmod +x /etc/nginx/conf.d/generate_nginx_config.sh &&
       /etc/nginx/conf.d/generate_nginx_config.sh && 
+      nginx &&
+      chmod +x /etc/nginx/conf.d/generate_ssl_cert.sh &&
+      /etc/nginx/conf.d/generate_ssl_cert.sh
       nginx -g 'daemon off;'"
     depends_on:
       - frontend
@@ -42,4 +45,3 @@ services:
       - "${NGINX_HOST_PORT}:${NGINX_CONTAINER_PORT}"
     volumes:
       - ./reverse-proxy:/etc/nginx/conf.d/
-      - /etc/letsencrypt/live/
