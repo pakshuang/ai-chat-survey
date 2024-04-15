@@ -12,14 +12,12 @@ RUN apt-get update && \
     libnss3-dev libssl-dev libreadline-dev libffi-dev wget
 
 # Download and install Python 3.11.8
-
-
 RUN wget https://www.python.org/ftp/python/3.11.8/Python-3.11.8.tar.xz && \
     tar -xf Python-3.11.8.tar.xz && \
     cd Python-3.11.8 && \
     ./configure --enable-optimizations --with-ensurepip=install && \
     make -j $(nproc) && \
-    make altinstall
+    make install
 
 # Clean up unnecessary files
 RUN rm -rf /tmp/Python-3.11.8*
@@ -36,12 +34,8 @@ RUN pip3 install --no-cache-dir pipenv==2023.12.1
 COPY src/ ./src
 COPY models/ ./models
 COPY Pipfile Pipfile.lock ./
-
-
-RUN pipenv install --system --python python3.11.8 && \
-pipenv install --verbose
-
-
+ENV PIPENV_PYTHON=/usr/local/bin/python3.11
+RUN pipenv install --verbose
 
 # Define the command to run the application
 CMD ["pipenv", "run", "python", "-m", "src.app"]
