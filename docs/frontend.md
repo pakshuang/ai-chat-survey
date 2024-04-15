@@ -71,7 +71,12 @@ Admins are able to:
 
 ### Client interface
 
-- Design of client interface
+Our initial design approach for the client interface focuses on maintaining information collection efficiency while adapting the survey to have a conversational, chat-like format. This concept led us to develop two separate pages:
+
+- Survey Form Page: This is the page for close-ended question, i.e. question that the surveyor would like to know regardless of the user's responses previously. The types of questions included on this page are multiple choice, multiple response, and free response.
+- Chat Page: After the initial form page, the answers are sent to a chatbot and users are redirected to the chat page where they engage in a conversation with the chatbot.
+
+_images to be added_
 
 ## Initial user interviews
 
