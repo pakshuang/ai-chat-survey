@@ -11,4 +11,4 @@ else
     SSL_CERTIFICATE_KEY=""
 fi
 
-envsubst '${FRONTEND_CONTAINER_PORT} ${BACKEND_CONTAINER_PORT} ${NGINX_CONTAINER_PORT} ${DOMAIN} "$SSL" "$SSL_CERTIFICATE" "$SSL_CERTIFICATE_KEY"' < /etc/nginx/conf.d/nginx.conf.template > /etc/nginx/conf.d/default.conf
+envsubst '${FRONTEND_CONTAINER_PORT} ${BACKEND_CONTAINER_PORT} ${NGINX_CONTAINER_PORT} ${DOMAIN} ${SSL} ${SSL_CERTIFICATE} ${SSL_CERTIFICATE_KEY}' < /etc/nginx/conf.d/nginx.conf.template > /etc/nginx/conf.d/default.conf
