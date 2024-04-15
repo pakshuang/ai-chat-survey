@@ -42,9 +42,10 @@ This section serves as an overview of the frontend architecture and design behin
 
 - We design the Chat Page to provide users with a more engaging and interactive experience compared to traditional survey form. The simplistic look and chat-like design helps to replicate the feeling of conversing with a person.
 - Messages displayed are retrieved from backend through an API call to ensure that the chat remains dynamic and responsive with real-time update and personalised interaction based on user input.
+- Messages were displayed bottom-up as an UX consideration. We implemented messages to be displayed form top to bottom at first but after AB testing with our interviewees, we found that the bottom-up approach reduced time taken for the survey to be completed. This could be due to the difference in range of perception when one has answers at the bottom of the screen and the questions at the top.
 
 ## Initial design
-
+s
 Our goal was to swiftly deliver a minimal viable product to our users, focusing on both functionality and aesthetics. To achieve this, we created low-fidelity wireframes and promptly developed them into a functional web application. We tested the app and gathered user feedback during interviews.
 
 Note that our favicon, selected to illustrate the AI capabilities of our app, is by [Pexelpy](https://freeicons.io/profile/433683) on [freeicons.io](https://freeicons.io).
@@ -142,3 +143,11 @@ The following table shows the feedback from each user after refinements were mad
 | 1    |          |
 
 ## Conclusion
+
+The frontend architecture and design has undergone a thoughtful evolution, driven by user feedback and iterative design cycles. Our focus on creating a user-friendly experience has resulted in a modern and engaging web application.
+
+Key components like React, Chakra UI, and Axios have been instrumental in delivering a visually appealing and interactive interface. The integration of form elements within the Chat Page has enhanced user engagement and streamlined the survey completion process.
+
+Authentication and authorization measures have been implemented to ensure secure access to admin routes and protect user data. While current storage methods like localStorage serve our needs, future enhancements may explore more secure options.
+
+Overall, our frontend architecture strikes a balance between technical sophistication and user-centric design, culminating in a successful implementation that meets the needs of our users and project goals.
