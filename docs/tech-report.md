@@ -14,7 +14,7 @@
 ## Intro
 In today's rapidly evolving business landscape, understanding customer needs and preferences is the cornerstone of success. Traditional survey methods, while informative, often fall short in capturing the intricacies of consumer behavior and sentiment.
 
-In this report, we unveil a proof-of-concept project poised to revolutionize the way businesses conduct customer research. Leveraging the power of advanced Language Models, particularly ChatGPT, we're introducing a dynamic and personalized survey experience that transcends the limitations of conventional approaches.
+In this report, we unveil a proof-of-concept project poised to revolutionize the way businesses conduct customer research. Leveraging the power of Large Language Models (LLMs), particularly ChatGPT, we're introducing a dynamic and personalized survey experience that transcends the limitations of conventional approaches.
 
 Our vision is simple yet transformative: to create surveys that adapt in real-time based on each respondent's unique input. By integrating ChatGPT into our survey platform, we're not only collecting data but engaging customers in meaningful conversations. This innovative approach enables us to pursue unique lines of inquiry, uncovering insights that traditional surveys often miss.
 
