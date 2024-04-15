@@ -76,7 +76,7 @@ Our initial design approach for the client interface focuses on maintaining info
 - Survey Form Page: This is the page for close-ended question, i.e. question that the surveyor would like to know regardless of the user's responses previously. The types of questions included on this page are multiple choice, multiple response, and free response.
 - Chat Page: After the initial form page, the answers are sent to a chatbot and users are redirected to the chat page where they engage in a conversation with the chatbot.
 
-_images to be added_
+_images of the old form and chat page to be added_
 
 ## Initial user interviews
 
@@ -119,7 +119,17 @@ Hovering over the avatar would reveal the current account's username.
 
 ### Client interface
 
-- Design of client interface
+We received numerous feedbacks and implemented changes accordingly. Here are the changes:
+
+- Add thank you message after the bot is done asking questions.
+  The ending of the survey seems abrupt sometimes due to the nature of the bot that we cannot predict. To ensure a smooth experience for the user, we implemented a flag which indicates whether the message from the bot is the last message.
+  _image of thank you message by bot to be added_
+- Integrate form page into chat page.
+  The design of the survey form page receives a lot of criticism due to its resemblance of the old traditional survey form. While doing the first part of the survey, some of the users stopped doing it since it is not too appealing. Since the workflow requires close-ended questions to be asked first, we decided to bring everything into the chat page.
+  _image of survey and image of chat from the chat page to be added_
+- Display messages from bottom to top
+  After the integration, we realise that it is not a good idea to keep the messages from top to bottom as the question may be on top, yet the choices is at the bottom of the page. We want the users to be comfortable in viewing questions and the choices together, so we change the direction of displaying the messages.
+  _image of first message that is from the bottom to be added_
 
 ## Follow-up user interviews
 
