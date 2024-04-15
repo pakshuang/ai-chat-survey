@@ -1,5 +1,9 @@
 server {
-    listen ${NGINX_CONTAINER_PORT};
+    listen ${NGINX_CONTAINER_PORT} ${SSL};
+    server_name www.${DOMAIN};
+
+    ${SSL_CERTIFICATE}
+    ${SSL_CERTIFICATE_KEY}
 
     # Proxy Frontend Requests
     location / {
