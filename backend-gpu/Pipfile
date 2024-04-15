@@ -3,12 +3,10 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
-
 [[source]]
 name = "pytorch"
 url = "https://download.pytorch.org/whl/cu118"
 verify_ssl = false
-
 
 [packages]
 torch = {index = "pytorch",version = "==2.1.0"}
@@ -22,6 +20,7 @@ pyjwt = "*"
 requests = "*"
 cryptography = "*"
 transformers = "*"
+peft = "*"
 
 [dev-packages]
 black = "*"
