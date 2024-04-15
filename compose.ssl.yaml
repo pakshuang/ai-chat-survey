@@ -7,8 +7,8 @@ services:
       envsubst '$${FRONTEND_CONTAINER_PORT} $${BACKEND_CONTAINER_PORT} $${DOMAIN}' < /etc/nginx/conf.d/nginx.conf.ssl.template > /etc/nginx/conf.d/default.conf &&
       while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g 'daemon off;'"
     ports:
-      - 80
-      - 443
+      - 80:80
+      - 443:443
     volumes:
       - ./reverse-proxy:/etc/nginx/conf.d
       - ./certbot/www:/var/www/certbot
