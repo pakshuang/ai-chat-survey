@@ -38,8 +38,8 @@ COPY models/ ./models
 COPY Pipfile Pipfile.lock ./
 
 
-RUN pipenv install --system --python python3.11.8
-RUN pipenv install --verbose
+RUN pipenv install --system --python python3.11.8 && \
+pipenv install --verbose
 
 
 
