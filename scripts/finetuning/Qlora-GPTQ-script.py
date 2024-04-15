@@ -43,13 +43,13 @@ def main():
     parser.add_argument(
         "--bits", dest="bits", type=int, help="Number of bits of quantised model"
     )
-
     parser.add_argument(
         "--output-path",
         dest="output",
         type=str,
         help="Output path",
-        default=str(pathlib.Path(__file__).parent.resolve()) + "/../../backend-gpu/models",
+        default=str(pathlib.Path(__file__).parent.resolve())
+        + "/../../backend-gpu/models",
     )
     parser.add_argument(
         "--learning-rate", dest="lr", type=float, help="Learning rate", default=2.5e-4
@@ -79,7 +79,7 @@ def main():
         "--has-system-prompt",
         dest="has_sys",
         type=int,
-        help="Does the model support system prompts in their chat template 1 or 0",
+        help="Does the model support system prompts in their chat template? Typically, 1 (yes), instead of 0",
         default=1,
     )
     parser.add_argument(

@@ -21,6 +21,8 @@ requests = "*"
 cryptography = "*"
 transformers = "*"
 peft = "*"
+optimum = "*"
+auto-gptq = "*"
 
 [dev-packages]
 black = "*"

@@ -28,23 +28,23 @@ pip install -r requirements.txt
 ```
 2. (Optional) Ideally, one would like a local copy of a GPTQ base model. The following is an example of how to obtain such a model in the `models` folder:
 ```shell
-cd ai-chat-survey/backend/models
+cd ai-chat-survey/backend-gpu/models
 git clone git clone https://huggingface.co/TheBloke/Nous-Hermes-2-SOLAR-10.7B-GPTQ -b gptq-4bit-32g-actorder_True
 ```
 
 ## Finetuning
 
-The script is to be run from the CLI, with arguments. This script finetunes a GPTQ-quantised model with parameter-efficient finetuning techniques to reduce computational time and memory. This is done with a LORA adapter. After training, the LORA model will be saved in `backend/models/`, where ideally, one could deploy the app in a container.
+The script is to be run from the CLI, with arguments. This script finetunes a GPTQ-quantised model with parameter-efficient finetuning techniques to reduce computational time and memory. This is done with a LORA adapter. After training, the LORA model will be saved in `backend-gpu/models/`, where ideally, one could deploy the app in a container.
 
 **Warning**: The current app, and therefore the backend container, for demonstration purposes, currently uses a closed-source model. The necessary installations and libraries needed to run an open-source model locally are omitted due to the long installation times required. The current backend container does **NOT** have access to the GPU.
 
 The finetuning script is intended to be run from the CLI using several available arguments.
 
-### Required Arguments
+### **Required** Arguments
 
 `--base`- Base model (huggingface name or path to GPTQ folder) to finetune. For example, "TheBloke/dolphin-2.2.1-mistral-7B-GPTQ" is a repository on huggingface. Supplying this to the argument will automatically download and load a model (from the `main` branch). This argument is supplied into the `AutoModelForCausalLM.from_pretrained` method.
 
-`--dataset-path` - Path to a dataset, in `csv` format. The dataset MUST have an `input` column, an `output` column and optionally, a `system` column, depending on the base model used.
+`--dataset-path` - Path to a dataset, in `csv` format. The dataset MUST have an `input` column, an `output` column and optionally, a `system` column, for the system prompt. It is recommended to include the system prompt.
 
 `--bits` - Number of bits to quantise. Supplied to the [GPTQConfig](https://huggingface.co/docs/transformers/main_classes/quantization#transformers.GPTQConfig) class.
 
@@ -64,7 +64,7 @@ The finetuning script is intended to be run from the CLI using several available
 
 ### Example
 ```shell
-python Qlora-GPTQ-script.py --base ../../backend/models/dolphin-2.2.1-mistral-7B-GPTQ --dataset-path C:\Users\ME\Downloads\datee.csv --output-path ../../backend/models --has-system-prompt 0 --train-size 0.5 --r 8 --bits 4 --steps 100
+python Qlora-GPTQ-script.py --base ../../backend-gpu/models/dolphin-2.2.1-mistral-7B-GPTQ --dataset-path C:\Users\ME\Downloads\datee.csv --output-path ../../backend-gpu/models --has-system-prompt 0 --train-size 0.5 --r 8 --bits 4 --steps 100
 ```
 Explanation:
 The following command assumes one has downloaded a model from huggingface and provides it to base. The Mistral models have not been trained with system prompts, so `datee.csv` is a `csv` file with `input` and `output` columns containing expected queries and responses to the LLM, and there is no need for a `system` column. `--has-system-prompt` is, for the same reason, set to 0. The output path of the trained adapter model is set to the `models` folder, but this is already done by default.
@@ -75,7 +75,7 @@ The following command assumes one has downloaded a model from huggingface and pr
 1. A new docker container will need to be run for local models. This docker container will require:
  - Access to the GPU
  - Pytorch and other dependencies listed in `requirements.txt`
-2. A class defined for this model. A skeletal class has already been defined in `root/backend/src/llm_classes`
+2. A class defined for this model. A skeletal class has already been defined in `root/backend-gpu/src/llm_classes`
 3. It is strongly recommended to consider models >= 30B parameters as these models tend to have smaller performance losses through quantisation.
 
 

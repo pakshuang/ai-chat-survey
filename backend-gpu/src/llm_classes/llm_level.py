@@ -2,11 +2,12 @@ import os
 import random
 from abc import ABC, abstractmethod
 
+import torch
 from dotenv import load_dotenv
 from openai import OpenAI
 from peft import AutoPeftModelForCausalLM
-import torch
-from transformers import AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
 
 class LLM(ABC):
     """A large language model class.
@@ -83,27 +84,21 @@ class GPT(LLM):
             return output_text
 
 
-class LocalLLMGPTQ(LLM):
-
+class LocalMistralGPTQ(LLM):
     """A class for GPTQ-quantised LLM"""
 
     def __init__(self):
-        self.path = "../models/"
-        model = AutoPeftModelForCausalLM.from_pretrained(
-            self.path,
-            low_cpu_mem_usage=True,
-            return_dict=True,
-            torch_dtype=torch.float16,
-            device_map="cuda",
-        )
-
-        tokenizer = AutoTokenizer.from_pretrained(self.path + "/dolphin-2.2.1-mistral-7B-GPTQ/")
-        self.model, self.tokenizer = model, tokenizer
+        self.path = "./models/dolphin-2.2.1-mistral-7B-GPTQ"
 
     def run(
-        self, messages: list, seed: int = random.randint(1, 9999), with_moderation=True
+        self,
+        messages: list,
+        seed: int = random.randint(1, 9999),
+        with_moderation: bool = True,
     ):
         """Runs the llm given a current conversation and seed and outputs a string.
+        The transformers library does NOT support setseed in the conventional sense, and instead expects a boolean in do_sample.
+        For deterministic results, set a seed that is GREATER than 9999.
 
         Args:
             messages (list): A list of messages tied to a ChatLog instance.
@@ -113,17 +108,94 @@ class LocalLLMGPTQ(LLM):
         Returns:
             str: text output from the Large Language Model.
         """
-        pass
-        conversations = self.tokenizer.apply_chat_template(messages)
-        input_ids = self.tokenizer(messages, return_tensors='pt').input_ids.cuda()
-
-        return self.model.generate(
-        inputs=input_ids,
-        temperature=0.7,
-        do_sample=True,
-        top_p=0.95,
-        top_k=40,
-        repetition_penalty=1,
-        max_new_tokens=2048,
-        eos_token_id=self.tokenizer.eos_token_id,
+        model = AutoModelForCausalLM.from_pretrained(
+            self.path,
+            low_cpu_mem_usage=True,
+            return_dict=True,
+            torch_dtype=torch.float16,
+            device_map="cuda",
         )
+
+        tokenizer = AutoTokenizer.from_pretrained(self.path)
+
+        sample = True if 1 <= seed <= 9999 else False
+        text = tokenizer.apply_chat_template(messages, tokenize=False)
+        tokenised = tokenizer(text, return_tensors="pt")
+        input_ids = tokenised.input_ids.cuda()
+        attention_mask = tokenised.attention_mask.cuda()
+        output = model.generate(
+            inputs=input_ids,
+            attention_mask=attention_mask,
+            temperature=0.7,
+            do_sample=sample,
+            top_p=0.95,
+            top_k=40,
+            repetition_penalty=1,
+            max_new_tokens=512,
+            eos_token_id=tokenizer.eos_token_id,
+        )
+
+        generated = tokenizer.batch_decode(
+            output[:, input_ids.shape[1] :], skip_special_tokens=True
+        )[0]
+
+        # CONTENT MODERATION NOT IMPLEMENTED
+        return generated
+
+
+class LocalMistralPEFTGPTQ(LLM):
+    def __init__(self):
+        self.model_path = "./models/dolphin-2.2.1-mistral-7B-GPTQ"
+        self.adapter_path = "./models"
+
+    def run(
+        self,
+        messages: list,
+        seed: int = random.randint(1, 9999),
+        with_moderation: bool = True,
+    ) -> str:
+        """Runs the llm given a current conversation and seed and outputs a string.
+        The transformers library does NOT support setseed in the conventional sense, and instead expects a boolean in do_sample.
+        For deterministic results, set a seed that is GREATER than 9999.
+
+        Args:
+            messages (list): A list of messages tied to a ChatLog instance.
+            seed (int, optional): A random integer. Defaults to a random integer from 1 to 9998.
+            with_moderation (bool, optional): Whether to activate moderation module to filter content. Defaults to True.
+
+        Returns:
+            str: text output from the Large Language Model.
+        """
+        model = AutoPeftModelForCausalLM.from_pretrained(
+            self.adapter_path,
+            low_cpu_mem_usage=True,
+            return_dict=True,
+            torch_dtype=torch.float16,
+            device_map="cuda",
+        )
+
+        tokenizer = AutoTokenizer.from_pretrained(self.model_path)
+
+        sample = True if 1 <= seed <= 9999 else False
+        text = tokenizer.apply_chat_template(messages, tokenize=False)
+        tokenised = tokenizer(text, return_tensors="pt")
+        input_ids = tokenised.input_ids.cuda()
+        attention_mask = tokenised.attention_mask.cuda()
+        output = model.generate(
+            inputs=input_ids,
+            attention_mask=attention_mask,
+            temperature=0.7,
+            do_sample=sample,
+            top_p=0.95,
+            top_k=40,
+            repetition_penalty=1,
+            max_new_tokens=512,
+            eos_token_id=tokenizer.eos_token_id,
+        )
+
+        generated = tokenizer.batch_decode(
+            output[:, input_ids.shape[1] :], skip_special_tokens=True
+        )[0]
+
+        # CONTENT MODERATION NOT IMPLEMENTED
+        return generated
