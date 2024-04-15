@@ -1,5 +1,5 @@
 ---
-version: "3"
+version: "3.8"
 services:
   gpu:
     image: pytorch/pytorch:2.1.0-cuda11.8-cudnn8-runtime
