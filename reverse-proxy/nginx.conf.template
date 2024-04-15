@@ -1,6 +1,6 @@
 server {
     listen ${NGINX_CONTAINER_PORT} ${SSL};
-    server_name www.${DOMAIN};
+    server_name ${DOMAIN};
 
     ${SSL_CERTIFICATE}
     ${SSL_CERTIFICATE_KEY}
