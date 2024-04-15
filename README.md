@@ -13,6 +13,8 @@ ai-chat-survey/
 │
 ├── backend/                   # Backend specific files
 │
+├── backend-gpu/               # Backend-gpu specific files
+│
 ├── database/                  # Database specific files
 │
 ├── reverse-proxy/             # Reverse proxy specific files
@@ -24,7 +26,7 @@ ai-chat-survey/
 ├── compose.yaml               # Docker Compose file for the application
 ├── compose.tests.yaml         # Docker Compose file for the integration tests
 ├── compose.eval.yaml          # Docker Compose file for the LLM evaluation
-├── compose.gpu.yaml           # Sample Docker Compose file for the potential GPU version of the application
+├── compose.gpu.yaml           # Docker Compose file for GPU version of the application for local LLMs
 │
 ├── sample.env                 # Sample environment variables
 ├── .gitignore                 # Specifies intentionally untracked files to ignore

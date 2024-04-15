@@ -113,16 +113,17 @@ class LocalLLMGPTQ(LLM):
         Returns:
             str: text output from the Large Language Model.
         """
-        # conversations = self.tokenizer.apply_chat_template(messages)
-        # input_ids = self.tokenizer(messages, return_tensors='pt').input_ids.cuda()
+        pass
+        conversations = self.tokenizer.apply_chat_template(messages)
+        input_ids = self.tokenizer(messages, return_tensors='pt').input_ids.cuda()
 
-        # return self.model.generate(
-        # inputs=input_ids,
-        # temperature=0.7,
-        # do_sample=True,
-        # top_p=0.95,
-        # top_k=40,
-        # repetition_penalty=1,
-        # max_new_tokens=2048,
-        # eos_token_id=bot.tok.eos_token_id,
-        # )
+        return self.model.generate(
+        inputs=input_ids,
+        temperature=0.7,
+        do_sample=True,
+        top_p=0.95,
+        top_k=40,
+        repetition_penalty=1,
+        max_new_tokens=2048,
+        eos_token_id=bot.tok.eos_token_id,
+        )
