@@ -125,5 +125,5 @@ class LocalLLMGPTQ(LLM):
         top_k=40,
         repetition_penalty=1,
         max_new_tokens=2048,
-        eos_token_id=bot.tok.eos_token_id,
+        eos_token_id=self.tokenizer.eos_token_id,
         )
