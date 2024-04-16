@@ -162,9 +162,6 @@ An evaluation test has already been run and the results are in backend/logs/eval
 
 The model performs most poorly in deciding whether to end the interview, achieving a score of 85.72% and 88.02% for two evaluation tests in this domain. This is reflected in how the model occasionally ends interviews prematurely. This issue can be avoided in the future through the use of finetuning, where LLMs could be trained prior to deployment, and we forsee that a finetuned model would be able to replicate a human interviewer in controlling the flow of the interview.
 
-Nevertheless, GPT-4 performs exceptionally well in all tests, obtaining an extremely high score.
-
-
 ## Conclusion
 
 In conclusion, this backend report has provided a detailed examination of the infrastructure supporting our AI chatbot survey system. We have explored the core components and discussed the rationale behind using ChatGPT and its integration into the survey framework. Additionally, we have examined the backend architecture, shedding light on the design decisions and the system's functionality.
