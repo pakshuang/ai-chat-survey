@@ -14,7 +14,7 @@ The integration of LLMs into survey research represents a cutting-edge frontier 
 
 Another development in the use of LLMs in survey research is detailed in the study by Maiorino et al. (2023), which explores the application of generative language models for survey question generation at SurveyMonkey. Their work demonstrates the possibility of using LLMs in the survey design process by generating comprehensive survey questions from a simple "seed" prompt. This process of "concept expansion" is particularly notable for its efficiency and its ability to integrate seamlessly with industry-standard questions.
 
-Like Maiorino, our group also seeks to leverage LLMs’ “concept expansion” ability. However, rather than generating static questions for survey designers, we dynamically create personalized questions in response to user inputs using prompt engineering techniques like Chain of Thought prompting (Wei et al., 2022), enhancing the interactivity of the survey experience.
+Like Maiorino, our group also seeks to leverage LLMs’ “concept expansion” ability. However, rather than generating static questions for survey designers, we dynamically create questions that adapt to user inputs. Prompt engineering techniques like Chain of Thought prompting (Wei et al., 2022) are used to leverage on the model's reasoning capabilities, enhancing the interactivity of the survey experience.
 
 ## Backend Architecture
 
@@ -111,7 +111,7 @@ For the full database schema, please refer to [init.sql](../database/init.sql)
 
 The underlying model powering this app is the Large Language Model (LLM) GPT-4. A LLM was determined due to the business objective, which requires dynamic survey question generations. In order to address concerns by the user, who wishes for an entertaining and dynamic survey experience, as well as the client, who expects more robust data security measures and a more efficient method of gathering insights, we have derived a solution pipeline for the chat process.
 
-<img src="./diagrams/images/prompt-eng-3.png" alt="drawing" style="height:250px;"/>
+<img src="./diagrams/images/prompt-eng-3.png" alt="drawing" style="height:350px;"/>
 <br>
 
 A detailed explanation on how we derived this solution and the incremental adjustments needed for this pipeline is in [llm.md](llm.md).
