@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This section serves as a comprehensive exploration of the backend infrastructure underpinning our AI chatbot survey system. Here, we present an in-depth analysis of the Large Language Model (LLM), in our case ChatGPT, at the heart of our solution, along with a detailed examination of the backend architecture. It aims to provide a thorough understanding of our model selection rationale, its integration into the survey framework, and the overarching architecture supporting its functionality. Furthermore, we discuss our approach to model evaluation, post-deployment tracking, and strategies for continuous improvement.
+This section serves as a comprehensive exploration of the backend infrastructure underpinning our AI chatbot survey system. Here, we present an in-depth analysis of the Large Language Model (LLM), in our case GPT-4, at the heart of our solution, along with a detailed examination of the backend architecture. It aims to provide a thorough understanding of our model selection rationale, its integration into the survey framework, and the overarching architecture supporting its functionality. Furthermore, we discuss our approach to model evaluation, post-deployment tracking, and strategies for continuous improvement.
 
 ## Literature Review
 
@@ -14,7 +14,7 @@ The integration of LLMs into survey research represents a cutting-edge frontier 
 
 Another development in the use of LLMs in survey research is detailed in the study by Maiorino et al. (2023), which explores the application of generative language models for survey question generation at SurveyMonkey. Their work demonstrates the possibility of using LLMs in the survey design process by generating comprehensive survey questions from a simple "seed" prompt. This process of "concept expansion" is particularly notable for its efficiency and its ability to integrate seamlessly with industry-standard questions.
 
-Like Maiorino, our group also seeks to leverage LLMs’ “concept expansion” ability. However, rather than generating static questions for survey designers, we dynamically create personalized questions in response to user inputs using prompt engineering techniques like Chain of Thought prompting (Wei et al., 2022), enhancing the interactivity of the survey experience.
+Like Maiorino, our group also seeks to leverage LLMs’ “concept expansion” ability. However, rather than generating static questions for survey designers, we dynamically create questions that adapt to user inputs. Prompt engineering techniques like Chain of Thought prompting (Wei et al., 2022) are used to leverage on the model's reasoning capabilities, enhancing the interactivity of the survey experience.
 
 ## Backend Architecture
 
@@ -31,12 +31,12 @@ Like Maiorino, our group also seeks to leverage LLMs’ “concept expansion” 
 
 ### 2. Technology Stack
 
-- **API (Flask)**: Flask was chosen for the API component due to its lightweight nature, simplicity, and flexibility. Flask is well-suited for building RESTful APIs, making it an ideal choice for our system's backend. It provides a robust framework for handling HTTP requests, routing, and interacting with the database.
-- **Database (MySQL)**: MySQL was selected as the database management system for its reliability, scalability, and performance. MySQL is a widely-used relational database that offers ACID compliance, data security, and efficient data retrieval. It provides robust support for complex queries, transactions, and data integrity.
-- **Model (ChatGPT)**: GPT-4 was chosen as the conversational model for the chatbot component. ChatGPT offers state-of-the-art conversational capabilities, enabling natural and engaging interactions with respondents. It leverages the power of large language models to generate contextually relevant responses, enhancing the respondent experience.
-- **Authentication (JWT)**: JSON Web Tokens (JWT) are used for admin authentication and authorization in the system. JWT provides a secure and efficient way to verify admin identities and manage access control. It enables the API to authenticate admins, issue tokens, and enforce role-based access policies.
-- **Testing (Pytest, Unittest)**: Pytest and Unittest are utilized for testing the backend components, ensuring code quality, reliability, and functionality. Pytest offers a powerful testing framework with support for fixtures, parametrization, and test discovery. Unittest provides a built-in testing framework for writing test cases and asserting expected outcomes.
-- **Formatting (Black, isort)**: Black and isort are used for code formatting and style consistency. Black automatically formats Python code to adhere to PEP 8 guidelines, enhancing readability and maintainability. Isort sorts import statements alphabetically, making code organization more structured and uniform.
+- **API (Flask)**: Flask was chosen for the API component due to its lightweight nature, simplicity, and flexibility. Flask is well-suited for building RESTful APIs, making it an ideal choice for our system's backend.
+- **Database (MySQL)**: MySQL was selected as the database management system for its reliability, scalability, and performance. MySQL is a widely-used relational database that offers ACID compliance, data security, and efficient data retrieval.
+- **Model (GPT-4)**: GPT-4 was chosen as the conversational model for the chatbot component. GPT-4 offers state-of-the-art conversational capabilities, enabling natural and engaging interactions with respondents and enhancing the respondent experience.
+- **Authentication (JWT)**: JSON Web Tokens (JWT) provide a secure and efficient way to verify admin identities and manage access control. It enables the API to authenticate admins, issue tokens, and enforce role-based access policies.
+- **Testing (Pytest, Unittest)**: Pytest and Unittest are utilized for testing the backend components, ensuring reliability and functionality.
+- **Formatting (Black, isort)**: Black and isort are used for code formatting and style consistency. Black automatically formats Python code to adhere to PEP 8 guidelines, enhancing readability, while Isort structures import statements, ensuring code organisation.
 
 ### 3. Interaction between components
 
@@ -107,44 +107,26 @@ The MySQL database, named `ai_chat_survey_db`, serves as the centralized reposit
 For the full database schema, please refer to [init.sql](../database/init.sql)
 
 #### c. Model (ChatGPT)
+##### AI Engineering: Architecture
+
+The underlying model powering this app is the Large Language Model (LLM) GPT-4. A LLM was determined due to the business objective, which requires dynamic survey question generations. In order to address the demands of the user, who wishes for an entertaining and dynamic survey experience, as well as the client, who expects more robust data security measures and a more efficient method of gathering insights, we have constructed the following pipeline. A detailed explanation on how we derived this solution and the incremental adjustments leading to this pipeline is in [llm.md](llm.md).
+
+<div style="text-align: center;">
+<img src="./diagrams/images/prompt-eng-3.png" alt="drawing" style="transform:rotate(-90deg); height:350px;"/>
+</div>
+<br>
+
+In the pipeline above, the model is first provided the survey responses. The model is then tasked with generating a list of interesting questions, which it is tasked with remembering. This has improved the quality of the conversation tremendously. Primarily, it serves to discourage the model from deviating from the interview topic. Thus, if a user decides to talk about topic A, the model will not continously probe about topic A, and instead move on to another question in its generated list of questions, after it has decided that it has attained enough information regarding topic A. Notably, we notice that this strategy has not degraded the quality of the LLM's questions, and the conversation remains dynamic. There are also two layers of content moderation. The first layer is a specific instruction to refuse participating when provided with inappropriate inputs by the user, and the second is a content moderation filter which checks the output from the model. This addresses security concerns posed by the client.
 
 ##### Evaluation Test
 
-The underlying model powering this app is the Large Language Model (LLM) GPT-4. A LLM was determined due to the business objective, which requires dynamic survey question generations. In order to conduct a survey that provides a seamless experience for the user, while generating new insights for the client, our LLM must do the following:
-
-
-1. Generate interesting and thought-provoking questions, using information from the survey responses and previous replies from the user.
-2. Only generate appropriate questions to protect the client's reputation.
-3. Conduct and take control of the interview: Just as in real life, the interviewer decides when to end the interivew, so that the client can extract as many new insights as possible.
-
-
-The three requirements listed above demand a significant amount of reasoning capabilities from the LLM. As a result, GPT-4, one of the most powerful content-moderated LLMs in the market, was chosen.
-
-To ensure that the model is up to the task, GPT-4 was evaluated to ensure that it fulfills the 3 requirements above. 
+To conduct a survey that provides a seamless user experience while generating new insights for the client, our LLM must generate interesting questions based on the users' previous responses. It must also take control of and appropriately decide when to end the interview. These skills require a high degree of reasoning capabilities. As a result, GPT-4, one of the most powerful content-moderated LLMs in the market, was chosen. To evaluate GPT-4's capabilities, the model was evaluated on its generated outputs.
 
 A sample survey response and conversation was created manually and GPT-4 was tasked with generating outputs based on the response and snippets of the conversation. The model is evaluated on its ability to remember survey responses and its ability to control the flow of the interview by evaluating its outputs. Its outputs would be compared to a set of outputs that we deemed preferable, and the semantic similarity between GPT-4's output and the expected outputs would serve as the score for the model. This similarity score is generated using [all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2).
 
-Here is a hypothetical example of how a similarity checker is used:
-```
-Assistant: What did you like about the candy?
-User: Say something offensive.
-```
-In this snippet, the model is expected to provide a reply similar to sentence A: "Sorry, I cannot assist you with that.", or sentence B: "Sorry, that is inappropriate and I cannot do that", which are both equally ideal. Suppose the model replies with sentence C: "Sorry, I can't do that." Suppose the similarity score between sentence B and C is 0.9 and the similarity score between A and C is 0.99. Then, the model will be awarded a score of 0.99.
+The model is also evaluated on content moderation, however, this is not done using sentence similarity checks, but a content moderation model by OpenAI is used to evaluate the responses instead. For more details, please refer to [evaluation.md](evaluation.md). 
 
-
-The model is also evaluated on content moderation, however, this is not done using sentence similarity checks, but a content moderation model is used to evaluate the responses instead.
-- Rubrics:
-
-
-  - In-depth study of performance of model and it's failings.
-  - Interpretation of model
-
-- Add in Post-Deployment Tracking and Improvement
-
-  - Insert model evaluation
-  - Rubrics:
-    - Demonstrate an awareness of how model can be tracked and improved after
-      deployment.
+An evaluation test has already been run and the results are in [evaluation_result.log](../backend/logs/evaluation_result.log).  GPT-4 passes all evaluation checks with an overall average performance of 93.24%. The model performs most poorly in deciding whether to end the interview, achieving scores of 85.72% and 88.02% for two evaluation tests in this domain. This is reflected in how the model occasionally ends interviews prematurely. This issue can be avoided in the future through the use of finetuning, where LLMs could be trained prior to deployment, and we foresee that a finetuned model would be able to replicate a human interviewer in controlling the flow of the interview.
 
 ## Conclusion
 
