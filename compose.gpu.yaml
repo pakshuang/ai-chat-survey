@@ -8,7 +8,7 @@ services:
     volumes:
       - ./database:/docker-entrypoint-initdb.d
 
-  backend-gpu:
+  backend:
     image: backend-gpu
     build: ./backend-gpu
     depends_on:
@@ -30,7 +30,7 @@ services:
     image: frontend
     build: ./frontend
     depends_on:
-      - backend-gpu
+      - backend
     env_file:
       - .env
   reverse-proxy:
@@ -41,7 +41,7 @@ services:
       nginx -g 'daemon off;'"
     depends_on:
       - frontend
-      - backend-gpu
+      - backend
     env_file:
       - .env
     ports:

@@ -9,7 +9,7 @@ WORKDIR /backend-gpu
 # Update package lists and install dependencies
 RUN apt-get update && \
     apt-get install -y build-essential zlib1g-dev libncurses5-dev libgdbm-dev \
-    libnss3-dev libssl-dev libreadline-dev libffi-dev wget
+    libnss3-dev libssl-dev libreadline-dev libffi-dev libbz2-dev wget
 
 # Download and install Python 3.11.8
 RUN wget https://www.python.org/ftp/python/3.11.8/Python-3.11.8.tar.xz && \
