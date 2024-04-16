@@ -96,13 +96,13 @@ The MySQL database, named `ai_chat_survey_db`, serves as the centralized reposit
 
 ##### Entity Relationship (ER) Diagram
 
+<img src="diagrams/images/db_schema.png" alt="Entity Relationship (ER) Diagram" width="400"/>
+
 - **Admins**: Stores information about administrators who have access to the system.
 - **Surveys**: Contains details of the surveys created in the system.
 - **Questions**: Stores the questions associated with each survey.
 - **Survey_Responses**: Holds the responses submitted for each survey question.
 - **ChatLog**: Logs the chat interactions between users and the chatbot.
-
-<img src="diagrams/images/db_schema.png" alt="Entity Relationship (ER) Diagram" width="400"/>
 
 For the full database schema, please refer to [init.sql](../database/init.sql)
 
