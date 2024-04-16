@@ -154,10 +154,6 @@ In this snippet, the model is expected to provide a reply similar to sentence A:
 
 The model is also evaluated on content moderation, however, this is not done using sentence similarity checks, but a content moderation model by OpenAI is used to evaluate the responses instead. For more details, please refer to [evaluation.md](evaluation.md).
 
-The evaluation can be run as a container with
-```shell
-docker compose -f compose.eval.yaml up --build
-```
 An evaluation test has already been run and the results are in backend/logs/evaluation_result.log.  GPT-4 passes all evaluation tests with an overall average performance of 93.24%.
 
 The model performs most poorly in deciding whether to end the interview, achieving a score of 85.72% and 88.02% for two evaluation tests in this domain. This is reflected in how the model occasionally ends interviews prematurely. This issue can be avoided in the future through the use of finetuning, where LLMs could be trained prior to deployment, and we forsee that a finetuned model would be able to replicate a human interviewer in controlling the flow of the interview.
