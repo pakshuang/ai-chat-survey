@@ -38,14 +38,8 @@ This section serves as an overview of the frontend architecture and design behin
 - We use `react-router-dom` for our app routing. Admin routes are protected, except signup and login page. Accessing other admin routes without login will bring them to the login page.
 - Client routes (chat page) are accessible by everyone. Accessing invalid routes will bring users to 404 Not Found page.
 
-### Chat Page
-
-- We design the Chat Page to provide users with a more engaging and interactive experience compared to traditional survey form. The simplistic look and chat-like design helps to replicate the feeling of conversing with a person.
-- Messages displayed are retrieved from backend through an API call to ensure that the chat remains dynamic and responsive with real-time update and personalised interaction based on user input.
-- Messages were displayed bottom-up as an UX consideration. We implemented messages to be displayed form top to bottom at first but after AB testing with our interviewees, we found that the bottom-up approach reduced time taken for the survey to be completed. This could be due to the difference in range of perception when one has answers at the bottom of the screen and the questions at the top.
-
 ## Initial design
-s
+
 Our goal was to swiftly deliver a minimal viable product to our users, focusing on both functionality and aesthetics. To achieve this, we created low-fidelity wireframes and promptly developed them into a functional web application. We tested the app and gathered user feedback during interviews.
 
 Note that our favicon, selected to illustrate the AI capabilities of our app, is by [Pexelpy](https://freeicons.io/profile/433683) on [freeicons.io](https://freeicons.io).
