@@ -1,9 +1,30 @@
 server {
     listen 80;
+    server_name ${DOMAIN} www.${DOMAIN};
+    server_tokens off;
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+
+    location / {
+        return 301 https://www.${DOMAIN}$request_uri;
+    }
+}
+
+server {
+    listen 443 ssl;
+    server_name www.${DOMAIN};
+    server_tokens off;
+
+    ssl_certificate /etc/letsencrypt/live/www.${DOMAIN}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/www.${DOMAIN}/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
     # Proxy Frontend Requests
     location / {
-        proxy_pass http://frontend:5173;
+        proxy_pass http://frontend:${FRONTEND_CONTAINER_PORT};
         proxy_http_version 1.1;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -15,7 +36,7 @@ server {
 
     # Proxy Backend API Requests
     location /api/ {
-        proxy_pass http://backend:5000;
+        proxy_pass http://backend:${BACKEND_CONTAINER_PORT};
         proxy_http_version 1.1;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
