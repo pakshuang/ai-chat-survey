@@ -101,3 +101,9 @@ docker compose -f compose.yaml -f compose.gpu.yaml up --build
 ```
 
 The class `LocalMistralPEFTGPTQ` has also been defined. This class represents a finetuned Mistral-7b-GPTQ model, and has been neatly configured to be run immediately, once the model has been finetuned. To run the app using this model instead of `LocalMistralGPTQ`, you will need to redefine the variables in `app.py`.
+
+## Future Work
+
+Future work will likely consist of finding good models and striking a balance between model capabilities and model size, as well as securing appropriate hardware to run these models. While models as small as 13B have a chance of performing well after finetuning, it is recommended that larger models such as Mixtral-8x7b be used.
+
+Regarding our current implementation of backend-gpu, content moderation filters have not been added as a consideration to testers, as the Mistral models require time to compute. Content moderation filters are also language models trained on text classification tasks, so running them along with the Mistral models may result in Out of Memory errors for smaller-sized GPUs.
