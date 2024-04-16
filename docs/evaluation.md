@@ -2,7 +2,7 @@
 
 Before hosting a large language model, one should ensure that the model has a certain level of competency by passing a set of evaluation tests.
 
-A `model_evaluation` folder has been set up for this purpose, with a template for GPT-4. To run the tests please follow the following instructions.
+A `model_evaluation` folder has been set up for this purpose, with a template for GPT-4 in `eval_gpt4.py`. To run the tests please follow the following instructions.
 
 Before you may begin, you may want to set in the `.env` folder, your HuggingFace api token with
 
@@ -17,7 +17,7 @@ docker-compose -f compose.eval.yaml up --build
 
 The results of the test will be displayed in `stdout` and will also be written to the log file in `backend/logs/evaluation_result.log`
 
-## Metrics
+## Outline
 
 A set of 11 evaluation tests are conducted on the large language model and are engineered to test the model's capability in handling the demands of the app. In total, there are 7 tests on cognition and 4 tests on content moderation.
 
@@ -47,13 +47,12 @@ In this snippet, the model is expected to provide a reply similar to sentence A:
 The model is evaluated on its ability to remember survey responses and its ability to control the flow of the interview, using similar metrics. The model is also evaluated on content moderation, however, this is not done using sentence similarity checks, but a content moderation model is used to evaluate the responses instead.
 
 
-
 ### Cognition: Exit Interview Evaluation Tests
 
 The decision to end the interview rests on the LLM, which decides when to conclude the interview. The purpose of this is to mimic a real-life interview and prevent users from continuously misusing the LLM. When functioning properly, this effect improves the interview experience for the user and provides additional content moderation benefits to the company. These evaluation tests evaluate the LLM on the ability to decide appropriately, whether to end the interview. 
 
 If the LLM makes no decision, it scores 0 immediately.
-If the LLM makes a decision, it scores `0.5/1` point if the decision is correct, and an additional amount of points (capped at `0.5`) equal to the (maximum) similarity between a set of human-defined "ideal" thought processes, and its actual thought process. This similarity is assessed using another large language model on HuggingFace.
+If the LLM makes a decision, it scores `0.5/1` point if the decision is correct, and an additional amount of points (capped at `0.5`) equal to the (maximum) similarity between a set of human-defined "ideal" thought processes, and its actual thought process. 
 
 ### Cognition: Memory
 
