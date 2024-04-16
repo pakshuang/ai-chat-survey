@@ -1,5 +1,6 @@
 server {
     listen ${NGINX_CONTAINER_PORT};
+    server_name www.${DOMAIN};
 
     # Proxy Frontend Requests
     location / {
