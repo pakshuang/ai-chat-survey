@@ -1,6 +1,7 @@
 # Localisation
 This script is only meant for technical stakeholders committed to the localisation of the LLM in this project. It provides some assistance and groundwork for what could be done in the future for this app.
-
+> **Warning**
+> You are reminded that localisation is beyond the scope of this project. This portion only serves as a proof of concept.
 ## Motivation
 
 In the modern data-centric environment, companies prioritize safeguarding sensitive information while enhancing operational efficiency. To achieve these goals, leveraging Local Language Models (LLMs) becomes crucial.
@@ -75,7 +76,6 @@ The following command assumes one has downloaded a model from huggingface and pr
 ## Deployment
 
 > **Warning**
-> You are reminded that localisation is beyond the scope of this project. This portion only serves as a proof of concept.
 > A Nvidia GPU with >=8GB of VRAM is COMPULSORY, and a GPU with >=16GB of VRAM is STRONGLY RECOMMENDED.
 
 A new docker container has been set up to run for local models. This container is run from the image `backend-gpu`. This docker container has:
