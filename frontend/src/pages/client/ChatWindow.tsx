@@ -1,9 +1,9 @@
-import { Box, SkeletonCircle, Button, Flex, Text } from "@chakra-ui/react";
-import { Fragment, useEffect, useState } from "react";
-import ChatMessage from "./ChatMessage";
-import TypingEffect from "./TypingEffect";
-import QuestionInput from "./QuestionInput";
-import { ChatWindowProps, surveyMessage } from "./constants";
+import { Box, SkeletonCircle, Button, Flex, Text } from "@chakra-ui/react"
+import { Fragment, useEffect, useState } from "react"
+import ChatMessage from "./ChatMessage"
+import TypingEffect from "./TypingEffect"
+import QuestionInput from "./QuestionInput"
+import { ChatWindowProps, surveyMessage } from "./constants"
 
 function ChatWindow({
   messages,
@@ -12,16 +12,16 @@ function ChatWindow({
   surveyState,
   handleSubmit,
 }: ChatWindowProps) {
-  const [botResponded, setBotResponded] = useState(false);
+  const [botResponded, setBotResponded] = useState(false)
 
   useEffect(() => {
     if (messages.slice(-1)[0]?.sender === "bot") {
-      setBotResponded(true);
+      setBotResponded(true)
     }
     if (messages.slice(-1)[0]?.sender === "user") {
-      setBotResponded(false);
+      setBotResponded(false)
     }
-  }, [messages]);
+  }, [messages])
   return (
     <Box
       overflowY="auto"
@@ -64,7 +64,7 @@ function ChatWindow({
                   <ChatMessage key={index} sender={item.sender}>
                     <Text fontSize="xl">{item.message}</Text>
                   </ChatMessage>
-                );
+                )
               }
               return (
                 <ChatMessage key={index} sender={"bot"}>
@@ -81,7 +81,7 @@ function ChatWindow({
                     </Box>
                   </Flex>
                 </ChatMessage>
-              );
+              )
             }
             return (
               <ChatMessage key={index} sender="bot">
@@ -89,14 +89,14 @@ function ChatWindow({
                   <TypingEffect text={messages.slice(-1)[0].message} />
                 </Text>
               </ChatMessage>
-            );
+            )
           } else {
             if (!item.question) {
               return (
                 <ChatMessage key={index} sender={item.sender}>
                   <Text fontSize="xl">{item.message}</Text>
                 </ChatMessage>
-              );
+              )
             }
             return (
               <Fragment key={index}>
@@ -111,19 +111,19 @@ function ChatWindow({
                   />
                 </ChatMessage>
               </Fragment>
-            );
+            )
           }
         })}
         {isBotThinking && (
           <ChatMessage sender="bot">
-            <SkeletonCircle size="4" alignSelf="flex-end" ml="8px" />
-            <SkeletonCircle size="4" alignSelf="flex-end" mx="0px" />
-            <SkeletonCircle size="4" alignSelf="flex-end" />
+            <SkeletonCircle size="4" alignSelf="center" ml="8px" />
+            <SkeletonCircle size="4" alignSelf="center" mx="0px" />
+            <SkeletonCircle size="4" alignSelf="center" />
           </ChatMessage>
         )}
       </Box>
     </Box>
-  );
+  )
 }
 
-export default ChatWindow;
+export default ChatWindow

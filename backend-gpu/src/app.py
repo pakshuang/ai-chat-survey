@@ -22,7 +22,7 @@ from src.llm_classes.functions import (
     construct_chatlog,
     format_responses_for_gpt,
 )
-from src.llm_classes.llm_level import GPT
+from src.llm_classes.llm_level import LocalMistralGPTQ
 from werkzeug.security import check_password_hash, generate_password_hash
 
 BACKEND_CONTAINER_PORT = os.getenv("BACKEND_CONTAINER_PORT", "5000")
@@ -691,7 +691,7 @@ def helper_send_message(
 
     try:
         # initialise LLM
-        llm = GPT()
+        llm = LocalMistralGPTQ()
         chat_log_dict = json.loads(llm_input["chat_log"])
         message_list = chat_log_dict["messages"]
 
@@ -917,4 +917,4 @@ def get_response_no_auth(survey_id, response_id):
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=BACKEND_CONTAINER_PORT)
+    app.run(debug=True, host="0.0.0.0", port=BACKEND_CONTAINER_PORT)
