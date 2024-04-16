@@ -109,10 +109,19 @@ For the full database schema, please refer to [init.sql](../database/init.sql)
 #### c. Model (ChatGPT)
 ##### AI Engineering: Architecture
 
-The underlying model powering this app is the Large Language Model (LLM) GPT-4. A LLM was determined due to the business objective, which requires dynamic survey question generations. In order to address concerns by the user, who wishes for an entertaining and dynamic survey experience, as well as the client, who expects more robust data security measures and a more efficient method of gathering insights, we have derived a solution pipeline for the chat process.
+The underlying model powering this app is the Large Language Model (LLM) GPT-4. A LLM was determined due to the business objective, which requires dynamic survey question generations. In order to address the demands of the user, who wishes for an entertaining and dynamic survey experience, as well as the client, who expects more robust data security measures and a more efficient method of gathering insights, we have outlined a few points of concern.
+
+1. The interview is conducted by the AI assistant. Therefore, the user should not be entering an input first.
+2. Where to supply The AI assistant with contextual information for the survey, which includes:
+    - Basic information about the product/service/brand.
+    - Initial survey responses by the user to base the interview questions on
+3. How do we ensure that the interview is carried out as smoothly as a semi-structured interview in real life?
+4. How do we improve the robustness of content moderation efforts and mitigate efforts to sabotage LLM responses as much as possible?
+
 
 <img src="./diagrams/images/prompt-eng-3.png" alt="drawing" style="height:350px;"/>
 <br>
+
 
 A detailed explanation on how we derived this solution and the incremental adjustments needed for this pipeline is in [llm.md](llm.md).
 
