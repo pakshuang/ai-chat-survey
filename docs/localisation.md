@@ -11,7 +11,7 @@ Furthermore, maintaining data privacy is paramount for companies, making it esse
 
 ## Suggestions
 
-An existing script `root/scripts/finetuning/Qlora-GPTQ-script.py` has been created to provide a simple pipeline for future finetuning efforts. To run this script, one needs to have a different set of Python dependencies from the rest of the app, which primarily focuses on the deployment of the Large Language Model.
+An existing script `root/scripts/finetuning/GPTQLoRA-script.py` has been created to provide a simple pipeline for future finetuning efforts. To run this script, one needs to have a different set of Python dependencies from the rest of the app, which primarily focuses on the deployment of the Large Language Model.
 
 > **Warning**: Pipenv does not seem to be compatible with Pytorch for GPU support. We recommend using another python environment.
 
