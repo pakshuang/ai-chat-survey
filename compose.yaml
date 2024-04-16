@@ -7,6 +7,7 @@ services:
       - .env
     volumes:
       - ./database:/docker-entrypoint-initdb.d
+      - db:/var/lib/mysql
 
   backend:
     image: backend
@@ -41,3 +42,6 @@ services:
       - "${NGINX_HOST_PORT}:${NGINX_CONTAINER_PORT}"
     volumes:
       - ./reverse-proxy:/etc/nginx/conf.d/
+
+volumes:
+  db:
