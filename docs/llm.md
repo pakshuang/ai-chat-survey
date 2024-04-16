@@ -301,7 +301,7 @@ assistant: Thank you for your time and for providing us with these feedbacks! Ha
 
 ## Future Improvements
 
-### Localising
+### Localisation
 
 #### LLM
 
@@ -313,9 +313,9 @@ Currently, in our code, we have defined a `LLM` class and have left it available
 
 #### Finetuning
 
-In order for small-sized Local-LLMs to function effectively, it is likely that these LLMs will require finetuning. Finetuning can be an extremely computationally expensive task. As a result, one can consider Parameter-Efficient Finetuning using QLora.
+In order for small-sized Local-LLMs to function effectively, it is likely that these LLMs will require finetuning. Finetuning can be an extremely computationally expensive task. As a result, one can consider Parameter-Efficient Finetuning using QLora and existing quantisation techniques for LLMs such as GPTQ in order to run LLMs efficiently, while preserving as much accuracy as possible.
 
-The Finetuned model can be loaded into an `LLM` child class and used in place of GPT-4. `eval_gpt4.py` can be reconfigured to test the finetuned LLM.
+The Finetuned model can be loaded into an `LLM` child class and used in place of GPT-4. `eval_gpt4.py` can be reconfigured to test the finetuned LLM. For an existing script that may provide insight as to how it can be done, please refer to [Localisation](localisation.md)
 
 
 #### Localising Content Moderation Model
@@ -325,6 +325,5 @@ The content moderation model currently used is from OpenAI. However, open-source
 ### Content Moderation
 
 While our content moderations have been very robust for GPT4, local LLMs may be less aligned. It will be helpful to finetune local LLMs on content-moderation datasets as well, for an additional layer of security.
-
 
 

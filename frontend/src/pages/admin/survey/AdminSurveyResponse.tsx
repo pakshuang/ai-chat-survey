@@ -2,6 +2,15 @@ import { Card, Divider, Text, VStack } from "@chakra-ui/react"
 import { Response } from "./constants"
 
 function AdminSurveyResponse({ response }: { response: Response }) {
+  const transform = (arr: string[]): string => {
+    let str = ""
+    arr.forEach((s, i) => {
+      if (i > 0) str += ", "
+      str += s
+    })
+    return str
+  }
+
   return (
     <Card w="48rem" bg="white" p="1.5rem">
       <VStack>
@@ -10,7 +19,7 @@ function AdminSurveyResponse({ response }: { response: Response }) {
             <Text as="b" fontSize="lg">
               {ans.question}
             </Text>
-            <Text>{ans.answer}</Text>
+            <Text>{transform(ans.answer)}</Text>
             <Divider orientation="horizontal" />
           </VStack>
         ))}
