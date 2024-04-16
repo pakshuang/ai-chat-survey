@@ -135,9 +135,7 @@ In order to conduct a survey that provides a seamless experience for the user, w
 3. Conduct and take control of the interview: Just as in real life, the interviewer decides when to end the interivew, so that the client can extract as many new insights as possible.
 
 
-The three requirements listed above demand a significant amount of reasoning capabilities from the LLM. As a result, GPT-4, one of the most powerful content-moderated LLMs in the market, was chosen.
-
-To ensure that the model is up to the task, GPT-4 was evaluated to ensure that it fulfills the 3 requirements above. 
+The three requirements listed above demand a significant amount of reasoning capabilities from the LLM. As a result, GPT-4, one of the most powerful content-moderated LLMs in the market, was chosen.To ensure that the model is up to the task, GPT-4 was evaluated to ensure that it fulfills the 3 requirements above. 
 
 A sample survey response and conversation was created manually and GPT-4 was tasked with generating outputs based on the response and snippets of the conversation. The model is evaluated on its ability to remember survey responses and its ability to control the flow of the interview by evaluating its outputs. Its outputs would be compared to a set of outputs that we deemed preferable, and the semantic similarity between GPT-4's output and the expected outputs would serve as the score for the model. This similarity score is generated using [all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2).
 
