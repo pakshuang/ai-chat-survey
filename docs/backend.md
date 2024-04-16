@@ -118,7 +118,7 @@ The underlying model powering this app is the Large Language Model (LLM) GPT-4. 
 3. How do we ensure that the interview is carried out as smoothly as a semi-structured interview in real life?
 4. How do we improve the robustness of content moderation efforts and mitigate efforts to sabotage LLM responses as much as possible?
 
-These concerns are addressed in the following pipeline.
+These concerns are addressed in the following pipeline. A detailed explanation on how we derived this solution and the incremental adjustments needed for this pipeline is in [llm.md](llm.md).
 
 <img src="./diagrams/images/prompt-eng-3.png" alt="drawing" style="height:350px;"/>
 <br>
@@ -128,8 +128,6 @@ In the pipeline above, the model is first provided the survey responses, which a
 Addressing concern 3 is more difficult. The model is then tasked with generating a list of interesting questions, which it is tasked with remembering. This has improved the quality of the conversation tremendously. Primarily, it serves to discourage the model from deviating from the interview topic. This means that if a user decides to talk about topic A, the model will not continously probe about topic A, and instead move on to another question in its generated list of questions, after it has decided that it has attained enough information regarding topic A. Notably, we notice that this strategy has not degraded the quality of the LLM's questions, and the conversation remains dynamic.
 
 There are also two layers of content moderation. The first layer is a specific instruction to refuse participating when provided with inappropriate inputs by the user, and the second is a content moderation filter which checks the output from the model. These points address concern 4.
-
-A detailed explanation on how we derived this solution and the incremental adjustments needed for this pipeline is in [llm.md](llm.md).
 
 ##### Evaluation Test
 
