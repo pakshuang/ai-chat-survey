@@ -109,7 +109,7 @@ For the full database schema, please refer to [init.sql](../database/init.sql)
 #### c. Prompt Engineering Layer
 ##### Class Diagram
 
-<img src="diagrams/images/llmclasses.png" alt="Class Diagram" width="600"/>
+![Class Diagram](diagrams/images/llmclasses.png)
 
 ##### AI Engineering: Model
 
