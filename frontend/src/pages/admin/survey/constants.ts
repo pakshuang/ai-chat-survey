@@ -60,7 +60,7 @@ export type Answer = {
   type: string
   question: string
   options: string[]
-  answer: string
+  answer: string[]
 }
 
 export type Response = {
