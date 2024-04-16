@@ -115,8 +115,8 @@ For the full database schema, please refer to [init.sql](../database/init.sql)
 
 The underlying model powering this app is the Large Language Model (LLM) GPT-4. A LLM was determined due to the business objective, which requires dynamic survey question generations. In order to address the demands of the user, who wishes for an entertaining and dynamic survey experience, as well as the client, who expects more robust data security measures and a more efficient method of gathering insights, we have constructed the following pipeline. A detailed explanation on how we derived this solution and the incremental adjustments leading to this pipeline is in [llm.md](llm.md).
 
-<div style="float: left; margin: 0px 0px 15px 15px;">
-<img src="./diagrams/images/prompt-eng-3.png" alt="drawing" style=" height:400px;"/>
+<div style="float: left; margin: 0px 0px 0px 0px;">
+<img src="./diagrams/images/prompt-eng-3.png" alt="drawing" style=" height:450px;"/>
 </div>
 <br>
 
