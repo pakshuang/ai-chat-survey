@@ -173,3 +173,6 @@ cython_debug/
 
 #exception to the rule
 !**/models/.gitkeep
+
+# Generated Nginx config
+reverse-proxy/default.conf
