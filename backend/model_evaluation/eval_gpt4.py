@@ -37,7 +37,7 @@ class Evaluation:
         self.jailbreak = conv["jailbreak_strong"]
         self.jailbreak_vstrong = conv["jailbreak_very_strong"]
         ############ Cognition ###########
-        self.hf_api_url = "https://api-inference.huggingface.co/models/sentence-transformers/msmarco-distilbert-base-tas-b"
+        self.hf_api_url = "https://api-inference.huggingface.co/models/sentence-transformers/all-MiniLM-L6-v2"
         self.hf_api_token = os.getenv("HF_API_KEY")
         self.is_last_1 = conv["is_last_1"]
         self.is_last_2 = conv["is_last_2"]
