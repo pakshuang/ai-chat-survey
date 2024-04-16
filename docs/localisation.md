@@ -29,8 +29,8 @@ pip install -r requirements.txt
 ```
 2. (Optional) Ideally, one would like a local copy of a GPTQ base model. The following is an example of how to obtain such a model in the `models` folder:
 ```shell
-cd ai-chat-survey/backend-gpu/models
-git clone git clone https://huggingface.co/TheBloke/Nous-Hermes-2-SOLAR-10.7B-GPTQ -b gptq-4bit-32g-actorder_True
+cd backend-gpu/models
+git clone https://huggingface.co/TheBloke/dolphin-2.2.1-mistral-7B-GPTQ -b gptq-4bit-32g-actorder_True
 ```
 
 ## Finetuning
@@ -100,4 +100,4 @@ Once the model is downloaded, you may run the app with the model with the follow
 docker compose -f compose.yaml -f compose.gpu.yaml up --build
 ```
 
-The class `LocalMistralPEFTGPTQ` has also been defined. This class represents a finetuned Mistral-7b-GPTQ model. To run the app using this model, you will need to redefine the variables in `app.py`.
+The class `LocalMistralPEFTGPTQ` has also been defined. This class represents a finetuned Mistral-7b-GPTQ model, and has been neatly configured to be run immediately, once the model has been finetuned. To run the app using this model instead of `LocalMistralGPTQ`, you will need to redefine the variables in `app.py`.
