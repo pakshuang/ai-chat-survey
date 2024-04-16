@@ -1,7 +1,8 @@
 # Localisation
 This script is only meant for technical stakeholders committed to the localisation of the LLM in this project. It provides some assistance and groundwork for what could be done in the future for this app.
-> **Warning**
-> You are reminded that localisation is beyond the scope of this project. This portion only serves as a proof of concept.
+> **Warning:**
+> You are reminded that localisation is beyond the scope of this project. This portion only serves as a proof of concept. Due to a lack of resources with respect to hardware, this section has not been tested extensively.
+
 ## Motivation
 
 In the modern data-centric environment, companies prioritize safeguarding sensitive information while enhancing operational efficiency. To achieve these goals, leveraging Local Language Models (LLMs) becomes crucial.
@@ -14,7 +15,7 @@ Furthermore, maintaining data privacy is paramount for companies, making it esse
 
 An existing script `root/scripts/finetuning/GPTQLoRA-script.py` has been created to provide a simple pipeline for future finetuning efforts. To run this script, one needs to have a different set of Python dependencies from the rest of the app, which primarily focuses on the deployment of the Large Language Model.
 
-> **Warning**: Pipenv does not seem to be compatible with Pytorch for GPU support. We recommend using another python environment.
+> **Info:** The finetuning process is separate from the deployment of the model onto the app. This script can be run separately without any container.
 
 ## Requirements
 1. Nvidia GPU with a bare minimum of 8GB VRAM, and a soft requirement of 16GB VRAM.
@@ -39,7 +40,7 @@ The script is to be run from the CLI, with arguments. This script finetunes a GP
 
 The reasoning behind using GPTQ quantised LLMs instead of other quantisation methods like AWQ or GGUF is due to the widespread availability of GPTQ models on HuggingFace, as well as GPTQ models to be run quickly on a GPU, which is compulsory for a web app with a minimal amount of traffic.
 
-**Warning**: The current app, and therefore the backend container, for demonstration purposes, currently uses a closed-source model. The necessary installations and libraries needed to run an open-source model locally are omitted due to the long installation times required. The current backend container does **NOT** have access to the GPU.
+**Warning:** The current app, and therefore the backend container, for demonstration purposes, currently uses a closed-source model. The necessary installations and libraries needed to run an open-source model locally are omitted due to the long installation times required. The current backend container does **NOT** have access to the GPU.
 
 The finetuning script is intended to be run from the CLI using several available arguments.
 
@@ -75,7 +76,7 @@ The following command assumes one has downloaded a model from huggingface and pr
 
 ## Deployment
 
-> **Warning**
+> **Warning:**
 > A Nvidia GPU with >=8GB of VRAM is COMPULSORY, and a GPU with >=16GB of VRAM is STRONGLY RECOMMENDED.
 
 A new docker container has been set up to run for local models. This container is run from the image `backend-gpu`. This docker container has:
@@ -91,7 +92,7 @@ git clone https://huggingface.co/TheBloke/dolphin-2.2.1-mistral-7B-GPTQ -b gptq-
 ```
 
 Once the model is downloaded, you may run the app with the model with the following command:
-> **Warning**
+> **Warning:**
 > Do NOT expect results as good as GPT-4. GPT-4 contains around 250 times the number of parameters!
 > You may encounter an error generating a response. This is due to a timeout error. Consider using a faster GPU.
 > You may even require multiple GPUs.
