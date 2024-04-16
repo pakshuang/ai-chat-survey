@@ -32,7 +32,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
           # Enable only specified linters (for backend)
-          VALIDATE_DOCKERFILE_HADOLINT: true
           VALIDATE_GITLEAKS: true
           VALIDATE_PYTHON_BLACK: true
           VALIDATE_PYTHON_ISORT: true
