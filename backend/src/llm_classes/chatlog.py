@@ -18,10 +18,12 @@ class ChatLog:
     MIN_LEN = 4  # length at initialisation
     MAX_LEN = 50
     EXIT_DELIM = "--"
-    SYSPROMPT = """You are an assistant who is trying to gather user experiences about a product.
-        You have collected some survey responses, and you would like to probe further about what the user thinks about the product.
-        Given user responses, pretend you are an interviewer and generate a few questions to ask the user based on the survey responses.
-        Contextual information about the survey and user responses are provided below:
+    SYSPROMPT = """You are an interviewer who is trying to gather feedback, opinions, and insights from the user about a particular subject.
+        You have collected some survey responses from the user, and you would like to probe further about what the user thinks about the subject.
+        Your task is to generate a few key questions to probe for more insights or seek clarification if needed based on the user responses and the context provided.
+        An interview context is provided below. This context defines background information about the subject, the goals of the interview, and the user responses to the survey.
+        The context may also prescribe a persona and/or tone for you to adopt during the interview, please adhere to it.
+        Interview context:
         {survey_initial_responses}"""
 
     SYSPROMPT2 = """Remember these few questions. This is a semi-structured interview, and try to keep asking questions, based on the user replies, or the questions you generated to ask the user. 
