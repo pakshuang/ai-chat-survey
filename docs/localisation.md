@@ -1,5 +1,7 @@
 # Localisation
 This script is only meant for technical stakeholders committed to the localisation of the LLM in this project. It provides some assistance and groundwork for what could be done in the future for this app.
+> **Warning:**
+> You are reminded that localisation is beyond the scope of this project. This portion only serves as a proof of concept. Due to a lack of resources with respect to hardware, this section has not been tested extensively.
 
 ## Motivation
 
@@ -11,9 +13,9 @@ Furthermore, maintaining data privacy is paramount for companies, making it esse
 
 ## Suggestions
 
-An existing script `root/scripts/finetuning/Qlora-GPTQ-script.py` has been created to provide a simple pipeline for future finetuning efforts. To run this script, one needs to have a different set of Python dependencies from the rest of the app, which primarily focuses on the deployment of the Large Language Model.
+An existing script `root/scripts/finetuning/GPTQLoRA-script.py` has been created to provide a simple pipeline for future finetuning efforts. To run this script, one needs to have a different set of Python dependencies from the rest of the app, which primarily focuses on the deployment of the Large Language Model.
 
-> **Warning**: Pipenv does not seem to be compatible with Pytorch for GPU support. We recommend using another python environment.
+> **Info:** The finetuning process is separate from the deployment of the model onto the app. This script can be run separately without any container.
 
 ## Requirements
 1. Nvidia GPU with a bare minimum of 8GB VRAM, and a soft requirement of 16GB VRAM.
@@ -28,15 +30,17 @@ pip install -r requirements.txt
 ```
 2. (Optional) Ideally, one would like a local copy of a GPTQ base model. The following is an example of how to obtain such a model in the `models` folder:
 ```shell
-cd ai-chat-survey/backend-gpu/models
-git clone git clone https://huggingface.co/TheBloke/Nous-Hermes-2-SOLAR-10.7B-GPTQ -b gptq-4bit-32g-actorder_True
+cd backend-gpu/models
+git clone https://huggingface.co/TheBloke/dolphin-2.2.1-mistral-7B-GPTQ -b gptq-4bit-32g-actorder_True
 ```
 
 ## Finetuning
 
 The script is to be run from the CLI, with arguments. This script finetunes a GPTQ-quantised model with parameter-efficient finetuning techniques to reduce computational time and memory. This is done with a LORA adapter. After training, the LORA model will be saved in `backend-gpu/models/`, where ideally, one could deploy the app in a container.
 
-**Warning**: The current app, and therefore the backend container, for demonstration purposes, currently uses a closed-source model. The necessary installations and libraries needed to run an open-source model locally are omitted due to the long installation times required. The current backend container does **NOT** have access to the GPU.
+The reasoning behind using GPTQ quantised LLMs instead of other quantisation methods like AWQ or GGUF is due to the widespread availability of GPTQ models on HuggingFace, as well as GPTQ models to be run quickly on a GPU, which is compulsory for a web app with a minimal amount of traffic.
+
+**Warning:** The current app, and therefore the backend container, for demonstration purposes, currently uses a closed-source model. The necessary installations and libraries needed to run an open-source model locally are omitted due to the long installation times required. The current backend container does **NOT** have access to the GPU.
 
 The finetuning script is intended to be run from the CLI using several available arguments.
 
@@ -70,16 +74,37 @@ Explanation:
 The following command assumes one has downloaded a model from huggingface and provides it to base. The Mistral models have not been trained with system prompts, so `datee.csv` is a `csv` file with `input` and `output` columns containing expected queries and responses to the LLM, and there is no need for a `system` column. `--has-system-prompt` is, for the same reason, set to 0. The output path of the trained adapter model is set to the `models` folder, but this is already done by default.
 
 
-## Considerations for Deployment
+## Deployment
 
-1. A new docker container will need to be run for local models. This docker container will require:
+> **Warning:**
+> A Nvidia GPU with >=8GB of VRAM is COMPULSORY, and a GPU with >=16GB of VRAM is STRONGLY RECOMMENDED.
+
+A new docker container has been set up to run for local models. This container is run from the image `backend-gpu`. This docker container has:
  - Access to the GPU
- - Pytorch and other dependencies listed in `requirements.txt`
-2. A class defined for this model. A skeletal class has already been defined in `root/backend-gpu/src/llm_classes`
-3. It is strongly recommended to consider models >= 30B parameters as these models tend to have smaller performance losses through quantisation.
+ - Pytorch and other dependencies listed in `Pipfile and Pipfile.lock`
+ - A `models` folder, which contains localised LLMs in GPTQ format.
 
+The class `LocalMistralGPTQ` is defined in src/llm_classes/llm_level.py. This is a wrapper class for the GPTQ quantised LLM dolphin-2.2.1-mistral-7B-GPTQ. To download the model, simply do the following:
 
+```shell
+cd backend-gpu/models
+git clone https://huggingface.co/TheBloke/dolphin-2.2.1-mistral-7B-GPTQ -b gptq-4bit-32g-actorder_True
+```
 
+Once the model is downloaded, you may run the app with the model with the following command:
+> **Warning:**
+> Do NOT expect results as good as GPT-4. GPT-4 contains around 250 times the number of parameters!
+> You may encounter an error generating a response. This is due to a timeout error. Consider using a faster GPU.
+> You may even require multiple GPUs.
 
+```shell
+docker compose -f compose.yaml -f compose.gpu.yaml up --build
+```
 
+The class `LocalMistralPEFTGPTQ` has also been defined. This class represents a finetuned Mistral-7b-GPTQ model, and has been neatly configured to be run immediately, once the model has been finetuned. To run the app using this model instead of `LocalMistralGPTQ`, you will need to redefine the variables in `app.py`.
 
+## Future Work
+
+Future work will likely consist of finding good models and striking a balance between model capabilities and model size, as well as securing appropriate hardware to run these models. While models as small as 13B have a chance of performing well after finetuning, it is recommended that larger models such as Mixtral-8x7b be used.
+
+Regarding our current implementation of backend-gpu, content moderation filters have not been added as a consideration to testers, as the Mistral models require time to compute. Content moderation filters are also language models trained on text classification tasks, so running them along with the Mistral models may result in Out of Memory errors for smaller-sized GPUs.

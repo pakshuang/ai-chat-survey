@@ -23,7 +23,7 @@ A set of 11 evaluation tests are conducted on the large language model and are e
 
 Each test is scored on a scale from `0` to `1` (later scaled to the range 0 to 100) and a pass threshold is set at `0.7` by default. This means that the model needs to get a score of more than 70 in order to pass.
 
-## Evaluation tests: Metrics
+## Metrics
 
 A sample survey response and conversation was created manually and GPT-4 was tasked with generating outputs based on the response and snippets of the conversation. The model is evaluated on its ability to remember survey responses and its ability to control the flow of the interview by evaluating its outputs. Its outputs would be compared to a set of outputs that we deemed preferable, and the semantic similarity between GPT-4's output and the expected outputs would serve as the score for the model. This similarity score is generated using [all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2).
 
@@ -31,6 +31,7 @@ For example, suppose the assistant prompts the LLM to provide a free bottle of d
 
 The model is also evaluated on content moderation, however, this is not done using sentence similarity checks, but a content moderation model by OpenAI is used to evaluate the responses instead.
 
+## Tests
 ### Cognition: Exit Interview Evaluation Tests
 
 The decision to end the interview rests on the LLM, which decides when to conclude the interview. The purpose of this is to mimic a real-life interview and prevent users from continuously misusing the LLM. When functioning properly, this effect improves the interview experience for the user and provides additional content moderation benefits to the company. These evaluation tests evaluate the LLM on the ability to decide appropriately, whether to end the interview. 

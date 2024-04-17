@@ -106,19 +106,25 @@ The MySQL database, named `ai_chat_survey_db`, serves as the centralized reposit
 
 For the full database schema, please refer to [init.sql](../database/init.sql)
 
-#### c. Model (ChatGPT)
-##### AI Engineering: Architecture
+
+#### c. Prompt Engineering Layer
+##### Class Diagram
+
+![Class Diagram](diagrams/images/llmclasses.png)
+
+##### AI Engineering: Model
 
 The underlying model powering this app is the Large Language Model (LLM) GPT-4. A LLM was determined due to the business objective, which requires dynamic survey question generations. In order to address the demands of the user, who wishes for an entertaining and dynamic survey experience, as well as the client, who expects more robust data security measures and a more efficient method of gathering insights, we have constructed the following pipeline. A detailed explanation on how we derived this solution and the incremental adjustments leading to this pipeline is in [llm.md](llm.md).
 
-<div style="text-align: center;">
-<img src="./diagrams/images/prompt-eng-3.png" alt="drawing" style="transform:rotate(-90deg); height:350px;"/>
+<div style="float: left; margin: 0px 0px 0px 0px;">
+<img src="./diagrams/images/prompt-eng-3.png" alt="drawing" style=" height:450px;"/>
 </div>
 <br>
 
-In the pipeline above, the model is first provided the survey responses. The model is then tasked with generating a list of interesting questions, which it is tasked with remembering. This has improved the quality of the conversation tremendously. Primarily, it serves to discourage the model from deviating from the interview topic. Thus, if a user decides to talk about topic A, the model will not continously probe about topic A, and instead move on to another question in its generated list of questions, after it has decided that it has attained enough information regarding topic A. Notably, we notice that this strategy has not degraded the quality of the LLM's questions, and the conversation remains dynamic. There are also two layers of content moderation. The first layer is a specific instruction to refuse participating when provided with inappropriate inputs by the user, and the second is a content moderation filter which checks the output from the model. This addresses security concerns posed by the client.
+In the pipeline on the left, the model is first provided the survey responses. The model is then tasked with generating a list of interesting questions, which it is tasked with remembering. This has improved the quality of the conversation tremendously. Primarily, it serves to discourage the model from deviating from the interview topic. Thus, if a user decides to talk about topic A, the model will not continously probe about topic A, and instead move on to another question in its generated list of questions, after it has decided that it has attained enough information regarding topic A. Notably, we notice that this strategy has not degraded the quality of the LLM's questions, and the conversation remains dynamic. There are also two layers of content moderation. The first layer is a specific instruction to refuse participating when provided with inappropriate inputs by the user, and the second is a content moderation filter which checks the output from the model. This addresses security concerns posed by the client.
 
 ##### Evaluation Test
+
 
 To conduct a survey that provides a seamless user experience while generating new insights for the client, our LLM must generate interesting questions based on the users' previous responses. It must also take control of and appropriately decide when to end the interview. These skills require a high degree of reasoning capabilities. As a result, GPT-4, one of the most powerful content-moderated LLMs in the market, was chosen. To evaluate GPT-4's capabilities, the model was evaluated on its generated outputs.
 
