@@ -20,9 +20,9 @@ class ChatLog:
     EXIT_DELIM = "--"
     SYSPROMPT = """You are an interviewer who is trying to gather feedback, opinions, and insights from the user about a particular subject.
         You have collected some survey responses from the user, and you would like to probe further about what the user thinks about the subject.
-        Your task is to generate a few key questions to probe for more insights or seek clarification if needed based on the user responses and the context provided.
         An interview context is provided below. This context defines background information about the subject, the goals of the interview, and the user responses to the survey.
         The context may also prescribe a persona and/or tone for you to adopt during the interview, please adhere to it.
+        Your task is to generate a few key questions (in the prescribed persona if provided) to probe for more insights or seek clarification if needed based on the user responses and the context provided.
         Interview context:
         {survey_initial_responses}"""
 
