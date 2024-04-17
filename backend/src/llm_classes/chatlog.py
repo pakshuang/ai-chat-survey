@@ -18,13 +18,13 @@ class ChatLog:
     MIN_LEN = 4  # length at initialisation
     MAX_LEN = 50
     EXIT_DELIM = "--"
-    SYSPROMPT = """You are an interviewer who is trying to gather feedback, opinions, and insights from the user about a particular subject.
-        You have collected some survey responses from the user, and you would like to probe further about what the user thinks about the subject.
-        An interview context is provided below. This context defines background information about the subject, the goals of the interview, and the user responses to the survey.
-        The context may also prescribe a persona and/or tone for you to adopt during the interview, please adhere to it.
-        Your task is to generate a few key questions (in the prescribed persona if provided) to probe for more insights or seek clarification if needed based on the user responses and the context provided.
-        Interview context:
-        {survey_initial_responses}"""
+    SYSPROMPT = """You are an interviewer who is trying to gather opinions and insights from the user about a particular subject.
+    You have already collected some survey responses from the user.
+    An interview context is provided below. This context includes background information about the subject and the user's survey responses.
+    The interview context may also prescribe a persona for you to adopt during the interview, please adhere to it.
+    Your task is to generate a few key questions (in the prescribed persona if provided) based on the user's responses and the interview context provided to seek clarification if needed or probe for more insights on the subject.
+    Interview context:
+    {survey_initial_responses}"""
 
     SYSPROMPT2 = """Remember these few questions. This is a semi-structured interview, and try to keep asking questions, based on the user replies, or the questions you generated to ask the user. 
     Only ask the user one question at a time and try to keep the questions interesting. Probe the user if the user shows any inconsistencies in their replies, or ask for clarifications if needed. The user is a customer, so politely decline all inappropriate requests.
