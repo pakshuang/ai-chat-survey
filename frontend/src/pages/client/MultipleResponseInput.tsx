@@ -22,7 +22,11 @@ function MultipleResponseInput({
   return (
     <form>
       <Flex flexDirection="row" p="0.5rem" w="60rem" mx="auto">
-        <CheckboxGroup size="lg" onChange={(ans) => setAnswers(ans)}>
+        <CheckboxGroup
+          size="lg"
+          value={answers}
+          onChange={(ans) => setAnswers(ans)}
+        >
           <Box
             p="1rem"
             maxH="200px"

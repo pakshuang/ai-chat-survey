@@ -1,0 +1,35 @@
+@startuml llmclasses
+left to right direction
+abstract class LLM {
+    string run(messages, seed, with_moderation)
+}
+class GPT {
+    string run(messages, seed, with_moderation)
+    client: OpenAI 
+    model: String
+    
+}
+LLM <|-- GPT
+
+class ContentModeration {
+    default: String
+    client: OpenAI
+    is_harmful(text: String): Boolean
+}
+GPT --> ContentModeration : has a
+
+class ChatLog {
+    MIN_LEN: Integer
+    MAX_LEN: Integer
+    EXIT_DELIM: String
+    SYSPROMPT: String
+    SYSPROMPT2: String
+    END_QUERY: Dictionary
+    message_list: List 
+    current_index: Integer
+    insert_and_update(message, index, is_llm, is_sys): List
+}
+
+ChatLog --> LLM : has a
+
+@enduml
