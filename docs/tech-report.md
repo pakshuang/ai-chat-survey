@@ -93,6 +93,10 @@ Further details about setup/installation can be found in [Setup](setup.md), such
 
 ## Future Directions and Recommendations
 
+### Analyzing ChatLogs
+Since all chat logs and survey responses are stored in our database, it becomes a valuable resource for further downstream analysis. Techniques such as sentiment analysis, topic modeling, and clustering can be employed to extract deeper insights into customer interactions and preferences. By leveraging platforms like [Inari](https://www.ycombinator.com/launches/Kpg-inari-ai-powered-product-discovery-and-feedback-analytics), which is designed for AI-powered feedback analytics, organizations can enhance their understanding of customer feedback, ultimately driving product development and enhancement.
+
+
 - [Localisation](localisation.md)
 
 ## Conclusion
