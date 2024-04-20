@@ -71,7 +71,7 @@ The following table shows their feedback, both positive and negative.
 | 1    | Unclear of importance of chat context                                                                | Yes          | Frontend  |
 | 1    | Survey ending is abrupt                                                                              | Yes          | Backend   |
 | 1    | Quite fun                                                                                            | NA           | NA        |
-| 2    | Felt more compelled to continue the survey and give information because of the conversational nature | Yes          | NA        |
+| 2    | Felt more compelled to continue the survey and give information because of the conversational nature | NA           | NA        |
 | 3    | Add ability to include images, graphs                                                                | No           | Both      |
 | 3    | Bot has the tendency to rephrase / repeat some questions                                             | Yes          | Backend   |
 | 3    | Chat is quite responsive, feels natural                                                              | NA           | NA        |
