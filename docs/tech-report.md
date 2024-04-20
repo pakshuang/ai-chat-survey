@@ -72,14 +72,6 @@ Further details about setup/installation can be found in [Setup](setup.md), such
 - **Reverse Proxy (Nginx)**: Nginx was chosen due to its simplicity and performance. It is used to route requests to the frontend or backend based on the URL path. Load balancing relies on the Docker network's internal DNS resolution. For more advanced load balancing, solutions like Traefik can be used due to its dynamic configuration capabilities and support for Docker.
 - The rationale for the choice of technologies for the other services can be found in the respective sections below.
 
-## Frontend
-
-- [Frontend](frontend.md): Insert Description and details about the frontend components and technologies used.
-
-## Backend
-
-- [Backend](backend.md): Insert Description and details about the backend components and technologies used.
-
 ## DevOps
 
 - **Docker**: The application is split into multiple services (frontend, backend, database, nginx) and each service is containerised using Docker.
@@ -94,10 +86,18 @@ Further details about setup/installation can be found in [Setup](setup.md), such
 ## Future Directions and Recommendations
 
 ### Analyzing ChatLogs
-Since all chat logs and survey responses are stored in our database, it becomes a valuable resource for further downstream analysis. Techniques such as sentiment analysis, topic modeling, and clustering can be employed to extract deeper insights into customer interactions and preferences. By leveraging platforms like [Inari](https://www.ycombinator.com/launches/Kpg-inari-ai-powered-product-discovery-and-feedback-analytics), which is designed for AI-powered feedback analytics, organizations can enhance their understanding of customer feedback, ultimately driving product development and enhancement.
+- Since all chat logs and survey responses are stored in our database, it becomes a valuable resource for further downstream analysis. 
+- Techniques such as sentiment analysis, topic modeling, and clustering can be employed to extract deeper insights into customer interactions and preferences. 
+- By leveraging platforms like [Inari](https://www.ycombinator.com/launches/Kpg-inari-ai-powered-product-discovery-and-feedback-analytics), which is designed for AI-powered feedback analytics, organizations can enhance their understanding of customer feedback, ultimately driving product development and enhancement.
 
+### Local LLMs
+- In the modern data-centric environment, companies prioritize safeguarding sensitive information while enhancing operational efficiency. To achieve these goals, leveraging Local Language Models (LLMs) becomes crucial.
 
-- [Localisation](localisation.md)
+- While LLMs are accessible via APIs, relying solely on external services can pose risks, especially if these APIs cease to provide LLM support, causing disruptions.
+
+- Furthermore, maintaining data privacy is paramount for companies, making it essential to avoid sharing sensitive information with external API providers when interacting with a model. Deploying LLMs internally helps mitigate these risks and ensures data remains secure within the organization's infrastructure.
+
+- We have written a document for users to use a local LLM  with our app. Refer to [localisation.md](localisation.md).
 
 ## Conclusion
 
