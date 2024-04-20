@@ -57,24 +57,34 @@ _images of the old form and chat page to be added_
 
 The following table shows the profiles of the users we interviewed.
 
-| User | Profile                     |
-| ---- | --------------------------- |
-| 1    | [age]-year-old [occupation] |
-| 2    | [age]-year-old [occupation] |
+| User | Profile                        |
+| ---- | ------------------------------ |
+| 1    | [age]-year-old [occupation]    |
+| 2    | [age]-year-old [occupation]    |
+| 3    | 22-year-old university student |
+| 4    | Our business stakeholder       |
 
-The following table shows their feedback as well as the refinements made for each piece of feedback.
+The following table shows their feedback, both positive and negative.
 
-| User | Feedback                              | Refinement                                                                    |
-| ---- | ------------------------------------- | ----------------------------------------------------------------------------- |
-| 1    | Unclear of importance of chat context | Emphasise importance of the chat context for the admin                        |
-| 1    | Quite fun                             | NA                                                                            |
-| 1    | Survey ending is abrupt               | Add final message to ask respondent if there’s anything else they want to add |
+| User | Feedback                                                                                             | Change made? | Change in |
+| ---- | ---------------------------------------------------------------------------------------------------- | ------------ | --------- |
+| 1    | Unclear of importance of chat context                                                                | Yes          | Frontend  |
+| 1    | Survey ending is abrupt                                                                              | Yes          | Backend   |
+| 1    | Quite fun                                                                                            | NA           | NA        |
+| 2    | Felt more compelled to continue the survey and give information because of the conversational nature | Yes          | NA        |
+| 3    | Add ability to include images, graphs                                                                | No           | Both      |
+| 3    | Bot has the tendency to rephrase / repeat some questions                                             | Yes          | Backend   |
+| 3    | Chat is quite responsive, feels natural                                                              | NA           | NA        |
+| 4    | Consider security: prevent discriminatory words in LLM output                                        | Yes          | Backend   |
+| 4    | Add ability to split the survey up into sections                                                     | No           | Both      |
+
+Some user feedback required changes to the backend, not the frontend. We thus discuss these changes later in the backend section of the report. Furthermore, we did not implement a few changes due to time constraints (indicated by “No” in the “Change made” column), but could be added in the future.
 
 ## Final design
 
 ### Admin portal
 
-The design of the admin portal was largely unaffected by our user interviews, which focused more on the client interface. However, based on feedback on users' uncertainty about the importance of chat context, we added a tooltip to give more information on the importance of the chat context in generating good survey questions.
+The design of the admin portal was largely unaffected by our user interviews, which focused more on the client interface. However, based on User 1's feedback on their uncertainty about the importance of chat context, we added a tooltip to give more information on the importance of the chat context in generating good survey questions.
 
 <img src="final-designs/chatbot-context-tooltip.png" width="50%"/>
 
@@ -104,7 +114,7 @@ We implemented the following changes based on user feedback:
   _image of survey and image of chat from the chat page to be added_
 - Displayed messages from bottom to top
   After the integration, we realised that the traditional way of showing messages from the top to bottom of the page might cause inconvenience for users at the beginning, who would have to go back and forth between reading the question at the top and filling out their answers in the chatbox at the bottom. Thus, we changed the direction of message display to position the latest question and chatbox close together.
-      _image of first message that is from the bottom to be added_
+  _image of first message that is from the bottom to be added_
 
 ## Follow-up user interviews
 
