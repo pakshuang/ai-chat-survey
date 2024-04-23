@@ -305,7 +305,7 @@ assistant: Thank you for your time and for providing us with these feedbacks! Ha
 
 #### LLM
 
-One important concern for companies is the security of their data. The dependence on APIs such as OpenAI API is something companies would like to avoid in order to prevent data leakages. As part of future improvements, we can look towards using local fine-tuned LLMs instead of GPT4.
+One important concern for companies is the security of their data. The dependence on APIs such as OpenAI API is something companies would like to avoid in order to prevent data leakages. As part of future improvements, we can look towards using local fine-tuned LLMs instead of GPT-4.
 
 Currently, as of 3rd April, models like Nous-Hermes-2-SOLAR-10.7B are extremely versatile for their size. A fine-tuned version could certainly be considered, as well as possibly other larger open-source LLMs like Mistral-8x7b.
 
@@ -324,6 +324,6 @@ The content moderation model currently used is from OpenAI. However, open-source
 
 ### Content Moderation
 
-While our content moderations have been very robust for GPT4, local LLMs may be less aligned. It will be helpful to finetune local LLMs on content-moderation datasets as well, for an additional layer of security.
+While our content moderations have been very robust for GPT-4, local LLMs may be less aligned. It will be helpful to finetune local LLMs on content-moderation datasets as well, for an additional layer of security.
 
 
