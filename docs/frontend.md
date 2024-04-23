@@ -51,7 +51,7 @@ We aimed to maintain information collection efficiency while incorporating a con
 - Survey page: This is the page for static questions, i.e. questions that the surveyor wants all users to answer, allowing easy traditional quantitative analysis. Questions can be multiple choice, multiple response, and free response.
 - Chat page: After the initial survey page, the user's answers are sent to a chatbot and users are redirected to the chat page where they engage in a conversation with the chatbot.
 
-_images of the old form and chat page to be added_
+<img src="wireframes/survey-page.png" width="49%" /> <img src="wireframes/chat-page.png" width="49%" />
 
 ## Initial user interviews
 
@@ -108,13 +108,16 @@ We implemented the following changes based on user feedback:
 
 - Added a thank you message after the bot is done asking questions.
   The ending of the survey seems abrupt sometimes due to the bot's unpredictable nature. To ensure a smooth user experience, we implemented a flag that indicates whether the bot's message will be its last.
-  _image of thank you message by bot to be added_
+
+  <img src="final-designs/thank-you-message.png" />
+
 - Integrated survey page into chat page.
   Some users found the survey page's design and questions too similar to traditional surveys, reducing their desire to complete the survey. However, as business stakeholders still wanted the static questions to be asked, we could not remove the static questions entirely. Thus, we integrated them into the chat page to provide the experience of chatting with the LLM.
-  _image of survey and image of chat from the chat page to be added_
+
+  <img src="final-designs/integrated-chat-page-survey.png" width="33%" /> <img src="final-designs/integrated-chat-page-confirmation.png" width="33%" /> <img src="final-designs/integrated-chat-page-chatbot.png" width="33%" />
+
 - Displayed messages from bottom to top
-  After the integration, we realised that the traditional way of showing messages from the top to bottom of the page might cause inconvenience for users at the beginning, who would have to go back and forth between reading the question at the top and filling out their answers in the chatbox at the bottom. Thus, we changed the direction of message display to position the latest question and chatbox close together.
-  _image of first message that is from the bottom to be added_
+  After the integration, we realised that the traditional way of showing messages from the top to bottom of the page might cause inconvenience for users at the beginning, who would have to go back and forth between reading the question at the top and filling out their answers in the chatbox at the bottom. Thus, we changed the direction of message display to position the latest question and chatbox close together. _(Refer to images above)_
 
 ## Follow-up user interviews
 
