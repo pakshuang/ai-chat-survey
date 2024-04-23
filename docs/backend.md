@@ -143,8 +143,8 @@ After conducting user interviews to gather feedback on our AI chatbot survey sys
 - ChatGPT will assess the current state of the survey and decide if it should end the survey on its own, returning `True` in the API payload.
 - Since a respondent does not need to indicate manually that they wish to end the survey, it ensures that surveys end on a more natural and satisfactory note for respondents.
 
-### 2. Dynamic Question Refinement
-- Implemented a dynamic question refinement feature based on user feedback to mitigate issues of question repetition or rephrasing.
+### 2. Reduce repetitive questioning
+- Refined prompt engineering to specifically address the issue of ChatGPT asking repetitive questions during the user interviews. This change prevents ChatGPT from asking the same question more than once.
 - Enhances the interactive nature of the survey experience and ensures that respondents remain actively engaged throughout the interaction.
 
 By incorporating these additional features based on user feedback, we aim to further optimize the functionality and usability of our AI chatbot survey system, ultimately enhancing the overall user satisfaction and effectiveness of the survey process.
