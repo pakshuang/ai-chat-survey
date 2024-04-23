@@ -121,13 +121,16 @@ We implemented the following changes based on user feedback:
 
 ## Follow-up user interviews
 
-- Rubrics: Repeat consults with user.
+The following table shows feedback from our follow-up user interviews after refinements were made.
 
-The following table shows the feedback from each user after refinements were made.
+| User | Feedback                                                                             |
+| ---- | ------------------------------------------------------------------------------------ |
+| 4    | Chatbot's ability to ask good questions and clarify is great                         |
+| 4    | Is it possible to add functionality to finetune a specific survey?                   |
+| 4    | Can the chatbot be coerced to produce shorter messages?                              |
+| 4    | Having the bot be able to take on specific personas would help keep the user engaged |
 
-| User | Feedback |
-| ---- | -------- |
-| 1    |          |
+Some users further suggested features or enhancements that we could include; we address these in our Future Directions and Recommendations section.
 
 ## Conclusion
 
