@@ -1,27 +1,40 @@
 @startuml overall-architecture
 
+!define AWSPuml https://raw.githubusercontent.com/awslabs/aws-icons-for-plantuml/v18.0/dist
+!include AWSPuml/AWSCommon.puml
+!include AWSPuml/Groups/AWSCloud.puml
+!include AWSPuml/Groups/EC2InstanceContents.puml
 
-package "Docker Bridge Network: ai-chat-survey_default)" #aliceblue;line:blue;text:blue{
-    node "Flask API\n(Service: backend)" as backend #aliceblue;line:blue;text:blue
+AWSCloudGroup(cloud){
+    EC2InstanceContentsGroup(ec2, "EC2 Instance"){
+        package "Docker Bridge Network (ai-chat-survey_default)" #aliceblue;line:blue;text:blue{
+            node "Flask API\n(Service: backend)" as backend #aliceblue;line:blue;text:blue
 
-    node "Nginx Reverse Proxy\n(Service: reverse_proxy)" as reverse_proxy #aliceblue;line:blue;text:blue
+            node "Nginx Reverse Proxy\n(Service: reverse_proxy)" as reverse_proxy #aliceblue;line:blue;text:blue
 
-    node "MySQL RDBMS\n(Service: database)" as database #aliceblue;line:blue;text:blue
+            node "MySQL RDBMS\n(Service: database)" as database #aliceblue;line:blue;text:blue
 
-    node "React Frontend\n(Service: frontend)" as frontend #aliceblue;line:blue;text:blue
+            node "React Frontend\n(Service: frontend)" as frontend #aliceblue;line:blue;text:blue
 
-    reverse_proxy <-down-> backend : HTTP request/response
-    reverse_proxy <-left-> frontend : HTTP request/response
-    backend <-left-> database : data interaction
+            node "Certbot SSL Certificate Client\n(Service: certbot)" as certbot #aliceblue;line:blue;text:blue
+
+            reverse_proxy -down-> backend : HTTP request
+            reverse_proxy -left-> frontend : HTTP request
+            backend -left-> database : data interaction
+        }
+    }
 }
 
 cloud "Internet"{
     actor "Client" as client
     [OpenAI GPT-4 Chat Completion API\n(https://api.openai.com/v1/chat/completions)]  as chat_api
+    [Let's Encrypt] as lets_encrypt
 }
 
-client <-left-> reverse_proxy: HTTP request/response
-chat_api <-left-> backend: HTTP request/response
+lets_encrypt -left-> reverse_proxy: ACME HTTP-01 challenge
+client -left-> reverse_proxy: HTTPS request
+chat_api <-left- backend: HTTPS request
+lets_encrypt -[hidden]down-> client
 client -[hidden]down-> chat_api
 
 @enduml
