@@ -38,7 +38,7 @@ Like Maiorino, our group also seeks to leverage LLMs’ “concept expansion” 
 - **Testing (Pytest, Unittest)**: Pytest and Unittest are utilized for testing the backend components, ensuring reliability and functionality.
 - **Formatting (Black, isort)**: Black and isort are used for code formatting and style consistency. Black automatically formats Python code to adhere to PEP 8 guidelines, enhancing readability, while Isort structures import statements, ensuring code organisation.
 
-### 3. Interaction between components
+### 3. Interaction between Components and Layers
 
 The backend components interact harmoniously to facilitate the flow of data and operations within the system:
 
