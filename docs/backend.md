@@ -143,8 +143,9 @@ After conducting user interviews to gather feedback on our AI chatbot survey sys
 - GPT-4 will assess the current state of the survey similar to a real-life interviewer and decide if it should end the survey on its own, returning `True` in the API payload.
 - Since a respondent does not need to indicate manually that they wish to end the survey, it ensures that surveys end on a more natural and satisfactory note for respondents.
 
-### 2. Reduce repetitive questioning
+For more details, please refer to [llm.md](llm.md).
 
+### 2. Reduce repetitive questioning
 - Refined prompt engineering to specifically address the issue of GPT-4 asking repetitive questions during the user interviews. This change prevents GPT-4 from asking the same question more than once.
 - Enhances the interactive nature of the survey experience and ensures that respondents remain actively engaged throughout the interaction.
 
