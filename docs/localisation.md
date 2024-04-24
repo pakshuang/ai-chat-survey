@@ -115,7 +115,7 @@ Regarding our current implementation of backend-gpu, content moderation filters 
 
 The LLM scene is constantly evolving. On April 18, 2024, Meta released llama-3, a very capable open-source LLM. Llama-3 comes in two sizes, 70b and 8b. The 8b model is the most capable open-source model to date. To speak of its impressiveness, as of 24 April 2024, it is currently (ranked 14 in the Overall category on the Chatbot Arena)[https://chat.lmsys.org/?leaderboard], a leaderboard where human evaluators rate the effectiveness of LLMs against one another. The 8-billion parameter model performs much above its weight class and ranks alongside Mistral-Medium (rank 14), Gemini 1.0 Pro (Dev API) (rank 21), both of which are much larger closed-source models. GPT-3.5-Turbo-0613 is ranked 25.
 
-The 70-billion parameter version is also very impressive. As of 24 April 2024, it has a rank of rank 6 in the Overall category, above two snapshots of GPT-4 (GPT-4-0314: rank 9, GPT-4-0613: rank 12) and Claude 3 Sonnet (rank 7).
+The 70-billion parameter version is also very impressive. As of 24 April 2024, it has a rank of 6 in the Overall category, above two snapshots of GPT-4 (GPT-4-0314: rank 9, GPT-4-0613: rank 12) and Claude 3 Sonnet (rank 7).
 
 Such improvements are certain to keep coming, and it would be a good idea to keep on the lookout for upcoming models. A good place to source for good models would be:
 (Chatbot Arena)[https://chat.lmsys.org/?leaderboard] - A site where human evaluators rate the effectiveness of LLMs in general or specific tasks like coding
