@@ -125,6 +125,7 @@ The following table shows feedback from our follow-up user interviews after refi
 
 | User | Feedback                                                                             |
 | ---- | ------------------------------------------------------------------------------------ |
+| 3    | A good experience; sounded more natural than before                                  |
 | 4    | Chatbot's ability to ask good questions and clarify is great                         |
 | 4    | Is it possible to add functionality to finetune a specific survey?                   |
 | 4    | Can the chatbot be coerced to produce shorter messages?                              |
