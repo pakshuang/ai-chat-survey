@@ -76,7 +76,7 @@ Further details about setup/installation can be found in [Setup](setup.md), such
 - The rationale for the choice of technologies for the other services can be found in the respective sections below.
 
 
-## Frontend Report
+## Frontend
 
 ### Introduction
 
@@ -214,7 +214,7 @@ Some users further suggested features or enhancements that we could include; we 
 
 Our frontend has been thoughtfully designed with React and Chakra UI to craft a visually appealing, interactive interface that encourages user engagement. Authentication and authorization measures also secure admin routes and data, while future enhancements may explore more robust storage options. Overall, we have created a modern, engaging web application that can help boost survey completion rates and enhance product development with targeted qualitative feedback.
 
-## Backend Report
+## Backend
 
 ### Introduction
 
