@@ -120,7 +120,7 @@ Such improvements are certain to keep coming, and it would be a good idea to kee
 
 (Open LLM leaderboard)[https://huggingface.co/spaces/HuggingFaceH4/open_llm_leaderboard] - A site where LLMs are rated on a variety of benchmarks like TruthfulQA (A dataset that evaluates on mitigating falsehoods).
 
-## Backend Conclusion
+## Conclusion
 
 In conclusion, our project has demonstrated the potential of integrating GPT-4 into customer research surveys, offering a glimpse into a future where technology enhances the survey experience. While our endeavor may be modest in scope, its implications are significant.
 
