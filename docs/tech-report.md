@@ -55,6 +55,7 @@ Further details about setup/installation can be found in [Setup](setup.md), such
 - Backend Development Environment
 - Testing (Backend)
 - Frontend Development Environment
+- Deployment
 
 ## Overall Architecture
 
@@ -63,6 +64,7 @@ Further details about setup/installation can be found in [Setup](setup.md), such
 ### Services
 
 - **Reverse Proxy (Nginx)**: Handles incoming requests and routes them to the backend or frontend. This unifies the frontend and backend under a single domain and allows for easy scaling of the frontend and backend services as well as avoids CORS issues.
+- **SSL Certificate Client (Certbot)**: Automatically fetches and renews SSL certificates from Let's Encrypt. This ensures that the application is served over HTTPS, providing a secure connection for users.
 - **Frontend (React)**: User interface for the application. It can be scaled horizontally to handle more users.
 - **Backend (Flask)**: Handles the business logic and interacts with the database. It can be scaled horizontally to handle more users.
 - **Database (MySQL)**: Stores the data for the application.
@@ -70,6 +72,7 @@ Further details about setup/installation can be found in [Setup](setup.md), such
 ### Technology Stack
 
 - **Reverse Proxy (Nginx)**: Nginx was chosen due to its simplicity and performance. It is used to route requests to the frontend or backend based on the URL path. Load balancing relies on the Docker network's internal DNS resolution. For more advanced load balancing, solutions like Traefik can be used due to its dynamic configuration capabilities and support for Docker.
+- **SSL Certificate Client (Certbot)**: Certbot was chosen for its ease of use and integration with Let's Encrypt.
 - The rationale for the choice of technologies for the other services can be found in the respective sections below.
 
 ## DevOps
