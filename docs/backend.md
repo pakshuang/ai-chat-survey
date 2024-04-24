@@ -137,10 +137,10 @@ An evaluation test has already been run and the results are in [evaluation_resul
 
 After conducting user interviews to gather feedback on our AI chatbot survey system, we identified several areas for improvement and subsequently implemented additional features to enhance the user experience. These features address specific user concerns and aim to make the survey interaction more seamless and engaging.
 
-### 1. 'is_last' Message for Survey Conclusion
+### 1. Survey Conclusion
 
-- Addressed the issue of abrupt survey endings by introducing an 'is_last' message in the API communication with GPT-4.
-- GPT-4 will assess the current state of the survey and decide if it should end the survey on its own, returning `True` in the API payload.
+- Addressed the issue of abrupt survey endings, as well as providing immersion, by introducing a final message in the API communication with GPT-4.
+- GPT-4 will assess the current state of the survey similar to a real-life interviewer and decide if it should end the survey on its own, returning `True` in the API payload.
 - Since a respondent does not need to indicate manually that they wish to end the survey, it ensures that surveys end on a more natural and satisfactory note for respondents.
 
 ### 2. Reduce repetitive questioning
