@@ -85,24 +85,18 @@ class Evaluation:
         inputs = {"source_sentence": text, "sentences": list(expected)}
         payload = {"inputs": inputs}
 
-        if self.hf_api_token is not None:
+        if not self.hf_api_token or not self.hf_api_token.strip():
             headers = {"Authorization": f"Bearer {self.hf_api_token}"}
+            response = requests.post(self.hf_api_url, headers=headers, json=payload)
         else:
-            headers = None
-
-        response = requests.post(self.hf_api_url, headers=headers, json=payload)
+            response = requests.post(self.hf_api_url, json=payload)
 
         while "estimated_time" in response.json():
             time.sleep(response.json()["estimated_time"])
             response = requests.post(self.hf_api_url, headers=headers, json=payload)
 
         max_score = max(response.json())
-
-        try:
-            assert isinstance(max_score, float)
-        except Exception as e:
-            self.logger.critical(f"ERROR: {e}")
-            return -1
+        
         return max_score
 
     def eval_gpt4_cognition_1_exit_interview(

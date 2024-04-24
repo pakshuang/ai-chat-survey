@@ -5,9 +5,22 @@ This document describes how to set up the project. It is intended to be read by 
 - [Python](https://www.python.org/)
 - [Node.js](https://nodejs.org/)
 
+## Prerequisites
+
+Docker: Install [Docker](https://www.docker.com/get-started) and [Docker Compose](https://docs.docker.com/compose/install/).
+
+## Quick Install and Run (Windows)
+
+1. Clone this repository.
+
+2. Navigate to root/scripts/ and run `installer_win.bat`.
+
+3. Supply your OpenAI API key and follow the instructions to install.
+
+
 ## Installing the Application
 
-1. Install [Docker](https://www.docker.com/get-started) and [Docker Compose](https://docs.docker.com/compose/install/).
+1. Clone this repository.
 
 2. Initialise `.env` file (use `copy` for Windows CMD):
 
@@ -15,7 +28,7 @@ This document describes how to set up the project. It is intended to be read by 
    cp sample.env .env
    ```
 
-3. Fill in the `.env` file with the necessary environment variables. Some of the variables are already filled in with default values.
+3. Fill in the `.env` file with the necessary environment variables, such as the OpenAI API key. Some of the variables are already filled in with default values.
 
 ## Running the Application
 
@@ -59,6 +72,10 @@ docker-compose down --rmi all --volumes
 ```
 
 ## Backend Development
+
+### Prerequisites
+
+Python (Version 3.8.11 or later)
 
 ### Setting up the backend development environment
 
@@ -168,6 +185,13 @@ The recommended way to run is to use docker compose instead, see [Running the Ap
       ```
 
 3. Once the tests are done, you can view the results in `backend/logs/integration_tests.log`.
+
+### Model Evaluation Tests
+
+To run the pre-defined model evaluation tests, simply run:
+```shell
+docker compose -f compose.eval.yaml up
+```
 
 ## Frontend Development
 
