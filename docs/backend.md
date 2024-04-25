@@ -138,9 +138,10 @@ An evaluation test has already been run and the results are in [evaluation_resul
 After conducting user interviews to gather feedback on our AI chatbot survey system, we identified several areas for improvement and subsequently implemented additional features to enhance the user experience. These features address specific user concerns and aim to make the survey interaction more seamless and engaging.
 
 ### 1. Survey Conclusion
+- Enchances immersion by preventing abrupt survey endings.
+- Like a human interviewer, the LLM decides when to end the survey and close the chat window, by its own discretion. Factors considered include whether the LLM is expecting a reply from a user, whether the LLM has finished asking the questions it has wanted to ask, and whether the LLM has properly thanked the user for their time.
 
-- Addressed the issue of abrupt survey endings, as well as providing immersion, by introducing a final message in the API communication with GPT-4.
-- GPT-4 will assess the current state of the survey similar to a real-life interviewer and decide if it should end the survey on its own, returning `True` in the API payload.
+- GPT-4 will assess the current state of the survey and decide if it should end the survey on its own, returning `True` in the API payload.
 - Since a respondent does not need to indicate manually that they wish to end the survey, it ensures that surveys end on a more natural and satisfactory note for respondents.
 
 For more details, please refer to [llm.md](llm.md).
