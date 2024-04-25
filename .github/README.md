@@ -16,7 +16,7 @@ ai-chat-survey/
 └── [Other Directories and Files]
 ```
 
-## Workflows Detail
+## Workflows
 
 ### Continuous Integration and Deployment
 

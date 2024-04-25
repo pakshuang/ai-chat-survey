@@ -2,9 +2,9 @@
 
 ## Overview
 
-This directory contains SQL scripts used for setting up and populating the database used by the AI Chat Survey application.
+This directory contains SQL scripts used for setting up and populating the database used by the application.
 
-## Repository Folder Structure (WIP)
+## Contents
 
 ```shell
 ai-chat-survey/

@@ -6,7 +6,11 @@ This is the technical documentation for the project. It is written in markdown a
 
 # Frontend
 
+The documentation found in `frontend.md` provides details of the frontend architecture and design behind our web application. We explain the technical details of our implementation, as well as present the evolution of our interface and experience design based on dogfooding and user interviews, from our initial wireframes all the way to the final high-fidelity application.
+
 # Backend
+
+The documentation found in `backend.md` provides details of the backend infrastructure underpinning our AI chatbot survey system. Here, we present an in-depth analysis of the LLM, in our case GPT-4, at the heart of our solution, along with a detailed examination of the backend architecture. It aims to provide a thorough understanding of our model selection rationale, its integration into the survey framework, and the overarching architecture supporting its functionality. Furthermore, we discuss our approach to model evaluation, post-deployment tracking, and strategies for continuous improvement.
 
 # API
 
@@ -207,11 +211,11 @@ These endpoints are used to create, read, update, and delete surveys, which are 
   - `500` - Internal Server Error
 
 ## Survey Responses
+
 > [!WARNING] **Survey Responses (Response objects) are not to be confused with API Responses!**
 > Survey responses/reponse objects are collections of data from survey and chat and are json objects. API Responses are outputs from a server!
 
 These endpoints are used to submit, read, update, and delete responses response objects, which are the combined data collected from the survey and chat completed by a single respondent.
-
 
 ### 1. Submit Survey Response
 
@@ -257,11 +261,11 @@ These endpoints are used to submit, read, update, and delete responses response 
 - **Endpoint:** `/api/v1/responses?survey={survey_id}`
 - **Method:** `GET`
 - **Description:** Get all response objects for a survey. An admin JWT that corresponds to the survey creator is required.
-
 - **Response:**
+
 > [!NOTE] **API Response!**
 
-  ```json
+```json
   {
     "responses": [
       "response object", # See /api/v1/responses/{response_id} for the structure of a response object
@@ -269,7 +273,7 @@ These endpoints are used to submit, read, update, and delete responses response 
       "response object"
     ]
   }
-  ```
+```
 
 - **Status Codes:**
 
@@ -342,8 +346,3 @@ These endpoints are used to submit, read, update, and delete responses response 
   - `400` - Bad Request
   - `404` - Not Found
   - `500` - Internal Server Error
-
-
-# Database
-
-# Classes
