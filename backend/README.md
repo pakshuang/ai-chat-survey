@@ -22,4 +22,4 @@ ai-chat-survey/
 
 ## Setup and Installation
 
-Refer to `backend.md` and `backend.md` in the `docs` directory for detailed information.
+Refer to `setup.md` and `backend.md` in the `docs` directory for detailed information.
