@@ -13,7 +13,7 @@ Docker: Install [Docker](https://www.docker.com/get-started) and [Docker Compose
 
 1. Clone this repository.
 
-2. Navigate to root/scripts/ and run `installer_win.bat`.
+2. Navigate to scripts/ and run `installer_win.bat`.
 
 3. Supply your OpenAI API key and follow the instructions to install.
 
