@@ -17,7 +17,6 @@ Docker: Install [Docker](https://www.docker.com/get-started) and [Docker Compose
 
 3. Supply your OpenAI API key and follow the instructions to install.
 
-
 ## Installing the Application
 
 1. Clone this repository.
@@ -193,11 +192,13 @@ The recommended way to run is to use docker compose instead, see [Running the Ap
 Model evaluation cases require the use of sentence-transformer models from HuggingFace. This is to gauge the output of the LLM (GPT-4) and ensure that it is desirable.
 
 First, obtain a HuggingFace API READ token. Set the token in the `.env` file with:
+
 ```
 HF_API_KEY=hf_...
 ```
 
 To run the pre-defined model evaluation tests, simply run:
+
 ```shell
 docker compose -f compose.eval.yaml up
 ```
