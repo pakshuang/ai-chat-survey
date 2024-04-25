@@ -186,7 +186,16 @@ The recommended way to run is to use docker compose instead, see [Running the Ap
 
 3. Once the tests are done, you can view the results in `backend/logs/integration_tests.log`.
 
-### Model Evaluation Tests
+### Model Evaluation
+
+### Prerequisites
+
+Model evaluation cases require the use of sentence-transformer models from HuggingFace. This is to gauge the output of the LLM (GPT-4) and ensure that this is desirable.
+
+First, obtain a HuggingFace API token. Set the token in the `.env` file with:
+```
+HF_API_KEY=
+```
 
 To run the pre-defined model evaluation tests, simply run:
 ```shell

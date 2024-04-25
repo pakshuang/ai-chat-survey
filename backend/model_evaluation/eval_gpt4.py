@@ -95,7 +95,11 @@ class Evaluation:
             time.sleep(response.json()["estimated_time"])
             response = requests.post(self.hf_api_url, headers=headers, json=payload)
 
-        max_score = max(response.json())
+        jsoned = response.json()
+        if 'error' in jsoned:
+            raise Exception(jsoned['error'])
+       
+        max_score = max(jsoned.json())
         
         return max_score
 
