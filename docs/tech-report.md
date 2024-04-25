@@ -118,9 +118,10 @@ The LLM scene is constantly evolving. On April 18, 2024, Meta released llama-3, 
 The 70-billion parameter version is also very impressive. As of 24 April 2024, it has a rank of 6 in the Overall category, above two snapshots of GPT-4 (GPT-4-0314: rank 9, GPT-4-0613: rank 12) and Claude 3 Sonnet (rank 7).
 
 Such improvements are certain to keep coming, and it would be a good idea to keep on the lookout for upcoming models. A good place to source for good models would be:
-(Chatbot Arena)[https://chat.lmsys.org/?leaderboard] - A site where human evaluators rate the effectiveness of LLMs in general or specific tasks like coding
 
-(Open LLM leaderboard)[https://huggingface.co/spaces/HuggingFaceH4/open_llm_leaderboard] - A site where LLMs are rated on a variety of benchmarks like TruthfulQA (A dataset that evaluates on mitigating falsehoods).
+[Chatbot Arena](https://chat.lmsys.org/?leaderboard) - A site where human evaluators rate the effectiveness of LLMs in general or specific tasks like coding
+
+[Open LLM leaderboard](https://huggingface.co/spaces/HuggingFaceH4/open_llm_leaderboard) - A site where LLMs are rated on a variety of benchmarks like TruthfulQA (A dataset that evaluates on mitigating falsehoods).
 
 ## Conclusion
 
