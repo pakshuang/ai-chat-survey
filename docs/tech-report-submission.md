@@ -117,9 +117,9 @@ Alternatively, follow the steps below to install and run the application on a lo
 
 2. Initialise `.env` file (use `copy` for Windows CMD):
 
-    ```shell
-    cp sample.env .env
-    ```
+```shell
+  cp sample.env .env
+```
 
 3. Fill in the `.env` file with the necessary environment variables. Some of the variables are already filled in with default values.
 
@@ -127,15 +127,15 @@ Alternatively, follow the steps below to install and run the application on a lo
 
 ### Running the Application
 
-```shell
-docker-compose up -d --build
-```
+    ```shell
+      docker-compose up -d --build
+    ```
 
 If you want to horizontally scale (application level) the frontend or backend services, you can use the following command (do not scale the database service or nginx service):
 
-```shell
-docker-compose up -d --scale frontend=2 --scale backend=2
-```
+    ```shell
+      docker-compose up -d --scale frontend=2 --scale backend=2
+    ```
 
 ### Stopping the Application
 
