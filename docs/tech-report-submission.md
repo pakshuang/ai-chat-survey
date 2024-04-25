@@ -105,7 +105,7 @@ Our vision is simple yet transformative: to create surveys that adapt in real-ti
 ## Setup
 Our project has been deployed, and is accessible via the following link: [https://www.ai-chat-survey.xyz/](https://www.ai-chat-survey.xyz/). Users can easily create an account, log in, create surveys, and participate in surveys to fully experience the product.
 
-We've also prepared a sample survey to allow users to explore the product from a respondent's perspective.
+We've also prepared a [sample survey](https://www.ai-chat-survey.xyz/chat/1) to allow users to explore the product from a respondent's perspective.
 
 Alternatively, follow the steps below to install and run the application on a local machine.
 
