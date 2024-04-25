@@ -87,10 +87,10 @@ class Evaluation:
 
         if not self.hf_api_token or not self.hf_api_token.strip():
             headers = {"Authorization": f"Bearer {self.hf_api_token}"}
-            response = requests.post(self.hf_api_url, headers=headers, json=payload)
         else:
-            response = requests.post(self.hf_api_url, json=payload)
+            headers = None
 
+        response = requests.post(self.hf_api_url, headers=headers, json=payload)
         while "estimated_time" in response.json():
             time.sleep(response.json()["estimated_time"])
             response = requests.post(self.hf_api_url, headers=headers, json=payload)
