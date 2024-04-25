@@ -1,4 +1,52 @@
-# Tech Report
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technical Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #000; /* Set default text color to black */
+        }
+        a {
+            color: blue; /* Set link color to blue */
+        }
+        .header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            color: #000;
+        }
+        code {
+            background-color: #f0f0f0; /* Set background color for inline code */
+            padding: 2px 4px; /* Add padding to inline code */
+            border-radius: 4px; /* Add border radius to inline code */
+            color: #333; /* Set text color for inline code */
+            font-weight: bold; /* Make inline code bold */
+            border: 1px solid #555; /* Add border around inline code */
+        }
+        .team {
+            background-color: #f0f0f0;
+            color: #000; /* Set font color to black */
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>Technical Report for Project 7: Interactive Survey Interface</h1>
+        <h3>Team: Full Stack Full Send</h3>
+    </div>
+</body>
+</html>
 
 ## Table of Contents
 
@@ -62,29 +110,29 @@ Our vision is simple yet transformative: to create surveys that adapt in real-ti
 
 2. Initialise `.env` file (use `copy` for Windows CMD):
 
-   ```shell
-   cp sample.env .env
-   ```
+```shell
+  cp sample.env .env
+```
 
 3. Fill in the `.env` file with the necessary environment variables. Some of the variables are already filled in with default values.
 
 ### Running the Application
 
-```shell
-docker-compose up -d --build
-```
+   ```shell
+     docker-compose up -d --build
+   ```
 
 If you want to horizontally scale (application level) the frontend or backend services, you can use the following command (do not scale the database service or nginx service):
 
-```shell
-docker-compose up -d --scale frontend=2 --scale backend=2
-```
+   ```shell
+     docker-compose up -d --scale frontend=2 --scale backend=2
+   ```
 
 ### Stopping the Application
 
-```shell
-docker-compose down
-```
+   ```shell
+     docker-compose down
+   ```
 
 Further details about setup/installation can be found in [setup.md](https://github.com/pakshuang/ai-chat-survey/blob/main/docs/setup.md), such as:
 
