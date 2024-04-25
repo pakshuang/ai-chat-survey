@@ -18,6 +18,7 @@
             background-color: #333;
             color: #fff;
             text-align: center;
+            font-size: 18px; 
         }
         .header h1 {
             margin: 0;
@@ -122,23 +123,25 @@ Alternatively, follow the steps below to install and run the application on a lo
 
 3. Fill in the `.env` file with the necessary environment variables. Some of the variables are already filled in with default values.
 
+<div style="page-break-after: always;"></div>
+
 ### Running the Application
 
-    ```shell
-    docker-compose up -d --build
-    ```
+   ```shell
+     docker-compose up -d --build
+   ```
 
 If you want to horizontally scale (application level) the frontend or backend services, you can use the following command (do not scale the database service or nginx service):
 
-    ```shell
-    docker-compose up -d --scale frontend=2 --scale backend=2
-    ```
+   ```shell
+     docker-compose up -d --scale frontend=2 --scale backend=2
+   ```
 
 ### Stopping the Application
 
-    ```shell
-    docker-compose down
-    ```
+   ```shell
+     docker-compose down
+   ```
 
 Further details about setup/installation can be found in [setup.md](https://github.com/pakshuang/ai-chat-survey/blob/main/docs/setup.md), such as:
 
@@ -150,6 +153,8 @@ Further details about setup/installation can be found in [setup.md](https://gith
 ## Overall Architecture
 
 ![Architecture](diagrams/images/overall-architecture.png)
+
+<div style="page-break-after: always;"></div>
 
 ### Services
 
@@ -359,6 +364,8 @@ Some users further suggested features or enhancements that we could include; we 
 
 Our frontend has been thoughtfully designed with React and Chakra UI to craft a visually appealing, interactive interface that encourages user engagement. Authentication and authorization measures also secure admin routes and data, while future enhancements may explore more robust storage options. Overall, we have created a modern, engaging web application that can help boost survey completion rates and enhance product development with targeted qualitative feedback.
 
+<div style="page-break-after: always;"></div>
+
 ## Backend
 
 ### Backend Introduction
@@ -376,6 +383,8 @@ The integration of LLMs into survey research represents a cutting-edge frontier 
 Another development in the use of LLMs in survey research is detailed in the study by Maiorino et al. (2023), which explores the application of generative language models for survey question generation at SurveyMonkey. Their work demonstrates the possibility of using LLMs in the survey design process by generating comprehensive survey questions from a simple "seed" prompt. This process of "concept expansion" is particularly notable for its efficiency and its ability to integrate seamlessly with industry-standard questions.
 
 Like Maiorino, our group also seeks to leverage LLMs’ “concept expansion” ability. However, rather than generating static questions for survey designers, we dynamically create questions that adapt to user inputs. Prompt engineering techniques like Chain of Thought prompting (Wei et al., 2022) are used to leverage on the model's reasoning capabilities, enhancing the interactivity of the survey experience.
+
+<div style="page-break-after: always;"></div>
 
 ### Backend Architecture
 
