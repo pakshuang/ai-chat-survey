@@ -18,7 +18,7 @@
             background-color: #333;
             color: #fff;
             text-align: center;
-            font-size: 18px; 
+            font-size: 18px;
         }
         .header h1 {
             margin: 0;
@@ -127,15 +127,15 @@ Alternatively, follow the steps below to install and run the application on a lo
 
 ### Running the Application
 
-   ```shell
-     docker-compose up -d --build
-   ```
+    ```shell
+      docker-compose up -d --build
+    ```
 
 If you want to horizontally scale (application level) the frontend or backend services, you can use the following command (do not scale the database service or nginx service):
 
-   ```shell
-     docker-compose up -d --scale frontend=2 --scale backend=2
-   ```
+    ```shell
+      docker-compose up -d --scale frontend=2 --scale backend=2
+    ```
 
 ### Stopping the Application
 
@@ -231,40 +231,40 @@ The following table shows the profiles of the users we interviewed.
 
 <style>
 /* Style for the first table */
-#table1 th:first-of-type {
+# table1 th:first-of-type {
     width: 10%;
 }
-#table1 th:nth-of-type(2) {
+# table1 th:nth-of-type(2) {
     width: 90%;
 }
-#table2 th:first-of-type {
+# table2 th:first-of-type {
     width: 10%;
 }
-#table2 th:nth-of-type(2) {
+# table2 th:nth-of-type(2) {
     width: 60%;
 }
-#table2 th:nth-of-type(3) {
+# table2 th:nth-of-type(3) {
     width: 15%;
 }
-#table2 th:nth-of-type(4) {
+# table2 th:nth-of-type(4) {
     width: 15%;
 }
-#table3 th:first-of-type {
+# table3 th:first-of-type {
     width: 10%;
 }
-#table3 th:nth-of-type(2) {
+# table3 th:nth-of-type(2) {
     width: 90%;
 }
-#table4 th:first-of-type {
+# table4 th:first-of-type {
     width: 10%;
 }
-#table4 th:nth-of-type(2) {
+# table4 th:nth-of-type(2) {
     width: 20%;
 }
-#table4 th:nth-of-type(3) {
+# table4 th:nth-of-type(3) {
     width: 10%;
 }
-#table4 th:nth-of-type(4) {
+# table4 th:nth-of-type(4) {
     width: 50%;
 }
 </style>
@@ -559,13 +559,13 @@ We have written a skeleton for this future extension. In particular, we have pro
 
 The landscape of LLMs is rapidly evolving. On April 18, 2024, Meta released a new open-source LLM named Llama-3, available in two configurations: a 70 billion parameter version and an 8 billion parameter version.
 
-#### Llama-3 (8b model) Highlights:
+#### Llama-3 (8b model) Highlights
 
 - As of April 24, 2024, the **8 billion parameter model** is **ranked 14th** in the Overall category on [Chatbot Arena](https://chat.lmsys.org/?leaderboard), a platform where human evaluators compare the effectiveness of different LLMs.
 - Notably, it performs comparably to much larger, closed-source models such as **Mistral-Medium** and **Gemini 1.0 Pro (Dev API)**, which are ranked 14th and 21st, respectively.
 - **GPT-3.5-Turbo-0613** is ranked 25th, highlighting the impressive capability of the 8b model relative to its size.
 
-#### Llama-3 (70b model) Highlights:
+#### Llama-3 (70b model) Highlights
 
 - The **70 billion parameter model** ranks **6th** in the Overall category as of the same date.
 - It outperforms several iterations of GPT-4 (**GPT-4-0314: 9th rank**, **GPT-4-0613: 12th rank**) and **Claude 3 Sonnet**, which is ranked 7th.
@@ -590,22 +590,22 @@ While our project may be a small step, it symbolizes a larger shift towards more
 
 ## Citations
 
-Devlin, J., Chang, M.-W., Lee, K., & Toutanova, K. (2019). _Bert: Pre-training of deep bidirectional transformers for language understanding_ (arXiv:1810.04805). arXiv. https://doi.org/10.48550/arXiv.1810.04805
+Devlin, J., Chang, M.-W., Lee, K., & Toutanova, K. (2019). _Bert: Pre-training of deep bidirectional transformers for language understanding_ (arXiv:1810.04805). arXiv. <https://doi.org/10.48550/arXiv.1810.04805>
 
-Floridi, L., & Chiriatti, M. (2020). Gpt-3: Its nature, scope, limits, and consequences. _Minds and Machines_ , _30_ (4), 681–694. https://doi.org/10.1007/s11023-020-09548-1
+Floridi, L., & Chiriatti, M. (2020). Gpt-3: Its nature, scope, limits, and consequences. _Minds and Machines_ , _30_ (4), 681–694. <https://doi.org/10.1007/s11023-020-09548-1>
 
-Groves, R. M. (2011). Three eras of survey research. _Public Opinion Quarterly_ , _75_ (5), 861–871. https://doi.org/10.1093/poq/nfr057
+Groves, R. M. (2011). Three eras of survey research. _Public Opinion Quarterly_ , _75_ (5), 861–871. <https://doi.org/10.1093/poq/nfr057>
 
-Kim, J., & Lee, B. (2024). _Ai-augmented surveys: Leveraging large language models and surveys for opinion prediction_ (arXiv:2305.09620). arXiv. https://doi.org/10.48550/arXiv.2305.09620
+Kim, J., & Lee, B. (2024). _Ai-augmented surveys: Leveraging large language models and surveys for opinion prediction_ (arXiv:2305.09620). arXiv. <https://doi.org/10.48550/arXiv.2305.09620>
 
-Launch YC: 🦊 Inari: AI-powered product discovery and feedback analytics. Y Combinator. (n.d.). https://www.ycombinator.com/launches/Kpg-inari-ai-powered-product-discovery-and-feedback-analytics
+Launch YC: 🦊 Inari: AI-powered product discovery and feedback analytics. Y Combinator. (n.d.). <https://www.ycombinator.com/launches/Kpg-inari-ai-powered-product-discovery-and-feedback-analytics>
 
-Maiorino, A., Padgett, Z., Wang, C., Yakubovskiy, M., & Jiang, P. (2023). Application and evaluation of large language models for the generation of survey questions. _Proceedings of the 32nd ACM International Conference on Information and Knowledge Management_ , 5244–5245. https://doi.org/10.1145/3583780.3615506
+Maiorino, A., Padgett, Z., Wang, C., Yakubovskiy, M., & Jiang, P. (2023). Application and evaluation of large language models for the generation of survey questions. _Proceedings of the 32nd ACM International Conference on Information and Knowledge Management_ , 5244–5245. <https://doi.org/10.1145/3583780.3615506>
 
-OpenAI, Achiam, J., Adler, S., Agarwal, S., Ahmad, L., Akkaya, I., Aleman, F. L., Almeida, D., Altenschmidt, J., Altman, S., Anadkat, S., Avila, R., Babuschkin, I., Balaji, S., Balcom, V., Baltescu, P., Bao, H., Bavarian, M., Belgum, J., … Zoph, B. (2024). _Gpt-4 technical report_ (arXiv:2303.08774). arXiv. https://doi.org/10.48550/arXiv.2303.08774
+OpenAI, Achiam, J., Adler, S., Agarwal, S., Ahmad, L., Akkaya, I., Aleman, F. L., Almeida, D., Altenschmidt, J., Altman, S., Anadkat, S., Avila, R., Babuschkin, I., Balaji, S., Balcom, V., Baltescu, P., Bao, H., Bavarian, M., Belgum, J., … Zoph, B. (2024). _Gpt-4 technical report_ (arXiv:2303.08774). arXiv. <https://doi.org/10.48550/arXiv.2303.08774>
 
-Sentence-transformers/all-minilm-L6-V2 · hugging face. sentence-transformers/all-MiniLM-L6-v2 · Hugging Face. (n.d.). https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2
+Sentence-transformers/all-minilm-L6-V2 · hugging face. sentence-transformers/all-MiniLM-L6-v2 · Hugging Face. (n.d.). <https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2>
 
-Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, L., & Polosukhin, I. (2017). _Attention is all you need_ (arXiv:1706.03762; Version 1). arXiv. https://doi.org/10.48550/arXiv.1706.03762
+Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, L., & Polosukhin, I. (2017). _Attention is all you need_ (arXiv:1706.03762; Version 1). arXiv. <https://doi.org/10.48550/arXiv.1706.03762>
 
-Wei, J., Wang, X., Schuurmans, D., Bosma, M., Ichter, B., Xia, F., Chi, E., Le, Q., & Zhou, D. (2022). _Chain-of-thought prompting elicits reasoning in large language models_ (arXiv:2201.11903; Version 1). arXiv. https://doi.org/10.48550/arXiv.2201.11903
+Wei, J., Wang, X., Schuurmans, D., Bosma, M., Ichter, B., Xia, F., Chi, E., Le, Q., & Zhou, D. (2022). _Chain-of-thought prompting elicits reasoning in large language models_ (arXiv:2201.11903; Version 1). arXiv. <https://doi.org/10.48550/arXiv.2201.11903>
