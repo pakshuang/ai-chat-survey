@@ -190,7 +190,7 @@ The recommended way to run is to use docker compose instead, see [Running the Ap
 
 ### Prerequisites
 
-Model evaluation cases require the use of sentence-transformer models from HuggingFace. This is to gauge the output of the LLM (GPT-4) and ensure that they are desirable.
+Model evaluation cases require the use of sentence-transformer models from HuggingFace. This is to gauge the output of the LLM (GPT-4) and ensure that it is desirable.
 
 First, obtain a HuggingFace API READ token. Set the token in the `.env` file with:
 ```
