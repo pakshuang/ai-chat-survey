@@ -94,8 +94,8 @@
 8. [Conclusion](#conclusion)
 9. [Citations](#citations)
 
-
 ## Project Introduction
+
 In today's rapidly evolving business landscape, understanding customer needs and preferences is the cornerstone of success. Traditional survey methods, while informative, often fall short in capturing the intricacies of consumer behavior and sentiment.
 
 In this report, we unveil a proof-of-concept project poised to revolutionize the way businesses conduct customer research. Leveraging the power of Large Language Models (LLMs), particularly GPT-4, we're introducing a dynamic and personalized survey experience that transcends the limitations of conventional approaches.
@@ -103,6 +103,7 @@ In this report, we unveil a proof-of-concept project poised to revolutionize the
 Our vision is simple yet transformative: to create surveys that adapt in real-time based on each respondent's unique input. By integrating GPT-4 into our survey platform, we're not only collecting data but engaging customers in meaningful conversations. This innovative approach enables us to pursue unique lines of inquiry, uncovering insights that traditional surveys often miss.
 
 ## Setup
+
 Our project has been deployed, and is accessible via the following link: [https://www.ai-chat-survey.xyz/](https://www.ai-chat-survey.xyz/). Users can easily create an account, log in, create surveys, and participate in surveys to fully experience the product.
 
 We've also prepared a [sample survey](https://www.ai-chat-survey.xyz/chat/1) to allow users to explore the product from a respondent's perspective.
@@ -123,21 +124,21 @@ Alternatively, follow the steps below to install and run the application on a lo
 
 ### Running the Application
 
-   ```shell
-     docker-compose up -d --build
-   ```
+```shell
+  docker-compose up -d --build
+```
 
 If you want to horizontally scale (application level) the frontend or backend services, you can use the following command (do not scale the database service or nginx service):
 
-   ```shell
-     docker-compose up -d --scale frontend=2 --scale backend=2
-   ```
+```shell
+  docker-compose up -d --scale frontend=2 --scale backend=2
+```
 
 ### Stopping the Application
 
-   ```shell
-     docker-compose down
-   ```
+```shell
+  docker-compose down
+```
 
 Further details about setup/installation can be found in [setup.md](https://github.com/pakshuang/ai-chat-survey/blob/main/docs/setup.md), such as:
 
@@ -271,6 +272,7 @@ The following table shows the profiles of the users we interviewed.
 | 2    | [age]-year-old [occupation]    |
 | 3    | 22-year-old university student |
 | 4    | Our business stakeholder       |
+| 5    | 24-year-old university student |
 
 The following table shows their feedback, both positive and negative.
 
@@ -279,6 +281,7 @@ The following table shows their feedback, both positive and negative.
 | User | Feedback                                                                                             | Change made? | Change in |
 | ---- | ---------------------------------------------------------------------------------------------------- | ------------ | --------- |
 | 1    | Unclear of importance of chat context                                                                | Yes          | Frontend  |
+| 1    | Need to wait for each question                                                                       | No           | NA        |
 | 1    | Survey ending is abrupt                                                                              | Yes          | Backend   |
 | 1    | Quite fun                                                                                            | NA           | NA        |
 | 2    | Felt more compelled to continue the survey and give information because of the conversational nature | NA           | NA        |
@@ -287,8 +290,10 @@ The following table shows their feedback, both positive and negative.
 | 3    | Chat is quite responsive, feels natural                                                              | NA           | NA        |
 | 4    | Consider security: prevent discriminatory words in LLM output                                        | Yes          | Backend   |
 | 4    | Add ability to split the survey up into sections                                                     | No           | Both      |
+| 5    | Survey section doesn't look like anything new                                                        | No           | Both      |
+| 5    | Chat is awkward to read because of distance between bubbles                                          | No           | Both      |
 
-Some user feedback required changes to the backend, not the frontend. We thus discuss these changes later in the backend section of the report. Furthermore, we did not implement a few changes due to time constraints (indicated by “No” in the “Change made” column), but could be added in the future.
+Some user feedback required changes to the backend, not the frontend. We thus discuss these changes later in the backend section of the report. Furthermore, we did not implement a few changes due to time constraints (indicated by “No” in the “Change made” column), but could be added in the future. Finally, while we understand User 1's comment on having to wait for each question, the speed of generation by GPT-4 is out of our control, so we were unable to act on their feedback.
 
 ### Final design
 
@@ -308,7 +313,7 @@ Hovering over the avatar would reveal the current account's username.
 
 - Added a section to each survey page to allow admins to easily test out the client interface
 - Made survey description and chat context scroll vertically instead of horizontally for easier reading
-    - In the screenshot below, note how the description and chat context are larger text boxes, rather than single lines of input as originally designed in the wireframe
+  - In the screenshot below, note how the description and chat context are larger text boxes, rather than single lines of input as originally designed in the wireframe
 
 <img src="final-designs/survey-interface-and-scroll.png" width="50%"/>
 
@@ -316,18 +321,20 @@ Hovering over the avatar would reveal the current account's username.
 
 We implemented the following changes based on user feedback:
 
-- Added a "Thank You" message after the bot is done asking questions.
-  The ending of the survey seems abrupt sometimes due to the bot's unpredictable nature. To ensure a smooth user experience, we implemented a flag that indicates whether the bot's message will be its last.
+- Added a "thank you" message after the bot is done asking questions to make the ending of the survey less abrupt as feedbacked by User 1. This addition was accomplished by implementing a flag that indicates whether the bot's message will be its last.
 
   <img src="final-designs/thank-you-message.png" />
 
 - Integrated survey page into chat page.
-  Some users found the survey page's design and questions too similar to traditional surveys, reducing their desire to complete the survey. However, as business stakeholders still wanted the static questions to be asked, we could not remove the static questions entirely. Thus, we integrated them into the chat page to provide the experience of chatting with the LLM.
+  User 5 found the survey page's design too similar to traditional surveys, reducing their desire to complete the survey. However, as business stakeholders still wanted the static questions to be asked, we could not remove the static questions entirely. Thus, we integrated them into the chat page to provide the experience of chatting with the LLM.
 
-  <img src="final-designs/integrated-chat-page-survey.png" width="33%" /> <img src="final-designs/integrated-chat-page-confirmation.png" width="33%" /> <img src="final-designs/integrated-chat-page-chatbot.png" width="33%" />
+- Made chat page interface more similar to ChatGPT's.
+  User 5 also commented that our original chatpage was awkward to read because of the distance between the two chat bubbles on a laptop screen. We also felt that chat bubbles might be too reminiscent of poorly-performing AI chatbots used by other companies for customer support, turning users off before they recognize the capabilities of our own chatbot. Thus, we changed our chat UI to be more similar to ChatGPT's, a more well-regarded AI software, to establish a sense of trust.
 
 - Displayed messages from bottom to top
-  After the integration, we realised that the traditional way of showing messages from the top to bottom of the page might cause inconvenience for users at the beginning, who would have to go back and forth between reading the question at the top and filling out their answers in the chatbox at the bottom. Thus, we changed the direction of message display to position the latest question and chatbox close together. _(Refer to images above)_
+  After the integration, we realised that the traditional way of showing messages from the top to bottom of the page might cause inconvenience for users at the beginning, who would have to go back and forth between reading the question at the top and filling out their answers in the chatbox at the bottom. Thus, we changed the direction of message display to position the latest question and chatbox close together.
+
+<img src="final-designs/integrated-chat-page-survey.png" width="33%" /> <img src="final-designs/integrated-chat-page-confirmation.png" width="33%" /> <img src="final-designs/integrated-chat-page-chatbot.png" width="33%" />
 
 #### Follow-up user interviews
 
@@ -335,13 +342,16 @@ The following table shows feedback from our follow-up user interviews after refi
 
 <div id="table3">
 
-| User | Feedback                                                                             |
-| ---- | ------------------------------------------------------------------------------------ |
-| 3    | A good experience; sounded more natural than before                                  |
-| 4    | Chatbot's ability to ask good questions and clarify is great                         |
-| 4    | Is it possible to add functionality to finetune a specific survey?                   |
-| 4    | Can the chatbot be coerced to produce shorter messages?                              |
-| 4    | Having the bot be able to take on specific personas would help keep the user engaged |
+| User | Feedback                                                                                                         |
+| ---- | ---------------------------------------------------------------------------------------------------------------- |
+| 1    | Having the MCQ/MRQ options and free response answers inside the chat input box itself makes the process seamless |
+| 3    | A good experience; sounds more natural than before                                                              |
+| 4    | Chatbot's ability to ask good questions and clarify is great                                                     |
+| 4    | Is it possible to add functionality to finetune a specific survey?                                               |
+| 4    | Can the chatbot be coerced to produce shorter messages?                                                          |
+| 4    | Having the bot be able to take on specific personas would help keep the user engaged                             |
+| 5    | Feels very smooth answering the survey via the chatbox                                                           |
+| 5    | Chat UI still a bit awkwardly boxy, but much cleaner than before                                                 |
 
 Some users further suggested features or enhancements that we could include; we address these in our Future Directions and Recommendations section.
 
@@ -376,9 +386,9 @@ Like Maiorino, our group also seeks to leverage LLMs’ “concept expansion” 
 - The backend architecture of our AI Chatbot Survey system serves as the foundation for managing data, handling respondent interactions, and ensuring system integrity. It plays a pivotal role in supporting the seamless operation of the entire system, from processing respondent requests to persisting data securely.
 - The backend is composed of three key components: the `API`, the `Database`, and the `Model`.
 
-    - **API**: The API component acts as the intermediary between the frontend and the backend. It receives requests from the frontend, processes them, and interacts with the database to fetch or store data. It also conducts prompt engineering and communicates with the model for chatbot interactions. It is designed to be stateless and therefore scalable.
-    - **Database**: The database component stores and manages the system's data, including surveys, responses, chat logs, and admin information. It ensures data integrity, persistence, and efficient retrieval.
-    - **Model**: The model component, GPT-4, serves as the conversational agent for the chatbot. It generates responses to respondent messages, providing a conversational interface for survey interactions. The model is integrated into the system through the OpenAI API, enabling real-time chatbot interactions.
+  - **API**: The API component acts as the intermediary between the frontend and the backend. It receives requests from the frontend, processes them, and interacts with the database to fetch or store data. It also conducts prompt engineering and communicates with the model for chatbot interactions. It is designed to be stateless and therefore scalable.
+  - **Database**: The database component stores and manages the system's data, including surveys, responses, chat logs, and admin information. It ensures data integrity, persistence, and efficient retrieval.
+  - **Model**: The model component, GPT-4, serves as the conversational agent for the chatbot. It generates responses to respondent messages, providing a conversational interface for survey interactions. The model is integrated into the system through the OpenAI API, enabling real-time chatbot interactions.
 
 #### 2. Technology Stack
 
@@ -481,6 +491,7 @@ After conducting user interviews to gather feedback on our AI chatbot survey sys
 For more details, please refer to [llm.md](https://github.com/pakshuang/ai-chat-survey/blob/main/docs/llm.md).
 
 #### 2. Reduce repetitive questioning
+
 - Refined prompt engineering to specifically address the issue of GPT-4 asking repetitive questions during the user interviews. This change prevents GPT-4 from asking the same question more than once.
 - Enhances the interactive nature of the survey experience and ensures that respondents remain actively engaged throughout the interaction.
 
@@ -526,11 +537,13 @@ Expanding on the initial capabilities of our platform, we envision a variety of 
 These features aim to make the survey platform not only more interactive and engaging for respondents but also more insightful and effective for researchers and businesses. By continuously evolving the platform, we can better meet the diverse needs of our users and stay ahead in the competitive field of customer research.
 
 ### Analyzing ChatLogs
+
 - Since all chat logs and survey responses are stored in our database, it becomes a valuable resource for further downstream analysis.
 - Techniques such as sentiment analysis, topic modeling, and clustering can be employed to extract deeper insights into customer interactions and preferences.
 - By leveraging platforms like [Inari](https://www.ycombinator.com/launches/Kpg-inari-ai-powered-product-discovery-and-feedback-analytics) (Launch YC: 🦊 Inari: AI-powered product discovery and feedback analytics), which is designed for AI-powered feedback analytics, organizations can enhance their understanding of customer feedback, ultimately driving product development and enhancement.
 
 ### Local LLMs
+
 In the modern data-centric environment, companies prioritize safeguarding sensitive information while enhancing operational efficiency. To achieve these goals, leveraging LLMs becomes crucial. While LLMs are accessible via APIs, relying solely on external services can pose risks, especially if these APIs cease to provide LLM support, causing disruptions. Furthermore, maintaining data privacy is paramount for companies, making it essential to avoid sharing sensitive information with external API providers when interacting with a model. Deploying LLMs internally helps mitigate these risks and ensures data remains secure within the organization's infrastructure.
 
 We have written a skeleton for this future extension. In particular, we have provided a working [finetuning script](https://github.com/pakshuang/ai-chat-survey/blob/main/scripts/finetuning/GPTQLoRA-script.py) for GPTQ-quantised LLMs using a GPU, as well as a dockerised container that has access to a GPU and can load a localised LLM. We have also written a document for users to use the finetuning scripts and running the docker container. Please refer to [localisation.md](https://github.com/pakshuang/ai-chat-survey/blob/main/docs/localisation.md).
@@ -538,11 +551,13 @@ We have written a skeleton for this future extension. In particular, we have pro
 The landscape of LLMs is rapidly evolving. On April 18, 2024, Meta released a new open-source LLM named Llama-3, available in two configurations: a 70 billion parameter version and an 8 billion parameter version.
 
 #### Llama-3 (8b model) Highlights:
+
 - As of April 24, 2024, the **8 billion parameter model** is **ranked 14th** in the Overall category on [Chatbot Arena](https://chat.lmsys.org/?leaderboard), a platform where human evaluators compare the effectiveness of different LLMs.
 - Notably, it performs comparably to much larger, closed-source models such as **Mistral-Medium** and **Gemini 1.0 Pro (Dev API)**, which are ranked 14th and 21st, respectively.
 - **GPT-3.5-Turbo-0613** is ranked 25th, highlighting the impressive capability of the 8b model relative to its size.
 
 #### Llama-3 (70b model) Highlights:
+
 - The **70 billion parameter model** ranks **6th** in the Overall category as of the same date.
 - It outperforms several iterations of GPT-4 (**GPT-4-0314: 9th rank**, **GPT-4-0613: 12th rank**) and **Claude 3 Sonnet**, which is ranked 7th.
 
