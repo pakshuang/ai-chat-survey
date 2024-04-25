@@ -104,8 +104,8 @@ Expanding on the initial capabilities of our platform, we envision a variety of 
 These features aim to make the survey platform not only more interactive and engaging for respondents but also more insightful and effective for researchers and businesses. By continuously evolving the platform, we can better meet the diverse needs of our users and stay ahead in the competitive field of customer research.
 
 ### Analyzing ChatLogs
-- Since all chat logs and survey responses are stored in our database, it becomes a valuable resource for further downstream analysis. 
-- Techniques such as sentiment analysis, topic modeling, and clustering can be employed to extract deeper insights into customer interactions and preferences. 
+- Since all chat logs and survey responses are stored in our database, it becomes a valuable resource for further downstream analysis.
+- Techniques such as sentiment analysis, topic modeling, and clustering can be employed to extract deeper insights into customer interactions and preferences.
 - By leveraging platforms like [Inari](https://www.ycombinator.com/launches/Kpg-inari-ai-powered-product-discovery-and-feedback-analytics), which is designed for AI-powered feedback analytics, organizations can enhance their understanding of customer feedback, ultimately driving product development and enhancement.
 
 ### Local LLMs

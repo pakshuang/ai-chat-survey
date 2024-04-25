@@ -80,9 +80,9 @@ The following command assumes one has downloaded a model from huggingface and pr
 > A Nvidia GPU with >=8GB of VRAM is COMPULSORY, and a GPU with >=16GB of VRAM is STRONGLY RECOMMENDED.
 
 A new docker container has been set up to run for local models. This container is run from the image `backend-gpu`. This docker container has:
- - Access to the GPU
- - Pytorch and other dependencies listed in `Pipfile and Pipfile.lock`
- - A `models` folder, which contains localised LLMs in GPTQ format.
+- Access to the GPU
+- Pytorch and other dependencies listed in `Pipfile and Pipfile.lock`
+- A `models` folder, which contains localised LLMs in GPTQ format.
 
 The class `LocalMistralGPTQ` is defined in src/llm_classes/llm_level.py. This is a wrapper class for the GPTQ quantised LLM dolphin-2.2.1-mistral-7B-GPTQ. To download the model, simply do the following:
 
