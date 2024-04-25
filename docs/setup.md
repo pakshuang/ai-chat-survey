@@ -217,3 +217,30 @@ The recommended way to run is to use docker compose instead, see [Running the Ap
    ```
 
 The recommended way to run is to use docker compose instead, see [Running the Application](#running-the-application).
+
+## Deployment
+
+### Obtain SSL Certificate from Let's Encrypt
+
+1. Obtain a domain name from a domain registrar and point the domain to the server's IP address.
+2. Make sure you update `DOMAIN`, `VITE_BASE_URL`, `NGINX_ENV`, `NODE_ENV`, `FLASK_ENV`, and `FLASK_SECRET_KEY` in the `.env` file.
+3. Run the following command to attempts to obtain an SSL certificate in staging mode:
+
+   ```shell
+   ./scripts/init_ssl.sh www.example.com dev@email.com 1
+   ```
+
+   - Replace `www.example.com` with your domain name.
+   - Replace `dev@email.com` with your email address.
+
+4. If the certificate is successfully obtained, run the following command to obtain the certificate in production mode:
+
+   ```shell
+   ./scripts/init_ssl.sh www.example.com dev@email.com 0
+   ```
+
+### Running the Application with SSL Enabled
+
+```shell
+docker-compose -f docker-compose.yml -f docker-compose.ssl.yml up -d --build
+```

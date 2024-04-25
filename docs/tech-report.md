@@ -55,6 +55,7 @@ Further details about setup/installation can be found in [Setup](setup.md), such
 - Backend Development Environment
 - Testing (Backend)
 - Frontend Development Environment
+- Deployment
 
 ## Overall Architecture
 
@@ -63,6 +64,7 @@ Further details about setup/installation can be found in [Setup](setup.md), such
 ### Services
 
 - **Reverse Proxy (Nginx)**: Handles incoming requests and routes them to the backend or frontend. This unifies the frontend and backend under a single domain and allows for easy scaling of the frontend and backend services as well as avoids CORS issues.
+- **SSL Certificate Client (Certbot)**: Automatically fetches and renews SSL certificates from Let's Encrypt. This ensures that the application is served over HTTPS, providing a secure connection for users.
 - **Frontend (React)**: User interface for the application. It can be scaled horizontally to handle more users.
 - **Backend (Flask)**: Handles the business logic and interacts with the database. It can be scaled horizontally to handle more users.
 - **Database (MySQL)**: Stores the data for the application.
@@ -70,7 +72,9 @@ Further details about setup/installation can be found in [Setup](setup.md), such
 ### Technology Stack
 
 - **Reverse Proxy (Nginx)**: Nginx was chosen due to its simplicity and performance. It is used to route requests to the frontend or backend based on the URL path. Load balancing relies on the Docker network's internal DNS resolution. For more advanced load balancing, solutions like Traefik can be used due to its dynamic configuration capabilities and support for Docker.
+- **SSL Certificate Client (Certbot)**: Certbot was chosen for its ease of use and integration with Let's Encrypt.
 - The rationale for the choice of technologies for the other services can be found in the respective sections below.
+
 
 ## DevOps
 
@@ -105,13 +109,18 @@ These features aim to make the survey platform not only more interactive and eng
 - By leveraging platforms like [Inari](https://www.ycombinator.com/launches/Kpg-inari-ai-powered-product-discovery-and-feedback-analytics), which is designed for AI-powered feedback analytics, organizations can enhance their understanding of customer feedback, ultimately driving product development and enhancement.
 
 ### Local LLMs
-- In the modern data-centric environment, companies prioritize safeguarding sensitive information while enhancing operational efficiency. To achieve these goals, leveraging Local Language Models (LLMs) becomes crucial.
+In the modern data-centric environment, companies prioritize safeguarding sensitive information while enhancing operational efficiency. To achieve these goals, leveraging Local Language Models (LLMs) becomes crucial. While LLMs are accessible via APIs, relying solely on external services can pose risks, especially if these APIs cease to provide LLM support, causing disruptions. Furthermore, maintaining data privacy is paramount for companies, making it essential to avoid sharing sensitive information with external API providers when interacting with a model. Deploying LLMs internally helps mitigate these risks and ensures data remains secure within the organization's infrastructure.
 
-- While LLMs are accessible via APIs, relying solely on external services can pose risks, especially if these APIs cease to provide LLM support, causing disruptions.
+We have written a skeleton for this future extension. In particular, we have provided a working [finetuning script](https://github.com/pakshuang/ai-chat-survey/blob/main/scripts/finetuning/GPTQLoRA-script.py) for GPTQ-quantised LLMs using a GPU, as well as a dockerised container that has access to a GPU and can load a localised LLM. We have also written a document for users to use the finetuning scripts and running the docker container. Please refer to [localisation.md](https://github.com/pakshuang/ai-chat-survey/blob/main/docs/localisation.md).
 
-- Furthermore, maintaining data privacy is paramount for companies, making it essential to avoid sharing sensitive information with external API providers when interacting with a model. Deploying LLMs internally helps mitigate these risks and ensures data remains secure within the organization's infrastructure.
+The LLM scene is constantly evolving. On April 18, 2024, Meta released llama-3, a very capable open-source LLM. Llama-3 comes in two sizes, 70b and 8b. The 8b model is the most capable open-source model for its weight class, to date. To speak of its impressiveness, as of 24 April 2024, it is currently (ranked 14 in the Overall category on the Chatbot Arena)[https://chat.lmsys.org/?leaderboard], a leaderboard where human evaluators rate the effectiveness of LLMs against one another. The 8-billion parameter model performs much above its weight class and ranks alongside Mistral-Medium (rank 14), Gemini 1.0 Pro (Dev API) (rank 21), both of which are much larger closed-source models. GPT-3.5-Turbo-0613 is ranked 25.
 
-- We have written a document for users to use a local LLM  with our app. Refer to [localisation.md](localisation.md).
+The 70-billion parameter version is also very impressive. As of 24 April 2024, it has a rank of 6 in the Overall category, above two snapshots of GPT-4 (GPT-4-0314: rank 9, GPT-4-0613: rank 12) and Claude 3 Sonnet (rank 7).
+
+Such improvements are certain to keep coming, and it would be a good idea to keep on the lookout for upcoming models. A good place to source for good models would be:
+(Chatbot Arena)[https://chat.lmsys.org/?leaderboard] - A site where human evaluators rate the effectiveness of LLMs in general or specific tasks like coding
+
+(Open LLM leaderboard)[https://huggingface.co/spaces/HuggingFaceH4/open_llm_leaderboard] - A site where LLMs are rated on a variety of benchmarks like TruthfulQA (A dataset that evaluates on mitigating falsehoods).
 
 ## Conclusion
 
