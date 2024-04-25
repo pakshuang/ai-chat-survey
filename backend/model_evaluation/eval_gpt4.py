@@ -96,11 +96,11 @@ class Evaluation:
             response = requests.post(self.hf_api_url, headers=headers, json=payload)
 
         jsoned = response.json()
-        if 'error' in jsoned:
-            raise Exception(jsoned['error'])
-       
+        if "error" in jsoned:
+            raise Exception(jsoned["error"])
+
         max_score = max(jsoned.json())
-        
+
         return max_score
 
     def eval_gpt4_cognition_1_exit_interview(
