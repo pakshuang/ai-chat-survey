@@ -170,6 +170,48 @@ We aimed to maintain information collection efficiency while incorporating a con
 
 The following table shows the profiles of the users we interviewed.
 
+<style>
+/* Style for the first table */
+#table1 th:first-of-type {
+    width: 10%;
+}
+#table1 th:nth-of-type(2) {
+    width: 90%;
+}
+#table2 th:first-of-type {
+    width: 10%;
+}
+#table2 th:nth-of-type(2) {
+    width: 60%;
+}
+#table2 th:nth-of-type(3) {
+    width: 15%;
+}
+#table2 th:nth-of-type(4) {
+    width: 15%;
+}
+#table3 th:first-of-type {
+    width: 10%;
+}
+#table3 th:nth-of-type(2) {
+    width: 90%;
+}
+#table4 th:first-of-type {
+    width: 10%;
+}
+#table4 th:nth-of-type(2) {
+    width: 20%;
+}
+#table4 th:nth-of-type(3) {
+    width: 10%;
+}
+#table4 th:nth-of-type(4) {
+    width: 50%;
+}
+</style>
+
+<div id="table1">
+
 | User | Profile                        |
 | ---- | ------------------------------ |
 | 1    | [age]-year-old [occupation]    |
@@ -178,6 +220,8 @@ The following table shows the profiles of the users we interviewed.
 | 4    | Our business stakeholder       |
 
 The following table shows their feedback, both positive and negative.
+
+<div id="table2">
 
 | User | Feedback                                                                                             | Change made? | Change in |
 | ---- | ---------------------------------------------------------------------------------------------------- | ------------ | --------- |
@@ -219,7 +263,7 @@ Hovering over the avatar would reveal the current account's username.
 
 We implemented the following changes based on user feedback:
 
-- Added a thank you message after the bot is done asking questions.
+- Added a "Thank You" message after the bot is done asking questions.
   The ending of the survey seems abrupt sometimes due to the bot's unpredictable nature. To ensure a smooth user experience, we implemented a flag that indicates whether the bot's message will be its last.
 
   <img src="final-designs/thank-you-message.png" />
@@ -235,6 +279,8 @@ We implemented the following changes based on user feedback:
 #### Follow-up user interviews
 
 The following table shows feedback from our follow-up user interviews after refinements were made.
+
+<div id="table3">
 
 | User | Feedback                                                                             |
 | ---- | ------------------------------------------------------------------------------------ |
@@ -307,23 +353,7 @@ The backend components interact harmoniously to facilitate the flow of data and 
 
 The backend server is the core component responsible for processing incoming requests from the frontend via our API. Implemented using Flask in app.py, the server handles various functionalities such as creating surveys, submitting responses, sending chat messages to GPT-4, with the following endpoints:
 
-<style scoped>
-table {
-  font-size: 10px;
-}
-table th:first-of-type {
-    width: 10%;
-}
-table th:nth-of-type(2) {
-    width: 20%;
-}
-table th:nth-of-type(3) {
-    width: 10%;
-}
-table th:nth-of-type(4) {
-    width: 50%;
-}
-</style>
+<div id="table4">
 
 | Resource         | API Method        | HTTP Method | Description                                                                       |
 | ---------------- | ----------------- | ----------- | --------------------------------------------------------------------------------- |
