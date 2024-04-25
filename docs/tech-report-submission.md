@@ -97,8 +97,6 @@ Further details about setup/installation can be found in [setup.md](https://gith
 
 ![Architecture](diagrams/images/overall-architecture.png)
 
-<div style="page-break-after: always;"></div>
-
 ### Services
 
 - **Reverse Proxy (Nginx)**: Handles incoming requests and routes them to the backend or frontend. This unifies the frontend and backend under a single domain and allows for easy scaling of the frontend and backend services as well as avoids CORS issues.
