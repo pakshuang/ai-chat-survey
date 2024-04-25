@@ -1,4 +1,4 @@
-# GitHub Configuration for Interactive Survey Interface
+# GitHub Configuration
 
 ## Overview
 

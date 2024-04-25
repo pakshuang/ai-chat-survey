@@ -1,0 +1,17 @@
+# Database
+
+## Overview
+
+This directory contains SQL scripts used for setting up and populating the database used by the AI Chat Survey application.
+
+## Repository Folder Structure (WIP)
+
+```shell
+ai-chat-survey/
+│
+├── database/                  # Database specific files
+│   ├── init.sql               # SQL script for initializing the database schema
+│   └── insert_dummy_data.sql  # Script for inserting dummy data
+│
+└── [Other Directories and Files]
+```
