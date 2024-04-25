@@ -2,17 +2,58 @@
 
 ## Table of Contents
 
-1. [Intro](#intro)
+1. [Project Introduction](#project-introduction)
 2. [Setup](#setup)
+   - [Installing the Application](#installing-the-application)
+   - [Running the Application](#running-the-application)
+   - [Stopping the Application](#stopping-the-application)
 3. [Overall Architecture](#overall-architecture)
+   - [Services](#services)
+   - [Technology Stack](#technology-stack)
 4. [Frontend](#frontend)
+   - [Introduction](#introduction)
+   - [Architecture](#architecture)
+     - [UI Libraries](#ui-libraries)
+     - [Authentication](#authentication)
+     - [Authorization](#authorization)
+   - [Initial Design](#initial-design)
+     - [Admin Portal](#admin-portal)
+     - [Client Interface](#client-interface)
+     - [Initial User Interviews](#initial-user-interviews)
+   - [Final Design](#final-design)
+     - [Updated Admin Portal](#updated-admin-portal)
+     - [Updated Client Interface](#updated-client-interface)
+     - [Follow-up User Interviews](#follow-up-user-interviews)
+   - [Frontend Conclusion](#frontend-conclusion)
 5. [Backend](#backend)
+   - [Introduction](#introduction-1)
+   - [Literature Review](#literature-review)
+   - [Backend Architecture](#backend-architecture)
+     - [Introduction to the Backend Architecture](#1-introduction-to-the-backend-architecture)
+     - [Technology Stack](#2-technology-stack)
+     - [Interaction between Components and Layers](#3-interaction-between-components-and-layers)
+   - [Backend Components](#backend-components)
+     - [API](#api)
+     - [Database](#database)
+     - [Model](#model)
+       - [Class Diagram](#class-diagram)
+       - [AI Engineering](#ai-engineering)
+       - [Evaluation Test](#evaluation-test)
+     - [Additional Enhancements](#additional-enhancements)
+       - [Survey Conclusion](#1-survey-conclusion)
+       - [Reduce Repetitive Questioning](#2-reduce-repetitive-questioning)
+       - [Content Moderation](#3-content-moderation)
+     - [Backend conclusion](#backend-conclusion)
 6. [DevOps](#devops)
 7. [Future Directions and Recommendations](#future-directions-and-recommendations)
+   - [Additional Features](#additional-features)
+   - [Analyzing ChatLogs](#analyzing-chatlogs)
+   - [Local LLMs](#local-llms)
 8. [Conclusion](#conclusion)
 9. [Citations](#citations)
 
-## Intro
+
+## Project Introduction
 In today's rapidly evolving business landscape, understanding customer needs and preferences is the cornerstone of success. Traditional survey methods, while informative, often fall short in capturing the intricacies of consumer behavior and sentiment.
 
 In this report, we unveil a proof-of-concept project poised to revolutionize the way businesses conduct customer research. Leveraging the power of Large Language Models (LLMs), particularly GPT-4, we're introducing a dynamic and personalized survey experience that transcends the limitations of conventional approaches.
@@ -58,11 +99,11 @@ Further details about setup/installation can be found in [setup.md](https://gith
 - Frontend Development Environment
 - Deployment
 
-<div style="page-break-after: always;"></div>
-
 ## Overall Architecture
 
 ![Architecture](diagrams/images/overall-architecture.png)
+
+<div style="page-break-after: always;"></div>
 
 ### Services
 
@@ -77,8 +118,6 @@ Further details about setup/installation can be found in [setup.md](https://gith
 - **Reverse Proxy (Nginx)**: Nginx was chosen due to its simplicity and performance. It is used to route requests to the frontend or backend based on the URL path. Load balancing relies on the Docker network's internal DNS resolution. For more advanced load balancing, solutions like Traefik can be used due to its dynamic configuration capabilities and support for Docker.
 - **SSL Certificate Client (Certbot)**: Certbot was chosen for its ease of use and integration with Let's Encrypt.
 - The rationale for the choice of technologies for the other services can be found in the respective sections below.
-
-<div style="page-break-after: always;"></div>
 
 ## Frontend
 
@@ -164,7 +203,7 @@ Some user feedback required changes to the backend, not the frontend. We thus di
 
 ### Final design
 
-#### Admin portal
+#### Updated Admin portal
 
 The design of the admin portal was largely unaffected by our user interviews, which focused more on the client interface. However, based on User 1's feedback on their uncertainty about the importance of chat context, we added a tooltip to give more information on the importance of the chat context in generating good survey questions.
 
@@ -184,7 +223,7 @@ Hovering over the avatar would reveal the current account's username.
 
 <img src="final-designs/survey-interface-and-scroll.png" width="50%"/>
 
-#### Client interface
+#### Updated Client interface
 
 We implemented the following changes based on user feedback:
 
@@ -201,7 +240,7 @@ We implemented the following changes based on user feedback:
 - Displayed messages from bottom to top
   After the integration, we realised that the traditional way of showing messages from the top to bottom of the page might cause inconvenience for users at the beginning, who would have to go back and forth between reading the question at the top and filling out their answers in the chatbox at the bottom. Thus, we changed the direction of message display to position the latest question and chatbox close together. _(Refer to images above)_
 
-### Follow-up user interviews
+#### Follow-up user interviews
 
 The following table shows feedback from our follow-up user interviews after refinements were made.
 
@@ -215,7 +254,7 @@ The following table shows feedback from our follow-up user interviews after refi
 
 Some users further suggested features or enhancements that we could include; we address these in our Future Directions and Recommendations section.
 
-### Conclusion
+### Frontend Conclusion
 
 Our frontend has been thoughtfully designed with React and Chakra UI to craft a visually appealing, interactive interface that encourages user engagement. Authentication and authorization measures also secure admin routes and data, while future enhancements may explore more robust storage options. Overall, we have created a modern, engaging web application that can help boost survey completion rates and enhance product development with targeted qualitative feedback.
 
@@ -374,7 +413,7 @@ By incorporating these additional features based on user feedback, we aim to fur
 
 #### 3. Content Moderation
 
-### Conclusion
+### Backend Conclusion
 
 In conclusion, this backend report has provided a detailed examination of the infrastructure supporting our AI chatbot survey system. We have explored the core components and discussed the rationale behind using GPT-4 and its integration into the survey framework. Additionally, we have examined the backend architecture, shedding light on the design decisions and the system's functionality.
 
@@ -421,9 +460,9 @@ The 70-billion parameter version is also very impressive. As of 24 April 2024, i
 
 Such improvements are certain to keep coming, and it would be a good idea to keep on the lookout for upcoming models. A good place to source for good models would be:
 
-[Chatbot Arena](https://chat.lmsys.org/?leaderboard) - A site where human evaluators rate the effectiveness of LLMs in general or specific tasks like coding
+- [Chatbot Arena](https://chat.lmsys.org/?leaderboard) - A site where human evaluators rate the effectiveness of LLMs in general or specific tasks like coding
 
-[Open LLM leaderboard](https://huggingface.co/spaces/HuggingFaceH4/open_llm_leaderboard) - A site where LLMs are rated on a variety of benchmarks like TruthfulQA (A dataset that evaluates on mitigating falsehoods).
+- [Open LLM leaderboard](https://huggingface.co/spaces/HuggingFaceH4/open_llm_leaderboard) - A site where LLMs are rated on a variety of benchmarks like TruthfulQA (A dataset that evaluates on mitigating falsehoods).
 
 ## Conclusion
 
