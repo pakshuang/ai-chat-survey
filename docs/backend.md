@@ -94,7 +94,7 @@ For the detailed API documentation, refer to [api.md](api.md).
 
 The MySQL database, named `ai_chat_survey_db`, serves as the centralized repository for storing survey data, user information, chat logs, and other relevant data. It consists of tables including `Admins`, `Surveys`, `Questions`, `Survey_Responses`, and `ChatLog`, designed to efficiently store and manage different types of data.
 
-##### Entity Relationship (ER) Diagram
+#### Entity Relationship (ER) Diagram
 
 <img src="diagrams/images/db_schema.png" alt="Entity Relationship (ER) Diagram" width="400"/>
 
@@ -146,6 +146,7 @@ After conducting user interviews to gather feedback on our AI chatbot survey sys
 For more details, please refer to [llm.md](llm.md).
 
 ### 2. Reduce repetitive questioning
+
 - Refined prompt engineering to specifically address the issue of GPT-4 asking repetitive questions during the user interviews. This change prevents GPT-4 from asking the same question more than once.
 - Enhances the interactive nature of the survey experience and ensures that respondents remain actively engaged throughout the interaction.
 
@@ -158,7 +159,6 @@ By incorporating these additional features based on user feedback, we aim to fur
 - The secondary layer involves an automated review system that utilizes an OpenAI text classifier for content moderation. This system evaluates all outputs for appropriateness, ensuring any unsuitable content is replaced with a standard, predefined message.
 
 This dual-layered approach enhances the reliability of our AI chatbot survey system, safeguarding against inappropriate content and maintaining a high standard of interaction quality.
-
 
 ## Conclusion
 
