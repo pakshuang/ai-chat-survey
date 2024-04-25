@@ -466,7 +466,7 @@ A sample survey response and conversation was created manually and GPT-4 was tas
 
 The model is also evaluated on content moderation, however, this is not done using sentence similarity checks, but a content moderation model by OpenAI is used to evaluate the responses instead. For more details, please refer to [evaluation.md](https://github.com/pakshuang/ai-chat-survey/blob/main/docs/evaluation.md) (Sentence-transformers/all-minilm-L6-V2 · hugging face).
 
-We found that GPT-4 passes all evaluation checks with an overall average performance of 93.24%. The model performs most poorly in deciding whether to end the interview, achieving scores of 85.72% and 88.02% for two evaluation tests in this domain. This is reflected in how the model occasionally ends interviews prematurely. This issue can be avoided in the future through the use of finetuning, where LLMs could be trained prior to deployment, and we foresee that a finetuned model would be able to replicate a human interviewer in controlling the flow of the interview.
+We found that GPT-4 passes all evaluation checks with an overall average performance of 93.24%. The model performs most poorly in deciding whether to end the interview, achieving scores of 85.72% and 88.02% for two evaluation tests in this domain. This is reflected in how the model occasionally ends interviews prematurely. This issue can be avoided in the future through the use of fine-tuning, where LLMs could be trained prior to deployment, and we foresee that a fine-tuned model would be able to replicate a human interviewer in controlling the flow of the interview.
 
 ### Additional Enhancements
 
