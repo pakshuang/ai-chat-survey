@@ -2,6 +2,7 @@
 setlocal
 rem You should already be here in ai-chat-survey
 rem updates files
+cd ..
 echo Getting updates...
 git pull origin main
 
