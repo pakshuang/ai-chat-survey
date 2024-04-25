@@ -416,7 +416,7 @@ The backend server is the core component responsible for processing incoming req
 | Survey Responses | Get Response      | GET         | Retrieves a response object by ID, requiring admin authentication.                |
 | Survey Responses | Send Chat Message | POST        | Sends a message to the chatbot and receives a response.                           |
 
-We decided not to implement full CRUD operations for the 3 resources (Admins, Surveys, and Survey Responses) due to the time constraints in implementing this project. For example, an `update` operations for Surveys was not developed so that the codebase would be smaller and easier to develop, test and maintain.
+We decided not to implement full CRUD operations for the 3 resources (Admins, Surveys, and Survey Responses) due to the time constraints in implementing this project. For example, `update` operations for Surveys were not developed so that the codebase would be smaller and easier to develop, test and maintain.
 
 For the detailed API documentation, refer to [api.md](https://github.com/pakshuang/ai-chat-survey/blob/main/docs/api.md).
 
@@ -459,7 +459,7 @@ To conduct a survey that provides a seamless user experience while generating ne
 
 A sample survey response and conversation was created manually and GPT-4 was tasked with generating outputs based on the response and snippets of the conversation. The model is evaluated on its ability to remember survey responses and its ability to control the flow of the interview by evaluating its outputs. Its outputs would be compared to a set of outputs that we deemed preferable, and the semantic similarity between GPT-4's output and the expected outputs would serve as the score for the model. This similarity score is generated using [all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2).
 
-The model is also evaluated on content moderation, however, this is not done using sentence similarity checks, but a content moderation model by OpenAI is used to evaluate the responses instead. For more details, please refer to [evaluation.md](https://github.com/pakshuang/ai-chat-survey/blob/main/docs/evaluation.md).
+The model is also evaluated on content moderation, however, this is not done using sentence similarity checks, but a content moderation model by OpenAI is used to evaluate the responses instead. For more details, please refer to [evaluation.md](https://github.com/pakshuang/ai-chat-survey/blob/main/docs/evaluation.md) (Sentence-transformers/all-minilm-L6-V2 · hugging face).
 
 An evaluation test has already been run and the results are in [evaluation_result.log](../backend/logs/evaluation_result.log).  GPT-4 passes all evaluation checks with an overall average performance of 93.24%. The model performs most poorly in deciding whether to end the interview, achieving scores of 85.72% and 88.02% for two evaluation tests in this domain. This is reflected in how the model occasionally ends interviews prematurely. This issue can be avoided in the future through the use of finetuning, where LLMs could be trained prior to deployment, and we foresee that a finetuned model would be able to replicate a human interviewer in controlling the flow of the interview.
 
@@ -517,7 +517,7 @@ These features aim to make the survey platform not only more interactive and eng
 ### Analyzing ChatLogs
 - Since all chat logs and survey responses are stored in our database, it becomes a valuable resource for further downstream analysis.
 - Techniques such as sentiment analysis, topic modeling, and clustering can be employed to extract deeper insights into customer interactions and preferences.
-- By leveraging platforms like [Inari](https://www.ycombinator.com/launches/Kpg-inari-ai-powered-product-discovery-and-feedback-analytics), which is designed for AI-powered feedback analytics, organizations can enhance their understanding of customer feedback, ultimately driving product development and enhancement.
+- By leveraging platforms like [Inari](https://www.ycombinator.com/launches/Kpg-inari-ai-powered-product-discovery-and-feedback-analytics) (Launch YC: 🦊 Inari: AI-powered product discovery and feedback analytics), which is designed for AI-powered feedback analytics, organizations can enhance their understanding of customer feedback, ultimately driving product development and enhancement.
 
 ### Local LLMs
 In the modern data-centric environment, companies prioritize safeguarding sensitive information while enhancing operational efficiency. To achieve these goals, leveraging Local Language Models (LLMs) becomes crucial. While LLMs are accessible via APIs, relying solely on external services can pose risks, especially if these APIs cease to provide LLM support, causing disruptions. Furthermore, maintaining data privacy is paramount for companies, making it essential to avoid sharing sensitive information with external API providers when interacting with a model. Deploying LLMs internally helps mitigate these risks and ensures data remains secure within the organization's infrastructure.
@@ -546,6 +546,8 @@ While our project may be a small step, it symbolizes a larger shift towards more
 
 ## Citations
 
+# Citations
+
 Devlin, J., Chang, M.-W., Lee, K., & Toutanova, K. (2019). _Bert: Pre-training of deep bidirectional transformers for language understanding_ (arXiv:1810.04805). arXiv. https://doi.org/10.48550/arXiv.1810.04805
 
 Floridi, L., & Chiriatti, M. (2020). Gpt-3: Its nature, scope, limits, and consequences. _Minds and Machines_ , _30_ (4), 681–694. https://doi.org/10.1007/s11023-020-09548-1
@@ -554,9 +556,13 @@ Groves, R. M. (2011). Three eras of survey research. _Public Opinion Quarterly_ 
 
 Kim, J., & Lee, B. (2024). _Ai-augmented surveys: Leveraging large language models and surveys for opinion prediction_ (arXiv:2305.09620). arXiv. https://doi.org/10.48550/arXiv.2305.09620
 
+Launch YC: 🦊 Inari: AI-powered product discovery and feedback analytics. Y Combinator. (n.d.). https://www.ycombinator.com/launches/Kpg-inari-ai-powered-product-discovery-and-feedback-analytics
+
 Maiorino, A., Padgett, Z., Wang, C., Yakubovskiy, M., & Jiang, P. (2023). Application and evaluation of large language models for the generation of survey questions. _Proceedings of the 32nd ACM International Conference on Information and Knowledge Management_ , 5244–5245. https://doi.org/10.1145/3583780.3615506
 
 OpenAI, Achiam, J., Adler, S., Agarwal, S., Ahmad, L., Akkaya, I., Aleman, F. L., Almeida, D., Altenschmidt, J., Altman, S., Anadkat, S., Avila, R., Babuschkin, I., Balaji, S., Balcom, V., Baltescu, P., Bao, H., Bavarian, M., Belgum, J., … Zoph, B. (2024). _Gpt-4 technical report_ (arXiv:2303.08774). arXiv. https://doi.org/10.48550/arXiv.2303.08774
+
+Sentence-transformers/all-minilm-L6-V2 · hugging face. sentence-transformers/all-MiniLM-L6-v2 · Hugging Face. (n.d.). https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2
 
 Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, L., & Polosukhin, I. (2017). _Attention is all you need_ (arXiv:1706.03762; Version 1). arXiv. https://doi.org/10.48550/arXiv.1706.03762
 

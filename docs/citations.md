@@ -8,9 +8,13 @@ Groves, R. M. (2011). Three eras of survey research. _Public Opinion Quarterly_ 
 
 Kim, J., & Lee, B. (2024). _Ai-augmented surveys: Leveraging large language models and surveys for opinion prediction_ (arXiv:2305.09620). arXiv. https://doi.org/10.48550/arXiv.2305.09620
 
+Launch YC: 🦊 Inari: AI-powered product discovery and feedback analytics. Y Combinator. (n.d.). https://www.ycombinator.com/launches/Kpg-inari-ai-powered-product-discovery-and-feedback-analytics
+
 Maiorino, A., Padgett, Z., Wang, C., Yakubovskiy, M., & Jiang, P. (2023). Application and evaluation of large language models for the generation of survey questions. _Proceedings of the 32nd ACM International Conference on Information and Knowledge Management_ , 5244–5245. https://doi.org/10.1145/3583780.3615506
 
 OpenAI, Achiam, J., Adler, S., Agarwal, S., Ahmad, L., Akkaya, I., Aleman, F. L., Almeida, D., Altenschmidt, J., Altman, S., Anadkat, S., Avila, R., Babuschkin, I., Balaji, S., Balcom, V., Baltescu, P., Bao, H., Bavarian, M., Belgum, J., … Zoph, B. (2024). _Gpt-4 technical report_ (arXiv:2303.08774). arXiv. https://doi.org/10.48550/arXiv.2303.08774
+
+Sentence-transformers/all-minilm-L6-V2 · hugging face. sentence-transformers/all-MiniLM-L6-v2 · Hugging Face. (n.d.). https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2
 
 Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, L., & Polosukhin, I. (2017). _Attention is all you need_ (arXiv:1706.03762; Version 1). arXiv. https://doi.org/10.48550/arXiv.1706.03762
 
