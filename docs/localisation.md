@@ -80,9 +80,9 @@ The following command assumes one has downloaded a model from huggingface and pr
 > A Nvidia GPU with >=8GB of VRAM is COMPULSORY, and a GPU with >=16GB of VRAM is STRONGLY RECOMMENDED.
 
 A new docker container has been set up to run for local models. This container is run from the image `backend-gpu`. This docker container has:
- - Access to the GPU
- - Pytorch and other dependencies listed in `Pipfile and Pipfile.lock`
- - A `models` folder, which contains localised LLMs in GPTQ format.
+- Access to the GPU
+- Pytorch and other dependencies listed in `Pipfile and Pipfile.lock`
+- A `models` folder, which contains localised LLMs in GPTQ format.
 
 The class `LocalMistralGPTQ` is defined in src/llm_classes/llm_level.py. This is a wrapper class for the GPTQ quantised LLM dolphin-2.2.1-mistral-7B-GPTQ. To download the model, simply do the following:
 
@@ -113,11 +113,11 @@ Regarding our current implementation of backend-gpu, content moderation filters 
 
 ### Recommendations
 
-The LLM scene is constantly evolving. On April 18, 2024, Meta released llama-3, a very capable open-source LLM. Llama-3 comes in two sizes, 70b and 8b. The 8b model is the most capable open-source model to date. To speak of its impressiveness, it is currently (ranked 14 on the Chatbot Arena)[https://chat.lmsys.org/?leaderboard], a leaderboard where human evaluators rate the effectiveness of LLMs against one another, as of 24 April 2024. The 8-billion parameter model performs much above its weight class and ranks alongside Mistral-Medium (rank 14), Gemini 1.0 Pro (Dev API), both of which are much larger closed-source models. GPT-3.5-Turbo-0613 is ranked 25.
+The LLM scene is constantly evolving. On April 18, 2024, Meta released llama-3, a very capable open-source LLM. Llama-3 comes in two sizes, 70b and 8b. The 8b model is the most capable open-source model for its weight class, to date. To speak of its impressiveness, as of 24 April 2024, it is currently (ranked 14 in the Overall category on the Chatbot Arena)[https://chat.lmsys.org/?leaderboard], a leaderboard where human evaluators rate the effectiveness of LLMs against one another. The 8-billion parameter model performs much above its weight class and ranks alongside Mistral-Medium (rank 14), Gemini 1.0 Pro (Dev API) (rank 21), both of which are much larger closed-source models. GPT-3.5-Turbo-0613 is ranked 25.
 
-Such improvements are certain to keep coming, and it would be a good idea to keep on the lookout for upcoming models.
+The 70-billion parameter version is also very impressive. As of 24 April 2024, it has a rank of 6 in the Overall category, above two snapshots of GPT-4 (GPT-4-0314: rank 9, GPT-4-0613: rank 12) and Claude 3 Sonnet (rank 7).
 
-A good place to source for good models would be:
+Such improvements are certain to keep coming, and it would be a good idea to keep on the lookout for upcoming models. A good place to source for good models would be:
 (Chatbot Arena)[https://chat.lmsys.org/?leaderboard] - A site where human evaluators rate the effectiveness of LLMs in general or specific tasks like coding
 
 (Open LLM leaderboard)[https://huggingface.co/spaces/HuggingFaceH4/open_llm_leaderboard] - A site where LLMs are rated on a variety of benchmarks like TruthfulQA (A dataset that evaluates on mitigating falsehoods).
