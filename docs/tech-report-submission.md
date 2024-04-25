@@ -59,7 +59,7 @@
    - [Services](#services)
    - [Technology Stack](#technology-stack)
 4. [Frontend](#frontend)
-   - [Introduction](#introduction)
+   - [Introduction](#frontend-introduction)
    - [Architecture](#architecture)
      - [UI Libraries](#ui-libraries)
      - [Authentication](#authentication)
@@ -74,7 +74,7 @@
      - [Follow-up User Interviews](#follow-up-user-interviews)
    - [Frontend Conclusion](#frontend-conclusion)
 5. [Backend](#backend)
-   - [Introduction](#introduction-1)
+   - [Introduction](#backend-introduction)
    - [Literature Review](#literature-review)
    - [Backend Architecture](#backend-architecture)
      - [Introduction to the Backend Architecture](#1-introduction-to-the-backend-architecture)
@@ -161,7 +161,7 @@ Further details about setup/installation can be found in [setup.md](https://gith
 
 ## Frontend
 
-### Introduction
+### Frontend Introduction
 
 This section serves as an overview of the frontend architecture and design behind our web application. We explain the technical details of our implementation, as well as present the evolution of our interface and experience design based on dogfooding and user interviews, from our initial wireframes all the way to the final high-fidelity application.
 
@@ -346,7 +346,7 @@ Our frontend has been thoughtfully designed with React and Chakra UI to craft a 
 
 ## Backend
 
-### Introduction
+### Backend Introduction
 
 This section serves as a comprehensive exploration of the backend infrastructure underpinning our AI chatbot survey system. Here, we present an in-depth analysis of the Large Language Model (LLM), in our case GPT-4, at the heart of our solution, along with a detailed examination of the backend architecture. It aims to provide a thorough understanding of our model selection rationale, its integration into the survey framework, and the overarching architecture supporting its functionality. Furthermore, we discuss our approach to model evaluation, post-deployment tracking, and strategies for continuous improvement.
 
