@@ -18,6 +18,7 @@
             background-color: #333;
             color: #fff;
             text-align: center;
+            font-size: 18px; 
         }
         .header h1 {
             margin: 0;
@@ -124,21 +125,21 @@ Alternatively, follow the steps below to install and run the application on a lo
 
 ### Running the Application
 
-    ```shell
-    docker-compose up -d --build
-    ```
+   ```shell
+     docker-compose up -d --build
+   ```
 
 If you want to horizontally scale (application level) the frontend or backend services, you can use the following command (do not scale the database service or nginx service):
 
-    ```shell
-    docker-compose up -d --scale frontend=2 --scale backend=2
-    ```
+   ```shell
+     docker-compose up -d --scale frontend=2 --scale backend=2
+   ```
 
 ### Stopping the Application
 
-    ```shell
-    docker-compose down
-    ```
+   ```shell
+     docker-compose down
+   ```
 
 Further details about setup/installation can be found in [setup.md](https://github.com/pakshuang/ai-chat-survey/blob/main/docs/setup.md), such as:
 
