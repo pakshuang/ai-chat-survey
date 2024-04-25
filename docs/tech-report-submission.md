@@ -1,4 +1,52 @@
-# Tech Report
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technical Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #000; /* Set default text color to black */
+        }
+        a {
+            color: blue; /* Set link color to blue */
+        }
+        .header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            color: #000;
+        }
+        code {
+            background-color: #f0f0f0; /* Set background color for inline code */
+            padding: 2px 4px; /* Add padding to inline code */
+            border-radius: 4px; /* Add border radius to inline code */
+            color: #333; /* Set text color for inline code */
+            font-weight: bold; /* Make inline code bold */
+            border: 1px solid #555; /* Add border around inline code */
+        }
+        .team {
+            background-color: #f0f0f0;
+            color: #000; /* Set font color to black */
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>Technical Report for Project 7: Interactive Survey Interface</h1>
+        <h3>Team: Full Stack Full Send</h3>
+    </div>
+</body>
+</html>
 
 ## Table of Contents
 
@@ -11,7 +59,7 @@
    - [Services](#services)
    - [Technology Stack](#technology-stack)
 4. [Frontend](#frontend)
-   - [Introduction](#introduction)
+   - [Introduction](#frontend-introduction)
    - [Architecture](#architecture)
      - [UI Libraries](#ui-libraries)
      - [Authentication](#authentication)
@@ -26,7 +74,7 @@
      - [Follow-up User Interviews](#follow-up-user-interviews)
    - [Frontend Conclusion](#frontend-conclusion)
 5. [Backend](#backend)
-   - [Introduction](#introduction-1)
+   - [Introduction](#backend-introduction)
    - [Literature Review](#literature-review)
    - [Backend Architecture](#backend-architecture)
      - [Introduction to the Backend Architecture](#1-introduction-to-the-backend-architecture)
@@ -55,6 +103,11 @@ In this report, we unveil a proof-of-concept project poised to revolutionize the
 Our vision is simple yet transformative: to create surveys that adapt in real-time based on each respondent's unique input. By integrating GPT-4 into our survey platform, we're not only collecting data but engaging customers in meaningful conversations. This innovative approach enables us to pursue unique lines of inquiry, uncovering insights that traditional surveys often miss.
 
 ## Setup
+Our project has been deployed, and is accessible via the following link: [https://www.ai-chat-survey.xyz/](https://www.ai-chat-survey.xyz/). Users can easily create an account, log in, create surveys, and participate in surveys to fully experience the product.
+
+We've also prepared a [sample survey](https://www.ai-chat-survey.xyz/chat/1) to allow users to explore the product from a respondent's perspective.
+
+Alternatively, follow the steps below to install and run the application on a local machine.
 
 ### Installing the Application
 
@@ -62,29 +115,29 @@ Our vision is simple yet transformative: to create surveys that adapt in real-ti
 
 2. Initialise `.env` file (use `copy` for Windows CMD):
 
-   ```shell
-   cp sample.env .env
-   ```
+```shell
+  cp sample.env .env
+```
 
 3. Fill in the `.env` file with the necessary environment variables. Some of the variables are already filled in with default values.
 
 ### Running the Application
 
-```shell
-docker-compose up -d --build
-```
+   ```shell
+     docker-compose up -d --build
+   ```
 
 If you want to horizontally scale (application level) the frontend or backend services, you can use the following command (do not scale the database service or nginx service):
 
-```shell
-docker-compose up -d --scale frontend=2 --scale backend=2
-```
+   ```shell
+     docker-compose up -d --scale frontend=2 --scale backend=2
+   ```
 
 ### Stopping the Application
 
-```shell
-docker-compose down
-```
+   ```shell
+     docker-compose down
+   ```
 
 Further details about setup/installation can be found in [setup.md](https://github.com/pakshuang/ai-chat-survey/blob/main/docs/setup.md), such as:
 
@@ -113,7 +166,7 @@ Further details about setup/installation can be found in [setup.md](https://gith
 
 ## Frontend
 
-### Introduction
+### Frontend Introduction
 
 This section serves as an overview of the frontend architecture and design behind our web application. We explain the technical details of our implementation, as well as present the evolution of our interface and experience design based on dogfooding and user interviews, from our initial wireframes all the way to the final high-fidelity application.
 
@@ -298,9 +351,9 @@ Our frontend has been thoughtfully designed with React and Chakra UI to craft a 
 
 ## Backend
 
-### Introduction
+### Backend Introduction
 
-This section serves as a comprehensive exploration of the backend infrastructure underpinning our AI chatbot survey system. Here, we present an in-depth analysis of the Large Language Model (LLM), in our case GPT-4, at the heart of our solution, along with a detailed examination of the backend architecture. It aims to provide a thorough understanding of our model selection rationale, its integration into the survey framework, and the overarching architecture supporting its functionality. Furthermore, we discuss our approach to model evaluation, post-deployment tracking, and strategies for continuous improvement.
+This section serves as a comprehensive exploration of the backend infrastructure underpinning our AI chatbot survey system. Here, we present an in-depth analysis of the LLM, in our case GPT-4, at the heart of our solution, along with a detailed examination of the backend architecture. It aims to provide a thorough understanding of our model selection rationale, its integration into the survey framework, and the overarching architecture supporting its functionality. Furthermore, we discuss our approach to model evaluation, post-deployment tracking, and strategies for continuous improvement.
 
 ### Literature Review
 
@@ -368,7 +421,7 @@ The backend server is the core component responsible for processing incoming req
 | Survey Responses | Get Response      | GET         | Retrieves a response object by ID, requiring admin authentication.                |
 | Survey Responses | Send Chat Message | POST        | Sends a message to the chatbot and receives a response.                           |
 
-We decided not to implement full CRUD operations for the 3 resources (Admins, Surveys, and Survey Responses) due to the time constraints in implementing this project. For example, an `update` operations for Surveys was not developed so that the codebase would be smaller and easier to develop, test and maintain.
+We decided not to implement full CRUD operations for the 3 resources (Admins, Surveys, and Survey Responses) due to the time constraints in implementing this project. For example, `update` operations for Surveys were not developed so that the codebase would be smaller and easier to develop, test and maintain.
 
 For the detailed API documentation, refer to [api.md](https://github.com/pakshuang/ai-chat-survey/blob/main/docs/api.md).
 
@@ -396,7 +449,7 @@ For the full database schema, please refer to [init.sql](https://github.com/paks
 
 ##### AI Engineering
 
-The underlying model powering this app is the Large Language Model (LLM) GPT-4. A LLM was determined due to the business objective, which requires dynamic survey question generations. In order to address the demands of the user, who wishes for an entertaining and dynamic survey experience, as well as the client, who expects more robust data security measures and a more efficient method of gathering insights, we have constructed the following pipeline. A detailed explanation on how we derived this solution and the incremental adjustments leading to this pipeline is in [llm.md](https://github.com/pakshuang/ai-chat-survey/blob/main/docs/llm.md).
+The underlying model powering this app is the LLM GPT-4. A LLM was determined due to the business objective, which requires dynamic survey question generations. In order to address the demands of the user, who wishes for an entertaining and dynamic survey experience, as well as the client, who expects more robust data security measures and a more efficient method of gathering insights, we have constructed the following pipeline. A detailed explanation on how we derived this solution and the incremental adjustments leading to this pipeline is in [llm.md](https://github.com/pakshuang/ai-chat-survey/blob/main/docs/llm.md).
 
 <div style="float: left; margin: 0px 0px 0px 0px;">
 <img src="./diagrams/images/prompt-eng-3.png" alt="drawing" style=" height:450px;"/>
@@ -411,9 +464,9 @@ To conduct a survey that provides a seamless user experience while generating ne
 
 A sample survey response and conversation was created manually and GPT-4 was tasked with generating outputs based on the response and snippets of the conversation. The model is evaluated on its ability to remember survey responses and its ability to control the flow of the interview by evaluating its outputs. Its outputs would be compared to a set of outputs that we deemed preferable, and the semantic similarity between GPT-4's output and the expected outputs would serve as the score for the model. This similarity score is generated using [all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2).
 
-The model is also evaluated on content moderation, however, this is not done using sentence similarity checks, but a content moderation model by OpenAI is used to evaluate the responses instead. For more details, please refer to [evaluation.md](https://github.com/pakshuang/ai-chat-survey/blob/main/docs/evaluation.md).
+The model is also evaluated on content moderation, however, this is not done using sentence similarity checks, but a content moderation model by OpenAI is used to evaluate the responses instead. For more details, please refer to [evaluation.md](https://github.com/pakshuang/ai-chat-survey/blob/main/docs/evaluation.md) (Sentence-transformers/all-minilm-L6-V2 · hugging face).
 
-An evaluation test has already been run and the results are in [evaluation_result.log](../backend/logs/evaluation_result.log).  GPT-4 passes all evaluation checks with an overall average performance of 93.24%. The model performs most poorly in deciding whether to end the interview, achieving scores of 85.72% and 88.02% for two evaluation tests in this domain. This is reflected in how the model occasionally ends interviews prematurely. This issue can be avoided in the future through the use of finetuning, where LLMs could be trained prior to deployment, and we foresee that a finetuned model would be able to replicate a human interviewer in controlling the flow of the interview.
+We found that GPT-4 passes all evaluation checks with an overall average performance of 93.24%. The model performs most poorly in deciding whether to end the interview, achieving scores of 85.72% and 88.02% for two evaluation tests in this domain. This is reflected in how the model occasionally ends interviews prematurely. This issue can be avoided in the future through the use of fine-tuning, where LLMs could be trained prior to deployment, and we foresee that a fine-tuned model would be able to replicate a human interviewer in controlling the flow of the interview.
 
 ### Additional Enhancements
 
@@ -433,7 +486,13 @@ For more details, please refer to [llm.md](https://github.com/pakshuang/ai-chat-
 
 By incorporating these additional features based on user feedback, we aim to further optimize the functionality and usability of our AI chatbot survey system, ultimately enhancing the overall user satisfaction and effectiveness of the survey process.
 
-#### 3. Content Moderation
+#### 3. Content Moderation Enhancement
+
+- To address the risks associated with potentially inappropriate content generated by LLMs, we've implemented a robust two-tier content moderation strategy.
+- The initial layer employs refined prompt engineering techniques, guiding the LLM to produce outputs that align with our content standards.
+- The secondary layer involves an automated review system that utilizes an OpenAI text classifier for content moderation. This system evaluates all outputs for appropriateness, ensuring any unsuitable content is replaced with a standard, predefined message.
+
+This dual-layered approach enhances the reliability of our AI chatbot survey system, safeguarding against inappropriate content and maintaining a high standard of interaction quality.
 
 ### Backend Conclusion
 
@@ -469,16 +528,25 @@ These features aim to make the survey platform not only more interactive and eng
 ### Analyzing ChatLogs
 - Since all chat logs and survey responses are stored in our database, it becomes a valuable resource for further downstream analysis.
 - Techniques such as sentiment analysis, topic modeling, and clustering can be employed to extract deeper insights into customer interactions and preferences.
-- By leveraging platforms like [Inari](https://www.ycombinator.com/launches/Kpg-inari-ai-powered-product-discovery-and-feedback-analytics), which is designed for AI-powered feedback analytics, organizations can enhance their understanding of customer feedback, ultimately driving product development and enhancement.
+- By leveraging platforms like [Inari](https://www.ycombinator.com/launches/Kpg-inari-ai-powered-product-discovery-and-feedback-analytics) (Launch YC: 🦊 Inari: AI-powered product discovery and feedback analytics), which is designed for AI-powered feedback analytics, organizations can enhance their understanding of customer feedback, ultimately driving product development and enhancement.
 
 ### Local LLMs
-In the modern data-centric environment, companies prioritize safeguarding sensitive information while enhancing operational efficiency. To achieve these goals, leveraging Local Language Models (LLMs) becomes crucial. While LLMs are accessible via APIs, relying solely on external services can pose risks, especially if these APIs cease to provide LLM support, causing disruptions. Furthermore, maintaining data privacy is paramount for companies, making it essential to avoid sharing sensitive information with external API providers when interacting with a model. Deploying LLMs internally helps mitigate these risks and ensures data remains secure within the organization's infrastructure.
+In the modern data-centric environment, companies prioritize safeguarding sensitive information while enhancing operational efficiency. To achieve these goals, leveraging LLMs becomes crucial. While LLMs are accessible via APIs, relying solely on external services can pose risks, especially if these APIs cease to provide LLM support, causing disruptions. Furthermore, maintaining data privacy is paramount for companies, making it essential to avoid sharing sensitive information with external API providers when interacting with a model. Deploying LLMs internally helps mitigate these risks and ensures data remains secure within the organization's infrastructure.
 
 We have written a skeleton for this future extension. In particular, we have provided a working [finetuning script](https://github.com/pakshuang/ai-chat-survey/blob/main/scripts/finetuning/GPTQLoRA-script.py) for GPTQ-quantised LLMs using a GPU, as well as a dockerised container that has access to a GPU and can load a localised LLM. We have also written a document for users to use the finetuning scripts and running the docker container. Please refer to [localisation.md](https://github.com/pakshuang/ai-chat-survey/blob/main/docs/localisation.md).
 
-The LLM scene is constantly evolving. On April 18, 2024, Meta released llama-3, a very capable open-source LLM. Llama-3 comes in two sizes, 70b and 8b. The 8b model is the most capable open-source model for its weight class, to date. To speak of its impressiveness, as of 24 April 2024, it is currently [ranked 14 in the Overall category on the Chatbot Arena](https://chat.lmsys.org/?leaderboard), a leaderboard where human evaluators rate the effectiveness of LLMs against one another. The 8-billion parameter model performs much above its weight class and ranks alongside Mistral-Medium (rank 14), Gemini 1.0 Pro (Dev API) (rank 21), both of which are much larger closed-source models. GPT-3.5-Turbo-0613 is ranked 25.
+The landscape of LLMs is rapidly evolving. On April 18, 2024, Meta released a new open-source LLM named Llama-3, available in two configurations: a 70 billion parameter version and an 8 billion parameter version.
 
-The 70-billion parameter version is also very impressive. As of 24 April 2024, it has a rank of 6 in the Overall category, above two snapshots of GPT-4 (GPT-4-0314: rank 9, GPT-4-0613: rank 12) and Claude 3 Sonnet (rank 7).
+#### Llama-3 (8b model) Highlights:
+- As of April 24, 2024, the **8 billion parameter model** is **ranked 14th** in the Overall category on [Chatbot Arena](https://chat.lmsys.org/?leaderboard), a platform where human evaluators compare the effectiveness of different LLMs.
+- Notably, it performs comparably to much larger, closed-source models such as **Mistral-Medium** and **Gemini 1.0 Pro (Dev API)**, which are ranked 14th and 21st, respectively.
+- **GPT-3.5-Turbo-0613** is ranked 25th, highlighting the impressive capability of the 8b model relative to its size.
+
+#### Llama-3 (70b model) Highlights:
+- The **70 billion parameter model** ranks **6th** in the Overall category as of the same date.
+- It outperforms several iterations of GPT-4 (**GPT-4-0314: 9th rank**, **GPT-4-0613: 12th rank**) and **Claude 3 Sonnet**, which is ranked 7th.
+
+These developments underscore the rapid advancements in the field of LLMs. It's advisable to stay updated on upcoming models, which can be sourced from reliable platforms like Chatbot Arena.
 
 Such improvements are certain to keep coming, and it would be a good idea to keep on the lookout for upcoming models. A good place to source for good models would be:
 
@@ -506,9 +574,13 @@ Groves, R. M. (2011). Three eras of survey research. _Public Opinion Quarterly_ 
 
 Kim, J., & Lee, B. (2024). _Ai-augmented surveys: Leveraging large language models and surveys for opinion prediction_ (arXiv:2305.09620). arXiv. https://doi.org/10.48550/arXiv.2305.09620
 
+Launch YC: 🦊 Inari: AI-powered product discovery and feedback analytics. Y Combinator. (n.d.). https://www.ycombinator.com/launches/Kpg-inari-ai-powered-product-discovery-and-feedback-analytics
+
 Maiorino, A., Padgett, Z., Wang, C., Yakubovskiy, M., & Jiang, P. (2023). Application and evaluation of large language models for the generation of survey questions. _Proceedings of the 32nd ACM International Conference on Information and Knowledge Management_ , 5244–5245. https://doi.org/10.1145/3583780.3615506
 
 OpenAI, Achiam, J., Adler, S., Agarwal, S., Ahmad, L., Akkaya, I., Aleman, F. L., Almeida, D., Altenschmidt, J., Altman, S., Anadkat, S., Avila, R., Babuschkin, I., Balaji, S., Balcom, V., Baltescu, P., Bao, H., Bavarian, M., Belgum, J., … Zoph, B. (2024). _Gpt-4 technical report_ (arXiv:2303.08774). arXiv. https://doi.org/10.48550/arXiv.2303.08774
+
+Sentence-transformers/all-minilm-L6-V2 · hugging face. sentence-transformers/all-MiniLM-L6-v2 · Hugging Face. (n.d.). https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2
 
 Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, L., & Polosukhin, I. (2017). _Attention is all you need_ (arXiv:1706.03762; Version 1). arXiv. https://doi.org/10.48550/arXiv.1706.03762
 
