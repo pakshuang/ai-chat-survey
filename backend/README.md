@@ -23,3 +23,9 @@ backend/                   # Backend specific files
 ## Setup and Installation
 
 Refer to `setup.md` and `backend.md` in the `docs` directory for detailed information.
+
+Links:
+
+[setup.md](https://github.com/pakshuang/ai-chat-survey/blob/main/docs/setup.md)
+
+[backend.md](https://github.com/pakshuang/ai-chat-survey/blob/main/docs/backend.md)

@@ -8,13 +8,25 @@ This is the technical documentation for the project. It is written in markdown a
 
 The documentation found in `frontend.md` provides details of the frontend architecture and design behind our web application. We explain the technical details of our implementation, as well as present the evolution of our interface and experience design based on dogfooding and user interviews, from our initial wireframes all the way to the final high-fidelity application.
 
+Links:
+
+[frontend.md](https://github.com/pakshuang/ai-chat-survey/blob/main/docs/frontend.md)
+
 # Backend
 
 The documentation found in `backend.md` provides details of the backend infrastructure underpinning our AI chatbot survey system. Here, we present an in-depth analysis of the LLM, in our case GPT-4, at the heart of our solution, along with a detailed examination of the backend architecture. It aims to provide a thorough understanding of our model selection rationale, its integration into the survey framework, and the overarching architecture supporting its functionality. Furthermore, we discuss our approach to model evaluation, post-deployment tracking, and strategies for continuous improvement.
 
+Link:
+
+[backend.md](https://github.com/pakshuang/ai-chat-survey/blob/main/docs/backend.md)
+
 # API
 
 The documentation found in `api.md` provides details about the API endpoints for your application. The application is designed to manage surveys, collect responses, and facilitate interactive chat-based surveys using a Large Language Model (LLM). It is intended to be read by developers and other technical stakeholders. This API contract will allow the frontend team to develop the UI before the backend is complete.
+
+Link:
+
+[api.md](https://github.com/pakshuang/ai-chat-survey/blob/main/docs/api.md)
 
 ## Admins
 
