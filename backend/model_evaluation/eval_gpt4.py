@@ -85,7 +85,7 @@ class Evaluation:
         inputs = {"source_sentence": text, "sentences": list(expected)}
         payload = {"inputs": inputs}
 
-        if not self.hf_api_token or not self.hf_api_token.strip():
+        if self.hf_api_token.strip():
             headers = {"Authorization": f"Bearer {self.hf_api_token}"}
         else:
             headers = None
@@ -99,7 +99,7 @@ class Evaluation:
         if "error" in jsoned:
             raise Exception(jsoned["error"])
 
-        max_score = max(jsoned.json())
+        max_score = max(jsoned)
 
         return max_score
 
