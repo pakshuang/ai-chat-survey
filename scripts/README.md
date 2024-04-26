@@ -13,5 +13,4 @@ scripts/                   # Scripts for integration tests, setup, etc.
 ├── init_ssl.sh            # Script to initialize SSL configuration
 ├── installer_win.bat      # Windows installer script
 └── run_backend_integration_tests.sh # Script to run backend integration tests
-
 ```
