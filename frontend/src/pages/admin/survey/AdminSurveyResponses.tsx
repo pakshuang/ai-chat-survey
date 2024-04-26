@@ -8,17 +8,17 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
-import ViewAdminSurveyTitle from "./ViewAdminSurveyTitle";
+import ViewAdminSurveyTitle from "../../../components/admin/survey/ViewAdminSurveyTitle";
 import { useQuery } from "react-query";
 import {
   getResponseBySurveyId,
   getSurveyById,
   getSurveys,
-} from "../../hooks/useApi";
+} from "../../../hooks/useApi";
 import { useEffect, useState } from "react";
-import AdminSurveyResponse from "./AdminSurveyResponse";
+import AdminSurveyResponse from "../../../components/admin/survey/AdminSurveyResponse";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import Header from "../Header";
+import Header from "../../../components/admin/survey/Header";
 
 function AdminSurveyResponses() {
   const { id } = useParams();

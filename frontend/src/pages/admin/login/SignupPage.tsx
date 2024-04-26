@@ -1,9 +1,9 @@
 import { SubmitHandler } from "react-hook-form";
 import { useState } from "react";
-import { LoginSignupData, errorToast } from "./constants";
+import { LoginSignupData, errorToast } from "../../../components/admin/login/constants";
 import { useNavigate } from "react-router-dom";
-import { signup } from "../../hooks/useApi";
-import { LoginSignupForm } from "./LoginSignupForm";
+import { signup } from "../../../hooks/useApi";
+import { LoginSignupForm } from "../../../components/admin/login/LoginSignupForm";
 
 function SignupPage() {
   const [isTaken, setIsTaken] = useState(false);
