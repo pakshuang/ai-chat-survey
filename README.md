@@ -9,26 +9,25 @@ ai-chat-survey/
 │
 ├── .github/                   # Github workflows and codeowners configuration files
 │
-├── frontend/                  # Frontend specific files
+├── backend-gpu/               # Backend-gpu specific files
 │
 ├── backend/                   # Backend specific files
 │
-├── backend-gpu/               # Backend-gpu specific files
-│
 ├── database/                  # Database specific files
+│
+├── docs/                      # Documentation files
+│
+├── frontend/                  # Frontend specific files
 │
 ├── reverse-proxy/             # Reverse proxy specific files
 │
 ├── scripts/                   # Scripts for integration tests, setup, etc.
-│
-├── docs/                      # Documentation files
-│
-├── compose.yaml               # Docker Compose file for the application
-├── compose.tests.yaml         # Docker Compose file for the integration tests
+├── .gitignore                 # Specifies intentionally untracked files to ignore
+├── README.md                  # Main project README with general information
 ├── compose.eval.yaml          # Docker Compose file for the LLM evaluation
 ├── compose.gpu.yaml           # Docker Compose file for GPU version of the application for local LLMs
-│
-├── sample.env                 # Sample environment variables
-├── .gitignore                 # Specifies intentionally untracked files to ignore
-└── README.md                  # Main project README with general information
+├── compose.ssl.yaml           # Docker Compose file for reverse proxy and certbot
+├── compose.tests.yaml         # Docker Compose file for the integration tests
+├── compose.yaml               # Docker Compose file for the application
+└── sample.env                 # Sample environment variables
 ```
