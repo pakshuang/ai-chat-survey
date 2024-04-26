@@ -495,7 +495,7 @@ The backend components interact harmoniously to facilitate the flow of data and 
 
 #### API
 
-The backend server is the core component responsible for processing incoming requests from the frontend via our API. Implemented using Flask in app.py, the server handles various functionalities such as creating surveys, submitting responses, sending chat messages to GPT-4, with the following endpoints:
+The backend server is the core component responsible for processing incoming requests from the frontend via our API. Implemented using Flask in [app.py](https://github.com/pakshuang/ai-chat-survey/blob/main/backend/src/app.py), the server handles various functionalities such as creating surveys, submitting responses, sending chat messages to GPT-4, with the following endpoints:
 
 <div id="table4" style="text-align: center">
 
@@ -551,7 +551,9 @@ The underlying model powering this app is the LLM GPT-4. A LLM was determined du
 </div>
 <br>
 
-In the pipeline on the left, the model is first provided the survey responses. The model is then tasked with generating a list of interesting questions, which it is tasked with remembering. This has improved the quality of the conversation tremendously. Primarily, it serves to discourage the model from deviating from the interview topic. Thus, if a user decides to talk about topic A, the model will not continuously probe about topic A, and instead move on to another question in its generated list of questions, after it has decided that it has attained enough information regarding topic A. Notably, we notice that this strategy has not degraded the quality of the LLM's questions, and the conversation remains dynamic. There are also two layers of content moderation. The first layer is a specific instruction to refuse participating when provided with inappropriate inputs by the user, and the second is a content moderation filter which checks the output from the model. This addresses security concerns posed by the client.
+In the pipeline on the left, the model is first provided the survey responses. The model is then tasked with generating a list of interesting questions, which it is tasked with remembering. This has improved the quality of the conversation tremendously. Primarily, it serves to discourage the model from deviating from the interview topic. Thus, if a user decides to talk about topic A, the model will not continuously probe about topic A, and instead move on to another question in its generated list of questions, after it has decided that it has attained enough information regarding topic A. Notably, we notice that this strategy has not degraded the quality of the LLM's questions, and the conversation remains dynamic.
+
+There are also two layers of content moderation. The first layer is a specific instruction to refuse participating when provided with inappropriate inputs by the user, and the second is a content moderation filter which checks the output from the model. This addresses security concerns posed by the client.
 
 ##### Evaluation Test
 
@@ -565,7 +567,7 @@ We found that GPT-4 passes all evaluation checks with an overall average perform
 
 ### Additional Enhancements
 
-After conducting user interviews to gather feedback on our AI chatbot survey system, we identified several areas for improvement and subsequently implemented additional features to enhance the user experience. These features address specific user concerns and aim to make the survey interaction more seamless and engaging.
+After conducting [user interviews](#initial-user-interviews) to gather feedback on our AI chatbot survey system, we identified several areas for improvement and subsequently implemented additional features to enhance the user experience. These features address specific user concerns and aim to make the survey interaction more seamless and engaging.
 
 #### 1. Survey Conclusion
 
