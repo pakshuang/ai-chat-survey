@@ -24,12 +24,16 @@
             margin: 0;
             color: #000;
         }
+        .header h3 {
+            margin:0;
+        }
         h2 {
             text-decoration: underline; /* Underline headers */
+            margin:0;
         }
         code {
             background-color: #f0f0f0; /* Set background color for inline code */
-            padding: 2px 4px; /* Add padding to inline code */
+            padding: 1px 3px; /* Add padding to inline code */
             border-radius: 4px; /* Add border radius to inline code */
             color: #333; /* Set text color for inline code */
             font-weight: bold; /* Make inline code bold */
@@ -55,14 +59,15 @@
 ## Table of Contents
 
 1. [Project Introduction](#project-introduction)
-2. [Setup](#setup)
+2. [Repository Structure](#repository-structure)
+3. [Setup](#setup)
    - [Installing the Application](#installing-the-application)
    - [Running the Application](#running-the-application)
    - [Stopping the Application](#stopping-the-application)
-3. [Overall Architecture](#overall-architecture)
+4. [Overall Architecture](#overall-architecture)
    - [Services](#services)
    - [Technology Stack](#technology-stack)
-4. [Frontend](#frontend)
+5. [Frontend](#frontend)
    - [Introduction](#frontend-introduction)
    - [Architecture](#architecture)
      - [UI Libraries](#ui-libraries)
@@ -77,7 +82,7 @@
      - [Updated Client Interface](#updated-client-interface)
      - [Follow-up User Interviews](#follow-up-user-interviews)
    - [Frontend Conclusion](#frontend-conclusion)
-5. [Backend](#backend)
+6. [Backend](#backend)
    - [Introduction](#backend-introduction)
    - [Literature Review](#literature-review)
    - [Backend Architecture](#backend-architecture)
@@ -90,14 +95,14 @@
      - [Model](#model)
      - [Additional Enhancements](#additional-enhancements)
      - [Backend conclusion](#backend-conclusion)
-6. [DevOps](#devops)
-7. [Future Directions and Recommendations](#future-directions-and-recommendations)
+7. [DevOps](#devops)
+8. [Future Directions and Recommendations](#future-directions-and-recommendations)
    - [Additional Features](#additional-features)
    - [Analyzing ChatLogs](#analyzing-chatlogs)
    - [Chatbot Personas](#chatbot-personas)
    - [Local LLMs](#local-llms)
-8. [Conclusion](#conclusion)
-9. [Citations](#citations)
+9. [Conclusion](#conclusion)
+10. [Citations](#citations)
 
 ## Project Introduction
 
@@ -106,6 +111,36 @@ In today's rapidly evolving business landscape, understanding customer needs and
 In this report, we unveil a proof-of-concept project poised to revolutionize the way businesses conduct customer research. Leveraging the power of Large Language Models (LLMs), particularly GPT-4, we're introducing a dynamic and personalized survey experience that transcends the limitations of conventional approaches.
 
 Our vision is simple yet transformative: to create surveys that adapt in real-time based on each respondent's unique input. By integrating GPT-4 into our survey platform, we're not only collecting data but engaging customers in meaningful conversations. This innovative approach enables us to pursue unique lines of inquiry, uncovering insights that traditional surveys often miss.
+
+## Repository Structure
+```
+ai-chat-survey/
+│
+├── .github/                   # Github workflows and codeowners configuration files
+│
+├── frontend/                  # Frontend specific files
+│
+├── backend/                   # Backend specific files
+│
+├── backend-gpu/               # Backend-gpu specific files
+│
+├── database/                  # Database specific files
+│
+├── reverse-proxy/             # Reverse proxy specific files
+│
+├── scripts/                   # Scripts for integration tests, setup, etc.
+│
+├── docs/                      # Documentation files
+│
+├── compose.yaml               # Docker Compose file for the application
+├── compose.tests.yaml         # Docker Compose file for the integration tests
+├── compose.eval.yaml          # Docker Compose file for the LLM evaluation
+├── compose.gpu.yaml           # Docker Compose file for GPU version of the application for local LLMs
+│
+├── sample.env                 # Sample environment variables
+├── .gitignore                 # Specifies intentionally untracked files to ignore
+└── README.md                  # Main project README with general information
+```
 
 ## Setup
 
@@ -126,8 +161,6 @@ Alternatively, follow the steps below to install and run the application on a lo
 ```
 
 3. Fill in the `.env` file with the necessary environment variables. Some of the variables are already filled in with default values.
-
-<div style="page-break-after: always;"></div>
 
 ### Running the Application
 
@@ -154,11 +187,11 @@ Further details about setup/installation can be found in [setup.md](https://gith
 - Frontend Development Environment
 - Deployment
 
+<div style="page-break-after: always;"></div>
+
 ## Overall Architecture
 
 ![Architecture](diagrams/images/overall-architecture.png)
-
-<div style="page-break-after: always;"></div>
 
 ### Services
 
@@ -173,6 +206,8 @@ Further details about setup/installation can be found in [setup.md](https://gith
 - **Reverse Proxy (Nginx)**: Nginx was chosen due to its simplicity and performance. It is used to route requests to the frontend or backend based on the URL path. Load balancing relies on the Docker network's internal DNS resolution. For more advanced load balancing, solutions like Traefik can be used due to its dynamic configuration capabilities and support for Docker.
 - **SSL Certificate Client (Certbot)**: Certbot was chosen for its ease of use and integration with Let's Encrypt.
 - The rationale for the choice of technologies for the other services can be found in the respective sections below.
+
+<div style="page-break-after: always;"></div>
 
 ## Frontend
 
@@ -233,8 +268,6 @@ We aimed to maintain information collection efficiency while incorporating a con
 <div style="text-align: center;">
 <img src="wireframes/survey-page.png" width="80%" /> <img src="wireframes/chat-page.png" width="80%" />
 </div>
-
-<div style="page-break-after: always;"></div>
 
 ### Initial user interviews
 
@@ -313,8 +346,6 @@ The following table shows their feedback, both positive and negative.
 
 Some user feedback required changes to the backend, not the frontend. We thus discuss these changes later in the backend section of the report. Furthermore, we did not implement a few changes due to time constraints (indicated by “No” in the “Change made” column), but could be added in the future. Finally, while we understand User 1's comment on having to wait for each question, the speed of generation by GPT-4 is out of our control, so we were unable to act on their feedback.
 
-<div style="page-break-after: always;"></div>
-
 ### Final design
 
 #### Updated Admin portal
@@ -343,8 +374,6 @@ Hovering over the avatar would reveal the current account's username.
 <img src="final-designs/survey-interface-and-scroll.png" width="60%"/>
 </div>
 
-<div style="page-break-after: always;"></div>
-
 #### Updated Client interface
 
 We implemented the following changes based on user feedback:
@@ -365,8 +394,10 @@ We implemented the following changes based on user feedback:
   After the integration, we realised that the traditional way of showing messages from the top to bottom of the page might cause inconvenience for users at the beginning, who would have to go back and forth between reading the question at the top and filling out their answers in the chatbox at the bottom. Thus, we changed the direction of message display to position the latest question and chatbox close together.
 
 <div style="text-align: center;">
-<img src="final-designs/integrated-chat-page-survey.png" width="59%" /> <img src="final-designs/integrated-chat-page-confirmation.png" width="59%" /> <img src="final-designs/integrated-chat-page-chatbot.png" width="59%" />
+<img src="final-designs/integrated-chat-page-survey.png" width="80%" /> <img src="final-designs/integrated-chat-page-confirmation.png" width="80%" /> <img src="final-designs/integrated-chat-page-chatbot.png" width="80%" />
 </div>
+
+<div style="page-break-after: always;"></div>
 
 #### Follow-up user interviews
 
@@ -481,7 +512,7 @@ The MySQL database, named `ai_chat_survey_db`, serves as the centralized reposit
 ##### Entity Relationship (ER) Diagram
 
 <div style="text-align: center;">
-<img src="diagrams/images/db_schema.png" alt="Entity Relationship (ER) Diagram" width="60%"/>
+<img src="diagrams/images/db_schema.png" alt="Entity Relationship (ER) Diagram" width="55%"/>
 </div>
 
 - **Admins**: Stores information about administrators who have access to the system.
@@ -589,7 +620,7 @@ Introducing chatbot personas would allow organizations to tailor the conversatio
 - For example, a financial institution might choose a "Financial Advisor" persona, where the chatbot provides advice and information using industry-specific terminology and concepts.
 - Conversely, a retail company might opt for a "Fashion Consultant" persona, focusing on style recommendations and current trends.
 
-Implementing chatbot personas can enhance user engagement and satisfaction by delivering a more personalized and relevant experience. It also opens up opportunities for organizations to effectively communicate with diverse audiences, ultimately improving the platform's utility and impact.
+Implementing chatbot personas can enhance user engagement and satisfaction by delivering a more personalized and relevant experience. 
 
 ### Local LLMs
 
@@ -625,8 +656,6 @@ In conclusion, our project has demonstrated the potential of integrating GPT-4 i
 Through our proof of concept, we've showcased the feasibility of leveraging GPT-4 to personalize survey interactions and uncover unique insights from respondents. By adopting this approach, businesses can gain a deeper understanding of customer preferences and feedback, ultimately guiding strategic decision-making processes.
 
 While our project may be a small step, it symbolizes a larger shift towards more dynamic and engaging survey methodologies. As technology continues to evolve, opportunities abound for further exploration and refinement in this field.
-
-<div style="page-break-after: always;"></div>
 
 ## Citations
 
