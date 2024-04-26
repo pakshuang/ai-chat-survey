@@ -8,7 +8,7 @@ import {
   submitBaseSurvey,
 } from "../../hooks/useApi";
 import { useParams } from "react-router-dom";
-import { Messages, Question, surveyMessage } from "./constants";
+import { Messages, Question, surveyMessage } from "../../components/client/constants";
 import ChatMessage from "../../components/client/ChatMessage";
 import MultipleChoiceInput from "../../components/client/MultipleChoiceInput";
 import MultipleResponseInput from "../../components/client/MultipleResponseInput";

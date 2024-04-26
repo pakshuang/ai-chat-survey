@@ -9,7 +9,7 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
-import { Survey, validate } from "../../../pages/admin/survey/constants";
+import { Survey, validate } from "./constants";
 import { QuestionIcon } from "@chakra-ui/icons";
 
 function AdminSurveyTitle() {

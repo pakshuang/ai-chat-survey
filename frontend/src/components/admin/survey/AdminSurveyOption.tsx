@@ -5,7 +5,7 @@ import {
   UseFieldArrayRemove,
   useFormContext,
 } from "react-hook-form"
-import { Survey, validate } from "../../../pages/admin/survey/constants"
+import { Survey, validate } from "./constants"
 
 function AdminSurveyOption({
   index,

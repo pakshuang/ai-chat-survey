@@ -9,7 +9,7 @@ import {
 import AdminSurveyAccordion from "../../../components/admin/survey/AdminSurveyAccordion";
 import { AddIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { useForm, FormProvider, useFieldArray } from "react-hook-form";
-import { createNewQuestion, Survey } from "./constants";
+import { createNewQuestion, Survey } from "../../../components/admin/survey/constants";
 import AdminSurveyTitle from "../../../components/admin/survey/AdminSurveyTitle";
 import { useEffect, useState } from "react";
 import { logout, shouldLogout, submitSurvey } from "../../../hooks/useApi";

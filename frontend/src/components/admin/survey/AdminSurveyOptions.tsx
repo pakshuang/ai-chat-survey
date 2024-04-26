@@ -1,7 +1,7 @@
 import { VStack } from "@chakra-ui/react"
 import AdminSurveyOption from "./AdminSurveyOption"
 import { Control, useFieldArray } from "react-hook-form"
-import { Survey } from "../../../pages/admin/survey/constants"
+import { Survey } from "./constants"
 
 function AdminSurveyOptions({
   index,

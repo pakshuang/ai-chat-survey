@@ -41,7 +41,7 @@ import {
   shouldLogout,
   deleteSurvey,
 } from "../../../hooks/useApi";
-import { needOptions, QuestionType } from "./constants";
+import { needOptions, QuestionType } from "../../../components/admin/survey/constants";
 import { useEffect } from "react";
 import ViewAdminSurveyTitle from "../../../components/admin/survey/ViewAdminSurveyTitle";
 import Header from "../../../components/admin/survey/Header";

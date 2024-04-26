@@ -3,7 +3,7 @@ import { Fragment, useEffect, useState } from "react"
 import ChatMessage from "./ChatMessage"
 import TypingEffect from "./TypingEffect"
 import QuestionInput from "./QuestionInput"
-import { ChatWindowProps, surveyMessage } from "../../pages/client/constants"
+import { ChatWindowProps, surveyMessage } from "./constants"
 
 function ChatWindow({
   messages,
