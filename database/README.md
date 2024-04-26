@@ -11,5 +11,4 @@ database/                  # Database specific files
 │
 ├── init.sql               # SQL script for initializing the database schema
 └── insert_dummy_data.sql  # Script for inserting dummy data
-
 ```
