@@ -136,14 +136,18 @@ ai-chat-survey/
 ├── reverse-proxy/             # Reverse proxy specific files
 │
 ├── scripts/                   # Scripts for integration tests, setup, etc.
-├── .gitignore                 # Specifies intentionally untracked files to ignore
-├── README.md                  # Main project README with general information
-├── compose.eval.yaml          # Docker Compose file for the LLM evaluation
-├── compose.gpu.yaml           # Docker Compose file for GPU version of the application for local LLMs
-├── compose.ssl.yaml           # Docker Compose file for reverse proxy and certbot
-├── compose.tests.yaml         # Docker Compose file for the integration tests
+│
 ├── compose.yaml               # Docker Compose file for the application
-└── sample.env                 # Sample environment variables
+├── compose.ssl.yaml           # Docker Compose file for the application in production
+├── compose.eval.yaml          # Docker Compose file for the LLM evaluation
+├── compose.gpu.yaml           # Docker Compose file for the GPU version of the application for local LLMs
+├── compose.tests.yaml         # Docker Compose file for the integration tests
+│
+│── sample.env                 # Sample environment variables
+│
+├── .gitignore                 # Specifies intentionally untracked files to ignore
+│
+└── README.md                  #  Markdown page for project introduction
 ```
 
 ## Setup
