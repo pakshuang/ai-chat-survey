@@ -327,7 +327,7 @@ The following table shows the profiles of the users we interviewed.
 
 | User | Profile                           |
 | ---- |-----------------------------------|
-| 1    | 50+ year-old female banker        |
+| 1    | 50+ year-old banker               |
 | 2    | 50+ year-old marketing specialist |
 | 3    | 22-year-old university student    |
 | 4    | Our business stakeholder          |
@@ -341,7 +341,7 @@ The following table shows their feedback, both positive and negative.
 <div id="table2" style="text-align: center">
 
 | User | Feedback                                                                                             | Change made? | Change in |
-| ---- | ---------------------------------------------------------------------------------------------------- | ------------ | --------- |
+| ---- | ---------------------------------------------------------------------------------------------------- |--------------|-----------|
 | 1    | Unclear of importance of chat context                                                                | Yes          | Frontend  |
 | 1    | Need to wait for each question                                                                       | No           | NA        |
 | 1    | Survey ending is abrupt                                                                              | Yes          | Backend   |
@@ -352,8 +352,8 @@ The following table shows their feedback, both positive and negative.
 | 3    | Chat is quite responsive, feels natural                                                              | NA           | NA        |
 | 4    | Consider security: prevent discriminatory words in LLM output                                        | Yes          | Backend   |
 | 4    | Add ability to split the survey up into sections                                                     | No           | Both      |
-| 5    | Survey section doesn't look like anything new                                                        | No           | Both      |
-| 5    | Chat is awkward to read because of distance between bubbles                                          | No           | Both      |
+| 5    | Survey section doesn't look like anything new                                                        | Yes          | Frontend  |
+| 5    | Chat is awkward to read because of distance between bubbles                                          | Yes          | Frontend  |
 </div>
 
 Some user feedback required changes to the backend, not the frontend. We thus discuss these changes later in the backend section of the report. Furthermore, we did not implement a few changes due to time constraints (indicated by “No” in the “Change made” column), but could be added in the future. Finally, while we understand User 1's comment on having to wait for each question, the speed of generation by GPT-4 is out of our control, so we were unable to act on their feedback.
@@ -402,7 +402,7 @@ We implemented the following changes based on user feedback:
 - Made chat page interface more similar to ChatGPT's.
   User 5 also commented that our original chatpage was awkward to read because of the distance between the two chat bubbles on a laptop screen. We also felt that chat bubbles might be too reminiscent of poorly-performing AI chatbots used by other companies for customer support, turning users off before they recognize the capabilities of our own chatbot. Thus, we changed our chat UI to be more similar to ChatGPT's, a more well-regarded AI software, to establish a sense of trust.
 
-- Displayed messages from bottom to top
+- Displayed messages from bottom to top.
   After the integration, we realised that the traditional way of showing messages from the top to bottom of the page might cause inconvenience for users at the beginning, who would have to go back and forth between reading the question at the top and filling out their answers in the chatbox at the bottom. Thus, we changed the direction of message display to position the latest question and chatbox close together.
 
 <div style="text-align: center;">
@@ -418,8 +418,9 @@ The following table shows feedback from our follow-up user interviews after refi
 <div id="table3" style="text-align: center">
 
 | User | Feedback                                                                                               |
-| ---- |--------------------------------------------------------------------------------------------------------|
+|------|--------------------------------------------------------------------------------------------------------|
 | 1    | Having the MCQ/MRQ/free response questions inside the chat input box itself makes the process seamless |
+| 2    | Conversation feels a lot more natural, feels like I am talking to a real human being.                  |
 | 3    | A good experience; sounds more natural than before                                                     |
 | 4    | Chatbot's ability to ask good questions and clarify is great                                           |
 | 4    | Is it possible to add functionality to finetune a specific survey?                                     |
