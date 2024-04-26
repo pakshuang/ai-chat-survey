@@ -1,4 +1,4 @@
-# Backend-gpu
+# Backend-GPU
 
 ## Overview
 
@@ -11,8 +11,8 @@ backend-gpu/               # Backend-gpu specific files
 │
 ├── Dockerfile             # Docker configuration for GPU-enabled services
 ├── Pipfile                # Manages Python dependencies for GPU compatibility
-├── Pipfile.lock            # Manages Python dependencies for GPU compatibility
-├── logs/                  # Directory for runtime logs
+├── Pipfile.lock           # Manages Python dependencies for GPU compatibility
+├── logs/                  # Runtime logs
 └── models/                # LLMs optimized for GPU usage
 ```
 
