@@ -127,15 +127,15 @@ Alternatively, follow the steps below to install and run the application on a lo
 
 ### Running the Application
 
-    ```shell
-      docker-compose up -d --build
-    ```
+   ```shell
+     docker-compose up -d --build
+   ```
 
 If you want to horizontally scale (application level) the frontend or backend services, you can use the following command (do not scale the database service or nginx service):
 
-    ```shell
-      docker-compose up -d --scale frontend=2 --scale backend=2
-    ```
+   ```shell
+     docker-compose up -d --scale frontend=2 --scale backend=2
+   ```
 
 ### Stopping the Application
 
@@ -209,12 +209,16 @@ Admins are able to:
 - Delete a survey.
 - Log out of their account.
 
-<img src="wireframes/landing-page.png" width="32%"/> <img src="wireframes/login.png" width="32%"/> <img src="wireframes/signup.png" width="32%"/>
 
-<img src="wireframes/admin-homepage.png" width="32%"/> <img src="wireframes/new-survey.png" width="32%"/>
-<img src="wireframes/survey.png" width="32%"/>
-
-<img src="wireframes/survey-responses.png" width="32%"/>
+<div style="text-align: center;">
+  <img src="wireframes/landing-page.png" style="width: 34%;"/>
+  <img src="wireframes/login.png" style="width: 34%;"/>
+  <img src="wireframes/signup.png" style="width: 32%; "/>
+  <img src="wireframes/admin-homepage.png" style="width: 32%;"/>
+  <img src="wireframes/new-survey.png" style="width: 32%;"/>
+  <img src="wireframes/survey.png" style="width: 34%; "/>
+  <img src="wireframes/survey-responses.png" style="width: 34%"/>
+</div>
 
 #### Client interface
 
@@ -231,40 +235,40 @@ The following table shows the profiles of the users we interviewed.
 
 <style>
 /* Style for the first table */
-# table1 th:first-of-type {
+#table1 th:first-of-type {
     width: 10%;
 }
-# table1 th:nth-of-type(2) {
+#table1 th:nth-of-type(2) {
     width: 90%;
 }
-# table2 th:first-of-type {
+#table2 th:first-of-type {
     width: 10%;
 }
-# table2 th:nth-of-type(2) {
+#table2 th:nth-of-type(2) {
     width: 60%;
 }
-# table2 th:nth-of-type(3) {
+#table2 th:nth-of-type(3) {
     width: 15%;
 }
-# table2 th:nth-of-type(4) {
+#table2 th:nth-of-type(4) {
     width: 15%;
 }
-# table3 th:first-of-type {
+#table3 th:first-of-type {
     width: 10%;
 }
-# table3 th:nth-of-type(2) {
+#table3 th:nth-of-type(2) {
     width: 90%;
 }
-# table4 th:first-of-type {
+#table4 th:first-of-type {
     width: 10%;
 }
-# table4 th:nth-of-type(2) {
+#table4 th:nth-of-type(2) {
     width: 20%;
 }
-# table4 th:nth-of-type(3) {
+#table4 th:nth-of-type(3) {
     width: 10%;
 }
-# table4 th:nth-of-type(4) {
+#table4 th:nth-of-type(4) {
     width: 50%;
 }
 </style>
