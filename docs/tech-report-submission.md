@@ -319,13 +319,13 @@ The following table shows the profiles of the users we interviewed.
 
 <div id="table1" style="text-align: center">
 
-| User | Profile                        |
-| ---- | ------------------------------ |
-| 1    | [age]-year-old [occupation]    |
-| 2    | [age]-year-old [occupation]    |
-| 3    | 22-year-old university student |
-| 4    | Our business stakeholder       |
-| 5    | 24-year-old university student |
+| User | Profile                           |
+| ---- |-----------------------------------|
+| 1    | 50+ year-old female banker        |
+| 2    | 50+ year-old marketing specialist |
+| 3    | 22-year-old university student    |
+| 4    | Our business stakeholder          |
+| 5    | 24-year-old university student    |
 </div>
 
 The following table shows their feedback, both positive and negative.
