@@ -264,9 +264,14 @@ Admins are able to:
 We aimed to maintain information collection efficiency while incorporating a conversational, chat-like format. This concept led us to develop two separate pages:
 
 - Survey page: This is the page for static questions, i.e. questions that the surveyor wants all users to answer, allowing easy traditional quantitative analysis. Questions can be multiple choice, multiple response, and free response.
+
+<div style="text-align: center;">
+<img src="wireframes/survey-page.png" width="80%" />
+</div>
+
 - Chat page: After the initial survey page, the user's answers are sent to a chatbot and users are redirected to the chat page where they engage in a conversation with the chatbot.
 <div style="text-align: center;">
-<img src="wireframes/survey-page.png" width="80%" /> <img src="wireframes/chat-page.png" width="80%" />
+<img src="wireframes/chat-page.png" width="80%" />
 </div>
 
 ### Initial user interviews
@@ -353,7 +358,7 @@ Some user feedback required changes to the backend, not the frontend. We thus di
 The design of the admin portal was largely unaffected by our user interviews, which focused more on the client interface. However, based on User 1's feedback on their uncertainty about the importance of chat context, we added a tooltip to give more information on the importance of the chat context in generating good survey questions.
 
 <div style="text-align: center;">
-<img src="final-designs/chatbot-context-tooltip.png" width="60%"/>
+<img src="final-designs/chatbot-context-tooltip.png" width="50%"/>
 </div>
 
 Based on our own testing of our initial implementation, we also:
@@ -394,7 +399,7 @@ We implemented the following changes based on user feedback:
   After the integration, we realised that the traditional way of showing messages from the top to bottom of the page might cause inconvenience for users at the beginning, who would have to go back and forth between reading the question at the top and filling out their answers in the chatbox at the bottom. Thus, we changed the direction of message display to position the latest question and chatbox close together.
 
 <div style="text-align: center;">
-<img src="final-designs/integrated-chat-page-survey.png" width="80%" /> <img src="final-designs/integrated-chat-page-confirmation.png" width="80%" /> <img src="final-designs/integrated-chat-page-chatbot.png" width="80%" />
+<img src="final-designs/integrated-chat-page-survey.png" width="70%" /> <img src="final-designs/integrated-chat-page-confirmation.png" width="70%" /> <img src="final-designs/integrated-chat-page-chatbot.png" width="70%" />
 </div>
 
 <div style="page-break-after: always;"></div>
