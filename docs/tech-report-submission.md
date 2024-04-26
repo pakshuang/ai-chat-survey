@@ -331,6 +331,8 @@ The following table shows the profiles of the users we interviewed.
 
 The following table shows their feedback, both positive and negative.
 
+<div style="page-break-after: always;"></div>
+
 <div id="table2" style="text-align: center">
 
 | User | Feedback                                                                                             | Change made? | Change in |
@@ -358,7 +360,7 @@ Some user feedback required changes to the backend, not the frontend. We thus di
 The design of the admin portal was largely unaffected by our user interviews, which focused more on the client interface. However, based on User 1's feedback on their uncertainty about the importance of chat context, we added a tooltip to give more information on the importance of the chat context in generating good survey questions.
 
 <div style="text-align: center;">
-<img src="final-designs/chatbot-context-tooltip.png" width="50%"/>
+<img src="final-designs/chatbot-context-tooltip.png" width="45%"/>
 </div>
 
 Based on our own testing of our initial implementation, we also:
