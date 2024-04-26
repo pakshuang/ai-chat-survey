@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios"
-import { LoginResponse, LoginSignupData } from "../admin/login/constants"
-import { GetSurvey, Response, Survey } from "../admin/survey/constants"
+import { LoginResponse, LoginSignupData } from "../components/admin/login/constants"
+import { GetSurvey, Response, Survey } from "../components/admin/survey/constants"
 import dayjs from "dayjs"
 
 const baseUrl: string = import.meta.env.VITE_BASE_URL

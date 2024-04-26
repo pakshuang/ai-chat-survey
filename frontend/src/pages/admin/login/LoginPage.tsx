@@ -1,9 +1,9 @@
 import { SubmitHandler } from "react-hook-form";
 import { useState, useEffect } from "react";
-import { LoginSignupData, errorToast } from "./constants";
+import { LoginSignupData, errorToast } from "../../../components/admin/login/constants";
 import { useNavigate } from "react-router-dom";
-import { login } from "../../hooks/useApi";
-import { LoginSignupForm } from "./LoginSignupForm";
+import { login } from "../../../hooks/useApi";
+import { LoginSignupForm } from "../../../components/admin/login/LoginSignupForm";
 import { useToast } from "@chakra-ui/react";
 
 function LoginPage() {

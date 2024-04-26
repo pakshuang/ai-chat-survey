@@ -1,5 +1,5 @@
 import { Avatar, Box, Button, Flex, Tooltip } from "@chakra-ui/react";
-import { logout } from "../hooks/useApi";
+import { logout } from "../../../hooks/useApi";
 import { useNavigate } from "react-router-dom";
 
 function Header() {

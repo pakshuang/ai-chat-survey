@@ -1,7 +1,7 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom"
 
 import Home from "./pages/Home"
-import AdminHomePage from "./pages/admin/AdminHomePage"
+import AdminHomePage from "./pages/admin/survey/AdminHomePage"
 import AdminSurveyPage from "./pages/admin/survey/AdminSurveyPage"
 import SignupPage from "./pages/admin/login/SignupPage"
 import LoginPage from "./pages/admin/login/LoginPage"
