@@ -7,16 +7,14 @@ This directory hosts the GPU-enabled version of the backend services for the app
 ## Contents
 
 ```shell
-ai-chat-survey/
+backend-gpu/               # Backend-gpu specific files
 │
-├── backend-gpu/               # Backend-gpu specific files
-│   ├── Dockerfile             # Docker configuration for GPU-enabled services
-│   ├── Pipfile & Pipfile.lock # Manages Python dependencies for GPU compatibility
-│   ├── logs/                  # Directory for runtime logs
-│   ├── models/                # LLMs optimized for GPU usage
-│   └── src/                   # Directory for Source Code
-│
-└── [Other Directories and Files]
+├──
+├── Dockerfile             # Docker configuration for GPU-enabled services
+├── Pipfile 		   # Manages Python dependencies for GPU compatibility
+├── Pipfile.lock 	   # Manages Python dependencies for GPU compatibility
+├── logs/                  # Directory for runtime logs
+└── models/                # LLMs optimized for GPU usage
 ```
 
 ## Setup and Installation

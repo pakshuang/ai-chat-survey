@@ -7,13 +7,10 @@ This folder contains configuration files and workflows that are used for GitHub 
 ## Contents
 
 ```shell
-ai-chat-survey/
+.github/                   # Github workflows and codeowners configuration files
 │
-├── .github/                   # Github workflows and codeowners configuration files
-│   ├── CODEOWNERS             # Specifies the owners for code reviews
-│   └── workflows/             # Contains GitHub Actions workflows
-│
-└── [Other Directories and Files]
+├── CODEOWNERS             # Specifies the owners for code reviews
+└── workflows/             # Contains GitHub Actions workflows
 ```
 
 ## Workflows

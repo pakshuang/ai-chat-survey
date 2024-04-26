@@ -7,11 +7,8 @@ This directory contains the configuration files for the reverse proxy setup, whi
 ## Contents
 
 ```shell
-ai-chat-survey/
+reverse-proxy/              # Reverse proxy specific files
 │
-├── reverse-proxy/            # Reverse proxy specific files
-│   ├── nginx.conf.ssl.template # Nginx configuration template for SSL
-│   └── nginx.conf.template   # Nginx configuration template
-│
-└── [Other Directories and Files]
+├── nginx.conf.ssl.template # Nginx configuration template for SSL
+└── nginx.conf.template     # Nginx configuration template
 ```

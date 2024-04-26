@@ -7,11 +7,9 @@ This directory contains SQL scripts used for setting up and populating the datab
 ## Contents
 
 ```shell
-ai-chat-survey/
+database/                  # Database specific files
 │
-├── database/                  # Database specific files
-│   ├── init.sql               # SQL script for initializing the database schema
-│   └── insert_dummy_data.sql  # Script for inserting dummy data
-│
-└── [Other Directories and Files]
+├── init.sql               # SQL script for initializing the database schema
+└── insert_dummy_data.sql  # Script for inserting dummy data
+
 ```
