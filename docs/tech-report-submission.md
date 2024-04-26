@@ -274,7 +274,7 @@ The following table shows the profiles of the users we interviewed.
 }
 </style>
 
-<div id="table1">
+<div id="table1" style="text-align: center">
 
 | User | Profile                        |
 | ---- | ------------------------------ |
@@ -283,10 +283,11 @@ The following table shows the profiles of the users we interviewed.
 | 3    | 22-year-old university student |
 | 4    | Our business stakeholder       |
 | 5    | 24-year-old university student |
+</div>
 
 The following table shows their feedback, both positive and negative.
 
-<div id="table2">
+<div id="table2" style="text-align: center">
 
 | User | Feedback                                                                                             | Change made? | Change in |
 | ---- | ---------------------------------------------------------------------------------------------------- | ------------ | --------- |
@@ -302,6 +303,7 @@ The following table shows their feedback, both positive and negative.
 | 4    | Add ability to split the survey up into sections                                                     | No           | Both      |
 | 5    | Survey section doesn't look like anything new                                                        | No           | Both      |
 | 5    | Chat is awkward to read because of distance between bubbles                                          | No           | Both      |
+</div>
 
 Some user feedback required changes to the backend, not the frontend. We thus discuss these changes later in the backend section of the report. Furthermore, we did not implement a few changes due to time constraints (indicated by “No” in the “Change made” column), but could be added in the future. Finally, while we understand User 1's comment on having to wait for each question, the speed of generation by GPT-4 is out of our control, so we were unable to act on their feedback.
 
@@ -360,18 +362,19 @@ We implemented the following changes based on user feedback:
 
 The following table shows feedback from our follow-up user interviews after refinements were made.
 
-<div id="table3">
+<div id="table3" style="text-align: center">
 
-| User | Feedback                                                                                                         |
-| ---- | ---------------------------------------------------------------------------------------------------------------- |
-| 1    | Having the MCQ/MRQ options and free response answers inside the chat input box itself makes the process seamless |
-| 3    | A good experience; sounds more natural than before                                                              |
-| 4    | Chatbot's ability to ask good questions and clarify is great                                                     |
-| 4    | Is it possible to add functionality to finetune a specific survey?                                               |
-| 4    | Can the chatbot be coerced to produce shorter messages?                                                          |
-| 4    | Having the bot be able to take on specific personas would help keep the user engaged                             |
-| 5    | Feels very smooth answering the survey via the chatbox                                                           |
-| 5    | Chat UI still a bit awkwardly boxy, but much cleaner than before                                                 |
+| User | Feedback                                                                                               |
+| ---- |--------------------------------------------------------------------------------------------------------|
+| 1    | Having the MCQ/MRQ/free response questions inside the chat input box itself makes the process seamless |
+| 3    | A good experience; sounds more natural than before                                                     |
+| 4    | Chatbot's ability to ask good questions and clarify is great                                           |
+| 4    | Is it possible to add functionality to finetune a specific survey?                                     |
+| 4    | Can the chatbot be coerced to produce shorter messages?                                                |
+| 4    | Having the bot be able to take on specific personas would help keep the user engaged                   |
+| 5    | Feels very smooth answering the survey via the chatbox                                                 |
+| 5    | Chat UI still a bit awkwardly boxy, but much cleaner than before                                       |
+</div>
 
 Some users further suggested features or enhancements that we could include; we address these in our Future Directions and Recommendations section.
 
@@ -440,7 +443,7 @@ The backend components interact harmoniously to facilitate the flow of data and 
 
 The backend server is the core component responsible for processing incoming requests from the frontend via our API. Implemented using Flask in app.py, the server handles various functionalities such as creating surveys, submitting responses, sending chat messages to GPT-4, with the following endpoints:
 
-<div id="table4">
+<div id="table4" style="text-align: center">
 
 | Resource         | API Method        | HTTP Method | Description                                                                       |
 | ---------------- | ----------------- | ----------- | --------------------------------------------------------------------------------- |
@@ -455,6 +458,8 @@ The backend server is the core component responsible for processing incoming req
 | Survey Responses | Get Response      | GET         | Retrieves a response object by ID, requiring admin authentication.                |
 | Survey Responses | Send Chat Message | POST        | Sends a message to the chatbot and receives a response.                           |
 
+</div>
+
 We decided not to implement full CRUD operations for the 3 resources (Admins, Surveys, and Survey Responses) due to the time constraints in implementing this project. For example, `update` operations for Surveys were not developed so that the codebase would be smaller and easier to develop, test and maintain.
 
 For the detailed API documentation, refer to [api.md](https://github.com/pakshuang/ai-chat-survey/blob/main/docs/api.md).
@@ -465,7 +470,9 @@ The MySQL database, named `ai_chat_survey_db`, serves as the centralized reposit
 
 ##### Entity Relationship (ER) Diagram
 
-<img src="diagrams/images/db_schema.png" alt="Entity Relationship (ER) Diagram" width="400"/>
+<div style="text-align: center;">
+<img src="diagrams/images/db_schema.png" alt="Entity Relationship (ER) Diagram" width="60%"/>
+</div>
 
 - **Admins**: Stores information about administrators who have access to the system.
 - **Surveys**: Contains details of the surveys created in the system.
@@ -473,7 +480,7 @@ The MySQL database, named `ai_chat_survey_db`, serves as the centralized reposit
 - **Survey_Responses**: Holds the responses submitted for each survey question.
 - **ChatLog**: Logs the chat interactions between users and the chatbot.
 
-For the full database schema, please refer to [init.sql](https://github.com/pakshuang/ai-chat-survey/blob/main/database/init.sql)
+For the full database schema, please refer to [init.sql](https://github.com/pakshuang/ai-chat-survey/blob/main/database/init.sql).
 
 #### Model
 
