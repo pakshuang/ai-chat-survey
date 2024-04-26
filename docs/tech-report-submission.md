@@ -226,8 +226,9 @@ We aimed to maintain information collection efficiency while incorporating a con
 
 - Survey page: This is the page for static questions, i.e. questions that the surveyor wants all users to answer, allowing easy traditional quantitative analysis. Questions can be multiple choice, multiple response, and free response.
 - Chat page: After the initial survey page, the user's answers are sent to a chatbot and users are redirected to the chat page where they engage in a conversation with the chatbot.
-
-<img src="wireframes/survey-page.png" width="49%" /> <img src="wireframes/chat-page.png" width="49%" />
+<div style="text-align: center;">
+<img src="wireframes/survey-page.png" width="60%" /> <img src="wireframes/chat-page.png" width="60%" />
+</div>
 
 ### Initial user interviews
 
@@ -310,13 +311,17 @@ Some user feedback required changes to the backend, not the frontend. We thus di
 
 The design of the admin portal was largely unaffected by our user interviews, which focused more on the client interface. However, based on User 1's feedback on their uncertainty about the importance of chat context, we added a tooltip to give more information on the importance of the chat context in generating good survey questions.
 
-<img src="final-designs/chatbot-context-tooltip.png" width="50%"/>
+<div style="text-align: center;">
+<img src="final-designs/chatbot-context-tooltip.png" width="60%"/>
+</div>
 
 Based on our own testing of our initial implementation, we also:
 
 - Added a header to all admin pages to enable the user to check which account they're logged into and also log out easily
 
-<img src="final-designs/header.png" width="50%"/>
+<div style="text-align: center;">
+<img src="final-designs/header.png" width="60%"/>
+</div>
 
 Hovering over the avatar would reveal the current account's username.
 
@@ -324,7 +329,9 @@ Hovering over the avatar would reveal the current account's username.
 - Made survey description and chat context scroll vertically instead of horizontally for easier reading
   - In the screenshot below, note how the description and chat context are larger text boxes, rather than single lines of input as originally designed in the wireframe
 
-<img src="final-designs/survey-interface-and-scroll.png" width="50%"/>
+<div style="text-align: center;">
+<img src="final-designs/survey-interface-and-scroll.png" width="60%"/>
+</div>
 
 #### Updated Client interface
 
@@ -332,7 +339,9 @@ We implemented the following changes based on user feedback:
 
 - Added a "thank you" message after the bot is done asking questions to make the ending of the survey less abrupt as feedbacked by User 1. This addition was accomplished by implementing a flag that indicates whether the bot's message will be its last.
 
-  <img src="final-designs/thank-you-message.png" />
+<div style="text-align: center;">
+  <img src="final-designs/thank-you-message.png" width="60%"/>
+</div>
 
 - Integrated survey page into chat page.
   User 5 found the survey page's design too similar to traditional surveys, reducing their desire to complete the survey. However, as business stakeholders still wanted the static questions to be asked, we could not remove the static questions entirely. Thus, we integrated them into the chat page to provide the experience of chatting with the LLM.
@@ -343,7 +352,9 @@ We implemented the following changes based on user feedback:
 - Displayed messages from bottom to top
   After the integration, we realised that the traditional way of showing messages from the top to bottom of the page might cause inconvenience for users at the beginning, who would have to go back and forth between reading the question at the top and filling out their answers in the chatbox at the bottom. Thus, we changed the direction of message display to position the latest question and chatbox close together.
 
-<img src="final-designs/integrated-chat-page-survey.png" width="33%" /> <img src="final-designs/integrated-chat-page-confirmation.png" width="33%" /> <img src="final-designs/integrated-chat-page-chatbot.png" width="33%" />
+<div style="text-align: center;">
+<img src="final-designs/integrated-chat-page-survey.png" width="60%" /> <img src="final-designs/integrated-chat-page-confirmation.png" width="60%" /> <img src="final-designs/integrated-chat-page-chatbot.png" width="60%" />
+</div>
 
 #### Follow-up user interviews
 
