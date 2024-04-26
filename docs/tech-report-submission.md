@@ -662,6 +662,8 @@ In conclusion, our project has demonstrated the potential of integrating GPT-4 i
 
 Through our proof of concept, we've showcased the feasibility of leveraging GPT-4 to personalize survey interactions and uncover unique insights from respondents. By adopting this approach, businesses can gain a deeper understanding of customer preferences and feedback, ultimately guiding strategic decision-making processes.
 
+<div style="page-break-after: always;"></div>
+
 ## Citations
 
 Devlin, J., Chang, M.-W., Lee, K., & Toutanova, K. (2019). _Bert: Pre-training of deep bidirectional transformers for language understanding_ (arXiv:1810.04805). arXiv. <https://doi.org/10.48550/arXiv.1810.04805>
