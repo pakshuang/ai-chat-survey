@@ -501,7 +501,7 @@ The backend server is the core component responsible for processing incoming req
 
 </div>
 
-We decided not to implement full CRUD operations for the 3 resources (Admins, Surveys, and Survey Responses) due to the time constraints in implementing this project. For example, `update` operations for Surveys were not developed so that the codebase would be smaller and easier to develop, test and maintain.
+We decided not to implement full CRUD operations for the 3 resources (Admins, Surveys, and Survey Responses) due to the time constraints in implementing this project. For example, `update` operations for Surveys were not implemented so that the codebase would be smaller and easier to develop, test and maintain.
 
 For the detailed API documentation, refer to [api.md](https://github.com/pakshuang/ai-chat-survey/blob/main/docs/api.md).
 
