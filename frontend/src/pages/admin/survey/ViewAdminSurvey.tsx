@@ -40,11 +40,11 @@ import {
   logout,
   shouldLogout,
   deleteSurvey,
-} from "../../hooks/useApi";
+} from "../../../hooks/useApi";
 import { needOptions, QuestionType } from "./constants";
 import { useEffect } from "react";
-import ViewAdminSurveyTitle from "./ViewAdminSurveyTitle";
-import Header from "../Header";
+import ViewAdminSurveyTitle from "../../../components/admin/survey/ViewAdminSurveyTitle";
+import Header from "../../../components/admin/survey/Header";
 
 function ViewAdminSurvey() {
   const { id } = useParams();

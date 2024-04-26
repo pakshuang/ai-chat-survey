@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import { Flex, Heading, Box, Link, Text, VStack } from "@chakra-ui/react";
-import ChatWindow from "./ChatWindow";
-import ChatInput from "./ChatInput";
+import ChatWindow from "../../components/client/ChatWindow";
+import ChatInput from "../../components/client/ChatInput";
 import {
   getUserSurvey,
   sendMessageApi,
   submitBaseSurvey,
-} from "../hooks/useApi";
+} from "../../hooks/useApi";
 import { useParams } from "react-router-dom";
 import { Messages, Question, surveyMessage } from "./constants";
-import ChatMessage from "./ChatMessage";
-import MultipleChoiceInput from "./MultipleChoiceInput";
-import MultipleResponseInput from "./MultipleResponseInput";
-import FreeResponseInput from "./FreeResponseInput";
+import ChatMessage from "../../components/client/ChatMessage";
+import MultipleChoiceInput from "../../components/client/MultipleChoiceInput";
+import MultipleResponseInput from "../../components/client/MultipleResponseInput";
+import FreeResponseInput from "../../components/client/FreeResponseInput";
 
 function ChatPage() {
   const { id } = useParams();

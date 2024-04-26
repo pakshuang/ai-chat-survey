@@ -1,5 +1,5 @@
 import { Card, Divider, Text, VStack } from "@chakra-ui/react"
-import { Response } from "./constants"
+import { Response } from "../../../pages/admin/survey/constants"
 
 function AdminSurveyResponse({ response }: { response: Response }) {
   const transform = (arr: string[]): string => {

@@ -1,6 +1,6 @@
 import { Button, Flex, CheckboxGroup, Checkbox, Box } from "@chakra-ui/react";
 import { useState } from "react";
-import { MultipleResponseInputProps } from "./constants";
+import { MultipleResponseInputProps } from "../../pages/client/constants";
 
 function MultipleResponseInput({
   questionID,

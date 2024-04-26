@@ -1,5 +1,5 @@
 import { Flex, Card, Image } from "@chakra-ui/react";
-import { ChatMessageProps } from "./constants";
+import { ChatMessageProps } from "../../pages/client/constants";
 import bot from "../../assets/bot.svg";
 import user from "../../assets/user.svg";
 

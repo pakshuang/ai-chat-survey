@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react"
 import AdminSurveyOptions from "./AdminSurveyOptions"
 import { UseFieldArrayRemove, useFormContext, useWatch } from "react-hook-form"
-import { needOptions, QuestionType, Survey, validate } from "./constants"
+import { needOptions, QuestionType, Survey, validate } from "../../../pages/admin/survey/constants"
 import { uniq } from "lodash"
 
 function AdminSurveyAccordion({

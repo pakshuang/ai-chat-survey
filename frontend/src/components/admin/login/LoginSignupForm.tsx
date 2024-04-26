@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { LoginSignupData } from "./constants";
+import { LoginSignupData } from "../../../pages/admin/login/constants";
 
 interface LoginSignupProps {
   onSubmit: SubmitHandler<LoginSignupData>;

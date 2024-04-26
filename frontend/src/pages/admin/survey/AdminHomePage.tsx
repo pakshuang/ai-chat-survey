@@ -7,13 +7,13 @@ import {
   Spinner,
   VStack,
 } from "@chakra-ui/react";
-import SurveyCard from "./SurveyCard";
-import NewSurveyCard from "./NewSurveyCard";
+import SurveyCard from "../../../components/admin/survey/SurveyCard";
+import NewSurveyCard from "../../../components/admin/survey/NewSurveyCard";
 import { useQuery } from "react-query";
-import { getSurveys, logout, shouldLogout } from "../hooks/useApi";
+import { getSurveys, logout, shouldLogout } from "../../../hooks/useApi";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "./Header";
+import Header from "../../../components/admin/survey/Header";
 
 function AdminHomePage() {
   const { data: surveys, isLoading, refetch } = useQuery("surveys", getSurveys);

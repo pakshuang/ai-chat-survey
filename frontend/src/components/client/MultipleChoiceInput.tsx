@@ -1,6 +1,6 @@
 import { Radio, RadioGroup, Button, Flex } from "@chakra-ui/react";
 import { useState } from "react";
-import { MultipleChoiceInputProps } from "./constants";
+import { MultipleChoiceInputProps } from "../../pages/client/constants";
 
 function MultipleChoiceInput({
   questionID,

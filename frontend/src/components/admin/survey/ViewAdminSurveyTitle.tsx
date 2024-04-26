@@ -1,5 +1,5 @@
 import { Card, Input, Text, Textarea } from "@chakra-ui/react"
-import { GetSurvey } from "./constants"
+import { GetSurvey } from "../../../pages/admin/survey/constants"
 
 function ViewAdminSurveyTitle({ survey }: { survey: GetSurvey }) {
   return (

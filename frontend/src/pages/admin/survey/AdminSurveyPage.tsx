@@ -6,16 +6,16 @@ import {
   VStack,
   useToast,
 } from "@chakra-ui/react";
-import AdminSurveyAccordion from "./AdminSurveyAccordion";
+import AdminSurveyAccordion from "../../../components/admin/survey/AdminSurveyAccordion";
 import { AddIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { useForm, FormProvider, useFieldArray } from "react-hook-form";
 import { createNewQuestion, Survey } from "./constants";
-import AdminSurveyTitle from "./AdminSurveyTitle";
+import AdminSurveyTitle from "../../../components/admin/survey/AdminSurveyTitle";
 import { useEffect, useState } from "react";
-import { logout, shouldLogout, submitSurvey } from "../../hooks/useApi";
+import { logout, shouldLogout, submitSurvey } from "../../../hooks/useApi";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
-import Header from "../Header";
+import Header from "../../../components/admin/survey/Header";
 
 function AdminSurveyPage() {
   const methods = useForm<Survey>({

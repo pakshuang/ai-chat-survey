@@ -1,5 +1,5 @@
 import { Button, Textarea, Flex } from "@chakra-ui/react";
-import { FreeResponseInputProps } from "./constants";
+import { FreeResponseInputProps } from "../../pages/client/constants";
 import { useState } from "react";
 
 function FreeResponseInput({

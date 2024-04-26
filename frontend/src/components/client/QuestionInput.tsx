@@ -9,7 +9,7 @@ import {
   Box,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { QuestionProps } from "./constants";
+import { QuestionProps } from "../../pages/client/constants";
 
 const QuestionInput = ({
   questionData,

@@ -8,7 +8,7 @@ import {
   Text,
   StackDivider,
 } from "@chakra-ui/react"
-import { GetSurvey } from "./survey/constants"
+import { GetSurvey } from "../../../pages/admin/survey/constants"
 import dayjs from "dayjs"
 import { useNavigate } from "react-router-dom"
 
