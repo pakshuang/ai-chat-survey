@@ -45,6 +45,12 @@
             padding: 10px;
             text-align: center;
         }
+        pre {
+            border: 1px solid #555; /* Add border around code blocks */
+            padding: 10px; /* Add padding to code blocks */
+            border-radius: 4px; /* Add border radius to code blocks */
+            overflow-x: auto; /* Enable horizontal scrolling if needed */
+        }
     </style>
 </head>
 <body>
@@ -155,7 +161,7 @@ Alternatively, follow the steps below to install and run the application on a lo
 
 2. Initialise `.env` file (use `copy` for Windows CMD):
 
-```shell
+```
   cp sample.env .env
 ```
 
@@ -163,19 +169,19 @@ Alternatively, follow the steps below to install and run the application on a lo
 
 ### Running the Application
 
-   ```shell
+   ```
      docker-compose up -d --build
    ```
 
 If you want to horizontally scale (application level) the frontend or backend services, you can use the following command (do not scale the database service or nginx service):
 
-   ```shell
+   ```
      docker-compose up -d --scale frontend=2 --scale backend=2
    ```
 
 ### Stopping the Application
 
-   ```shell
+   ```
      docker-compose down
    ```
 
