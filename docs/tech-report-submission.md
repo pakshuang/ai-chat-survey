@@ -24,9 +24,16 @@
             margin: 0;
             color: #000;
         }
+        .header h3 {
+            margin:0;
+        }
+        h2 {
+            text-decoration: underline; /* Underline headers */
+            margin:0;
+        }
         code {
             background-color: #f0f0f0; /* Set background color for inline code */
-            padding: 2px 4px; /* Add padding to inline code */
+            padding: 1px 3px; /* Add padding to inline code */
             border-radius: 4px; /* Add border radius to inline code */
             color: #333; /* Set text color for inline code */
             font-weight: bold; /* Make inline code bold */
@@ -37,6 +44,12 @@
             color: #000; /* Set font color to black */
             padding: 10px;
             text-align: center;
+        }
+        pre {
+            border: 1px solid #555; /* Add border around code blocks */
+            padding: 10px; /* Add padding to code blocks */
+            border-radius: 4px; /* Add border radius to code blocks */
+            overflow-x: auto; /* Enable horizontal scrolling if needed */
         }
     </style>
 </head>
@@ -52,14 +65,15 @@
 ## Table of Contents
 
 1. [Project Introduction](#project-introduction)
-2. [Setup](#setup)
+2. [Repository Structure](#repository-structure)
+3. [Setup](#setup)
    - [Installing the Application](#installing-the-application)
    - [Running the Application](#running-the-application)
    - [Stopping the Application](#stopping-the-application)
-3. [Overall Architecture](#overall-architecture)
+4. [Overall Architecture](#overall-architecture)
    - [Services](#services)
    - [Technology Stack](#technology-stack)
-4. [Frontend](#frontend)
+5. [Frontend](#frontend)
    - [Introduction](#frontend-introduction)
    - [Architecture](#architecture)
      - [UI Libraries](#ui-libraries)
@@ -74,7 +88,7 @@
      - [Updated Client Interface](#updated-client-interface)
      - [Follow-up User Interviews](#follow-up-user-interviews)
    - [Frontend Conclusion](#frontend-conclusion)
-5. [Backend](#backend)
+6. [Backend](#backend)
    - [Introduction](#backend-introduction)
    - [Literature Review](#literature-review)
    - [Backend Architecture](#backend-architecture)
@@ -87,13 +101,13 @@
      - [Model](#model)
      - [Additional Enhancements](#additional-enhancements)
      - [Backend conclusion](#backend-conclusion)
-6. [DevOps](#devops)
-7. [Future Directions and Recommendations](#future-directions-and-recommendations)
+7. [DevOps](#devops)
+8. [Future Directions and Recommendations](#future-directions-and-recommendations)
    - [Additional Features](#additional-features)
    - [Analyzing ChatLogs](#analyzing-chatlogs)
    - [Local LLMs](#local-llms)
-8. [Conclusion](#conclusion)
-9. [Citations](#citations)
+9. [Conclusion](#conclusion)
+10. [Citations](#citations)
 
 ## Project Introduction
 
@@ -102,6 +116,35 @@ In today's rapidly evolving business landscape, understanding customer needs and
 In this report, we unveil a proof-of-concept project poised to revolutionize the way businesses conduct customer research. Leveraging the power of Large Language Models (LLMs), particularly GPT-4, we're introducing a dynamic and personalized survey experience that transcends the limitations of conventional approaches.
 
 Our vision is simple yet transformative: to create surveys that adapt in real-time based on each respondent's unique input. By integrating GPT-4 into our survey platform, we're not only collecting data but engaging customers in meaningful conversations. This innovative approach enables us to pursue unique lines of inquiry, uncovering insights that traditional surveys often miss.
+
+## Repository Structure
+```
+ai-chat-survey/
+│
+├── .github/                   # Github workflows and codeowners configuration files
+│
+├── backend-gpu/               # Backend-gpu specific files
+│
+├── backend/                   # Backend specific files
+│
+├── database/                  # Database specific files
+│
+├── docs/                      # Documentation files
+│
+├── frontend/                  # Frontend specific files
+│
+├── reverse-proxy/             # Reverse proxy specific files
+│
+├── scripts/                   # Scripts for integration tests, setup, etc.
+├── .gitignore                 # Specifies intentionally untracked files to ignore
+├── README.md                  # Main project README with general information
+├── compose.eval.yaml          # Docker Compose file for the LLM evaluation
+├── compose.gpu.yaml           # Docker Compose file for GPU version of the application for local LLMs
+├── compose.ssl.yaml           # Docker Compose file for reverse proxy and certbot
+├── compose.tests.yaml         # Docker Compose file for the integration tests
+├── compose.yaml               # Docker Compose file for the application
+└── sample.env                 # Sample environment variables
+```
 
 ## Setup
 
@@ -117,29 +160,27 @@ Alternatively, follow the steps below to install and run the application on a lo
 
 2. Initialise `.env` file (use `copy` for Windows CMD):
 
-```shell
+```
   cp sample.env .env
 ```
 
 3. Fill in the `.env` file with the necessary environment variables. Some of the variables are already filled in with default values.
 
-<div style="page-break-after: always;"></div>
-
 ### Running the Application
 
-    ```shell
-      docker-compose up -d --build
-    ```
+   ```
+     docker-compose up -d --build
+   ```
 
 If you want to horizontally scale (application level) the frontend or backend services, you can use the following command (do not scale the database service or nginx service):
 
-    ```shell
-      docker-compose up -d --scale frontend=2 --scale backend=2
-    ```
+   ```
+     docker-compose up -d --scale frontend=2 --scale backend=2
+   ```
 
 ### Stopping the Application
 
-   ```shell
+   ```
      docker-compose down
    ```
 
@@ -150,11 +191,11 @@ Further details about setup/installation can be found in [setup.md](https://gith
 - Frontend Development Environment
 - Deployment
 
+<div style="page-break-after: always;"></div>
+
 ## Overall Architecture
 
 ![Architecture](diagrams/images/overall-architecture.png)
-
-<div style="page-break-after: always;"></div>
 
 ### Services
 
@@ -169,6 +210,8 @@ Further details about setup/installation can be found in [setup.md](https://gith
 - **Reverse Proxy (Nginx)**: Nginx was chosen due to its simplicity and performance. It is used to route requests to the frontend or backend based on the URL path. Load balancing relies on the Docker network's internal DNS resolution. For more advanced load balancing, solutions like Traefik can be used due to its dynamic configuration capabilities and support for Docker.
 - **SSL Certificate Client (Certbot)**: Certbot was chosen for its ease of use and integration with Let's Encrypt.
 - The rationale for the choice of technologies for the other services can be found in the respective sections below.
+
+<div style="page-break-after: always;"></div>
 
 ## Frontend
 
@@ -209,21 +252,31 @@ Admins are able to:
 - Delete a survey.
 - Log out of their account.
 
-<img src="wireframes/landing-page.png" width="32%"/> <img src="wireframes/login.png" width="32%"/> <img src="wireframes/signup.png" width="32%"/>
 
-<img src="wireframes/admin-homepage.png" width="32%"/> <img src="wireframes/new-survey.png" width="32%"/>
-<img src="wireframes/survey.png" width="32%"/>
-
-<img src="wireframes/survey-responses.png" width="32%"/>
+<div style="text-align: center;">
+  <img src="wireframes/landing-page.png" style="width: 34%;"/>
+  <img src="wireframes/login.png" style="width: 34%;"/>
+  <img src="wireframes/signup.png" style="width: 32%; "/>
+  <img src="wireframes/admin-homepage.png" style="width: 32%;"/>
+  <img src="wireframes/new-survey.png" style="width: 32%;"/>
+  <img src="wireframes/survey.png" style="width: 34%; "/>
+  <img src="wireframes/survey-responses.png" style="width: 34%"/>
+</div>
 
 #### Client interface
 
 We aimed to maintain information collection efficiency while incorporating a conversational, chat-like format. This concept led us to develop two separate pages:
 
 - Survey page: This is the page for static questions, i.e. questions that the surveyor wants all users to answer, allowing easy traditional quantitative analysis. Questions can be multiple choice, multiple response, and free response.
-- Chat page: After the initial survey page, the user's answers are sent to a chatbot and users are redirected to the chat page where they engage in a conversation with the chatbot.
 
-<img src="wireframes/survey-page.png" width="49%" /> <img src="wireframes/chat-page.png" width="49%" />
+<div style="text-align: center;">
+<img src="wireframes/survey-page.png" width="80%" />
+</div>
+
+- Chat page: After the initial survey page, the user's answers are sent to a chatbot and users are redirected to the chat page where they engage in a conversation with the chatbot.
+<div style="text-align: center;">
+<img src="wireframes/chat-page.png" width="80%" />
+</div>
 
 ### Initial user interviews
 
@@ -231,60 +284,63 @@ The following table shows the profiles of the users we interviewed.
 
 <style>
 /* Style for the first table */
-# table1 th:first-of-type {
+#table1 th:first-of-type {
     width: 10%;
 }
-# table1 th:nth-of-type(2) {
+#table1 th:nth-of-type(2) {
     width: 90%;
 }
-# table2 th:first-of-type {
+#table2 th:first-of-type {
     width: 10%;
 }
-# table2 th:nth-of-type(2) {
+#table2 th:nth-of-type(2) {
     width: 60%;
 }
-# table2 th:nth-of-type(3) {
+#table2 th:nth-of-type(3) {
     width: 15%;
 }
-# table2 th:nth-of-type(4) {
+#table2 th:nth-of-type(4) {
     width: 15%;
 }
-# table3 th:first-of-type {
+#table3 th:first-of-type {
     width: 10%;
 }
-# table3 th:nth-of-type(2) {
+#table3 th:nth-of-type(2) {
     width: 90%;
 }
-# table4 th:first-of-type {
+#table4 th:first-of-type {
     width: 10%;
 }
-# table4 th:nth-of-type(2) {
+#table4 th:nth-of-type(2) {
     width: 20%;
 }
-# table4 th:nth-of-type(3) {
+#table4 th:nth-of-type(3) {
     width: 10%;
 }
-# table4 th:nth-of-type(4) {
+#table4 th:nth-of-type(4) {
     width: 50%;
 }
 </style>
 
-<div id="table1">
+<div id="table1" style="text-align: center">
 
-| User | Profile                        |
-| ---- | ------------------------------ |
-| 1    | [age]-year-old [occupation]    |
-| 2    | [age]-year-old [occupation]    |
-| 3    | 22-year-old university student |
-| 4    | Our business stakeholder       |
-| 5    | 24-year-old university student |
+| User | Profile                           |
+| ---- |-----------------------------------|
+| 1    | 50+ year-old banker               |
+| 2    | 50+ year-old marketing specialist |
+| 3    | 22-year-old university student    |
+| 4    | Our business stakeholder          |
+| 5    | 24-year-old university student    |
+</div>
 
 The following table shows their feedback, both positive and negative.
 
-<div id="table2">
+<div style="page-break-after: always;"></div>
+
+<div id="table2" style="text-align: center">
 
 | User | Feedback                                                                                             | Change made? | Change in |
-| ---- | ---------------------------------------------------------------------------------------------------- | ------------ | --------- |
+| ---- | ---------------------------------------------------------------------------------------------------- |--------------|-----------|
 | 1    | Unclear of importance of chat context                                                                | Yes          | Frontend  |
 | 1    | Need to wait for each question                                                                       | No           | NA        |
 | 1    | Survey ending is abrupt                                                                              | Yes          | Backend   |
@@ -295,8 +351,9 @@ The following table shows their feedback, both positive and negative.
 | 3    | Chat is quite responsive, feels natural                                                              | NA           | NA        |
 | 4    | Consider security: prevent discriminatory words in LLM output                                        | Yes          | Backend   |
 | 4    | Add ability to split the survey up into sections                                                     | No           | Both      |
-| 5    | Survey section doesn't look like anything new                                                        | No           | Both      |
-| 5    | Chat is awkward to read because of distance between bubbles                                          | No           | Both      |
+| 5    | Survey section doesn't look like anything new                                                        | Yes          | Frontend  |
+| 5    | Chat is awkward to read because of distance between bubbles                                          | Yes          | Frontend  |
+</div>
 
 Some user feedback required changes to the backend, not the frontend. We thus discuss these changes later in the backend section of the report. Furthermore, we did not implement a few changes due to time constraints (indicated by “No” in the “Change made” column), but could be added in the future. Finally, while we understand User 1's comment on having to wait for each question, the speed of generation by GPT-4 is out of our control, so we were unable to act on their feedback.
 
@@ -306,13 +363,17 @@ Some user feedback required changes to the backend, not the frontend. We thus di
 
 The design of the admin portal was largely unaffected by our user interviews, which focused more on the client interface. However, based on User 1's feedback on their uncertainty about the importance of chat context, we added a tooltip to give more information on the importance of the chat context in generating good survey questions.
 
-<img src="final-designs/chatbot-context-tooltip.png" width="50%"/>
+<div style="text-align: center;">
+<img src="final-designs/chatbot-context-tooltip.png" width="45%"/>
+</div>
 
 Based on our own testing of our initial implementation, we also:
 
 - Added a header to all admin pages to enable the user to check which account they're logged into and also log out easily
 
-<img src="final-designs/header.png" width="50%"/>
+<div style="text-align: center;">
+<img src="final-designs/header.png" width="60%"/>
+</div>
 
 Hovering over the avatar would reveal the current account's username.
 
@@ -320,7 +381,9 @@ Hovering over the avatar would reveal the current account's username.
 - Made survey description and chat context scroll vertically instead of horizontally for easier reading
   - In the screenshot below, note how the description and chat context are larger text boxes, rather than single lines of input as originally designed in the wireframe
 
-<img src="final-designs/survey-interface-and-scroll.png" width="50%"/>
+<div style="text-align: center;">
+<img src="final-designs/survey-interface-and-scroll.png" width="60%"/>
+</div>
 
 #### Updated Client interface
 
@@ -328,7 +391,9 @@ We implemented the following changes based on user feedback:
 
 - Added a "thank you" message after the bot is done asking questions to make the ending of the survey less abrupt as feedbacked by User 1. This addition was accomplished by implementing a flag that indicates whether the bot's message will be its last.
 
-  <img src="final-designs/thank-you-message.png" />
+<div style="text-align: center;">
+  <img src="final-designs/thank-you-message.png" width="60%"/>
+</div>
 
 - Integrated survey page into chat page.
   User 5 found the survey page's design too similar to traditional surveys, reducing their desire to complete the survey. However, as business stakeholders still wanted the static questions to be asked, we could not remove the static questions entirely. Thus, we integrated them into the chat page to provide the experience of chatting with the LLM.
@@ -336,27 +401,33 @@ We implemented the following changes based on user feedback:
 - Made chat page interface more similar to ChatGPT's.
   User 5 also commented that our original chatpage was awkward to read because of the distance between the two chat bubbles on a laptop screen. We also felt that chat bubbles might be too reminiscent of poorly-performing AI chatbots used by other companies for customer support, turning users off before they recognize the capabilities of our own chatbot. Thus, we changed our chat UI to be more similar to ChatGPT's, a more well-regarded AI software, to establish a sense of trust.
 
-- Displayed messages from bottom to top
+- Displayed messages from bottom to top.
   After the integration, we realised that the traditional way of showing messages from the top to bottom of the page might cause inconvenience for users at the beginning, who would have to go back and forth between reading the question at the top and filling out their answers in the chatbox at the bottom. Thus, we changed the direction of message display to position the latest question and chatbox close together.
 
-<img src="final-designs/integrated-chat-page-survey.png" width="33%" /> <img src="final-designs/integrated-chat-page-confirmation.png" width="33%" /> <img src="final-designs/integrated-chat-page-chatbot.png" width="33%" />
+<div style="text-align: center;">
+<img src="final-designs/integrated-chat-page-survey.png" width="70%" /> <img src="final-designs/integrated-chat-page-confirmation.png" width="70%" /> <img src="final-designs/integrated-chat-page-chatbot.png" width="70%" />
+</div>
+
+<div style="page-break-after: always;"></div>
 
 #### Follow-up user interviews
 
 The following table shows feedback from our follow-up user interviews after refinements were made.
 
-<div id="table3">
+<div id="table3" style="text-align: center">
 
-| User | Feedback                                                                                                         |
-| ---- | ---------------------------------------------------------------------------------------------------------------- |
-| 1    | Having the MCQ/MRQ options and free response answers inside the chat input box itself makes the process seamless |
-| 3    | A good experience; sounds more natural than before                                                              |
-| 4    | Chatbot's ability to ask good questions and clarify is great                                                     |
-| 4    | Is it possible to add functionality to finetune a specific survey?                                               |
-| 4    | Can the chatbot be coerced to produce shorter messages?                                                          |
-| 4    | Having the bot be able to take on specific personas would help keep the user engaged                             |
-| 5    | Feels very smooth answering the survey via the chatbox                                                           |
-| 5    | Chat UI still a bit awkwardly boxy, but much cleaner than before                                                 |
+| User | Feedback                                                                                               |
+|------|--------------------------------------------------------------------------------------------------------|
+| 1    | Having the MCQ/MRQ/free response questions inside the chat input box itself makes the process seamless |
+| 2    | Conversation feels a lot more natural, feels like I am talking to a real human being.                  |
+| 3    | A good experience; sounds more natural than before                                                     |
+| 4    | Chatbot's ability to ask good questions and clarify is great                                           |
+| 4    | Is it possible to add functionality to finetune a specific survey?                                     |
+| 4    | Can the chatbot be coerced to produce shorter messages?                                                |
+| 4    | Having the bot be able to take on specific personas would help keep the user engaged                   |
+| 5    | Feels very smooth answering the survey via the chatbox                                                 |
+| 5    | Chat UI still a bit awkwardly boxy, but much cleaner than before                                       |
+</div>
 
 Some users further suggested features or enhancements that we could include; we address these in our Future Directions and Recommendations section.
 
@@ -423,9 +494,9 @@ The backend components interact harmoniously to facilitate the flow of data and 
 
 #### API
 
-The backend server is the core component responsible for processing incoming requests from the frontend via our API. Implemented using Flask in app.py, the server handles various functionalities such as creating surveys, submitting responses, sending chat messages to GPT-4, with the following endpoints:
+The backend server is the core component responsible for processing incoming requests from the frontend via our API. Implemented using Flask in [app.py](https://github.com/pakshuang/ai-chat-survey/blob/main/backend/src/app.py), the server handles various functionalities such as creating surveys, submitting responses, sending chat messages to GPT-4, with the following endpoints:
 
-<div id="table4">
+<div id="table4" style="text-align: center">
 
 | Resource         | API Method        | HTTP Method | Description                                                                       |
 | ---------------- | ----------------- | ----------- | --------------------------------------------------------------------------------- |
@@ -440,7 +511,9 @@ The backend server is the core component responsible for processing incoming req
 | Survey Responses | Get Response      | GET         | Retrieves a response object by ID, requiring admin authentication.                |
 | Survey Responses | Send Chat Message | POST        | Sends a message to the chatbot and receives a response.                           |
 
-We decided not to implement full CRUD operations for the 3 resources (Admins, Surveys, and Survey Responses) due to the time constraints in implementing this project. For example, `update` operations for Surveys were not developed so that the codebase would be smaller and easier to develop, test and maintain.
+</div>
+
+We decided not to implement full CRUD operations for the 3 resources (Admins, Surveys, and Survey Responses) due to the time constraints in implementing this project. For example, `update` operations for Surveys were not implemented so that the codebase would be smaller and easier to develop, test and maintain.
 
 For the detailed API documentation, refer to [api.md](https://github.com/pakshuang/ai-chat-survey/blob/main/docs/api.md).
 
@@ -450,7 +523,9 @@ The MySQL database, named `ai_chat_survey_db`, serves as the centralized reposit
 
 ##### Entity Relationship (ER) Diagram
 
-<img src="diagrams/images/db_schema.png" alt="Entity Relationship (ER) Diagram" width="400"/>
+<div style="text-align: center;">
+<img src="diagrams/images/db_schema.png" alt="Entity Relationship (ER) Diagram" width="55%"/>
+</div>
 
 - **Admins**: Stores information about administrators who have access to the system.
 - **Surveys**: Contains details of the surveys created in the system.
@@ -458,7 +533,7 @@ The MySQL database, named `ai_chat_survey_db`, serves as the centralized reposit
 - **Survey_Responses**: Holds the responses submitted for each survey question.
 - **ChatLog**: Logs the chat interactions between users and the chatbot.
 
-For the full database schema, please refer to [init.sql](https://github.com/pakshuang/ai-chat-survey/blob/main/database/init.sql)
+For the full database schema, please refer to [init.sql](https://github.com/pakshuang/ai-chat-survey/blob/main/database/init.sql).
 
 #### Model
 
@@ -475,7 +550,9 @@ The underlying model powering this app is the LLM GPT-4. A LLM was determined du
 </div>
 <br>
 
-In the pipeline on the left, the model is first provided the survey responses. The model is then tasked with generating a list of interesting questions, which it is tasked with remembering. This has improved the quality of the conversation tremendously. Primarily, it serves to discourage the model from deviating from the interview topic. Thus, if a user decides to talk about topic A, the model will not continuously probe about topic A, and instead move on to another question in its generated list of questions, after it has decided that it has attained enough information regarding topic A. Notably, we notice that this strategy has not degraded the quality of the LLM's questions, and the conversation remains dynamic. There are also two layers of content moderation. The first layer is a specific instruction to refuse participating when provided with inappropriate inputs by the user, and the second is a content moderation filter which checks the output from the model. This addresses security concerns posed by the client.
+In the pipeline on the left, the model is first provided the survey responses. The model is then tasked with generating a list of interesting questions, which it is tasked with remembering. This has improved the quality of the conversation tremendously. Primarily, it serves to discourage the model from deviating from the interview topic. Thus, if a user decides to talk about topic A, the model will not continuously probe about topic A, and instead move on to another question in its generated list of questions, after it has decided that it has attained enough information regarding topic A. Notably, we notice that this strategy has not degraded the quality of the LLM's questions, and the conversation remains dynamic.
+
+There are also two layers of content moderation. The first layer is a specific instruction to refuse participating when provided with inappropriate inputs by the user, and the second is a content moderation filter which checks the output from the model. This addresses security concerns posed by the client.
 
 ##### Evaluation Test
 
@@ -489,7 +566,7 @@ We found that GPT-4 passes all evaluation checks with an overall average perform
 
 ### Additional Enhancements
 
-After conducting user interviews to gather feedback on our AI chatbot survey system, we identified several areas for improvement and subsequently implemented additional features to enhance the user experience. These features address specific user concerns and aim to make the survey interaction more seamless and engaging.
+After conducting [user interviews](#initial-user-interviews) to gather feedback on our AI chatbot survey system, we identified several areas for improvement and subsequently implemented additional features to enhance the user experience. These features address specific user concerns and aim to make the survey interaction more seamless and engaging.
 
 #### 1. Survey Conclusion
 
@@ -536,6 +613,7 @@ In conclusion, this backend report has provided a detailed examination of the in
 Expanding on the initial capabilities of our platform, we envision a variety of enhancements to enrich the user experience and increase the platform's utility:
 
 - **Adding Sections**: Based on extensive user interviews and feedback from our business stakeholders, we've identified a significant improvement for our survey platform: the integration of distinct sections. This enhancement will effectively create multiple "mini-surveys" within a single session. Respondents will alternate between answering predefined questions from the organization and engaging in interactive conversations with GPT-4. This enables more effective detection and documentation of inconsistencies in respondents' feedback within the survey session itself, improving the quality and reliability of the data collected.
+- **Chatbot Personas:** Introducing chatbot personas would allow organizations to tailor the conversational experience to specific target audiences. By indicating a persona via the chatbox context field, the platform could dynamically adjust the prompts generated by GPT-4 to use language and terminology suited for the target audience, enhancing the survey experience.
 - **Editable Surveys:** Introduce the ability to modify surveys after they have been created, allowing users to adapt and improve their surveys based on initial feedback and insights.
 - **Multimedia Support:** Enable the inclusion of images, videos, and audio clips within surveys to provide a richer respondent experience and capture more nuanced feedback.
 - **Real-time Analytics Dashboard:** Develop a dashboard that provides real-time analytics and insights into survey responses. This tool could help survey creators quickly understand trends and adjust their strategies accordingly.
@@ -580,11 +658,9 @@ Such improvements are certain to keep coming, and it would be a good idea to kee
 
 ## Conclusion
 
-In conclusion, our project has demonstrated the potential of integrating GPT-4 into customer research surveys, offering a glimpse into a future where technology enhances the survey experience. While our endeavor may be modest in scope, its implications are significant.
+In conclusion, our project has demonstrated the potential of integrating GPT-4 into customer research surveys, offering a glimpse into a future where technology enhances the survey experience. Our project may be a small step, we believe it symbolizes a larger shift towards more dynamic and engaging survey methodologies. 
 
 Through our proof of concept, we've showcased the feasibility of leveraging GPT-4 to personalize survey interactions and uncover unique insights from respondents. By adopting this approach, businesses can gain a deeper understanding of customer preferences and feedback, ultimately guiding strategic decision-making processes.
-
-While our project may be a small step, it symbolizes a larger shift towards more dynamic and engaging survey methodologies. As technology continues to evolve, opportunities abound for further exploration and refinement in this field.
 
 <div style="page-break-after: always;"></div>
 
